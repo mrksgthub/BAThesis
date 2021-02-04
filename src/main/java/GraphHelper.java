@@ -7,8 +7,10 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 public class GraphHelper {
 
@@ -92,6 +94,38 @@ public class GraphHelper {
 
         System.out.println("test");
     }
+
+    public static <E> int chooseRandomIndex(List<E> list, int size){
+
+
+
+    return 2;
+    }
+
+    /**
+     * Picks nSamplesNeeded Samples out of an ArrayList.
+     * @param population
+     * @param nSamplesNeeded
+     * @param r
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> pickSample(ArrayList<T> population, int nSamplesNeeded, Random r) {
+        List<T> ret = new ArrayList<T>();
+        int nPicked = 0, i = 0, nLeft = population.size();
+        while (nSamplesNeeded > 0) {
+            int rand = r.nextInt(nLeft);
+            if (rand < nSamplesNeeded) {
+                ret.add(population.get(i));
+                nSamplesNeeded--;
+            }
+            nLeft--;
+            i++;
+        }
+        return ret;
+    }
+
+
 
 
 }

@@ -36,6 +36,7 @@ public class KettenTest {
 
 
         GraphAusKetten test = new GraphAusKetten(10);
+        Graph<TreeVertex, DefaultEdge> testGraph = test.generateSPgraph();
 
 
 

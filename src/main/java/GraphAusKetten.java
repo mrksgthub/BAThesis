@@ -14,6 +14,8 @@ public class GraphAusKetten {
     Hashtable<Integer, stGraph> graphHashtable = new Hashtable<>();
 
     private final DefaultUndirectedGraph<TreeVertex, DefaultEdge> graph;
+    List<KettenComponent> compList = new ArrayList<>();
+
 
 
 
@@ -27,16 +29,7 @@ public class GraphAusKetten {
                 TreeVertex v1 = graph.addVertex();
                 TreeVertex v2 = graph.addVertex();
             graph.addEdge(v1, v2);
-
-
-        }
-
-        int iter=0;
-        for (TreeVertex vertex: graph.vertexSet()
-             ) {
-            vertexList.add(vertex);
-
-
+            compList.add(new KettenComponent(v1, v2));
         }
 
 
@@ -44,6 +37,32 @@ public class GraphAusKetten {
 
 
     }
+
+
+    public DefaultUndirectedGraph<TreeVertex, DefaultEdge> generateSPgraph() {
+
+        KettenComponent component1 = compList.get(0);
+
+
+
+
+
+
+
+
+
+        return graph;
+    }
+
+
+
+
+
+
+
+
+
+
 
 
     void generateChains() {
@@ -103,29 +122,13 @@ public class GraphAusKetten {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     public void randomChainsBottomUp(int i) {
 
 
         Random random = new Random();
         int chainsAmount = getChooseChain(2, i/2);
 
-
-
         List<TreeVertex> vertexList1;
-
-
 
         // initialize chains
         int u = 0;
@@ -134,9 +137,7 @@ public class GraphAusKetten {
             vertexList1 = new LinkedList<>();
             vertexList1.add(new TreeVertex(Integer.toString(u++)));
             vertexList1.add(new TreeVertex(Integer.toString(u++)));
-
             treeVertexHashtable.put(j, vertexList1);
-
 
         }
 
@@ -148,20 +149,6 @@ public class GraphAusKetten {
             vertexList1 = treeVertexHashtable.get(chooseChain);
             vertexList1.add(new TreeVertex(Integer.toString(u++)));
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         System.out.println("test");
@@ -186,4 +173,6 @@ public class GraphAusKetten {
 
 
     }
+
+
 }

@@ -16,6 +16,7 @@ import org.jgrapht.traverse.DepthFirstIterator;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -374,20 +375,64 @@ public class Test {
     }
 
 
+    @org.junit.jupiter.api.Test
+    public void randomTest() {
+
+        Integer[] ints = {1, 2, 3};
+
+        Integer[] test = pickSample(ints,2, new Random() );
+
+        ArrayList<String> stringList = new ArrayList<>();
+        stringList.add("a");
+        stringList.add("b");
+        stringList.add("c");
+        List<String> newList = pickSample(stringList, 2, new Random());
 
 
 
 
 
+    }
 
 
 
 
 
+        public static <T> T[] pickSample(T[] population, int nSamplesNeeded, Random r) {
+            T[] ret = (T[]) Array.newInstance(population.getClass().getComponentType(),
+                    nSamplesNeeded);
+            int nPicked = 0, i = 0, nLeft = population.length;
+            while (nSamplesNeeded > 0) {
+                int rand = r.nextInt(nLeft);
+                if (rand < nSamplesNeeded) {
+                    ret[nPicked++] = population[i];
+                    nSamplesNeeded--;
+                }
+                nLeft--;
+                i++;
+            }
+            return ret;
+        }
+
+
+    public static <T> List<T> pickSample(ArrayList<T> population, int nSamplesNeeded, Random r) {
+        List<T> ret = new ArrayList<T>();
+        int nPicked = 0, i = 0, nLeft = population.size();
+        while (nSamplesNeeded > 0) {
+            int rand = r.nextInt(nLeft);
+            if (rand < nSamplesNeeded) {
+                ret.add(population.get(i));
+                nSamplesNeeded--;
+            }
+            nLeft--;
+            i++;
+        }
+        return ret;
+    }
+
+
+    }
 
 
 
 
-
-
-}
