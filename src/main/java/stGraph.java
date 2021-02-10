@@ -4,10 +4,7 @@ import org.jgrapht.graph.AsGraphUnion;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.Multigraph;
 
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class stGraph extends Multigraph {
@@ -127,5 +124,15 @@ public class stGraph extends Multigraph {
     }
 
 
+    public <T> void mergeVertices(T a3, T b1) {
+        Set<T> adjVertices =  Graphs.neighborSetOf(this, b1);
 
+        for (T adjVertex :
+                adjVertices) {
+            this.addEdge(a3, adjVertex);
+        }
+        this.removeVertex(b1);
+
+
+    }
 }

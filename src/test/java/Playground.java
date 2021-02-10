@@ -264,5 +264,64 @@ https://stackoverflow.com/questions/8766741/changing-contents-of-vertex-with-jgr
     }
 
 
+    @Test
+    public void mergeVertices(){
+
+
+        stGraph test1 = new stGraph(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+        stGraph test2 = new stGraph(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+
+
+        test1.addVertex(new TreeVertex("A1"));
+        test1.addVertex(new TreeVertex("A2"));
+        test1.addVertex(new TreeVertex("A3"));
+
+
+        Iterator<TreeVertex> test1Iterator = test1.vertexSet().stream().iterator();
+        TreeVertex startA = test1Iterator.next();
+
+        TreeVertex endA = test1Iterator.next();
+
+        test1.addEdge(test1.findVertex("A1"), test1.findVertex("A2"));
+        test1.addEdge(test1.findVertex("A2"), test1.findVertex("A3"));
+
+
+        test1.addVertex(new TreeVertex("B1"));
+        test1.addVertex(new TreeVertex("B2"));
+
+        test1.addEdge(test1.findVertex("B1"), test1.findVertex("B2"));
+
+        test1.mergeVertices(test1.findVertex("A3"), test1.findVertex("B1"));
+
+        GraphHelper.printToDOT(test1);
+
+
+
+        test1.mergeVertices(test1.findVertex("B2"), test1.findVertex("A1"));
+
+        GraphHelper.printToDOT(test1);
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

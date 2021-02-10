@@ -1,5 +1,6 @@
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.util.SupplierUtil;
@@ -8,21 +9,21 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class GraphAusKetten<T> {
+public class GraphAusKetten2<T> {
 
 
     private final int size;
     Hashtable<Integer, List<TreeVertex>> treeVertexHashtable = new Hashtable<>();
     Hashtable<Integer, stGraph> graphHashtable = new Hashtable<>();
 
-    private final DefaultUndirectedGraph<TreeVertex, DefaultEdge> graph;
+    private final DefaultDirectedGraph<TreeVertex, DefaultEdge> graph;
     ArrayList<KettenComponent<TreeVertex, DefaultEdge>> compList = new ArrayList<>();
 
 
-    public GraphAusKetten(int i) {
+    public GraphAusKetten2(int i) {
 
         this.size = i;
-        graph = new DefaultUndirectedGraph<>(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+        graph = new DefaultDirectedGraph<>(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
 
         //TODO oder eine Lange Kette erzeugen und diese dann in Komponenten zerteilen?
         for (int j = 0; j < i; j++) {
@@ -37,7 +38,7 @@ public class GraphAusKetten<T> {
     }
 
 
-    public DefaultUndirectedGraph<TreeVertex, DefaultEdge> generateSPgraph() {
+    public DefaultDirectedGraph<TreeVertex, DefaultEdge> generateSPgraph() {
         List<KettenComponent<TreeVertex, DefaultEdge>> toBeMergedComponents = new ArrayList<>();
 
         Random random = new Random();
@@ -104,103 +105,6 @@ public class GraphAusKetten<T> {
     }
 
 
-    void generateChains() {
-
-
-        // von Stackoverflow: finde die Splitpoints um size in zufällig viele Teile zu zerteilen
-        List<Integer> splitPoints =
-                IntStream.rangeClosed(2, size)
-                        .boxed().collect(Collectors.toList());
-        Collections.shuffle(splitPoints);
-        splitPoints.subList(4, splitPoints.size()).clear();
-        Collections.sort(splitPoints);
-
-
-    }
-
-
-    public void splitList(List<TreeVertex> testList, int size) {
-        Random random = new Random();
-
-        int j = 0;
-
-
-        int divider = random.ints(2, (size + 1)).findFirst().getAsInt();
-        System.out.println(divider);
-
-        List<TreeVertex> vertexList1 = testList.subList(0, divider);
-        List<TreeVertex> vertexList2 = testList.subList(divider, testList.size());
-
-        treeVertexHashtable.put(j, vertexList1);
-        treeVertexHashtable.put(j++, vertexList2);
-
-        List<TreeVertex> vertexList = new LinkedList<>();
-
-        for (int i = 0; i < 1; i++) {
-
-
-            vertexList = treeVertexHashtable.get(i);
-            divider = random.ints(2, (vertexList.size() + 1)).findFirst().getAsInt();
-            System.out.println(divider);
-
-            vertexList1 = testList.subList(0, divider);
-            vertexList2 = testList.subList(divider, testList.size());
-
-            treeVertexHashtable.put(j, vertexList1);
-            treeVertexHashtable.put(j++, vertexList2);
-
-        }
-
-
-        System.out.println("Test");
-
-    }
-
-
-    public void randomChainsBottomUp(int i) {
-
-
-        Random random = new Random();
-        int chainsAmount = getChooseChain(2, i / 2);
-
-        List<TreeVertex> vertexList1;
-
-        // initialize chains
-        int u = 0;
-        for (int j = 1; j < chainsAmount + 1; j++) {
-
-            vertexList1 = new LinkedList<>();
-            vertexList1.add(new TreeVertex(Integer.toString(u++)));
-            vertexList1.add(new TreeVertex(Integer.toString(u++)));
-            treeVertexHashtable.put(j, vertexList1);
-
-        }
-
-
-        int chooseChain;
-
-        for (int j = 0; j < (i - chainsAmount * 2); j++) {
-            chooseChain = getChooseChain(1, treeVertexHashtable.size()); //beginnt mit index 0
-            vertexList1 = treeVertexHashtable.get(chooseChain);
-            vertexList1.add(new TreeVertex(Integer.toString(u++)));
-        }
-
-
-        System.out.println("test");
-
-    }
-
-    private int getChooseChain(int min, int max) {
-
-        Random random = new Random();
-        return (random.nextInt(max + 1 - min) + min);
-    }
-
-    public void mergeChains(stGraph stGraph1, stGraph stGraph2) {
-
-
-    }
-
 
     public <V, E> void mergeSnode(KettenComponent<V, E> kettenComponent1, KettenComponent<V, E> kettenComponent2) {
 
@@ -215,7 +119,7 @@ public class GraphAusKetten<T> {
     public <V, E> void mergeGraphsPnode(KettenComponent<V, E> kettenComponent1, KettenComponent<V, E> kettenComponent2) {
 
         mergeVertices((TreeVertex) kettenComponent1.getStart(), (TreeVertex) kettenComponent2.getStart());
-        mergeVertices((TreeVertex) kettenComponent1.getEnd(), (TreeVertex) kettenComponent2.getEnd());
+        mergeVerticesEnd((TreeVertex) kettenComponent1.getEnd(), (TreeVertex) kettenComponent2.getEnd());
         compList.remove(kettenComponent2);
         kettenComponent1.updateDegrees();
 
@@ -223,51 +127,6 @@ public class GraphAusKetten<T> {
     }
 
 
-    /**
-     * Replaces a specific Vertex in a jgraphT Undirected Graph with another Vertex
-     *
-     * @param vertex
-     * @param replace
-     * @param <V>
-     * @param <E>
-     */
-    public <V, E> void replaceVertex(Graph<V, E> graph, V vertex, V replace) {
-
-        Set<E> edgeSet1 = new HashSet<E>(graph.incomingEdgesOf(vertex));
-        Set<E> outgoingEdges = new HashSet<E>(graph.outgoingEdgesOf(vertex));
-
-
-        for (E edge : edgeSet1) {
-            if (vertex == graph.getEdgeTarget(edge)) {
-                graph.addEdge(graph.getEdgeSource(edge), replace);
-            } else if (vertex == graph.getEdgeSource(edge)) {
-
-                graph.addEdge(replace, graph.getEdgeTarget(edge));
-
-            }
-
-        }
-
-        graph.removeVertex(vertex);
-    }
-
-
-    public TreeVertex findVertex(String name) {
-
-        Set<TreeVertex> vertexSet = this.graph.vertexSet();
-
-
-        for (TreeVertex node : vertexSet
-        ) {
-            if (name.equals(node.getName())) {
-                return node;
-            }
-        }
-
-        System.out.println("Node not found");
-        return null;
-
-    }
 
     public <T> void mergeVertices(TreeVertex a3, TreeVertex b1) {
         Set<TreeVertex> adjVertices = Graphs.neighborSetOf(graph, b1);
@@ -275,6 +134,17 @@ public class GraphAusKetten<T> {
         for (TreeVertex adjVertex :
                 adjVertices) {
             graph.addEdge(a3, adjVertex);
+        }
+        graph.removeVertex(b1);
+
+    }
+
+    public <T> void mergeVerticesEnd(TreeVertex a3, TreeVertex b1) {
+        Set<DefaultEdge> adjVertices = graph.incomingEdgesOf(b1);
+
+        for (DefaultEdge edge :
+                adjVertices) {
+            graph.addEdge(graph.getEdgeSource(edge),a3);
         }
         graph.removeVertex(b1);
 

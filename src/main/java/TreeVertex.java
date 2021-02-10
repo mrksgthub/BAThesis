@@ -15,6 +15,7 @@ public class TreeVertex extends Vertex
     TreeVertex secondVertexInEdge;
     boolean visited = false;
     String realName;
+    int numbering;
 
     public String getRealName() {
         return realName;

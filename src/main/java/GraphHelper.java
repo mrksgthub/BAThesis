@@ -1,27 +1,72 @@
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
+import org.jgrapht.util.SupplierUtil;
 
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public class GraphHelper {
+public class GraphHelper<V extends TreeVertex, E> {
 
 
-    public static <V> void printToDOT(DefaultUndirectedGraph<V, DefaultEdge> jgrapthTest) {
+    public static <V> void printToDOT(Graph<V, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)
         DOTExporter<V, DefaultEdge> exporter = new DOTExporter<>();
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
         System.out.println(writer.toString());
     }
+
+    public static DefaultUndirectedGraph<TreeVertex, DefaultEdge> getTreeVertexDefaultEdgeDefaultUndirectedGraph() {
+        return new DefaultUndirectedGraph<TreeVertex, DefaultEdge>(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+    }
+
+    public static void printToDOTTreeVertex(Graph<TreeVertex, DefaultEdge> jgrapthTest) {
+        //Create the exporter (without ID provider)
+
+
+        DOTExporter<TreeVertex, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexIdProvider((TreeVertex e) -> {
+            return e.getName();
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(jgrapthTest, writer);
+        System.out.println(writer.toString());
+    }
+
+    public static void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
+        //Create the exporter (without ID provider)
+
+
+        DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexIdProvider((SPQNode e) -> {
+            return e.getName();
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(jgrapthTest, writer);
+        System.out.println(writer.toString());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
@@ -95,23 +140,18 @@ public class GraphHelper {
         System.out.println("test");
     }
 
-    public static <E> int chooseRandomIndex(List<E> list, int size){
-
-
-
-    return 2;
-    }
 
     /**
-     * Picks nSamplesNeeded Samples out of an ArrayList.
+     * Picks nSamplesNeeded Samples out of an ArrayList. (Stackoverflow)
+     *
+     * @param <T>
      * @param population
      * @param nSamplesNeeded
      * @param r
-     * @param <T>
      * @return
      */
-    public static <T> List<T> pickSample(ArrayList<T> population, int nSamplesNeeded, Random r) {
-        List<T> ret = new ArrayList<T>();
+    public static <V, E> List<V> pickSample(ArrayList<V> population, int nSamplesNeeded, Random r) {
+        List<V> ret = new ArrayList<V>();
         int nPicked = 0, i = 0, nLeft = population.size();
         while (nSamplesNeeded > 0) {
             int rand = r.nextInt(nLeft);
@@ -126,6 +166,52 @@ public class GraphHelper {
     }
 
 
+    public static DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root) {
+        DefaultDirectedGraph<SPQNode, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        HashMap<SPQNode, Boolean> nodeHashMap = new HashMap<SPQNode, Boolean>();
+
+
+        dfsRun(root, nodeHashMap, graph);
+
+        return graph;
+
+
+
+
+
+
+
+
+
+    }
+
+
+    public static void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+
+      map.computeIfAbsent(root, k -> false);
+
+
+        if (!map.get(root)) {
+            graph.addVertex(root);
+            map.put(root, true);
+
+            for (SPQNode node :
+                    root.getChildren()) {
+
+                graph.addVertex(node);
+                graph.addEdge(root, node);
+                dfsRun(node, map, graph);
+
+            }
+        }
+    }
+
+
+
+    public static int getRandomNumberUsingNextInt(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
+    }
 
 
 }

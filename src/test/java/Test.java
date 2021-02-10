@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.misc.Pair;
 import org.antlr.v4.runtime.tree.Tree;
 import org.jbpt.algo.tree.tctree.TCTree;
 import org.jbpt.graph.MultiGraph;
@@ -394,8 +395,21 @@ public class Test {
 
     }
 
+    @org.junit.jupiter.api.Test
+    public void edgeMapTest() {
+
+        HashMap<Pair<String, String>, Integer> pairIntegerHashMap = new HashMap<>();
+
+        Pair<String, String> stringStringPair = new Pair<>("a", "b");
+
+        pairIntegerHashMap.put(stringStringPair, 1);
+        pairIntegerHashMap.get(new Pair<String, String>("a", "b"));
 
 
+
+
+
+    }
 
 
         public static <T> T[] pickSample(T[] population, int nSamplesNeeded, Random r) {
