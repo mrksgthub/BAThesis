@@ -22,6 +22,7 @@ public class GraphgenSplitGraph {
     public GraphgenSplitGraph(int operations) {
         this.operations = operations;
         root = new SPQPNode("Proot");
+        root.setNodeType(NodeTypesEnum.NODETYPE.PROOT);
         TreeVertex vertex = new TreeVertex("source");
         TreeVertex vertex2 = new TreeVertex("sink");
         multigraph.addVertex(vertex);
@@ -30,7 +31,9 @@ public class GraphgenSplitGraph {
         multigraph.addEdge(vertex, vertex2);
 
 
-        root.getChildren().add(new SPQQNode("Q" + ++counter));
+        SPQQNode qRight = new SPQQNode("Q" + ++counter);
+        root.getChildren().add(qRight);
+        qRight.setParent(root);
 
         SPQNode q = new SPQQNode("Q" + ++counter);
         root.getChildren().add(q);
@@ -42,6 +45,13 @@ public class GraphgenSplitGraph {
 
     }
 
+    public SPQNode getRoot() {
+        return root;
+    }
+
+    public void setRoot(SPQNode root) {
+        this.root = root;
+    }
 
     public void generateGraph() {
 
@@ -66,8 +76,13 @@ public class GraphgenSplitGraph {
 
         }
       //  GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
-      //  GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root));
 
+
+        for (DefaultEdge edge1 :
+                edgeSPQNodeHashMap.keySet()) {
+            edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString().replaceAll("\\s","").replaceAll(":","_").replaceAll("\\("," ").replaceAll("\\)","").trim());
+        }
+        GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
     }
 
     private void randomnewSNode(DefaultEdge edge) {
@@ -80,13 +95,14 @@ public class GraphgenSplitGraph {
         edges.add(edge1);
         edges.add(edge2);
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newSnode = new SPQNode("S" + ++counter);
-        SPQNode newQnode = new SPQNode("Q" + ++counter);
+        SPQNode newSnode = new SPQSNode("S" + ++counter);
+        SPQNode newQnode = new SPQQNode("Q" + ++counter);
         edgeSPQNodeHashMap.remove(edge);
-        edgeSPQNodeHashMap.put(edge1, oldQNode);
-        edgeSPQNodeHashMap.put(edge2, newQnode);
+        edgeSPQNodeHashMap.put(edge2, oldQNode);
+        edgeSPQNodeHashMap.put(edge1, newQnode);
         nodeUmhaengen(oldQNode, newSnode);
-        addNodeAsChild(newQnode, newSnode);
+        addNodeAsRightChild(newQnode, newSnode);
+
     }
 
 
@@ -96,11 +112,11 @@ public class GraphgenSplitGraph {
         edges.add(edge1);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newPnode = new SPQNode("P" + ++counter);
-        SPQNode newQnode = new SPQNode("Q" + ++counter);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newQnode = new SPQQNode("Q" + ++counter);
         edgeSPQNodeHashMap.put(edge1, newQnode);
         nodeUmhaengen(oldQNode, newPnode);
-        addNodeAsChild(newQnode, newPnode);
+        addNodeAsRightChild(newQnode, newPnode);
 
 
     }
@@ -113,7 +129,7 @@ public class GraphgenSplitGraph {
 
 
 
-    public <T extends SPQNode> void addNodeAsChild(T node, T parent) {
+    public <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
         node.setParent(parent);
         parent.getChildren().add(node);
 
@@ -126,7 +142,7 @@ public class GraphgenSplitGraph {
         //neuer Knoten als Parent festlegen
 
         newnode.setParent(node.getParent());
-        addNodeAsChild(node, newnode);
+        addNodeAsRightChild(node, newnode);
 
     }
 

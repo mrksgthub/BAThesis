@@ -23,7 +23,7 @@ public class SPQGenTest {
     spqGen2.generate();
 
 
-    DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(spqGen2.root);
+    DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(spqGen2.root, 1);
     GraphHelper.printToDOT(graph);
 
 
@@ -36,14 +36,14 @@ public class SPQGenTest {
 
     @Test
     public void teilerGraphgen() {
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(30);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(900);
         graphgenSplitGraph.generateGraph();
 
 
 
         GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
 
-        DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(graphgenSplitGraph.root);
+        DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(graphgenSplitGraph.root,1);
         GraphHelper.printTODOTSPQNode(graph);
 
 
@@ -59,14 +59,27 @@ public class SPQGenTest {
         }
 
 
-        TCTree tcTree = new TCTree(SPQRtest);
-        TCTree tcTree2 = new TCTree(spqrtest2);
+      //  TCTree tcTree = new TCTree(SPQRtest);
+       // TCTree tcTree2 = new TCTree(spqrtest2);
 
         System.out.println(SPQRtest.toDOT());
-        System.out.println(tcTree.toDOT());
+    //    System.out.println(tcTree.toDOT());
 
 
-        System.out.println(tcTree.getGraph().toDOT());
+        SPQNode root = graphgenSplitGraph.getRoot();
+        root.compachtTree();
+     ;
+
+        DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
+        GraphHelper.printTODOTSPQNode(graph2);
+
+
+
+
+
+
+
+       // System.out.println(tcTree.getGraph().toDOT());
 
 
 

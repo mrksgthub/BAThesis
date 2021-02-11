@@ -4,12 +4,34 @@ import java.util.Random;
 
 public class SPQNode {
 
+
+    public List<SPQNode> getMergedChildren() {
+        return mergedChildren;
+    }
+
+    public void setMergedChildren(List<SPQNode> mergedChildren) {
+        this.mergedChildren = mergedChildren;
+    }
+
+    public NodeTypesEnum.NODETYPE getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
+        this.nodeType = nodeType;
+    }
+
     List<SPQNode> children = new ArrayList<>();
+    List<SPQNode> mergedChildren = new ArrayList<>();
+
     int nodes;
     SPQNode parent;
     boolean isroot = false;
     boolean visited;
     String name;
+    NodeTypesEnum.NODETYPE nodeType;
+
+
 
     public String getName() {
         return name;
@@ -151,7 +173,6 @@ public class SPQNode {
 
 
             children.get(0).generateNode2(size2, this);
-            ;
             children.get(1).generateNode2(size3, this);
 
 
@@ -176,6 +197,35 @@ public class SPQNode {
 
         addNodeAsChild(node, newnode);
 
+    }
+
+
+    public void compachtTree() {
+
+        this.mergedChildren.addAll(children);
+
+        for (SPQNode spQNode : children
+        ) {
+            spQNode.compachtTree();
+        }
+        if (this.getParent() != null && this.getNodeType() == this.getParent().getNodeType() ) {
+            nodeMerge(this, this.getParent());
+        }
+
+    }
+
+    private void nodeMerge(SPQNode node, SPQNode parent) {
+
+        int pos = parent.mergedChildren.indexOf(node);
+       // node.mergedChildren.clear();
+        // node.mergedChildren.addAll(node.getChildren());
+        parent.mergedChildren.remove(node);
+
+        for (SPQNode spQNode : node.mergedChildren
+        ) {
+            parent.mergedChildren.add(pos++, spQNode);
+            spQNode.setParent(parent);
+        }
     }
 
 

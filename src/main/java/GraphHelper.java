@@ -166,12 +166,15 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
-    public static DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root) {
+    public static DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root, int integer) {
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
         HashMap<SPQNode, Boolean> nodeHashMap = new HashMap<SPQNode, Boolean>();
 
-
-        dfsRun(root, nodeHashMap, graph);
+        if (integer == 1) {
+            dfsRun(root, nodeHashMap, graph);
+        } else {
+            dfsRun2(root, nodeHashMap, graph);
+        }
 
         return graph;
 
@@ -205,6 +208,26 @@ public class GraphHelper<V extends TreeVertex, E> {
             }
         }
     }
+    public static void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+
+        map.computeIfAbsent(root, k -> false);
+
+
+        if (!map.get(root)) {
+            graph.addVertex(root);
+            map.put(root, true);
+
+            for (SPQNode node :
+                    root.mergedChildren) {
+
+                graph.addVertex(node);
+                graph.addEdge(root, node);
+                dfsRun2(node, map, graph);
+
+            }
+        }
+    }
+
 
 
 
