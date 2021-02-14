@@ -1,82 +1,90 @@
-import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Hashtable;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Supplier;
 
-public class SPQTree<V,E> extends DefaultUndirectedGraph<V,E> {
+public class SPQTree {
+
+    SPQNode root;
+    Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable = new Hashtable();
+    Set<SPQNode> visited = new LinkedHashSet<SPQNode>();
+    DirectedMultigraph<TreeVertex, DefaultEdge> constructedGraph = new DirectedMultigraph<TreeVertex, DefaultEdge>(DefaultEdge.class);
 
 
-    V root;
-
-    public SPQTree(Supplier<V> vSupplier, Supplier<E> defaultEdgeSupplier, boolean b) {
-        super(vSupplier, defaultEdgeSupplier, b);
+    public Set<SPQNode> getVisited() {
+        return visited;
     }
 
-    public V getRoot() {
+    public void setVisited(Set<SPQNode> visited) {
+        this.visited = visited;
+    }
+
+    public SPQTree(SPQNode root) {
+        this.root = root;
+
+
+
+
+
+    }
+
+    public SPQNode getRoot() {
         return root;
     }
 
-    public void setRoot(V root) {
+    public void setRoot(SPQNode root) {
         this.root = root;
     }
 
-    public SPQTree(Class<? extends E> edgeClass) {
-        super(edgeClass);
+    public Hashtable<SPQNode, List<SPQNode>> getNodeTOedgesTable() {
+        return nodeTOedgesTable;
     }
 
+    public void setNodeTOedgesTable(Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable) {
+        this.nodeTOedgesTable = nodeTOedgesTable;
+    }
 
-    public void addChildren(V toBeParent, V child){
-        if(!this.containsVertex(toBeParent)){
-            throw new IllegalArgumentException("Parent not in Tree");
+    public void fillNodeToEdgesTable(SPQNode root) {
+
+        nodeTOedgesTable.putIfAbsent(root, root.mergedChildren);
+
+        for (SPQNode node : root.mergedChildren
+        ) {
+            fillNodeToEdgesTable(node);
         }
-
-        this.addVertex(child);
-        this.addEdge(toBeParent,child);
-
-
-
     }
 
-    public void addChildren(SPQTree<V,E> tree, V toBeParent){
-        if(!this.containsVertex(toBeParent)){
-            throw new IllegalArgumentException("Parent not in Tree");
+    public void deterimeSandPnodeStartEndVertices(SPQNode root, Set<SPQNode> visited) {
+        visited.add(root);
+
+
+        for (SPQNode node : root.getMergedChildren()
+        ) {
+            deterimeSandPnodeStartEndVertices(node, visited);
         }
-
-        Graphs.addGraph(this, tree);
-        this.addEdge(toBeParent, tree.getRoot());
-
-
-
-
-    }
-
-    public void determineRoot(){
-
-        List<V> linkedList = new LinkedList<V>();
-        // TODO Shuffling required?
-
-
-
-        for (V v: this.vertexSet()
-             ) {
-            if(this.outDegreeOf(v) > 1) {
-                this.root = v;
-                return;
-            }
+        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
+            root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
+            root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
+        } else {
+            constructedGraph.addVertex(root.getStartVertex());
+            constructedGraph.addVertex(root.getSinkVertex());
+            constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());
         }
 
 
 
-
     }
-
-
-
 
 
 
 }
+
+
+
+
+
+
+

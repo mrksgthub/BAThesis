@@ -30,8 +30,24 @@ public class SPQNode {
     boolean visited;
     String name;
     NodeTypesEnum.NODETYPE nodeType;
+    TreeVertex startVertex;
+    TreeVertex sinkVertex;
 
+    public TreeVertex getStartVertex() {
+        return startVertex;
+    }
 
+    public void setStartVertex(TreeVertex startVertex) {
+        this.startVertex = startVertex;
+    }
+
+    public TreeVertex getSinkVertex() {
+        return sinkVertex;
+    }
+
+    public void setSinkVertex(TreeVertex sinkVertex) {
+        this.sinkVertex = sinkVertex;
+    }
 
     public String getName() {
         return name;

@@ -31,16 +31,22 @@ public class GraphgenSplitGraph {
         multigraph.addEdge(vertex, vertex2);
 
 
-        SPQQNode qRight = new SPQQNode("Q" + ++counter);
+        SPQQNode qLeft = new SPQQNode("Q" + ++counter);
+        root.getChildren().add(qLeft);
+        qLeft.setParent(root);
+        qLeft.setStartVertex(vertex);
+        qLeft.setSinkVertex(vertex2);
+
+        SPQNode qRight = new SPQQNode("Q" + ++counter);
+        qRight.setStartVertex(vertex);
+        qRight.setSinkVertex(vertex2);
         root.getChildren().add(qRight);
         qRight.setParent(root);
 
-        SPQNode q = new SPQQNode("Q" + ++counter);
-        root.getChildren().add(q);
-        q.setParent(root);
-
         edges.add(multigraph.getEdge(vertex, vertex2));
-        edgeSPQNodeHashMap.put(multigraph.getEdge(vertex, vertex2), q);
+        // First two entries in the Hashmap, which will be used for the embedding
+        edgeSPQNodeHashMap.put(multigraph.getEdge(vertex, vertex2), qRight);
+        edgeSPQNodeHashMap.put(multigraph.getEdge(vertex, vertex2), qLeft);
 
 
     }
@@ -78,10 +84,15 @@ public class GraphgenSplitGraph {
       //  GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
 
 
+        // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
                 edgeSPQNodeHashMap.keySet()) {
             edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString().replaceAll("\\s","").replaceAll(":","_").replaceAll("\\("," ").replaceAll("\\)","").trim());
+            edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
+            edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
         }
+
+
         GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
     }
 

@@ -1,14 +1,7 @@
-import org.jbpt.algo.tree.tctree.TCTree;
 import org.jbpt.graph.MultiGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
-import org.jgrapht.alg.interfaces.PlanarityTestingAlgorithm;
-import org.jgrapht.alg.planar.BoyerMyrvoldPlanarityInspector;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
-import org.jgrapht.graph.DirectedAcyclicGraph;
-import org.jgrapht.traverse.DepthFirstIterator;
 import org.junit.jupiter.api.Test;
 
 
@@ -36,7 +29,7 @@ public class SPQGenTest {
 
     @Test
     public void teilerGraphgen() {
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(900);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9);
         graphgenSplitGraph.generateGraph();
 
 
@@ -62,23 +55,24 @@ public class SPQGenTest {
       //  TCTree tcTree = new TCTree(SPQRtest);
        // TCTree tcTree2 = new TCTree(spqrtest2);
 
-        System.out.println(SPQRtest.toDOT());
+   //     System.out.println(SPQRtest.toDOT());
     //    System.out.println(tcTree.toDOT());
 
 
         SPQNode root = graphgenSplitGraph.getRoot();
         root.compachtTree();
-     ;
+
 
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-        GraphHelper.printTODOTSPQNode(graph2);
+       GraphHelper.printTODOTSPQNode(graph2);
 
 
+        SPQTree tree = new SPQTree(root);
+        tree.fillNodeToEdgesTable(tree.getRoot());
+        tree.deterimeSandPnodeStartEndVertices(tree.getRoot(), tree.getVisited());
 
 
-
-
-
+        GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
        // System.out.println(tcTree.getGraph().toDOT());
 
 
