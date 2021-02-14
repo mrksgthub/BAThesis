@@ -74,8 +74,7 @@ public class SPQGenTest {
 
         GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
        // System.out.println(tcTree.getGraph().toDOT());
-
-
+        DFSTreeGenerator dfsTreeGenerator = new DFSTreeGenerator(tree.constructedGraph);
 
     }
 }

@@ -17,6 +17,14 @@ public class TreeVertex extends Vertex
     String realName;
     int numbering;
 
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
+
     public String getRealName() {
         return realName;
     }
