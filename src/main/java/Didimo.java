@@ -4,6 +4,7 @@ public class Didimo{
     SPQTree tree;
 
 
+
     public Didimo(SPQTree tree) {
         this.tree = tree;
     }

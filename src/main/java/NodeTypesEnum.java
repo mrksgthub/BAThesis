@@ -1,5 +1,5 @@
 public class NodeTypesEnum {
 
-    enum NODETYPE {P, Q, S, PROOT}
+    enum NODETYPE {P, Q, QSTAR, S, PROOT}
 
 }

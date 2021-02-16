@@ -1,4 +1,6 @@
 import org.jbpt.graph.MultiGraph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -29,7 +31,7 @@ public class SPQGenTest {
 
     @Test
     public void teilerGraphgen() {
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9000);
         graphgenSplitGraph.generateGraph();
 
 
@@ -63,6 +65,7 @@ public class SPQGenTest {
         root.compachtTree();
 
 
+
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
        GraphHelper.printTODOTSPQNode(graph2);
 
@@ -72,9 +75,34 @@ public class SPQGenTest {
         tree.deterimeSandPnodeStartEndVertices(tree.getRoot(), tree.getVisited());
 
 
+
+
+
+
         GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
        // System.out.println(tcTree.getGraph().toDOT());
         DFSTreeGenerator dfsTreeGenerator = new DFSTreeGenerator(tree.constructedGraph);
+
+        DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(tree.constructedGraph);
+       GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+
+        GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getMergedChildren().get(0).getStartVertex(), root.getSinkVertex());
+
+
+
+
+        // normale repräsentation
+        root.compachtTree2();
+
+        graph2 = GraphHelper.treeToDOT(root, 2);
+        GraphHelper.printTODOTSPQNode(graph2);
+
+
+
+
+
+
+
 
     }
 }

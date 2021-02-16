@@ -1,3 +1,5 @@
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -68,13 +70,22 @@ public class SPQTree {
         if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
             root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
             root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
+
+
+
+            DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(constructedGraph);
+            GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+
+            GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+            root.setaPathFromSourceToSink(test2.getVertexList());
         } else {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());
             constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());
+
+
+
         }
-
-
 
     }
 
