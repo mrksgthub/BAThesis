@@ -1,4 +1,8 @@
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedMultigraph;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +27,15 @@ public class SPQNode {
 
     List<SPQNode> children = new ArrayList<>();
     List<SPQNode> mergedChildren = new ArrayList<>();
+    HashSet<TreeVertex> nodesInCompnent = new HashSet<>();
+
+    public HashSet<TreeVertex> getNodesInCompnent() {
+        return nodesInCompnent;
+    }
+
+    public void setNodesInCompnent(HashSet<TreeVertex> nodesInCompnent) {
+        this.nodesInCompnent = nodesInCompnent;
+    }
 
     int nodes;
     SPQNode parent;
@@ -34,6 +47,28 @@ public class SPQNode {
     TreeVertex startVertex;
     TreeVertex sinkVertex;
     List<TreeVertex> aPathFromSourceToSink = new ArrayList<>();
+    double repIntervalLowerBound = 0;
+    double repIntervalUpperBound = 0;
+
+    public double getRepIntervalLowerBound() {
+        return repIntervalLowerBound;
+    }
+
+    public void setRepIntervalLowerBound(int repIntervalLowerBound) {
+        this.repIntervalLowerBound = repIntervalLowerBound;
+    }
+
+    public double getRepIntervalUpperBound() {
+        return repIntervalUpperBound;
+    }
+
+    public void setRepIntervalUpperBound(int repIntervalUpperBound) {
+        this.repIntervalUpperBound = repIntervalUpperBound;
+    }
+
+    public void calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+
+    }
 
     public List<TreeVertex> getaPathFromSourceToSink() {
         return aPathFromSourceToSink;
@@ -256,6 +291,31 @@ public class SPQNode {
     }
 
 
+    public void computeNodesInComponent() {
+
+
+        for (SPQNode spQNode : mergedChildren
+        ) {
+            spQNode.computeNodesInComponent();
+        }
+
+        if ((this.getNodeType() == NodeTypesEnum.NODETYPE.Q)) {
+            nodesInCompnent.add(startVertex);
+            nodesInCompnent.add(sinkVertex);
+        }
+        if (mergedChildren.size() > 0) {
+            for (SPQNode nodes :
+                    mergedChildren) {
+                nodesInCompnent.addAll(nodes.getNodesInCompnent());
+            }
+        }
+
+
+    }
+
+
+
+
     private void mergeQNodes() {
 
         List<SPQNode> qNodes = new ArrayList<SPQNode>();
@@ -315,6 +375,29 @@ public class SPQNode {
             parent.mergedChildren.add(pos++, spQNode);
             spQNode.setParent(parent);
         }
+    }
+
+    public void computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+
+        for (SPQNode root : getMergedChildren()
+        ) {
+            root.computeRepresentability(graph);
+        }
+        if (this.mergedChildren.size() != 0) {
+            calculateRepresentabilityInterval(graph);
+        }
+
+    }
+
+    public int computeHowManyCommonNodesThisAndSet(HashSet<TreeVertex> tempHashSet) {
+        int counter = 0;
+        for (TreeVertex node : tempHashSet
+        ) {
+            if (nodesInCompnent.contains(node)) {
+                counter++;
+            }
+        }
+        return counter;
     }
 
 

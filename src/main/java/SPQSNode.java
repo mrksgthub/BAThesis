@@ -1,3 +1,6 @@
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DirectedMultigraph;
+
 public class SPQSNode extends SPQNode{
 
     NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.S;
@@ -21,6 +24,22 @@ public class SPQSNode extends SPQNode{
     public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
         this.nodeType = nodeType;
     }
+
+    @Override
+    public void calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+        for (SPQNode node : mergedChildren
+        ) {
+            repIntervalLowerBound += node.getRepIntervalLowerBound();
+            repIntervalUpperBound += node.getRepIntervalUpperBound();
+        }
+    }
+
+
+
+
+
+
+
 }
 
 

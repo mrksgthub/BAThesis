@@ -31,7 +31,7 @@ public class SPQGenTest {
 
     @Test
     public void teilerGraphgen() {
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9000);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9);
         graphgenSplitGraph.generateGraph();
 
 
@@ -94,8 +94,13 @@ public class SPQGenTest {
         // normale repräsentation
         root.compachtTree2();
 
+        root.computeNodesInComponent();
+
         graph2 = GraphHelper.treeToDOT(root, 2);
         GraphHelper.printTODOTSPQNode(graph2);
+
+
+        root.computeRepresentability(tree.constructedGraph);
 
 
 
@@ -105,4 +110,64 @@ public class SPQGenTest {
 
 
     }
+
+    @Test
+    public void didimoTest() {
+
+
+        SPQNode root = new SPQPNode("Proot");
+
+        TreeVertex source = new TreeVertex("source");
+        root.setStartVertex(source);
+        TreeVertex sink = new TreeVertex("sink");
+        root.setSinkVertex(sink);
+        SPQQNode q1 = new SPQQNode("Q1");
+        SPQNode q2 = new SPQQNode("Q2");
+        q1.setStartVertex(source);
+        q1.setSinkVertex(sink);
+        q2.setStartVertex(source);
+        q2.setSinkVertex(sink);
+
+
+
+        root.getChildren().add(q1);
+        root.getChildren().add(q2);
+
+
+
+
+        SPQTree tree = new SPQTree(root);
+        root.compachtTree();
+        root.compachtTree2();
+        tree.deterimeSandPnodeStartEndVertices(tree.getRoot(), tree.getVisited());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

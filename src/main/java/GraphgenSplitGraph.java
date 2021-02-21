@@ -63,7 +63,7 @@ public class GraphgenSplitGraph {
 
 
         DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
-        randomnewSNode(edge);
+        // randomnewSNode(edge);
 
 
        // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
@@ -119,15 +119,32 @@ public class GraphgenSplitGraph {
 
     private void randomnewPNode(DefaultEdge edge) {
 
-        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+
+
+        TreeVertex vertex = multigraph.addVertex();
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
+        DefaultEdge edge2 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
         edges.add(edge1);
+        edges.add(edge2);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
         SPQNode newPnode = new SPQPNode("P" + ++counter);
-        SPQNode newQnode = new SPQQNode("Q" + ++counter);
-        edgeSPQNodeHashMap.put(edge1, newQnode);
+
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+        SPQNode newQnode2 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge2, newQnode2);
+
+        SPQNode newSnode = new SPQSNode(("S" + ++counter));
+        newQnode1.setParent(newSnode);
+        newQnode2.setParent(newSnode);
+
+        newSnode.getChildren().add(newQnode1);
+        newSnode.getChildren().add(newQnode2);
+
         nodeUmhaengen(oldQNode, newPnode);
-        addNodeAsRightChild(newQnode, newPnode);
+        addNodeAsRightChild(newSnode, newPnode);
 
 
     }
