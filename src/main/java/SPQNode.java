@@ -1,10 +1,7 @@
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class SPQNode {
 
@@ -27,7 +24,88 @@ public class SPQNode {
 
     List<SPQNode> children = new ArrayList<>();
     List<SPQNode> mergedChildren = new ArrayList<>();
-    HashSet<TreeVertex> nodesInCompnent = new HashSet<>();
+    HashSet<TreeVertex> nodesInCompnent = new LinkedHashSet<>();
+    HashSet<TreeVertex> inDegreeStarVertexSet = new LinkedHashSet<>();
+    HashSet<TreeVertex> inDegreeSinkVertexSet = new LinkedHashSet<>();
+    HashSet<TreeVertex> outDegreeStartVertexSet = new LinkedHashSet<>();
+    HashSet<TreeVertex> outDegreeSinkVertexSet = new LinkedHashSet<>();
+    int inDegreeStartVertex = 9999;
+    int inDegreeSinkVertex = 9999;
+    int outDegreeStartVertex = 9999;
+    int outDegreeSinkVertex = 9999;
+    double spirality = 999999;
+
+    public double getSpirality() {
+        return spirality;
+    }
+
+    public void setSpirality(double spirality) {
+        this.spirality = spirality;
+    }
+
+    public HashSet<TreeVertex> getInDegreeStarVertexSet() {
+        return inDegreeStarVertexSet;
+    }
+
+    public void setInDegreeStarVertexSet(HashSet<TreeVertex> inDegreeStarVertexSet) {
+        this.inDegreeStarVertexSet = inDegreeStarVertexSet;
+    }
+
+    public HashSet<TreeVertex> getInDegreeSinkVertexSet() {
+        return inDegreeSinkVertexSet;
+    }
+
+    public void setInDegreeSinkVertexSet(HashSet<TreeVertex> inDegreeSinkVertexSet) {
+        this.inDegreeSinkVertexSet = inDegreeSinkVertexSet;
+    }
+
+    public HashSet<TreeVertex> getOutDegreeStartVertexSet() {
+        return outDegreeStartVertexSet;
+    }
+
+    public void setOutDegreeStartVertexSet(HashSet<TreeVertex> outDegreeStartVertexSet) {
+        this.outDegreeStartVertexSet = outDegreeStartVertexSet;
+    }
+
+    public HashSet<TreeVertex> getOutDegreeSinkVertexSet() {
+        return outDegreeSinkVertexSet;
+    }
+
+    public void setOutDegreeSinkVertexSet(HashSet<TreeVertex> outDegreeSinkVertexSet) {
+        this.outDegreeSinkVertexSet = outDegreeSinkVertexSet;
+    }
+
+    public int getInDegreeStartVertex() {
+        return inDegreeStartVertex;
+    }
+
+    public void setInDegreeStartVertex(int inDegreeStartVertex) {
+        this.inDegreeStartVertex = inDegreeStartVertex;
+    }
+
+    public int getInDegreeSinkVertex() {
+        return inDegreeSinkVertex;
+    }
+
+    public void setInDegreeSinkVertex(int inDegreeSinkVertex) {
+        this.inDegreeSinkVertex = inDegreeSinkVertex;
+    }
+
+    public int getOutDegreeStartVertex() {
+        return outDegreeStartVertex;
+    }
+
+    public void setOutDegreeStartVertex(int outDegreeStartVertex) {
+        this.outDegreeStartVertex = outDegreeStartVertex;
+    }
+
+    public int getOutDegreeSinkVertex() {
+        return outDegreeSinkVertex;
+    }
+
+    public void setOutDegreeSinkVertex(int outDegreeSinkVertex) {
+        this.outDegreeSinkVertex = outDegreeSinkVertex;
+    }
 
     public HashSet<TreeVertex> getNodesInCompnent() {
         return nodesInCompnent;
@@ -261,13 +339,13 @@ public class SPQNode {
     }
 
 
-    public void compachtTree() {
+    public void compactTree() {
 
         this.mergedChildren.addAll(children);
 
         for (SPQNode spQNode : children
         ) {
-            spQNode.compachtTree();
+            spQNode.compactTree();
         }
         if (this.getParent() != null && this.getNodeType() == this.getParent().getNodeType()) {
             nodeMerge(this, this.getParent());
@@ -276,12 +354,12 @@ public class SPQNode {
 
     }
 
-    public void compachtTree2() {
+    public void compactTree2() {
 
 
         for (SPQNode spQNode : mergedChildren
         ) {
-            spQNode.compachtTree2();
+            spQNode.compactTree2();
         }
 
         if ((this.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
@@ -334,7 +412,7 @@ public class SPQNode {
                     SPQQNode newQ = new SPQQNode(this.getName() + "Qstar" + counter++);
                     newQ.setMergedChildren(qNodes);
                     newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
-                    newQ.setSinkVertex(newQ.getMergedChildren().get(0).getStartVertex());
+                    newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
                     replacementmergedChildren.add(newQ);
 
                     qNodes = new ArrayList<SPQNode>();
@@ -346,7 +424,7 @@ public class SPQNode {
             SPQQNode newQ = new SPQQNode(this.getName() + "Qstar" + counter++);
             newQ.setMergedChildren(qNodes);
             newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
-            newQ.setSinkVertex(newQ.getMergedChildren().get(0).getStartVertex());
+            newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
             replacementmergedChildren.add(newQ);
 
             qNodes = new ArrayList<SPQNode>();
@@ -355,13 +433,16 @@ public class SPQNode {
             if (getMergedChildren().size() == 1) {
                 this.getParent().getMergedChildren().set(this.getParent().getMergedChildren().indexOf(this), newQ);
             }
+        } else if(replacementmergedChildren.size() > 1) {
+            this.setMergedChildren(replacementmergedChildren);
 
+            }
         }
 
 
 
 
-    }
+
 
     private void nodeMerge(SPQNode node, SPQNode parent) {
 
@@ -399,6 +480,128 @@ public class SPQNode {
         }
         return counter;
     }
+
+
+    public void computeSpirality() {
+
+
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.S) {
+
+            double delta = 0;
+            for (SPQNode node :
+                    mergedChildren) {
+                node.setSpirality(node.getRepIntervalUpperBound());
+                delta += (node.getRepIntervalUpperBound());
+            }
+            delta -= this.spirality;
+
+            if (delta != 0) {
+                for (SPQNode node :
+                        mergedChildren) {
+                    double temp = Math.min(delta, node.getRepIntervalUpperBound() - node.getRepIntervalLowerBound());
+                    node.setSpirality(node.getSpirality() - temp);
+                    delta -= temp;
+                    if (delta == 0) {
+                        break;
+                    }
+                }
+            }
+
+
+
+
+        }
+        else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 3) {
+            this.getMergedChildren().get(0).setSpirality(this.spirality +2);
+            this.getMergedChildren().get(1).setSpirality(this.spirality);
+            this.getMergedChildren().get(2).setSpirality(this.spirality -2);
+
+
+        } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 2) {
+            int alphaul = 9999;
+            int alphaur = 9999;
+
+            int alphavl = 9999;
+            int alphavr = 9999;
+
+            double kul = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(0).getInDegreeStartVertex() == 1)? 1 : 0.5;
+            double kur = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(1).getInDegreeStartVertex() == 1)? 1 : 0.5;;
+
+
+            double kvl = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(0).getInDegreeSinkVertex() == 1)? 1 : 0.5;
+            double kvr = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(1).getInDegreeSinkVertex() == 1)? 1 : 0.5;                                                                                                                   ;
+
+            int[] arrU;
+            if ((this.getInDegreeStartVertex() + this.getOutDegreeStartVertex()) == 4) {
+                alphaul = 1;
+                alphaur = 1;
+                arrU = new int[]{1};
+
+            } else {
+                arrU = new int[]{1, 0};
+            }
+
+
+
+            int[] arrV;
+            if ((this.getInDegreeSinkVertex() + this.getOutDegreeSinkVertex()) == 4) {
+                alphavl = 1;
+                alphavr = 1;
+                arrV = new int[]{1};
+            } else {
+                arrV = new int[]{1, 0};
+            }
+
+            outerloop:
+            for (int i = 0; i < arrU.length; i++) {
+                for (int j = 0; j < arrV.length; j++) {
+                    alphaul = arrU[i];
+                    alphavl = arrV[j];
+                    double temp = this.spirality + kul * arrU[i] + kvl * arrV[j];
+                    if (this.getMergedChildren().get(0).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(0).getRepIntervalUpperBound()) {
+                        this.getMergedChildren().get(0).setSpirality(this.spirality +kul*alphaul + kvl*alphavl);
+                        break outerloop;
+                    }
+                }
+            }
+
+
+            outerloop2:
+            for (int i = 0; i < arrU.length; i++) {
+                for (int j = 0; j < arrV.length; j++) {
+                    alphaur = arrU[i];
+                    alphavr = arrV[j];
+                    double temp = this.spirality - kur * arrU[i] - kvr * arrV[j];
+                    if (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(1).getRepIntervalUpperBound()) {
+                        this.getMergedChildren().get(1).setSpirality(this.spirality -kur*alphaur - kvr*alphavr);
+                        break outerloop2;
+                    }
+                }
+            }
+
+
+
+
+
+
+        //    this.getMergedChildren().get(0).setSpirality(this.spirality +kul*alphaul + kvl*alphavl );
+
+            System.out.println("Test");
+
+        }
+
+
+        for (SPQNode node :
+                mergedChildren) {
+            node.computeSpirality();
+        }
+
+
+
+    }
+
+
+
 
 
 }

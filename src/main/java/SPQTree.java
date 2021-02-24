@@ -1,12 +1,10 @@
 import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.Hashtable;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SPQTree {
 
@@ -14,6 +12,8 @@ public class SPQTree {
     Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable = new Hashtable();
     Set<SPQNode> visited = new LinkedHashSet<SPQNode>();
     DirectedMultigraph<TreeVertex, DefaultEdge> constructedGraph = new DirectedMultigraph<TreeVertex, DefaultEdge>(DefaultEdge.class);
+    Hashtable<SPQNode, HashSet<SPQNode>> vertexAdjMap = new Hashtable<>();
+
 
 
     public Set<SPQNode> getVisited() {
@@ -88,6 +88,23 @@ public class SPQTree {
         }
 
     }
+
+    public void determineAdjecents() {
+
+        for (TreeVertex vertex: constructedGraph.vertexSet()
+             ) {
+            Set<TreeVertex> adjSetStart = Graphs.neighborSetOf(constructedGraph, vertex);
+
+        }
+
+
+
+
+
+    }
+
+
+
 
 
 

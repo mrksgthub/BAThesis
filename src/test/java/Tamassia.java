@@ -58,8 +58,8 @@ public class Tamassia {
         }
 
 
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(embedding, startvertex);
-        treeVertexFaceGenerator.generateFaces();
+        //FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(embedding, startvertex);
+     //   treeVertexFaceGenerator.generateFaces();
 
 
     }
@@ -92,8 +92,8 @@ public class Tamassia {
         PlanarityTestingAlgorithm.Embedding<TreeVertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
 
 
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(embedding);
-        treeVertexFaceGenerator.generateFaces();
+        //FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(embedding);
+   //     treeVertexFaceGenerator.generateFaces();
 
 
 

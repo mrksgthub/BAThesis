@@ -45,9 +45,9 @@ public class SPQPNode extends SPQNode {
 
             if (mL <= MR && mL <= MC && mR <= ML && mR <= MC && mC <= ML && mC <= MR) {
                 repIntervalLowerBound = Math.max(mL - 2, mC);
-                repIntervalLowerBound = Math.max(mC, mR + 2);
+                repIntervalLowerBound = Math.max( repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
-                repIntervalUpperBound = Math.min(MC, MC + 2);
+                repIntervalUpperBound = Math.min(repIntervalUpperBound, MC + 2);
 
 
             } else {
@@ -132,19 +132,21 @@ public class SPQPNode extends SPQNode {
             if (inDegreeCounterStart == 2 && inDegreeCounterSink == 2) { // I_2O_alphaBeta
 
                 // Lemmma 8
-                double gamma = inDegreeOfStartVertex + outDegreeOfSinkVertex - 2;
+                double gamma = outDegreeCounterStart + outDegreeCounterSink - 2;
 
 
-                if (outDegreeCounterSink == 2 && outDegreeCounterStart == 1) { // Fall I2O21
+    /*            if (outDegreeCounterSink == 2 && outDegreeCounterStart == 1) { // Fall I2O21
                     double tempmL = mL;
                     double tempmR = mR;
                     double tempML = ML;
                     double tempMR = MR;
                     mL = tempmR;
                     mR = tempmL;
-                    MR = tempMR;
-                    ML = tempML;
+                    MR = tempML;
+                    ML = tempMR;
                 }
+
+     */
 
 
                 double lBound = mL - MR;
@@ -153,7 +155,7 @@ public class SPQPNode extends SPQNode {
 
                 if (lBound <= 4 - gamma && 2 <= upBound) {
 
-                    repIntervalLowerBound = Math.max(mL - 2, mR - 1) + gamma / 2;
+                    repIntervalLowerBound = Math.max(mL - 2, mR) + gamma / 2;
                     repIntervalUpperBound = Math.min(ML, MR + 2) - gamma / 2;
 
 
@@ -220,21 +222,25 @@ public class SPQPNode extends SPQNode {
             } else { // I_3dO_alphaBeta
 
                 double pd = 9999;
-                double gamma = inDegreeCounterStart + outDegreeCounterSink - 2;
+                double gamma = outDegreeCounterStart + outDegreeCounterSink - 2;
 
                 if (inDegreeCounterStart == 3) {
 
                     pd = (mergedChildren.get(0).computeHowManyCommonNodesThisAndSet(tempSetStart) == 2) ? 0 : 1;
                 } else { // umkehren
                     pd = (mergedChildren.get(0).computeHowManyCommonNodesThisAndSet(tempSetSink) == 2) ? 0 : 1;
+
+                    /*
                     double tempmL = mL;
                     double tempmR = mR;
                     double tempML = ML;
                     double tempMR = MR;
                     mL = tempmR;
                     mR = tempmL;
-                    MR = tempMR;
-                    ML = tempML;
+                    MR = tempML;
+                    ML = tempMR;
+
+                     */
                 }
 
                 double lBound = mL - MR;
@@ -242,8 +248,8 @@ public class SPQPNode extends SPQNode {
 
                 if (lBound <= 3.5 - gamma && 2.5 <= upBound) {
 
-                    repIntervalLowerBound = Math.max(mL - 2, mR - 1) + (gamma - pd) / 2;
-                    repIntervalUpperBound = Math.min(ML, MR + 2) - (gamma + pd) / 2;
+                    repIntervalLowerBound = Math.max(mL - 1.5, mR + 1) + (gamma - pd) / 2;
+                    repIntervalUpperBound = Math.min(ML -0.5, MR + 2) - (gamma + pd) / 2;
 
 
                 } else {
@@ -257,6 +263,8 @@ public class SPQPNode extends SPQNode {
         } else {
             System.out.println("Invalid number of Children for P-Node");
         }
+
+
 
 
     }
