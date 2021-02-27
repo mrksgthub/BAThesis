@@ -9,7 +9,7 @@ public class ReverseBFSTree {
 
     Graph inputGraph;
     TreeVertex root;
-    private int size;
+    private final int size;
     Hashtable<Vertex, Vertex[]> vertexHashtable = new Hashtable<>();
     ArrayList<TreeVertex> graphVertices = new ArrayList<TreeVertex>();
     private int iterator = 0;

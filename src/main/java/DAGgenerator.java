@@ -88,7 +88,7 @@ public class DAGgenerator<V extends TreeVertex,E> {
             if (!vIntegerHashMap.containsKey(node)) {
                 vIntegerHashMap.put(node, vIntegerHashMap.get(veBreadthFirstIterator.getParent(node))+1);
             }
-            directedAcyclicGraph.addVertex((TreeVertex) node);
+            directedAcyclicGraph.addVertex(node);
             if (node != start) {
                 directedAcyclicGraph.addEdge(veBreadthFirstIterator.getParent(node), node);
 
@@ -106,10 +106,10 @@ public class DAGgenerator<V extends TreeVertex,E> {
         for (E edge : graph.edgeSet()
         ) {
 
-            if ((vIntegerHashMap.get(graph.getEdgeTarget((E) edge)) > vIntegerHashMap.get(graph.getEdgeSource((E) edge)))) {
-                directedGraph.addEdge(graph.getEdgeSource((E) edge), graph.getEdgeTarget((E) edge));
+            if ((vIntegerHashMap.get(graph.getEdgeTarget(edge)) > vIntegerHashMap.get(graph.getEdgeSource(edge)))) {
+                directedGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge));
             } else {
-                directedGraph.addEdge(graph.getEdgeTarget((E) edge), graph.getEdgeSource((E) edge));
+                directedGraph.addEdge(graph.getEdgeTarget(edge), graph.getEdgeSource(edge));
             }
 
 

@@ -36,8 +36,8 @@ public class DFSTree<V, E> {
     }
 
     void removeEdge(TreeVertex label1, TreeVertex label2) {
-        List<TreeVertex> eV1 = (List) this.adjVertices.get(label1);
-        List<TreeVertex> eV2 = (List) this.adjVertices.get(label2);
+        List<TreeVertex> eV1 = this.adjVertices.get(label1);
+        List<TreeVertex> eV2 = this.adjVertices.get(label2);
         if (eV1 != null) {
             eV1.remove(label1);
         }
@@ -50,7 +50,7 @@ public class DFSTree<V, E> {
 
 
     List<TreeVertex> getAdjVertices(TreeVertex label) {
-        return (List) this.adjVertices.get(label);
+        return this.adjVertices.get(label);
     }
 
 
@@ -65,14 +65,14 @@ public class DFSTree<V, E> {
                 if (stack.isEmpty()) {
                     return visited;
                 }
-                vertex = (TreeVertex) stack.pop();
+                vertex = stack.pop();
             } while (visited.contains(vertex));
 
             visited.add(vertex);
             Iterator<TreeVertex> var5 = graph.getAdjVertices(vertex).iterator();
 
             while (var5.hasNext()) {
-                TreeVertex v = (TreeVertex) var5.next();
+                TreeVertex v = var5.next();
                 stack.push(v);
             }
         }
@@ -86,7 +86,7 @@ public class DFSTree<V, E> {
         visited.add(root);
 
         while (!queue.isEmpty()) {
-            TreeVertex vertex = (TreeVertex) queue.poll();
+            TreeVertex vertex = queue.poll();
             Iterator var5 = graph.getAdjVertices(vertex).iterator();
 
             while (var5.hasNext()) {

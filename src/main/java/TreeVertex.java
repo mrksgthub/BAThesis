@@ -1,6 +1,7 @@
 import org.antlr.v4.runtime.tree.Tree;
 import org.jbpt.hypergraph.abs.Vertex;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -16,6 +17,26 @@ public class TreeVertex extends Vertex
     boolean visited = false;
     String realName;
     int numbering;
+    int leftAngle;
+    int rightAngle;
+
+    public int getLeftAngle() {
+        return leftAngle;
+    }
+
+    public void setLeftAngle(int leftAngle) {
+        this.leftAngle = leftAngle;
+    }
+
+    public int getRightAngle() {
+        return rightAngle;
+    }
+
+    public void setRightAngle(int rightAngle) {
+        this.rightAngle = rightAngle;
+    }
+
+    ArrayList<TreeVertex> adjecentVertices = new ArrayList<>();
 
     public boolean isVisited() {
         return visited;

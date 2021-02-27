@@ -29,11 +29,16 @@ public class SPQNode {
     HashSet<TreeVertex> inDegreeSinkVertexSet = new LinkedHashSet<>();
     HashSet<TreeVertex> outDegreeStartVertexSet = new LinkedHashSet<>();
     HashSet<TreeVertex> outDegreeSinkVertexSet = new LinkedHashSet<>();
+    List<TreeVertex> startNodes = new ArrayList<>();
+    List<TreeVertex> sinkNodes = new ArrayList<>();
     int inDegreeStartVertex = 9999;
     int inDegreeSinkVertex = 9999;
     int outDegreeStartVertex = 9999;
     int outDegreeSinkVertex = 9999;
     double spirality = 999999;
+    ArrayList<Integer> anglesStart = new ArrayList<>();
+    ArrayList<Integer> anglesSink = new ArrayList<>();
+
 
     public double getSpirality() {
         return spirality;
@@ -365,11 +370,20 @@ public class SPQNode {
         if ((this.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
             mergeQNodes();
         }
+        if ((this.getNodeType() == NodeTypesEnum.NODETYPE.P) || this.getNodeType() == NodeTypesEnum.NODETYPE.PROOT) {
+            fixQNode();
+        }
+
 
     }
 
 
     public void computeNodesInComponent() {
+
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
+            startVertex.adjecentVertices.add(sinkVertex);
+            sinkVertex.adjecentVertices.add(0, startVertex);
+        }
 
 
         for (SPQNode spQNode : mergedChildren
@@ -380,18 +394,57 @@ public class SPQNode {
         if ((this.getNodeType() == NodeTypesEnum.NODETYPE.Q)) {
             nodesInCompnent.add(startVertex);
             nodesInCompnent.add(sinkVertex);
+            nodesInCompnent.add(startVertex);
+            nodesInCompnent.add(sinkVertex);
         }
+
+
         if (mergedChildren.size() > 0) {
             for (SPQNode nodes :
                     mergedChildren) {
                 nodesInCompnent.addAll(nodes.getNodesInCompnent());
+
+                if ((nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q) && nodes.mergedChildren.size() == 0) {
+                    if (this.getStartVertex() == nodes.getStartVertex()) {
+                        startNodes.add(nodes.getSinkVertex());
+                    }
+                    if (this.getSinkVertex() == nodes.getSinkVertex()) {
+                        sinkNodes.add(nodes.getStartVertex());
+                    }
+                } else {
+                    if (this.getStartVertex() == nodes.getStartVertex()) {
+                        startNodes.addAll(nodes.startNodes);
+                    }
+                    if (this.getSinkVertex() == nodes.getSinkVertex()) {
+                        sinkNodes.addAll(nodes.sinkNodes);
+                    }
+
+                }
             }
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
-
-
 
 
     private void mergeQNodes() {
@@ -433,15 +486,29 @@ public class SPQNode {
             if (getMergedChildren().size() == 1) {
                 this.getParent().getMergedChildren().set(this.getParent().getMergedChildren().indexOf(this), newQ);
             }
-        } else if(replacementmergedChildren.size() > 1) {
+        } else if (replacementmergedChildren.size() > 1) {
             this.setMergedChildren(replacementmergedChildren);
+
+        }
+    }
+
+    public void fixQNode() {
+
+        for (SPQNode nodes :
+                mergedChildren) {
+
+            if (nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q && nodes.mergedChildren.size() == 0) {
+                SPQNode newQ = new SPQQNode("Qstar" + nodes.getName());
+                newQ.setParent(this);
+                newQ.setStartVertex(nodes.getStartVertex());
+                newQ.setSinkVertex(nodes.getSinkVertex());
+                newQ.mergedChildren.add(nodes);
+                this.mergedChildren.set(this.mergedChildren.indexOf(nodes), newQ);
+
 
             }
         }
-
-
-
-
+    }
 
 
     private void nodeMerge(SPQNode node, SPQNode parent) {
@@ -508,13 +575,18 @@ public class SPQNode {
             }
 
 
-
-
-        }
-        else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 3) {
-            this.getMergedChildren().get(0).setSpirality(this.spirality +2);
+        } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 3) {
+            this.getMergedChildren().get(0).setSpirality(this.spirality + 2);
             this.getMergedChildren().get(1).setSpirality(this.spirality);
-            this.getMergedChildren().get(2).setSpirality(this.spirality -2);
+            this.getMergedChildren().get(2).setSpirality(this.spirality - 2);
+            anglesStart.add(1);
+            anglesStart.add(1);
+            anglesStart.add(1);
+            anglesStart.add(1);
+            anglesSink.add(1);
+            anglesSink.add(1);
+            anglesSink.add(1);
+            anglesSink.add(1);
 
 
         } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 2) {
@@ -524,12 +596,12 @@ public class SPQNode {
             int alphavl = 9999;
             int alphavr = 9999;
 
-            double kul = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(0).getInDegreeStartVertex() == 1)? 1 : 0.5;
-            double kur = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(1).getInDegreeStartVertex() == 1)? 1 : 0.5;;
+            double kul = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(0).getInDegreeStartVertex() == 1) ? 1 : 0.5;
+            double kur = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(1).getInDegreeStartVertex() == 1) ? 1 : 0.5;
 
 
-            double kvl = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(0).getInDegreeSinkVertex() == 1)? 1 : 0.5;
-            double kvr = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(1).getInDegreeSinkVertex() == 1)? 1 : 0.5;                                                                                                                   ;
+            double kvl = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(0).getInDegreeSinkVertex() == 1) ? 1 : 0.5;
+            double kvr = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(1).getInDegreeSinkVertex() == 1) ? 1 : 0.5;
 
             int[] arrU;
             if ((this.getInDegreeStartVertex() + this.getOutDegreeStartVertex()) == 4) {
@@ -537,21 +609,22 @@ public class SPQNode {
                 alphaur = 1;
                 arrU = new int[]{1};
 
+
             } else {
                 arrU = new int[]{1, 0};
             }
-
-
-
             int[] arrV;
             if ((this.getInDegreeSinkVertex() + this.getOutDegreeSinkVertex()) == 4) {
                 alphavl = 1;
                 alphavr = 1;
                 arrV = new int[]{1};
+
+
             } else {
                 arrV = new int[]{1, 0};
             }
 
+            //Spirality des Linken Kindes Festlegen
             outerloop:
             for (int i = 0; i < arrU.length; i++) {
                 for (int j = 0; j < arrV.length; j++) {
@@ -559,13 +632,13 @@ public class SPQNode {
                     alphavl = arrV[j];
                     double temp = this.spirality + kul * arrU[i] + kvl * arrV[j];
                     if (this.getMergedChildren().get(0).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(0).getRepIntervalUpperBound()) {
-                        this.getMergedChildren().get(0).setSpirality(this.spirality +kul*alphaul + kvl*alphavl);
+                        this.getMergedChildren().get(0).setSpirality(this.spirality + kul * alphaul + kvl * alphavl);
                         break outerloop;
                     }
                 }
             }
 
-
+            //Spirality des rechten Kindes Festlegen
             outerloop2:
             for (int i = 0; i < arrU.length; i++) {
                 for (int j = 0; j < arrV.length; j++) {
@@ -573,20 +646,40 @@ public class SPQNode {
                     alphavr = arrV[j];
                     double temp = this.spirality - kur * arrU[i] - kvr * arrV[j];
                     if (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(1).getRepIntervalUpperBound()) {
-                        this.getMergedChildren().get(1).setSpirality(this.spirality -kur*alphaur - kvr*alphavr);
+                        this.getMergedChildren().get(1).setSpirality(this.spirality - kur * alphaur - kvr * alphavr);
                         break outerloop2;
                     }
                 }
             }
 
+            int tempstart = alphaul + alphavl;
+            if ((this.getInDegreeStartVertex() + this.getOutDegreeStartVertex()) == 4) {
+                anglesStart.add(1);
+                tempstart++;
+            } else {
+                anglesStart.add(999999); // dh nur eine Kante außerhalb
+            }
+            anglesStart.add(alphaul);
+            anglesStart.add(alphaur);
+            anglesStart.add((tempstart == 2) ? 0 : 1);
 
-
-
-
-
-        //    this.getMergedChildren().get(0).setSpirality(this.spirality +kul*alphaul + kvl*alphavl );
-
+            int tempsink = alphavl + alphavr;
+            if ((this.getInDegreeSinkVertex() + this.getOutDegreeSinkVertex()) == 4) {
+                anglesSink.add(1);
+                tempsink++;
+            } else {
+            //    anglesSink.add(9999); // dh nur eine Kante außerhalb
+            }
+            anglesSink.add(alphavl);
+            anglesSink.add(alphavr);
+            anglesSink.add((tempsink == 2) ? 0 : 1);
             System.out.println("Test");
+
+
+            this.mergedChildren.get(0).startNodes.get(0).setRightAngle(alphaul);
+            this.mergedChildren.get(0).startNodes.get(1).setRightAngle(alphaur);
+
+
 
         }
 
@@ -597,11 +690,7 @@ public class SPQNode {
         }
 
 
-
     }
-
-
-
 
 
 }

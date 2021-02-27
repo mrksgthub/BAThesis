@@ -243,7 +243,7 @@ public class FaceGenerator<V extends TreeVertex, E> {
         ) {
             for (TreeVertex vertex : adjVertices.get(vePlanarGraphFace)
             ) {
-                graph.addEdge((TreeVertex) vertex, vePlanarGraphFace);
+                graph.addEdge(vertex, vePlanarGraphFace);
             }
         }
 

@@ -30,7 +30,7 @@ Wahrscheinlichkeit für p und s Knoten zufällig generieren?
 public class Graphgen {
 
     private int vertices;
-    private Vertex[] vertexArr;
+    private final Vertex[] vertexArr;
     String[] nodeTypes = {"S", "P", "N"};
     ArrayList<TreeVertex> leafNodes = new ArrayList<>();
     ArrayList<TreeVertex> rest = new ArrayList<>();

@@ -59,13 +59,13 @@ public class SPQTree {
         }
     }
 
-    public void deterimeSandPnodeStartEndVertices(SPQNode root, Set<SPQNode> visited) {
+    public void determineSandPnodes(SPQNode root, Set<SPQNode> visited) {
         visited.add(root);
 
 
         for (SPQNode node : root.getMergedChildren()
         ) {
-            deterimeSandPnodeStartEndVertices(node, visited);
+            determineSandPnodes(node, visited);
         }
         if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
             root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
@@ -73,11 +73,11 @@ public class SPQTree {
 
 
 
-            DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(constructedGraph);
-            GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+          //  DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(constructedGraph);
+        //    GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
 
-            GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
-            root.setaPathFromSourceToSink(test2.getVertexList());
+         //   GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+        //    root.setaPathFromSourceToSink(test2.getVertexList());
         } else {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());

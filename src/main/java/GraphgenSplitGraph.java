@@ -22,7 +22,7 @@ public class GraphgenSplitGraph {
     public GraphgenSplitGraph(int operations) {
         this.operations = operations;
         root = new SPQPNode("Proot");
-        root.setNodeType(NodeTypesEnum.NODETYPE.PROOT);
+        root.setNodeType(NodeTypesEnum.NODETYPE.P);
         TreeVertex vertex = new TreeVertex("source");
         TreeVertex vertex2 = new TreeVertex("sink");
         multigraph.addVertex(vertex);
@@ -119,7 +119,7 @@ public class GraphgenSplitGraph {
 
     private void randomnewPNode(DefaultEdge edge) {
 
-
+        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
 
         TreeVertex vertex = multigraph.addVertex();
         DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
@@ -144,7 +144,7 @@ public class GraphgenSplitGraph {
         newSnode.getChildren().add(newQnode2);
 
         nodeUmhaengen(oldQNode, newPnode);
-        addNodeAsRightChild(newSnode, newPnode);
+        addNodeAsRightChild(newSnode, newPnode); //möglicherweise addNodeAsLeftChild hinzuf+gen und dann random wäheln welche
 
 
     }
