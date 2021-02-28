@@ -169,10 +169,8 @@ public class FaceGenerator<V extends TreeVertex, E> {
                 adjVertices.put(faceObj, new ArrayList<>());
                 planarGraphFaces.add(faceObj);
 
-
                 V startVertex = pair.a;
                 List<V> tArrayList = (ArrayList<V>) embedding.get(startVertex);
-                //     E edge = tArrayList.get(0);
                 V vertex = startVertex;
                 V nextVertex = pair.b;
                 pairBooleanHashtable.put(pair, true);
@@ -206,12 +204,8 @@ public class FaceGenerator<V extends TreeVertex, E> {
                     visitsMap2.merge(vvPair, 1, Integer::sum);
 
                 }
-                System.out.println("test");
                 listOfFaces2.add(face);
-
-
             }
-
 
         }
 

@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.misc.Pair;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -38,6 +39,11 @@ public class SPQNode {
     double spirality = 999999;
     ArrayList<Integer> anglesStart = new ArrayList<>();
     ArrayList<Integer> anglesSink = new ArrayList<>();
+    int alphaul;
+    int alphavl;
+    int alphaur;
+    int alphavr;
+
 
 
     public double getSpirality() {
@@ -675,9 +681,15 @@ public class SPQNode {
             anglesSink.add((tempsink == 2) ? 0 : 1);
             System.out.println("Test");
 
+            this.alphavl = alphavl;
+            this.alphavr = alphavr;
+            this.alphaul = alphaul;
+            this.alphaur = alphaur;
 
-            this.mergedChildren.get(0).startNodes.get(0).setRightAngle(alphaul);
-            this.mergedChildren.get(0).startNodes.get(1).setRightAngle(alphaur);
+
+
+          //  this.mergedChildren.get(0).startNodes.get(0).setRightAngle(alphaul);
+           // this.mergedChildren.get(0).startNodes.get(1).setRightAngle(alphaur);
 
 
 
@@ -691,6 +703,14 @@ public class SPQNode {
 
 
     }
+    public void computeOrthogonalRepresentation(HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashMap) {
+
+
+
+
+
+        System.out.println("Test");
+        }
 
 
 }

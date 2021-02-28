@@ -1,3 +1,4 @@
+import org.antlr.v4.runtime.misc.Pair;
 import org.jbpt.graph.MultiGraph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
@@ -36,22 +37,22 @@ public class SPQGenTest {
         graphgenSplitGraph.generateGraph();
 
 
- //       GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
+        //       GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
 
-  //      DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(graphgenSplitGraph.root, 1);
-    //    GraphHelper.printTODOTSPQNode(graph);
+        //      DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(graphgenSplitGraph.root, 1);
+        //    GraphHelper.printTODOTSPQNode(graph);
 
 
-  //      org.jbpt.graph.MultiGraph jbtGraph = new MultiGraph();
+        //      org.jbpt.graph.MultiGraph jbtGraph = new MultiGraph();
 
-  //      org.jbpt.graph.Graph SPQRtest = new org.jbpt.graph.Graph();
-     //   org.jbpt.graph.MultiGraph spqrtest2 = new MultiGraph();
-  //      for (DefaultEdge edge : graphgenSplitGraph.getMultigraph().edgeSet()
- //       ) {
-   //         graphgenSplitGraph.getMultigraph().getEdgeSource(edge);
-   //         SPQRtest.addEdge(graphgenSplitGraph.getMultigraph().getEdgeSource(edge), graphgenSplitGraph.getMultigraph().getEdgeTarget(edge));
+        //      org.jbpt.graph.Graph SPQRtest = new org.jbpt.graph.Graph();
+        //   org.jbpt.graph.MultiGraph spqrtest2 = new MultiGraph();
+        //      for (DefaultEdge edge : graphgenSplitGraph.getMultigraph().edgeSet()
+        //       ) {
+        //         graphgenSplitGraph.getMultigraph().getEdgeSource(edge);
+        //         SPQRtest.addEdge(graphgenSplitGraph.getMultigraph().getEdgeSource(edge), graphgenSplitGraph.getMultigraph().getEdgeTarget(edge));
 
-    //    }
+        //    }
 
 
         //  TCTree tcTree = new TCTree(SPQRtest);
@@ -69,19 +70,19 @@ public class SPQGenTest {
         GraphHelper.printTODOTSPQNode(graph2);
 
 
-       SPQTree tree = new SPQTree(root);
-       tree.fillNodeToEdgesTable(tree.getRoot());
-       tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
+        SPQTree tree = new SPQTree(root);
+        tree.fillNodeToEdgesTable(tree.getRoot());
+        tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
 
 
-  //      GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+        //      GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
         // System.out.println(tcTree.getGraph().toDOT());
-      //  DFSTreeGenerator dfsTreeGenerator = new DFSTreeGenerator(tree.constructedGraph);
+        //  DFSTreeGenerator dfsTreeGenerator = new DFSTreeGenerator(tree.constructedGraph);
 
-    //    DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(tree.constructedGraph);
-   //     GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+        //    DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(tree.constructedGraph);
+        //     GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
 
-    //    GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getMergedChildren().get(0).getStartVertex(), root.getSinkVertex());
+        //    GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getMergedChildren().get(0).getStartVertex(), root.getSinkVertex());
 
 
         // normale repräsentation
@@ -201,7 +202,6 @@ public class SPQGenTest {
         getAdjecentsMap(root, adjMap, tree.constructedGraph);
 
 
-
         root.getMergedChildren().get(0).setSpirality(3);
         root.getMergedChildren().get(0).computeSpirality();
 
@@ -229,18 +229,13 @@ public class SPQGenTest {
             }
 
 
-
-
-
             embedding.put(vertex, arrList);
 
         }
 
 
-
-
-    //    BoyerMyrvoldPlanarityInspector<TreeVertex, DefaultEdge> myrvoldPlanarityInspector = new BoyerMyrvoldPlanarityInspector<>(tree.constructedGraph);
-    //    PlanarityTestingAlgorithm.Embedding<TreeVertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
+        //    BoyerMyrvoldPlanarityInspector<TreeVertex, DefaultEdge> myrvoldPlanarityInspector = new BoyerMyrvoldPlanarityInspector<>(tree.constructedGraph);
+        //    PlanarityTestingAlgorithm.Embedding<TreeVertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
 
         DepthFirstIterator<TreeVertex, DefaultEdge> depthFirstIterator = new DepthFirstIterator<>(tree.constructedGraph);
         while (depthFirstIterator.hasNext()) {
@@ -255,24 +250,29 @@ public class SPQGenTest {
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
 
+        HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        for (Pair<TreeVertex, TreeVertex> pair :
+                treeVertexFaceGenerator.adjFaces2.keySet()) {
+            pairIntegerMap.put(pair, 999);
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        winkelHinzufügen(root, pairIntegerMap);
 
 
         System.out.println("Test");
+    }
+
+
+    public void winkelHinzufügen(SPQNode root, HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashmap) {
+
+        for (SPQNode node :
+                root.getMergedChildren()) {
+            winkelHinzufügen(node, hashmap);
+        }
+        if (root.getMergedChildren().size() > 1) {
+            root.computeOrthogonalRepresentation(hashmap);
+        }
+
     }
 
 
@@ -393,8 +393,6 @@ public class SPQGenTest {
 
             root.setInDegreeStartVertex(tempSetStart.size());
             root.setInDegreeStarVertexSet(tempSetStart);
-
-
 
 
             adjecentsMap.put(root.getStartVertex(), (LinkedHashSet<TreeVertex>) adjSetSink);

@@ -1,7 +1,9 @@
+import org.antlr.v4.runtime.misc.Pair;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,7 +45,7 @@ public class SPQPNode extends SPQNode {
             double MC = mergedChildren.get(1).getRepIntervalUpperBound();
             double MR = mergedChildren.get(2).getRepIntervalUpperBound();
 
-            if (mL-2 <= MR+2 && mL-2 <= MC && mR+2 <= ML-2 && mR+2 <= MC && mC <= ML-2 && mC <= MR+2) {
+            if (mL - 2 <= MR + 2 && mL - 2 <= MC && mR + 2 <= ML - 2 && mR + 2 <= MC && mC <= ML - 2 && mC <= MR + 2) {
                 repIntervalLowerBound = Math.max(mL - 2, mC);
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
@@ -224,5 +226,48 @@ public class SPQPNode extends SPQNode {
 
     }
 
+    @Override
+    public void computeOrthogonalRepresentation(HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashMap) {
 
+        // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
+        if (startNodes.size() == 4) {
+
+            // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
+
+        } else {
+
+
+            // Beispiel 8-6-5 außen
+            TreeVertex nextVertexStartLeft = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(0).startNodes.get(0)) - 1), startVertex.adjecentVertices.size()));
+            hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(0).startNodes.get(0), startVertex), alphaul);
+
+            // Beispiel 5-6-7 Außen
+            TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(1).startNodes.get(0)) + 1), startVertex.adjecentVertices.size()));
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexStarRight, startVertex)), alphaur);
+
+            //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 7-6 an Knoten 6)
+            hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(1).startNodes.get(0)), startVertex)), (alphaur + alphaul == 2) ? 0 : 1);
+
+
+        }
+        if (sinkNodes.size() == 4) {
+
+
+        } else {
+            // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
+            TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexSinkLeft, sinkVertex)), alphavl);
+
+            // rechter Winkel an Sink Vertex (Außen)
+            TreeVertex nextVertexSinkRight = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(1).sinkNodes.get(0)) - 1), sinkVertex.adjecentVertices.size()));
+            hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(1).sinkNodes.get(0)), sinkVertex)), alphavr);
+
+            //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 9-11-10 an Knoten 11)
+            hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(0).startNodes.get(0)), sinkVertex)), (alphavr + alphavl == 2) ? 0 : 1);
+
+
+        }
+
+
+    }
 }
