@@ -63,7 +63,7 @@ public class GraphgenSplitGraph {
 
 
         DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
-        // randomnewSNode(edge);
+         randomnewSNode(edge);
 
 
        // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));

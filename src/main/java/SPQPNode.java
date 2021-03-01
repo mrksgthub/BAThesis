@@ -28,7 +28,7 @@ public class SPQPNode extends SPQNode {
     }
 
     @Override
-    public void calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
 
         // TODO einmal für alle Knoten zu Beginn berechnen, dann in ein Hashtable packen
         Set<TreeVertex> adjSetStart = Graphs.neighborSetOf(graph, getStartVertex());
@@ -54,6 +54,7 @@ public class SPQPNode extends SPQNode {
 
             } else {
                 System.out.println("Intervals do not overlap P has 3 Children" + " " + this.getName());
+                check=false;
             }
 
 
@@ -135,6 +136,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
+                    check=false;
                 }
 
             } else if ((inDegreeCounterStart == 3 && inDegreeCounterSink == 3))  // I_3dd
@@ -186,6 +188,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
+                    check=false;
                 }
 
 
@@ -213,6 +216,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
+                    check=false;
                 }
 
 
@@ -221,9 +225,10 @@ public class SPQPNode extends SPQNode {
 
         } else {
             System.out.println("Invalid number of Children for P-Node");
+            check=false;
         }
 
-
+        return check;
     }
 
     @Override
@@ -300,8 +305,8 @@ public class SPQPNode extends SPQNode {
         } else if (sinkVertex.adjecentVertices.size() == 2){
 
 
-                hashMap.put((new Pair<TreeVertex, TreeVertex>(startVertex, sinkVertex)), 1);
-                hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), -1);
+                hashMap.put((new Pair<TreeVertex, TreeVertex>(startVertex, sinkVertex)), -1);
+                hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), 1);
 
                 System.out.println("Test");
 

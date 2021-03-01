@@ -33,69 +33,114 @@ public class SPQGenTest {
 
     @Test
     public void teilerGraphgen() {
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(9);
-        graphgenSplitGraph.generateGraph();
 
 
-        //       GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
-
-        //      DefaultDirectedGraph<SPQNode, DefaultEdge> graph = GraphHelper.treeToDOT(graphgenSplitGraph.root, 1);
-        //    GraphHelper.printTODOTSPQNode(graph);
-
-
-        //      org.jbpt.graph.MultiGraph jbtGraph = new MultiGraph();
-
-        //      org.jbpt.graph.Graph SPQRtest = new org.jbpt.graph.Graph();
-        //   org.jbpt.graph.MultiGraph spqrtest2 = new MultiGraph();
-        //      for (DefaultEdge edge : graphgenSplitGraph.getMultigraph().edgeSet()
-        //       ) {
-        //         graphgenSplitGraph.getMultigraph().getEdgeSource(edge);
-        //         SPQRtest.addEdge(graphgenSplitGraph.getMultigraph().getEdgeSource(edge), graphgenSplitGraph.getMultigraph().getEdgeTarget(edge));
-
-        //    }
-
-
-        //  TCTree tcTree = new TCTree(SPQRtest);
-        // TCTree tcTree2 = new TCTree(spqrtest2);
-
-        //     System.out.println(SPQRtest.toDOT());
-        //    System.out.println(tcTree.toDOT());
-
-
-        SPQNode root = graphgenSplitGraph.getRoot();
-        root.compactTree();
-
-
-        DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-        GraphHelper.printTODOTSPQNode(graph2);
-
-
+        SPQNode root = new SPQNode();
         SPQTree tree = new SPQTree(root);
-        tree.fillNodeToEdgesTable(tree.getRoot());
-        tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
+
+        boolean check = false;
+        while (!check) {
+            check = true;
+
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(5);
+            graphgenSplitGraph.generateGraph();
 
 
-        //      GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
-        // System.out.println(tcTree.getGraph().toDOT());
-        //  DFSTreeGenerator dfsTreeGenerator = new DFSTreeGenerator(tree.constructedGraph);
+            root = graphgenSplitGraph.getRoot();
+            root.compactTree();
+            DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
+            GraphHelper.printTODOTSPQNode(graph2);
+            tree = new SPQTree(root);
+            tree.fillNodeToEdgesTable(tree.getRoot());
+            tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
 
-        //    DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(tree.constructedGraph);
-        //     GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
+            // normale repräsentation
+            root.compactTree2();
 
-        //    GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getMergedChildren().get(0).getStartVertex(), root.getSinkVertex());
+            root.computeNodesInComponent();
 
+            graph2 = GraphHelper.treeToDOT(root, 2);
+            GraphHelper.printTODOTSPQNode(graph2);
+            GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
 
-        // normale repräsentation
-        root.compactTree2();
-
-        root.computeNodesInComponent();
-
-        graph2 = GraphHelper.treeToDOT(root, 2);
-        GraphHelper.printTODOTSPQNode(graph2);
+            check = root.computeRepresentability(tree.constructedGraph, check);
+        }
 
 
-        root.computeRepresentability(tree.constructedGraph);
+
         tree.computeNofRoot();
+
+
+
+
+
+
+
+
+
+
+        root.getMergedChildren().get(0).computeSpirality();
+
+
+        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+
+        for (TreeVertex vertex :
+                tree.constructedGraph.vertexSet()) {
+
+            ArrayList<TreeVertex> arrList = new ArrayList<>();
+
+            Set<DefaultEdge> tempIn = tree.constructedGraph.incomingEdgesOf(vertex);
+            Set<DefaultEdge> tempOut = tree.constructedGraph.outgoingEdgesOf(vertex);
+
+
+            ArrayList<DefaultEdge> inEdgesList = new ArrayList<>(tempIn);
+            ListIterator<DefaultEdge> tempInListIterator = inEdgesList.listIterator(inEdgesList.size());
+            ListIterator<DefaultEdge> tempOutListIterator = new ArrayList<>(tempOut).listIterator();
+
+            while (tempInListIterator.hasPrevious()) {
+                arrList.add(tree.constructedGraph.getEdgeSource(tempInListIterator.previous()));
+            }
+            while (tempOutListIterator.hasNext()) {
+                arrList.add(tree.constructedGraph.getEdgeTarget(tempOutListIterator.next()));
+            }
+
+
+            embedding.put(vertex, arrList);
+
+        }
+
+
+        DepthFirstIterator<TreeVertex, DefaultEdge> depthFirstIterator = new DepthFirstIterator<>(tree.constructedGraph);
+        while (depthFirstIterator.hasNext()) {
+            depthFirstIterator.next();
+
+        }
+
+        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
+        HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        for (Pair<TreeVertex, TreeVertex> pair :
+                treeVertexFaceGenerator.adjFaces2.keySet()) {
+            pairIntegerMap.put(pair, 999);
+        }
+
+
+
+        winkelHinzufügen(root, pairIntegerMap);
+
+
+        System.out.println("Test");
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
@@ -188,7 +233,8 @@ public class SPQGenTest {
 
 
         root.computeNodesInComponent();
-        root.computeRepresentability(tree.constructedGraph);
+        boolean check = true;
+        root.computeRepresentability(tree.constructedGraph, check);
 
 
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);

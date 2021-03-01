@@ -26,12 +26,14 @@ public class SPQSNode extends SPQNode{
     }
 
     @Override
-    public void calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
         for (SPQNode node : mergedChildren
         ) {
             repIntervalLowerBound += node.getRepIntervalLowerBound();
             repIntervalUpperBound += node.getRepIntervalUpperBound();
         }
+
+        return check;
     }
 
 

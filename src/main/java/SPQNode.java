@@ -155,8 +155,9 @@ public class SPQNode {
         this.repIntervalUpperBound = repIntervalUpperBound;
     }
 
-    public void calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
 
+        return check;
     }
 
     public List<TreeVertex> getaPathFromSourceToSink() {
@@ -531,16 +532,20 @@ public class SPQNode {
         }
     }
 
-    public void computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
 
         for (SPQNode root : getMergedChildren()
         ) {
-            root.computeRepresentability(graph);
+            root.computeRepresentability(graph, check);
         }
         if (this.mergedChildren.size() != 0) {
-            calculateRepresentabilityInterval(graph);
+           check = calculateRepresentabilityInterval(graph, check);
         }
 
+        if (!check) {
+            return false;
+        }
+        return check;
     }
 
     public int computeHowManyCommonNodesThisAndSet(HashSet<TreeVertex> tempHashSet) {
