@@ -103,6 +103,27 @@ public class SPQTree {
 
     }
 
+    public void computeNofRoot() {
+
+
+        int spirality = 99999;
+
+        if (root.getMergedChildren().get(0).startNodes.size() == 1 && root.getMergedChildren().get(0).sinkNodes.size() == 1 ) {
+
+            spirality = 2;
+        } else if (root.getMergedChildren().get(0).startNodes.size() >= 2 && root.getMergedChildren().get(0).sinkNodes.size() >= 2) {
+
+            spirality = 4;
+
+        } else {
+            spirality = 3;
+        }
+
+
+
+        root.getMergedChildren().get(0).setSpirality(spirality);
+    }
+
 
 
 

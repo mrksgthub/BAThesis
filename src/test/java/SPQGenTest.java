@@ -95,6 +95,7 @@ public class SPQGenTest {
 
 
         root.computeRepresentability(tree.constructedGraph);
+        tree.computeNofRoot();
 
 
     }
@@ -202,6 +203,7 @@ public class SPQGenTest {
         getAdjecentsMap(root, adjMap, tree.constructedGraph);
 
 
+        tree.computeNofRoot();
         root.getMergedChildren().get(0).setSpirality(3);
         root.getMergedChildren().get(0).computeSpirality();
 
@@ -234,22 +236,14 @@ public class SPQGenTest {
         }
 
 
-        //    BoyerMyrvoldPlanarityInspector<TreeVertex, DefaultEdge> myrvoldPlanarityInspector = new BoyerMyrvoldPlanarityInspector<>(tree.constructedGraph);
-        //    PlanarityTestingAlgorithm.Embedding<TreeVertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
-
         DepthFirstIterator<TreeVertex, DefaultEdge> depthFirstIterator = new DepthFirstIterator<>(tree.constructedGraph);
         while (depthFirstIterator.hasNext()) {
             depthFirstIterator.next();
 
         }
 
-
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
-
-
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
-
-
         HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
         for (Pair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
