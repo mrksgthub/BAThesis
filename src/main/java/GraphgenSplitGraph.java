@@ -17,6 +17,15 @@ public class GraphgenSplitGraph {
     List<DefaultEdge> edges = new ArrayList();
     HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap();
     int counter = 0;
+    private double chanceOfP = 50;
+
+    public GraphgenSplitGraph(int operations, double chanceOfP) {
+
+        this(operations);
+        this.chanceOfP = chanceOfP;
+    }
+
+
 
 
     public GraphgenSplitGraph(int operations) {
@@ -73,7 +82,7 @@ public class GraphgenSplitGraph {
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 2) < 1 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
                 randomnewPNode(edge);
             } else {
 
@@ -87,13 +96,15 @@ public class GraphgenSplitGraph {
         // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
                 edgeSPQNodeHashMap.keySet()) {
-            edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString().replaceAll("\\s","").replaceAll(":","_").replaceAll("\\("," ").replaceAll("\\)","").trim());
+          edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString().replaceAll("\\s","").replaceAll(":","_").replaceAll("\\("," ").replaceAll("\\)","").trim());
+        //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
+
             edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
             edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
         }
 
 
-        GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
+    //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
     }
 
     private void randomnewSNode(DefaultEdge edge) {

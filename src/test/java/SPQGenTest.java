@@ -2,11 +2,12 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.jbpt.graph.MultiGraph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
+import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
+import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
+import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.*;
 
-import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ public class SPQGenTest {
     @Test
     public void graphGen() {
 
-        SPQGen2 spqGen2 = new SPQGen2(9);
+        SPQGen2 spqGen2 = new SPQGen2(1000);
         spqGen2.generate();
 
 
@@ -38,18 +39,21 @@ public class SPQGenTest {
         SPQNode root = new SPQNode();
         SPQTree tree = new SPQTree(root);
 
-        boolean check = false;
+        Boolean check = false;
+
+        int counter = 0;
         while (!check) {
+            counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(5);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(100, 20);
             graphgenSplitGraph.generateGraph();
 
 
             root = graphgenSplitGraph.getRoot();
             root.compactTree();
-            DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-            GraphHelper.printTODOTSPQNode(graph2);
+         //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
+     //       GraphHelper.printTODOTSPQNode(graph2);
             tree = new SPQTree(root);
             tree.fillNodeToEdgesTable(tree.getRoot());
             tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
@@ -59,13 +63,12 @@ public class SPQGenTest {
 
             root.computeNodesInComponent();
 
-            graph2 = GraphHelper.treeToDOT(root, 2);
-            GraphHelper.printTODOTSPQNode(graph2);
-            GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
-
-            check = root.computeRepresentability(tree.constructedGraph, check);
+      //    graph2 = GraphHelper.treeToDOT(root, 2);
+      //      GraphHelper.printTODOTSPQNode(graph2);
+     //       GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+//TODO falls Degree = 4, dann Problem?
+          check =  root.computeRepresentability(tree.constructedGraph, check);
         }
-
 
 
         tree.computeNofRoot();
@@ -119,14 +122,61 @@ public class SPQGenTest {
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
         HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+
         for (Pair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
-            pairIntegerMap.put(pair, 999);
+            pairIntegerMap.put(pair, 0);
         }
 
 
 
+
+
+
         winkelHinzufügen(root, pairIntegerMap);
+
+
+        List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face: treeVertexFaceGenerator.planarGraphFaces
+             ) {
+           int edgeCount = 0;
+            for (Pair<TreeVertex, TreeVertex> pair:
+           face.getOrthogonalRep().keySet() ){
+                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
+                edgeCount += pairIntegerMap.get(pair);
+            }
+
+            if (Math.abs(edgeCount) != 4) {
+            //    assert(Math.abs(edgeCount) == 4);
+                test.add(face);
+                assert (Math.abs(edgeCount) != 4);
+            }
+
+
+
+
+
+
+        }
+
+        DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+        treeVertexFaceGenerator.generateCapacities();
+
+
+        GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+
+
+
+
+  //     MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+
+
+    //    test33.getMaximumFlow(treeVertexFaceGenerator.source, treeVertexFaceGenerator.sink);
+   //    test33.getFlowMap();
+
+
+    //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+
 
 
         System.out.println("Test");
@@ -141,9 +191,19 @@ public class SPQGenTest {
 
 
 
+    }
 
+
+    @Test
+    public void teilergraphMassTest() {
+
+        for (int i = 0; i < 1000; i++) {
+            teilerGraphgen();
+
+        }
 
     }
+
 
     @Test
     public void didimoTest() {
@@ -253,6 +313,9 @@ public class SPQGenTest {
         root.getMergedChildren().get(0).setSpirality(3);
         root.getMergedChildren().get(0).computeSpirality();
 
+        // TODO visited map ist outdated
+       // checkSpiralitiesWithinBounds(tree);
+
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
 
@@ -293,13 +356,43 @@ public class SPQGenTest {
         HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
         for (Pair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
-            pairIntegerMap.put(pair, 999);
+            pairIntegerMap.put(pair, 0);
         }
 
         winkelHinzufügen(root, pairIntegerMap);
 
 
+        List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+        ) {
+            int edgeCount = 0;
+            for (Pair<TreeVertex, TreeVertex> pair :
+                    face.getOrthogonalRep().keySet()) {
+                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
+                edgeCount += pairIntegerMap.get(pair);
+            }
+
+            if (Math.abs(edgeCount) != 4) {
+                //    assert(Math.abs(edgeCount) == 4);
+                test.add(face);
+            }
+
+
+        }
+
+
+
+
         System.out.println("Test");
+    }
+
+    private void checkSpiralitiesWithinBounds(SPQTree tree) {
+        for (SPQNode node :
+                tree.visited) {
+            if (node.mergedChildren.size() > 0 && !node.getName().equals("Proot")) {
+                assert (node.getRepIntervalLowerBound() <= node.getSpirality() && node.getSpirality() <= node.getRepIntervalUpperBound());
+            }
+        }
     }
 
 
@@ -309,7 +402,7 @@ public class SPQGenTest {
                 root.getMergedChildren()) {
             winkelHinzufügen(node, hashmap);
         }
-        if (root.getMergedChildren().size() > 1) {
+        if (root.getMergedChildren().size() > 1 && !root.isIsroot()) {
             root.computeOrthogonalRepresentation(hashmap);
         }
 

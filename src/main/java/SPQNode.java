@@ -7,6 +7,11 @@ import java.util.*;
 public class SPQNode {
 
 
+    private double kul;
+    private double kur;
+    private double kvl;
+    private double kvr;
+
     public List<SPQNode> getMergedChildren() {
         return mergedChildren;
     }
@@ -155,9 +160,9 @@ public class SPQNode {
         this.repIntervalUpperBound = repIntervalUpperBound;
     }
 
-    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
+    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
 
-        return check;
+        return true;
     }
 
     public List<TreeVertex> getaPathFromSourceToSink() {
@@ -397,7 +402,7 @@ public class SPQNode {
         ) {
             spQNode.computeNodesInComponent();
         }
-
+/*
         if ((this.getNodeType() == NodeTypesEnum.NODETYPE.Q)) {
             nodesInCompnent.add(startVertex);
             nodesInCompnent.add(sinkVertex);
@@ -406,11 +411,14 @@ public class SPQNode {
         }
 
 
+ */
+
         if (mergedChildren.size() > 0) {
             for (SPQNode nodes :
                     mergedChildren) {
+                /*
                 nodesInCompnent.addAll(nodes.getNodesInCompnent());
-
+*/
                 if ((nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q) && nodes.mergedChildren.size() == 0) {
                     if (this.getStartVertex() == nodes.getStartVertex()) {
                         startNodes.add(nodes.getSinkVertex());
@@ -532,19 +540,25 @@ public class SPQNode {
         }
     }
 
-    public boolean computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
+    public boolean computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph, Boolean check) {
 
+        boolean temp;
         for (SPQNode root : getMergedChildren()
         ) {
-            root.computeRepresentability(graph, check);
-        }
-        if (this.mergedChildren.size() != 0) {
-           check = calculateRepresentabilityInterval(graph, check);
+            temp =  root.computeRepresentability(graph, check);
+            if (!temp) {
+                check = temp;
+            }
         }
 
-        if (!check) {
-            return false;
+        if (this.mergedChildren.size() != 0) {
+
+            if (!calculateRepresentabilityInterval(graph)) {
+
+                check = false;
+            }
         }
+
         return check;
     }
 
@@ -573,7 +587,7 @@ public class SPQNode {
             }
             delta -= this.spirality;
 
-            if (delta != 0) {
+            while (delta != 0) {
                 for (SPQNode node :
                         mergedChildren) {
                     double temp = Math.min(delta, node.getRepIntervalUpperBound() - node.getRepIntervalLowerBound());
@@ -607,15 +621,15 @@ public class SPQNode {
             int alphavl = 9999;
             int alphavr = 9999;
 
-            double kul = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(0).getInDegreeStartVertex() == 1) ? 1 : 0.5;
-            double kur = (this.getOutDegreeStartVertex() == 1 && this.getMergedChildren().get(1).getInDegreeStartVertex() == 1) ? 1 : 0.5;
+            kul = ((this.startVertex.adjecentVertices.size() - startNodes.size()) == 1 && this.getMergedChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
+            kur = ((this.startVertex.adjecentVertices.size() - startNodes.size())== 1 && this.getMergedChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
 
 
-            double kvl = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(0).getInDegreeSinkVertex() == 1) ? 1 : 0.5;
-            double kvr = (this.getOutDegreeSinkVertex() == 1 && this.getMergedChildren().get(1).getInDegreeSinkVertex() == 1) ? 1 : 0.5;
+            kvl = ((this.sinkVertex.adjecentVertices.size() - sinkNodes.size())== 1 && this.getMergedChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
+            kvr = ((this.sinkVertex.adjecentVertices.size() - sinkNodes.size()) == 1 && this.getMergedChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
 
             int[] arrU;
-            if ((this.getInDegreeStartVertex() + this.getOutDegreeStartVertex()) == 4) {
+            if (startVertex.adjecentVertices.size() == 4) {
                 alphaul = 1;
                 alphaur = 1;
                 arrU = new int[]{1};
@@ -625,7 +639,7 @@ public class SPQNode {
                 arrU = new int[]{1, 0};
             }
             int[] arrV;
-            if ((this.getInDegreeSinkVertex() + this.getOutDegreeSinkVertex()) == 4) {
+            if ((this.sinkVertex.adjecentVertices.size()) == 4) {
                 alphavl = 1;
                 alphavr = 1;
                 arrV = new int[]{1};
@@ -656,7 +670,7 @@ public class SPQNode {
                     alphaur = arrU[i];
                     alphavr = arrV[j];
                     double temp = this.spirality - kur * arrU[i] - kvr * arrV[j];
-                    if (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(1).getRepIntervalUpperBound()) {
+                    if (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(1).getRepIntervalUpperBound() && alphaul+alphaur > 0 && alphavl+alphavr > 0) {
                         this.getMergedChildren().get(1).setSpirality(this.spirality - kur * alphaur - kvr * alphavr);
                         break outerloop2;
                     }

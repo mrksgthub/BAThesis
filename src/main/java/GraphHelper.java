@@ -3,6 +3,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultUndirectedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.util.SupplierUtil;
@@ -38,6 +39,22 @@ public class GraphHelper<V extends TreeVertex, E> {
         exporter.exportGraph(jgrapthTest, writer);
         System.out.println(writer.toString());
     }
+
+    public static void printToDOTTreeVertexWeighted(Graph<TreeVertex, DefaultWeightedEdge> jgrapthTest) {
+        //Create the exporter (without ID provider)
+
+
+        DOTExporter<TreeVertex, DefaultWeightedEdge> exporter = new DOTExporter<>();
+        exporter.setVertexIdProvider((TreeVertex e) -> {
+            return e.getName();
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(jgrapthTest, writer);
+        System.out.println(writer.toString());
+    }
+
+
+
 
     public static void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)

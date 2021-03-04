@@ -11,6 +11,10 @@ import java.util.Set;
 public class SPQPNode extends SPQNode {
 
     NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.P;
+    private int inDegreeCounterStart;
+    private int inDegreeCounterSink;
+    private int outDegreeCounterStart;
+    private int outDegreeCounterSink;
 
 
     public SPQPNode(String name) {
@@ -28,7 +32,7 @@ public class SPQPNode extends SPQNode {
     }
 
     @Override
-    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph, boolean check) {
+    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
 
         // TODO einmal für alle Knoten zu Beginn berechnen, dann in ein Hashtable packen
         Set<TreeVertex> adjSetStart = Graphs.neighborSetOf(graph, getStartVertex());
@@ -49,12 +53,12 @@ public class SPQPNode extends SPQNode {
                 repIntervalLowerBound = Math.max(mL - 2, mC);
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
-                repIntervalUpperBound = Math.min(repIntervalUpperBound, MC + 2);
+                repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
 
 
             } else {
                 System.out.println("Intervals do not overlap P has 3 Children" + " " + this.getName());
-                check=false;
+                return false;
             }
 
 
@@ -72,6 +76,7 @@ public class SPQPNode extends SPQNode {
             double MR = rightSNode.getRepIntervalUpperBound();
 
 
+            /*
             int inDegreeOfStartVertex = graph.inDegreeOf(startVertex);
             if (inDegreeOfStartVertex == 0) { //if starVertex is the rootvertex of the whole graph
                 inDegreeOfStartVertex = 1;
@@ -85,38 +90,44 @@ public class SPQPNode extends SPQNode {
             int outdegreeOfv;
             int outdegreeOfu;
 
+            */
 //TODO falsch, hier muss mit children gearbeitet werden
-
+/*
             HashSet<TreeVertex> tempSetStart = new HashSet<TreeVertex>(adjSetStart);
             tempSetStart.retainAll(nodesInCompnent);
             HashSet<TreeVertex> tempSetSink = new HashSet<TreeVertex>(adjSetSink);
             tempSetSink.retainAll(nodesInCompnent);
 
-            int inDegreeCounterStart = 0;
-            int inDegreeCounterSink = 0;
-            int outDegreeCounterStart = 0;
-            int outDegreeCounterSink = 0;
+            inDegreeCounterStart = 0;
+            inDegreeCounterSink = 0;
+            outDegreeCounterStart = 0;
+            outDegreeCounterSink = 0;
 
             for (TreeVertex node : tempSetStart
             ) {
-                if (nodesInCompnent.contains(node)) {
+            if (nodesInCompnent.contains(node)) {
                     inDegreeCounterStart++;
+           }
+         }
+          for (TreeVertex node : tempSetSink
+        ) {
+              if (nodesInCompnent.contains(node)) {
+                 inDegreeCounterSink++;
                 }
-            }
-            for (TreeVertex node : tempSetSink
-            ) {
-                if (nodesInCompnent.contains(node)) {
-                    inDegreeCounterSink++;
-                }
-            }
+   //         }
+
+              */
+
+   //         int test1 = computeHowManyCommonNodesThisAndSet(tempSetStart);
+   //         int test2 = computeHowManyCommonNodesThisAndSet(tempSetSink);
 
 
-            int test1 = computeHowManyCommonNodesThisAndSet(tempSetStart);
-            int test2 = computeHowManyCommonNodesThisAndSet(tempSetSink);
+            //TODO wurde geändert von dem auskommentierten zu diesem hier
+            inDegreeCounterStart = startNodes.size();
+            inDegreeCounterSink = sinkNodes.size();
 
-
-            outDegreeCounterStart = adjSetStart.size() - inDegreeCounterStart;
-            outDegreeCounterSink = adjSetSink.size() - inDegreeCounterSink;
+            outDegreeCounterStart = startVertex.adjecentVertices.size() - inDegreeCounterStart;
+            outDegreeCounterSink = sinkVertex.adjecentVertices.size() - inDegreeCounterSink;
 
 
             if (inDegreeCounterStart == 2 && inDegreeCounterSink == 2) { // I_2O_alphaBeta
@@ -136,7 +147,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
-                    check=false;
+                    return false;
                 }
 
             } else if ((inDegreeCounterStart == 3 && inDegreeCounterSink == 3))  // I_3dd
@@ -153,20 +164,22 @@ public class SPQPNode extends SPQNode {
                 MR = rightSNode.getRepIntervalUpperBound();
 
                 // Was tun falls erstes oder zweites child eine Q node ist
-                if ((childrenOfFirstChild.get(0).getNodeType() == NodeTypesEnum.NODETYPE.P) && (childrenOfFirstChild.get(childrenOfFirstChild.size() - 1).getNodeType() == NodeTypesEnum.NODETYPE.P)) { //I3ll
+                if ((mergedChildren.get(0).startNodes.size() == 2) && (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3ll
+
 
                     pdU = 0;
                     pdV = 0;
-                } else if ((childrenOfSecondChild.get(0).getNodeType() == NodeTypesEnum.NODETYPE.P) && (childrenOfSecondChild.get(childrenOfSecondChild.size() - 1).getNodeType() == NodeTypesEnum.NODETYPE.P)) //I3rr
+                } else if ((mergedChildren.get(1).startNodes.size() == 2) && (mergedChildren.get(1).sinkNodes.size() == 2)) //I3rr
                 { // FIxbar indem man Q2 zu nem Qstar macht
 
                     pdU = 1;
                     pdV = 1;
-                } else if ((childrenOfFirstChild.get(0).getNodeType() == NodeTypesEnum.NODETYPE.P) && (childrenOfFirstChild.get(childrenOfFirstChild.size() - 1).getNodeType() != NodeTypesEnum.NODETYPE.P)) { //I3lr
+                } else if ((mergedChildren.get(1).startNodes.size() == 2) &&  (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3lr
 
                     pdU = 0;
                     pdV = 1;
-                } else if ((childrenOfSecondChild.get(0).getNodeType() == NodeTypesEnum.NODETYPE.P) && (childrenOfSecondChild.get(childrenOfSecondChild.size() - 1).getNodeType() != NodeTypesEnum.NODETYPE.P)) { //I3rl
+
+                } else if ((mergedChildren.get(0).startNodes.size() == 2) &&  (mergedChildren.get(1).sinkNodes.size() == 2)) { //I3rl
 
                     rightSNode = mergedChildren.get(0);
                     leftSNode = mergedChildren.get(1);
@@ -188,7 +201,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
-                    check=false;
+                    return false;
                 }
 
 
@@ -199,9 +212,10 @@ public class SPQPNode extends SPQNode {
 
                 if (inDegreeCounterStart == 3) {
 
-                    pd = (mergedChildren.get(0).computeHowManyCommonNodesThisAndSet(tempSetStart) == 2) ? 0 : 1;
+                    //TODO wurde geändert
+                    pd = (mergedChildren.get(0).startNodes.size() == 2) ? 0 : 1;
                 } else { // umkehren
-                    pd = (mergedChildren.get(0).computeHowManyCommonNodesThisAndSet(tempSetSink) == 2) ? 0 : 1;
+                    pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
 
                 }
 
@@ -216,7 +230,7 @@ public class SPQPNode extends SPQNode {
 
                 } else {
                     System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
-                    check=false;
+                    return false;
                 }
 
 
@@ -225,65 +239,63 @@ public class SPQPNode extends SPQNode {
 
         } else {
             System.out.println("Invalid number of Children for P-Node");
-            check=false;
+            return false;
         }
 
-        return check;
+        return true;
     }
 
     @Override
     public void computeOrthogonalRepresentation(HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashMap) {
 
         // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
-        if (startNodes.size() == 3) {
+        TreeVertex vertex1 = mergedChildren.get(0).startNodes.get(0);
+        if (startNodes.size() == 3  && !this.getName().equals("Proot")) {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
 
             // Beispiel3-4-10  Außen
-            TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size()-1).startNodes.get(mergedChildren.get(mergedChildren.size()-1).startNodes.size()-1)) + 1), startVertex.adjecentVertices.size()));
+            TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size() - 1).startNodes.get(mergedChildren.get(mergedChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexStarRight, startVertex)), 1);
 
             //Beispiel 9-4-10
-            TreeVertex nextVertexMiddle = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size()-1).startNodes.get(mergedChildren.get(mergedChildren.size()-1).startNodes.size()-1)) + 1), startVertex.adjecentVertices.size()));
+            TreeVertex nextVertexMiddle = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size() - 1).startNodes.get(mergedChildren.get(mergedChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(1), startVertex)), 1);
 
-             // Beispiel3-4-10  Außen
+            // Beispiel3-4-10  Außen
             hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(2), startVertex)), 1);
 
             // Beispiel5-4-3  Außen
-            hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(0), startVertex)), -1);
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(0), startVertex)), 1);
 
-        } else if (startNodes.size() == 2 && startVertex.adjecentVertices.size() > 2) {
+        } else if (startNodes.size() == 2 && startVertex.adjecentVertices.size() > 2  && !this.getName().equals("Proot")) {
             // Beispiel 8-6-5 außen
-            TreeVertex nextVertexStartLeft = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(0).startNodes.get(0)) - 1), startVertex.adjecentVertices.size()));
-            hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(0).startNodes.get(0), startVertex), alphaul);
+            TreeVertex nextVertexStartLeft = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(vertex1) - 1), startVertex.adjecentVertices.size()));
+            hashMap.put(new Pair<TreeVertex, TreeVertex>(vertex1, startVertex), alphaul);
 
             // Beispiel 5-6-7 Außen
-            TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(1).startNodes.get(0)) + 1), startVertex.adjecentVertices.size()));
+            TreeVertex vertex2 = mergedChildren.get(1).startNodes.get(0);
+            TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(vertex2) + 1), startVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexStarRight, startVertex)), alphaur);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 7-6 an Knoten 6)
-            hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(1).startNodes.get(0)), startVertex)), ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1);
-        } else if (startVertex.adjecentVertices.size() == 2) {
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(vertex2, startVertex)), ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1);
+
+        } else if (startVertex.adjecentVertices.size() == 2 && this.getName().equals("Proot")) {
 
             hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkVertex, startVertex)), 1);
             hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(0), startVertex)), -1);
 
 
-
         }
 
 
-
-
-
-
-            if (sinkNodes.size() == 3) {
-                // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
+        if (sinkNodes.size() == 3 && !this.getName().equals("Proot")) {
+            // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexSinkLeft, sinkVertex)), 1);
 
-            // 8-13-14
-            hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), -1);
+            // 8-13-7
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), 1);
 
             // Beispie 7-13-12  "Zwischen Innenkanten"
             hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(1), sinkVertex)), 1);
@@ -291,7 +303,7 @@ public class SPQPNode extends SPQNode {
             // Beispie 12-13-14  "Zwischen Innenkanten"
             hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(2), sinkVertex)), 1);
 
-        } else if (sinkNodes.size() == 2 && startVertex.adjecentVertices.size() > 2) {
+        } else if (sinkNodes.size() == 2 && sinkVertex.adjecentVertices.size() > 2  && !this.getName().equals("Proot")) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexSinkLeft, sinkVertex)), alphavl);
@@ -301,14 +313,15 @@ public class SPQPNode extends SPQNode {
             hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(1).sinkNodes.get(0)), sinkVertex)), alphavr);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 9-11-10 an Knoten 11)
-            hashMap.put((new Pair<TreeVertex, TreeVertex>((mergedChildren.get(0).startNodes.get(0)), sinkVertex)), (alphavr + alphavl == 2 && (sinkVertex.adjecentVertices.size() == 3)) ? 0 : 1);
-        } else if (sinkVertex.adjecentVertices.size() == 2){
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), (alphavr + alphavl == 2 && (sinkVertex.adjecentVertices.size() == 3)) ? 0 : 1);
+
+        } else if (sinkVertex.adjecentVertices.size() == 2 && this.getName().equals("Proot")) {
 
 
-                hashMap.put((new Pair<TreeVertex, TreeVertex>(startVertex, sinkVertex)), -1);
-                hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), 1);
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(startVertex, sinkVertex)), -1);
+            hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), 1);
 
-                System.out.println("Test");
+            System.out.println("Test");
 
 
         }

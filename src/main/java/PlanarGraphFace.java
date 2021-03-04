@@ -1,10 +1,7 @@
 import org.antlr.v4.runtime.misc.Pair;
 import org.jbpt.hypergraph.abs.Vertex;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class PlanarGraphFace<V,E> extends TreeVertex {
@@ -12,7 +9,15 @@ public class PlanarGraphFace<V,E> extends TreeVertex {
     Set<Pair<V, V>> pairSet = new HashSet<Pair<V,V>>();
     Set<V> vSet = new HashSet<>();
     Set<E> edgeSet = new HashSet<>();
+    Map<Pair<V,V>, Integer> orthogonalRep= new LinkedHashMap<>();
 
+    public Map<Pair<V, V>, Integer> getOrthogonalRep() {
+        return orthogonalRep;
+    }
+
+    public void setOrthogonalRep(Map<Pair<V, V>, Integer> orthogonalRep) {
+        this.orthogonalRep = orthogonalRep;
+    }
 
     public PlanarGraphFace() {
 
