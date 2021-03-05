@@ -103,7 +103,7 @@ public class SPQTree {
 
     }
 
-    public void computeNofRoot() {
+    public boolean computeNofRoot() {
 
 
         int spirality = 99999;
@@ -120,8 +120,13 @@ public class SPQTree {
         }
 
 
-
-        root.getMergedChildren().get(0).setSpirality(spirality);
+        if (root.getMergedChildren().get(0).getRepIntervalLowerBound() <= spirality && spirality <= root.getMergedChildren().get(0).getRepIntervalUpperBound()) {
+            root.getMergedChildren().get(0).setSpirality(spirality);
+            return true;
+        } else {
+            System.out.println("Fehler?");
+            return false;
+        }
     }
 
 

@@ -52,8 +52,8 @@ public class SPQGenTest {
 
             root = graphgenSplitGraph.getRoot();
             root.compactTree();
-         //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-     //       GraphHelper.printTODOTSPQNode(graph2);
+            //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
+            //       GraphHelper.printTODOTSPQNode(graph2);
             tree = new SPQTree(root);
             tree.fillNodeToEdgesTable(tree.getRoot());
             tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
@@ -63,26 +63,20 @@ public class SPQGenTest {
 
             root.computeNodesInComponent();
 
-      //    graph2 = GraphHelper.treeToDOT(root, 2);
-      //      GraphHelper.printTODOTSPQNode(graph2);
-     //       GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
-//TODO falls Degree = 4, dann Problem?
-          check =  root.computeRepresentability(tree.constructedGraph, check);
+            //    graph2 = GraphHelper.treeToDOT(root, 2);
+            //      GraphHelper.printTODOTSPQNode(graph2);
+            //       GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+            check = root.computeRepresentability(tree.constructedGraph, check);
+            check = (tree.computeNofRoot()) ? check : false;
+
         }
 
 
-        tree.computeNofRoot();
-
-
-
-
-
-
-
-
-
-
-        root.getMergedChildren().get(0).computeSpirality();
+        // TODO computeNofRoot berchnet spirality und root condition
+        boolean isValidDidimo = false;
+        if (isValidDidimo = tree.computeNofRoot()) {
+            root.getMergedChildren().get(0).computeSpirality();
+        }
 
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
@@ -113,11 +107,6 @@ public class SPQGenTest {
         }
 
 
-        DepthFirstIterator<TreeVertex, DefaultEdge> depthFirstIterator = new DepthFirstIterator<>(tree.constructedGraph);
-        while (depthFirstIterator.hasNext()) {
-            depthFirstIterator.next();
-
-        }
 
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
@@ -129,32 +118,29 @@ public class SPQGenTest {
         }
 
 
-
-
-
-
-        winkelHinzufügen(root, pairIntegerMap);
+        if (isValidDidimo) {
+            winkelHinzufügen(root, pairIntegerMap);
+        }
 
 
         List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face: treeVertexFaceGenerator.planarGraphFaces
-             ) {
-           int edgeCount = 0;
-            for (Pair<TreeVertex, TreeVertex> pair:
-           face.getOrthogonalRep().keySet() ){
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+        ) {
+            int edgeCount = 0;
+            for (Pair<TreeVertex, TreeVertex> pair :
+                    face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
             }
 
             if (Math.abs(edgeCount) != 4) {
-            //    assert(Math.abs(edgeCount) == 4);
+                //    assert(Math.abs(edgeCount) == 4);
                 test.add(face);
-                assert (Math.abs(edgeCount) != 4);
+                if (Math.abs(edgeCount) == 4) {
+                    System.out.println("Fehler");
+
+                }
             }
-
-
-
-
 
 
         }
@@ -166,29 +152,17 @@ public class SPQGenTest {
         GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
+        //     MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
-  //     MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+        //    test33.getMaximumFlow(treeVertexFaceGenerator.source, treeVertexFaceGenerator.sink);
+        //    test33.getFlowMap();
 
 
-    //    test33.getMaximumFlow(treeVertexFaceGenerator.source, treeVertexFaceGenerator.sink);
-   //    test33.getFlowMap();
-
-
-    //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
-
+        //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
         System.out.println("Test");
-
-
-
-
-
-
-
-
-
 
 
     }
@@ -314,7 +288,7 @@ public class SPQGenTest {
         root.getMergedChildren().get(0).computeSpirality();
 
         // TODO visited map ist outdated
-       // checkSpiralitiesWithinBounds(tree);
+        // checkSpiralitiesWithinBounds(tree);
 
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
@@ -379,8 +353,6 @@ public class SPQGenTest {
 
 
         }
-
-
 
 
         System.out.println("Test");

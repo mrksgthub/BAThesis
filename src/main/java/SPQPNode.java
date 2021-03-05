@@ -34,10 +34,6 @@ public class SPQPNode extends SPQNode {
     @Override
     public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
 
-        // TODO einmal für alle Knoten zu Beginn berechnen, dann in ein Hashtable packen
-        Set<TreeVertex> adjSetStart = Graphs.neighborSetOf(graph, getStartVertex());
-        Set<TreeVertex> adjSetSink = Graphs.neighborSetOf(graph, getSinkVertex());
-
 
         if (mergedChildren.size() == 3) {
 
@@ -54,6 +50,7 @@ public class SPQPNode extends SPQNode {
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
                 repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
+                System.out.println("3 Children" + " " + this.getName());
 
 
             } else {
@@ -64,8 +61,6 @@ public class SPQPNode extends SPQNode {
 
         } else if (mergedChildren.size() == 2) {
 
-            TreeVertex vPole;
-            TreeVertex uPole;
             SPQNode leftSNode = mergedChildren.get(0);
             SPQNode rightSNode = mergedChildren.get(1);
 
@@ -74,52 +69,6 @@ public class SPQPNode extends SPQNode {
             double mR = rightSNode.getRepIntervalLowerBound();
             double ML = leftSNode.getRepIntervalUpperBound();
             double MR = rightSNode.getRepIntervalUpperBound();
-
-
-            /*
-            int inDegreeOfStartVertex = graph.inDegreeOf(startVertex);
-            if (inDegreeOfStartVertex == 0) { //if starVertex is the rootvertex of the whole graph
-                inDegreeOfStartVertex = 1;
-            }
-
-
-            int outDegreeOfSinkVertex = graph.outDegreeOf(sinkVertex);
-            if (outDegreeOfSinkVertex == 0) { //if starVertex is the rootvertex of the whole graph
-                outDegreeOfSinkVertex = 1;
-            }
-            int outdegreeOfv;
-            int outdegreeOfu;
-
-            */
-//TODO falsch, hier muss mit children gearbeitet werden
-/*
-            HashSet<TreeVertex> tempSetStart = new HashSet<TreeVertex>(adjSetStart);
-            tempSetStart.retainAll(nodesInCompnent);
-            HashSet<TreeVertex> tempSetSink = new HashSet<TreeVertex>(adjSetSink);
-            tempSetSink.retainAll(nodesInCompnent);
-
-            inDegreeCounterStart = 0;
-            inDegreeCounterSink = 0;
-            outDegreeCounterStart = 0;
-            outDegreeCounterSink = 0;
-
-            for (TreeVertex node : tempSetStart
-            ) {
-            if (nodesInCompnent.contains(node)) {
-                    inDegreeCounterStart++;
-           }
-         }
-          for (TreeVertex node : tempSetSink
-        ) {
-              if (nodesInCompnent.contains(node)) {
-                 inDegreeCounterSink++;
-                }
-   //         }
-
-              */
-
-   //         int test1 = computeHowManyCommonNodesThisAndSet(tempSetStart);
-   //         int test2 = computeHowManyCommonNodesThisAndSet(tempSetSink);
 
 
             //TODO wurde geändert von dem auskommentierten zu diesem hier
@@ -144,6 +93,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 2, mR) + gamma / 2;
                     repIntervalUpperBound = Math.min(ML, MR + 2) - gamma / 2;
 
+                    System.out.println("I2Oab" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
@@ -155,8 +105,6 @@ public class SPQPNode extends SPQNode {
                 double pdV = 9999;
                 double pdU = 9999;
 
-                List<SPQNode> childrenOfFirstChild = mergedChildren.get(0).getMergedChildren();
-                List<SPQNode> childrenOfSecondChild = mergedChildren.get(1).getMergedChildren();
 
                 mL = leftSNode.getRepIntervalLowerBound();
                 mR = rightSNode.getRepIntervalLowerBound();
@@ -181,23 +129,28 @@ public class SPQPNode extends SPQNode {
 
                 } else if ((mergedChildren.get(0).startNodes.size() == 2) &&  (mergedChildren.get(1).sinkNodes.size() == 2)) { //I3rl
 
-                    rightSNode = mergedChildren.get(0);
-                    leftSNode = mergedChildren.get(1);
-                    pdU = 0;
-                    pdV = 1;
+                 //   rightSNode = mergedChildren.get(0);
+                //    leftSNode = mergedChildren.get(1);
+                    pdU = 1;
+                    pdV = 0;
 
-                    mL = rightSNode.getRepIntervalLowerBound();
-                    mR = leftSNode.getRepIntervalLowerBound();
-                    ML = rightSNode.getRepIntervalUpperBound();
-                    MR = leftSNode.getRepIntervalUpperBound();
+                //    mL = rightSNode.getRepIntervalLowerBound();
+               //     mR = leftSNode.getRepIntervalLowerBound();
+                //    ML = rightSNode.getRepIntervalUpperBound();
+                //    MR = leftSNode.getRepIntervalUpperBound();
+
+                    System.out.println("I_3rl reverse" + this.getName());
+
                 }
                 double lBound = mL - MR;
                 double upBound = ML - mR;
 
                 if ((lBound <= 3) && (3 <= upBound)) {
 
-                    repIntervalUpperBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
-                    repIntervalLowerBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
+                    repIntervalLowerBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
+                    repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
+
+                    System.out.println("I3_dd" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
@@ -214,8 +167,17 @@ public class SPQPNode extends SPQNode {
 
                     //TODO wurde geändert
                     pd = (mergedChildren.get(0).startNodes.size() == 2) ? 0 : 1;
-                } else { // umkehren
+
+
+                    System.out.println("I_3dOab reverse" + this.getName());
+
+
+
+
+
+                } else { // check Sink
                     pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
+                    System.out.println("NI_3dOab normal" + " " + this.getName());
 
                 }
 

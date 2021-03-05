@@ -599,6 +599,7 @@ public class SPQNode {
                 }
             }
 
+            assert delta == 0;
 
         } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 3) {
             this.getMergedChildren().get(0).setSpirality(this.spirality + 2);
@@ -633,8 +634,6 @@ public class SPQNode {
                 alphaul = 1;
                 alphaur = 1;
                 arrU = new int[]{1};
-
-
             } else {
                 arrU = new int[]{1, 0};
             }
@@ -643,8 +642,6 @@ public class SPQNode {
                 alphavl = 1;
                 alphavr = 1;
                 arrV = new int[]{1};
-
-
             } else {
                 arrV = new int[]{1, 0};
             }
@@ -677,40 +674,19 @@ public class SPQNode {
                 }
             }
 
-            int tempstart = alphaul + alphavl;
-            if ((this.getInDegreeStartVertex() + this.getOutDegreeStartVertex()) == 4) {
-                anglesStart.add(1);
-                tempstart++;
-            } else {
-                anglesStart.add(999999); // dh nur eine Kante außerhalb
-            }
-            anglesStart.add(alphaul);
-            anglesStart.add(alphaur);
-            anglesStart.add((tempstart == 2) ? 0 : 1);
 
-            int tempsink = alphavl + alphavr;
-            if ((this.getInDegreeSinkVertex() + this.getOutDegreeSinkVertex()) == 4) {
-                anglesSink.add(1);
-                tempsink++;
-            } else {
-            //    anglesSink.add(9999); // dh nur eine Kante außerhalb
-            }
-            anglesSink.add(alphavl);
-            anglesSink.add(alphavr);
-            anglesSink.add((tempsink == 2) ? 0 : 1);
+            assert (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= this.getMergedChildren().get(1).getSpirality() &&this.getMergedChildren().get(1).getSpirality() <= this.getMergedChildren().get(1).getRepIntervalUpperBound());
+            assert (this.getMergedChildren().get(0).getRepIntervalLowerBound() <= this.getMergedChildren().get(0).getSpirality() &&this.getMergedChildren().get(0).getSpirality() <= this.getMergedChildren().get(0).getRepIntervalUpperBound());
+
+
+
+
             System.out.println("Test");
 
             this.alphavl = alphavl;
             this.alphavr = alphavr;
             this.alphaul = alphaul;
             this.alphaur = alphaur;
-
-
-
-          //  this.mergedChildren.get(0).startNodes.get(0).setRightAngle(alphaul);
-           // this.mergedChildren.get(0).startNodes.get(1).setRightAngle(alphaur);
-
-
 
         }
 
@@ -719,6 +695,13 @@ public class SPQNode {
                 mergedChildren) {
             node.computeSpirality();
         }
+
+
+        assert (getRepIntervalLowerBound() <= getRepIntervalUpperBound());
+
+
+
+
 
 
     }
