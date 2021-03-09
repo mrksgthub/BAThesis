@@ -1,4 +1,4 @@
-import org.antlr.v4.runtime.misc.Pair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -674,7 +674,7 @@ public class SPQNode {
 
 
     }
-    public void computeOrthogonalRepresentation(HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashMap) {
+    public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
 
 
 

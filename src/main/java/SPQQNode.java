@@ -1,4 +1,5 @@
 import org.antlr.v4.runtime.misc.Pair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -35,18 +36,18 @@ public class SPQQNode extends SPQNode {
     }
     
     @Override
-    public void computeOrthogonalRepresentation(HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashMap) {
+    public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
 
 
         if (spirality >= 0) {
             for (int i = 0; i < spirality; i++) {
-                hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), 1);
-                hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), -1);
+                hashMap.put(new MutablePair<TreeVertex, TreeVertex>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), 1);
+                hashMap.put(new MutablePair<TreeVertex, TreeVertex>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), -1);
             }
         } else {
             for (int i = 0; i < -spirality; i++) {
-                hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), -1);
-                hashMap.put(new Pair<TreeVertex, TreeVertex>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), 1);
+                hashMap.put(new MutablePair<TreeVertex, TreeVertex>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), -1);
+                hashMap.put(new MutablePair<TreeVertex, TreeVertex>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), 1);
             }
         }
 

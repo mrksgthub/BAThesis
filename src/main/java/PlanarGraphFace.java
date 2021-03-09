@@ -1,4 +1,5 @@
-import org.antlr.v4.runtime.misc.Pair;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jbpt.hypergraph.abs.Vertex;
 
 import java.util.*;
@@ -6,16 +7,16 @@ import java.util.function.Supplier;
 
 public class PlanarGraphFace<V,E> extends TreeVertex {
 
-    Set<Pair<V, V>> pairSet = new HashSet<Pair<V,V>>();
+    Set<MutablePair<V, V>> pairSet = new HashSet<>();
     Set<V> vSet = new HashSet<>();
     Set<E> edgeSet = new HashSet<>();
-    Map<Pair<V,V>, Integer> orthogonalRep= new LinkedHashMap<>();
+    Map<MutablePair<V,V>, Integer> orthogonalRep= new LinkedHashMap<>();
 
-    public Map<Pair<V, V>, Integer> getOrthogonalRep() {
+    public Map<MutablePair<V, V>, Integer> getOrthogonalRep() {
         return orthogonalRep;
     }
 
-    public void setOrthogonalRep(Map<Pair<V, V>, Integer> orthogonalRep) {
+    public void setOrthogonalRep(Map<MutablePair<V, V>, Integer> orthogonalRep) {
         this.orthogonalRep = orthogonalRep;
     }
 
@@ -32,11 +33,11 @@ public class PlanarGraphFace<V,E> extends TreeVertex {
     }
 
 
-    public Set<Pair<V, V>> getPairSet() {
+    public Set<MutablePair<V, V>> getPairSet() {
         return pairSet;
     }
 
-    public void setPairSet(Set<Pair<V, V>> pairSet) {
+    public void setPairSet(Set<MutablePair<V, V>> pairSet) {
         this.pairSet = pairSet;
     }
 

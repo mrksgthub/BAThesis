@@ -1,4 +1,5 @@
 import org.antlr.v4.runtime.misc.Pair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jbpt.graph.MultiGraph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
@@ -112,9 +113,9 @@ public class SPQGenTest {
 
 
 
-        HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
 
-        for (Pair<TreeVertex, TreeVertex> pair :
+        for (MutablePair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.put(pair, 0);
         }
@@ -137,7 +138,7 @@ public class SPQGenTest {
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
         ) {
             int edgeCount = 0;
-            for (Pair<TreeVertex, TreeVertex> pair :
+            for (MutablePair<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
@@ -341,8 +342,8 @@ public class SPQGenTest {
 
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
-        HashMap<Pair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
-        for (Pair<TreeVertex, TreeVertex> pair :
+        HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        for (MutablePair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.put(pair, 0);
         }
@@ -354,7 +355,7 @@ public class SPQGenTest {
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
         ) {
             int edgeCount = 0;
-            for (Pair<TreeVertex, TreeVertex> pair :
+            for (MutablePair<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
@@ -401,7 +402,7 @@ public class SPQGenTest {
     }
 
 
-    public void winkelHinzufügen(SPQNode root, HashMap<Pair<TreeVertex, TreeVertex>, Integer> hashmap) {
+    public void winkelHinzufügen(SPQNode root, HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {

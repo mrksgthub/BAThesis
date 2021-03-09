@@ -1,4 +1,5 @@
-import org.antlr.v4.runtime.misc.Pair;
+
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
@@ -25,15 +26,15 @@ public class FaceGenerator<V extends TreeVertex, E> {
 
 
     Map<E, Integer> visitsMap = new HashMap<>();
-    Map<Pair<V, V>, Integer> visitsMap2 = new HashMap<>();
-    Map<Pair<V, V>, Integer> pairIntegerMap = new HashMap<>();
+    Map<MutablePair<V, V>, Integer> visitsMap2 = new HashMap<>();
+    Map<MutablePair<V, V>, Integer> pairIntegerMap = new HashMap<>();
 
     Set<PlanarGraphFace<V, E>> planarGraphFaces = new HashSet<>();
 
     HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
 
     HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
-    HashMap<Pair<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<Pair<V, V>, PlanarGraphFace<V, E>>();
+    HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>>();
 
 
     DirectedMultigraph<V, E> graph;
@@ -55,8 +56,8 @@ public class FaceGenerator<V extends TreeVertex, E> {
         for (E edge : graph.edgeSet()
         ) {
             visitsMap.put(edge, 0);
-            pairIntegerMap.put(new Pair<V, V>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)), 0);
-            pairIntegerMap.put(new Pair<V, V>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)), 0);
+            pairIntegerMap.put(new MutablePair<V, V>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)), 0);
+            pairIntegerMap.put(new MutablePair<V, V>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)), 0);
             adjFaces.put(edge, new ArrayList<PlanarGraphFace<V, E>>());
         }
 
@@ -76,25 +77,25 @@ public class FaceGenerator<V extends TreeVertex, E> {
     public void generateFaces() {
 
 
-        List<Pair<V, V>> pairList = new ArrayList<>();
+        List<MutablePair<V, V>> pairList = new ArrayList<>();
         E edge;
 
 
-        List<Pair<V, V>> pairList1 = new ArrayList<>(pairIntegerMap.keySet());
+        List<MutablePair<V, V>> pairList1 = new ArrayList<>(pairIntegerMap.keySet());
 
-        Pair<V, V> startingEdge = new Pair<V, V>(startvertex, sinkVertex);
+        MutablePair<V, V> startingEdge = new MutablePair<V, V>(startvertex, sinkVertex);
         int x = pairList1.lastIndexOf(startingEdge);
         Collections.swap(pairList1, 0, x);
 
 
-        Iterator<Pair<V, V>> pairIterator = pairList1.iterator();
+        Iterator<MutablePair<V, V>> pairIterator = pairList1.iterator();
         int i = 0;
 
 
         while (pairIterator.hasNext()
         ) {
 
-            Pair<V, V> edgePair = pairIterator.next();
+            MutablePair<V, V> edgePair = pairIterator.next();
             pairList.add(edgePair);
             List<E> face = new ArrayList<>();
 
@@ -103,14 +104,14 @@ public class FaceGenerator<V extends TreeVertex, E> {
             planarGraphFaces.add(faceObj);
 
 
-            V startVertex = edgePair.a;
+            V startVertex = edgePair.getLeft();
             List<E> tArrayList = (ArrayList<E>) embedding2.getEdgesAround(startVertex);
             //     E edge = tArrayList.get(0);
             V vertex = startVertex;
-            V nextVertex = edgePair.b;
+            V nextVertex = edgePair.getRight();
             pairList1.remove(edgePair);
 
-            edge = embeddingGraphAsUndirectred.getEdge(edgePair.a, edgePair.b);
+            edge = embeddingGraphAsUndirectred.getEdge(edgePair.getLeft(), edgePair.getRight());
             face.add(edge);
 
             faceObj.getvSet().add(vertex);
@@ -128,7 +129,7 @@ public class FaceGenerator<V extends TreeVertex, E> {
                 edge = tArrayList.get((tArrayList.indexOf(edge) + 1) % tArrayList.size());
                 adjFaces.get(edge).add(faceObj);
                 nextVertex = Graphs.getOppositeVertex(embeddingGraphAsUndirectred, edge, vertex);
-                edgePair = new Pair<V, V>(vertex, nextVertex);
+                edgePair = new MutablePair<V, V>(vertex, nextVertex);
                 pairList1.remove(edgePair);
                 pairList.add(edgePair);
 
@@ -155,20 +156,20 @@ public class FaceGenerator<V extends TreeVertex, E> {
         E edge;
 
 
-        List<Pair<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
+        List<MutablePair<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
 
-        Pair<V, V> startingEdge = new Pair<V, V>(startvertex, sinkVertex);
+        MutablePair<V, V> startingEdge = new MutablePair<V, V>(startvertex, sinkVertex);
         int x = pairList.lastIndexOf(startingEdge);
         Collections.swap(pairList, 0, x);
 
-        LinkedHashMap<Pair<V, V>, Boolean> pairBooleanHashtable = new LinkedHashMap<>();
-        for (Pair<V, V> pair :
+        LinkedHashMap<MutablePair<V, V>, Boolean> pairBooleanHashtable = new LinkedHashMap<>();
+        for (MutablePair<V, V> pair :
                 pairList) {
             pairBooleanHashtable.put(pair, false);
         }
         int i = 0;
 
-        for (Pair<V, V> pair :
+        for (MutablePair<V, V> pair :
                 pairBooleanHashtable.keySet()) {
             if (pairBooleanHashtable.get(pair) == false) {
 
@@ -179,10 +180,10 @@ public class FaceGenerator<V extends TreeVertex, E> {
                 adjVertices.put(faceObj, new ArrayList<>());
                 planarGraphFaces.add(faceObj);
 
-                V startVertex = pair.a;
+                V startVertex = pair.getLeft();
                 List<V> tArrayList = (ArrayList<V>) embedding.get(startVertex);
                 V vertex = startVertex;
-                V nextVertex = pair.b;
+                V nextVertex = pair.getRight();
                 pairBooleanHashtable.put(pair, true);
 
                 face.add(startVertex);
@@ -203,7 +204,7 @@ public class FaceGenerator<V extends TreeVertex, E> {
                     tArrayList = (List<V>) embedding.get(nextVertex);
                     V temp = nextVertex;
                     nextVertex = tArrayList.get(Math.floorMod((tArrayList.indexOf(vertex) - 1), tArrayList.size()));
-                    Pair<V, V> vvPair = new Pair<>(temp, nextVertex);
+                    MutablePair<V, V> vvPair = new MutablePair<>(temp, nextVertex);
                     vertex = temp;
                     adjFaces2.put(vvPair, faceObj);
                     faceObj.getOrthogonalRep().put(vvPair, 999);
