@@ -117,8 +117,10 @@ public class TreeVertex extends Vertex
         }
     };
 
+    public String getName() {
 
-
+        return super.getName();
+    }
 
 
 

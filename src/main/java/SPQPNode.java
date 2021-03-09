@@ -105,7 +105,6 @@ public class SPQPNode extends SPQNode {
                 double pdV = 9999;
                 double pdU = 9999;
 
-
                 mL = leftSNode.getRepIntervalLowerBound();
                 mR = rightSNode.getRepIntervalLowerBound();
                 ML = leftSNode.getRepIntervalUpperBound();
@@ -122,12 +121,12 @@ public class SPQPNode extends SPQNode {
 
                     pdU = 1;
                     pdV = 1;
-                } else if ((mergedChildren.get(1).startNodes.size() == 2) &&  (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3lr
+                } else if ((mergedChildren.get(1).startNodes.size() == 2) && (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3lr
 
                     pdU = 0;
                     pdV = 1;
 
-                } else if ((mergedChildren.get(0).startNodes.size() == 2) &&  (mergedChildren.get(1).sinkNodes.size() == 2)) { //I3rl
+                } else if ((mergedChildren.get(0).startNodes.size() == 2) && (mergedChildren.get(1).sinkNodes.size() == 2)) { //I3rl
 
                  //   rightSNode = mergedChildren.get(0);
                 //    leftSNode = mergedChildren.get(1);
@@ -171,10 +170,6 @@ public class SPQPNode extends SPQNode {
 
                     System.out.println("I_3dOab reverse" + this.getName());
 
-
-
-
-
                 } else { // check Sink
                     pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
                     System.out.println("NI_3dOab normal" + " " + this.getName());
@@ -188,13 +183,10 @@ public class SPQPNode extends SPQNode {
 
                     repIntervalLowerBound = Math.max(mL - 1.5, mR + 1) + (gamma - pd) / 2;
                     repIntervalUpperBound = Math.min(ML - 0.5, MR + 2) - (gamma + pd) / 2;
-
-
                 } else {
                     System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
                     return false;
                 }
-
 
             }
 
@@ -212,7 +204,7 @@ public class SPQPNode extends SPQNode {
 
         // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
         TreeVertex vertex1 = mergedChildren.get(0).startNodes.get(0);
-        if (startNodes.size() == 3  && !this.getName().equals("Proot")) {
+        if (startNodes.size() == 3 && !this.getName().equals("Proot")) {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
 
             // Beispiel3-4-10  Außen
@@ -229,7 +221,7 @@ public class SPQPNode extends SPQNode {
             // Beispiel5-4-3  Außen
             hashMap.put((new Pair<TreeVertex, TreeVertex>(startNodes.get(0), startVertex)), 1);
 
-        } else if (startNodes.size() == 2 && startVertex.adjecentVertices.size() > 2  && !this.getName().equals("Proot")) {
+        } else if (startNodes.size() == 2 && startVertex.adjecentVertices.size() > 2 && !this.getName().equals("Proot")) {
             // Beispiel 8-6-5 außen
             TreeVertex nextVertexStartLeft = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(vertex1) - 1), startVertex.adjecentVertices.size()));
             hashMap.put(new Pair<TreeVertex, TreeVertex>(vertex1, startVertex), alphaul);
@@ -265,7 +257,7 @@ public class SPQPNode extends SPQNode {
             // Beispie 12-13-14  "Zwischen Innenkanten"
             hashMap.put((new Pair<TreeVertex, TreeVertex>(sinkNodes.get(2), sinkVertex)), 1);
 
-        } else if (sinkNodes.size() == 2 && sinkVertex.adjecentVertices.size() > 2  && !this.getName().equals("Proot")) {
+        } else if (sinkNodes.size() == 2 && sinkVertex.adjecentVertices.size() > 2 && !this.getName().equals("Proot")) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
             hashMap.put((new Pair<TreeVertex, TreeVertex>(nextVertexSinkLeft, sinkVertex)), alphavl);

@@ -402,16 +402,6 @@ public class SPQNode {
         ) {
             spQNode.computeNodesInComponent();
         }
-/*
-        if ((this.getNodeType() == NodeTypesEnum.NODETYPE.Q)) {
-            nodesInCompnent.add(startVertex);
-            nodesInCompnent.add(sinkVertex);
-            nodesInCompnent.add(startVertex);
-            nodesInCompnent.add(sinkVertex);
-        }
-
-
- */
 
         if (mergedChildren.size() > 0) {
             for (SPQNode nodes :
@@ -437,27 +427,6 @@ public class SPQNode {
                 }
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
