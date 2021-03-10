@@ -79,6 +79,35 @@ public class Rectangulator<E> {
             }
 
             HashMap<MutablePair<TreeVertex, TreeVertex>, Boolean> visitedMap = new HashMap<>();
+            for (MutablePair<TreeVertex, TreeVertex> pair:
+                    nexts.keySet()
+                 ) {
+                visitedMap.put(pair, false);
+            }
+            for (MutablePair<TreeVertex, TreeVertex> pair:
+                    visitedMap.keySet()
+            ) {
+                if (!visitedMap.get(pair)) {
+                    int counter = newOrthogonalRep.get(pair);
+                    MutablePair<TreeVertex, TreeVertex> iterator = nexts.get(pair);
+
+                    visitedMap.put(pair, true);
+                    visitedMap.put(iterator, true);
+                    while (pair != iterator) {
+                        visitedMap.put(iterator, true);
+                        counter += newOrthogonalRep.get(iterator);
+                        iterator = nexts.get(iterator);
+
+                    }
+                    assert (Math.abs(counter) == 4);
+                }
+
+
+
+
+
+            }
+
 
 
 
@@ -140,7 +169,7 @@ public class Rectangulator<E> {
                 MutablePair<TreeVertex, TreeVertex> newEdge = new MutablePair<>(possibleEdge.getRight(), newVertex);
 
                 edgeList.add(newEdge);
-                MutablePair newEdge2 = new MutablePair(newVertex, edgeList.get(0).getLeft());
+                MutablePair<TreeVertex, TreeVertex> newEdge2 = new MutablePair<>(newVertex, edgeList.get(0).getLeft());
                 edgeList.add(newEdge2);
 
 
@@ -148,18 +177,9 @@ public class Rectangulator<E> {
                 newOrthogonalRep.put(newEdge, 1);
                 // newOrthogonalRep.put(newEdge2, 1);
 
-
-
                 front.setRight(newVertex);
 
-
                 MutablePair<TreeVertex, TreeVertex> followingEdge = nexts.get(possibleEdge);
-
-
-
-
-
-
 
                 // Update nexts of new Face
                 nexts.put(possibleEdge, newEdge);
