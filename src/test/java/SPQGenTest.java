@@ -47,7 +47,7 @@ public class SPQGenTest {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(10000, 1);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(100, 20);
             graphgenSplitGraph.generateGraph();
 
 
@@ -370,6 +370,7 @@ public class SPQGenTest {
         }
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
+        rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
 
 

@@ -5,6 +5,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
+import org.jgrapht.alg.interfaces.PlanarityTestingAlgorithm;
 import org.jgrapht.alg.planar.BoyerMyrvoldPlanarityInspector;
 import org.jgrapht.graph.*;
 import org.jgrapht.graph.DefaultEdge;
@@ -20,6 +21,174 @@ public class FaceGenerator<V extends TreeVertex, E> {
 
     List<List<E>> listOfFaces = new ArrayList<>();
     List<List<V>> listOfFaces2 = new ArrayList<>();
+
+    public Map<TreeVertex, Integer> getSupplyMap() {
+        return supplyMap;
+    }
+
+    public void setSupplyMap(Map<TreeVertex, Integer> supplyMap) {
+        this.supplyMap = supplyMap;
+    }
+
+    public Map<DefaultWeightedEdge, Integer> getLowerMap() {
+        return lowerMap;
+    }
+
+    public void setLowerMap(Map<DefaultWeightedEdge, Integer> lowerMap) {
+        this.lowerMap = lowerMap;
+    }
+
+    public Map<DefaultWeightedEdge, Integer> getUpperMap() {
+        return upperMap;
+    }
+
+    public void setUpperMap(Map<DefaultWeightedEdge, Integer> upperMap) {
+        this.upperMap = upperMap;
+    }
+
+    public List<List<E>> getListOfFaces() {
+        return listOfFaces;
+    }
+
+    public void setListOfFaces(List<List<E>> listOfFaces) {
+        this.listOfFaces = listOfFaces;
+    }
+
+    public List<List<V>> getListOfFaces2() {
+        return listOfFaces2;
+    }
+
+    public void setListOfFaces2(List<List<V>> listOfFaces2) {
+        this.listOfFaces2 = listOfFaces2;
+    }
+
+    public Hashtable<TreeVertex, ArrayList<TreeVertex>> getEmbedding() {
+        return embedding;
+    }
+
+    public void setEmbedding(Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding) {
+        this.embedding = embedding;
+    }
+
+    public BoyerMyrvoldPlanarityInspector.Embedding getEmbedding2() {
+        return embedding2;
+    }
+
+    public void setEmbedding2(BoyerMyrvoldPlanarityInspector.Embedding embedding2) {
+        this.embedding2 = embedding2;
+    }
+
+    public Map<E, Integer> getVisitsMap() {
+        return visitsMap;
+    }
+
+    public void setVisitsMap(Map<E, Integer> visitsMap) {
+        this.visitsMap = visitsMap;
+    }
+
+    public Map<MutablePair<V, V>, Integer> getVisitsMap2() {
+        return visitsMap2;
+    }
+
+    public void setVisitsMap2(Map<MutablePair<V, V>, Integer> visitsMap2) {
+        this.visitsMap2 = visitsMap2;
+    }
+
+    public Map<MutablePair<V, V>, Integer> getPairIntegerMap() {
+        return pairIntegerMap;
+    }
+
+    public void setPairIntegerMap(Map<MutablePair<V, V>, Integer> pairIntegerMap) {
+        this.pairIntegerMap = pairIntegerMap;
+    }
+
+    public Set<PlanarGraphFace<V, E>> getPlanarGraphFaces() {
+        return planarGraphFaces;
+    }
+
+    public void setPlanarGraphFaces(Set<PlanarGraphFace<V, E>> planarGraphFaces) {
+        this.planarGraphFaces = planarGraphFaces;
+    }
+
+    public HashMap<PlanarGraphFace<V, E>, ArrayList<V>> getAdjVertices() {
+        return adjVertices;
+    }
+
+    public void setAdjVertices(HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices) {
+        this.adjVertices = adjVertices;
+    }
+
+    public HashMap<E, ArrayList<PlanarGraphFace<V, E>>> getAdjFaces() {
+        return adjFaces;
+    }
+
+    public void setAdjFaces(HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces) {
+        this.adjFaces = adjFaces;
+    }
+
+    public HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> getAdjFaces2() {
+        return adjFaces2;
+    }
+
+    public void setAdjFaces2(HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2) {
+        this.adjFaces2 = adjFaces2;
+    }
+
+    public DirectedMultigraph<V, E> getGraph() {
+        return graph;
+    }
+
+    public void setGraph(DirectedMultigraph<V, E> graph) {
+        this.graph = graph;
+    }
+
+    public V getStartvertex() {
+        return startvertex;
+    }
+
+    public void setStartvertex(V startvertex) {
+        this.startvertex = startvertex;
+    }
+
+    public V getSinkVertex() {
+        return sinkVertex;
+    }
+
+    public void setSinkVertex(V sinkVertex) {
+        this.sinkVertex = sinkVertex;
+    }
+
+    public AsUndirectedGraph<V, E> getEmbeddingGraphAsUndirectred() {
+        return embeddingGraphAsUndirectred;
+    }
+
+    public void setEmbeddingGraphAsUndirectred(AsUndirectedGraph<V, E> embeddingGraphAsUndirectred) {
+        this.embeddingGraphAsUndirectred = embeddingGraphAsUndirectred;
+    }
+
+    public TreeVertex getSink() {
+        return sink;
+    }
+
+    public void setSink(TreeVertex sink) {
+        this.sink = sink;
+    }
+
+    public TreeVertex getSource() {
+        return source;
+    }
+
+    public void setSource(TreeVertex source) {
+        this.source = source;
+    }
+
+    public DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> getNetworkGraph() {
+        return networkGraph;
+    }
+
+    public void setNetworkGraph(DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> networkGraph) {
+        this.networkGraph = networkGraph;
+    }
 
     Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
     BoyerMyrvoldPlanarityInspector.Embedding embedding2;
@@ -153,9 +322,6 @@ public class FaceGenerator<V extends TreeVertex, E> {
     public void generateFaces2() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
 
 
-        E edge;
-
-
         List<MutablePair<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
 
         MutablePair<V, V> startingEdge = new MutablePair<V, V>(startvertex, sinkVertex);
@@ -175,10 +341,14 @@ public class FaceGenerator<V extends TreeVertex, E> {
 
 
                 List<V> face = new ArrayList<>();
+                List<MutablePair<V, V>> edgeList = new ArrayList<>();
+                edgeList.add(pair);
 
                 PlanarGraphFace<V, E> faceObj = new PlanarGraphFace<V, E>(Integer.toString(i++));
                 adjVertices.put(faceObj, new ArrayList<>());
                 planarGraphFaces.add(faceObj);
+                faceObj.setEdgeList(edgeList);
+
 
                 V startVertex = pair.getLeft();
                 List<V> tArrayList = (ArrayList<V>) embedding.get(startVertex);
@@ -212,7 +382,7 @@ public class FaceGenerator<V extends TreeVertex, E> {
 
                     pairBooleanHashtable.put(vvPair, true);
                     //.add(edgePair);
-
+                    edgeList.add(vvPair);
                     face.add(nextVertex);
                     visitsMap2.merge(vvPair, 1, Integer::sum);
 
@@ -358,17 +528,16 @@ public class FaceGenerator<V extends TreeVertex, E> {
                 new CapacityScalingMinimumCostFlow<>();
 
 
-
         HashMap<DefaultWeightedEdge, Double> costMap = new HashMap();
-        for ( DefaultWeightedEdge edge:
-        networkGraph.edgeSet()     ) {
+        for (DefaultWeightedEdge edge :
+                networkGraph.edgeSet()) {
 
 
-        };
+        }
+        ;
 
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow =
                 minimumCostFlowAlgorithm.getMinimumCostFlow(problem);
-
 
 
     }

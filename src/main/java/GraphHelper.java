@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -70,7 +71,9 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
-
+    public static MutablePair<TreeVertex, TreeVertex> reverseEdge(MutablePair<TreeVertex, TreeVertex> edge) {
+        return new MutablePair<>(edge.getRight(), edge.getLeft());
+    }
 
 
 
@@ -161,7 +164,7 @@ public class GraphHelper<V extends TreeVertex, E> {
     /**
      * Picks nSamplesNeeded Samples out of an ArrayList. (Stackoverflow)
      *
-     * @param <T>
+     * @param <V>
      * @param population
      * @param nSamplesNeeded
      * @param r
