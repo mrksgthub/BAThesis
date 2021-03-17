@@ -14,7 +14,15 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
     Map<MutablePair<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
     Map<Integer, ArrayList<MutablePair<V, V>>> sidesMap = new LinkedHashMap<>();
     List<MutablePair<V, V>> edgeList = new ArrayList<>();
+    FaceType type = FaceType.INTERAL;
 
+    public FaceType getType() {
+        return type;
+    }
+
+    public void setType(FaceType type) {
+        this.type = type;
+    }
 
     public List<MutablePair<V, V>> getEdgeList() {
         return edgeList;
@@ -122,6 +130,13 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
 
     }
+
+
+    enum FaceType {INTERAL, EXTERNAL}
+
+
+
+
 
 
 }

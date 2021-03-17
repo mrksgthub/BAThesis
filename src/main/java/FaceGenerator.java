@@ -345,6 +345,9 @@ public class FaceGenerator<V extends TreeVertex, E> {
                 edgeList.add(pair);
 
                 PlanarGraphFace<V, E> faceObj = new PlanarGraphFace<V, E>(Integer.toString(i++));
+                if (faceObj.getName().equals("0")) {
+                    faceObj.setType(PlanarGraphFace.FaceType.EXTERNAL);
+                }
                 adjVertices.put(faceObj, new ArrayList<>());
                 planarGraphFaces.add(faceObj);
                 faceObj.setEdgeList(edgeList);

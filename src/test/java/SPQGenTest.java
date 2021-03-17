@@ -369,14 +369,14 @@ public class SPQGenTest {
 
         }
 
+
+
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
-
-
-
-
-
+        int cou = rectangulator.rectangularFaceMap.size();
+        System.out.println(cou);
+        assert (cou == 24);
 
 
 
@@ -387,7 +387,15 @@ public class SPQGenTest {
 
 
 
+    @Test
+    public void didimoRepeatedTest() {
 
+        for (int i = 0; i < 1000; i++) {
+            didimoTest();
+
+        }
+
+    }
 
 
 
