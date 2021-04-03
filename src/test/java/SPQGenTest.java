@@ -12,6 +12,9 @@ import org.jgrapht.graph.*;
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.*;
 
 
@@ -34,7 +37,7 @@ public class SPQGenTest {
 
 
     @Test
-    public void teilerGraphgen() {
+    public void teilerGraphgen() throws IOException {
 
 
         SPQNode root = new SPQNode();
@@ -47,7 +50,7 @@ public class SPQGenTest {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(100, 20);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(30, 20);
             graphgenSplitGraph.generateGraph();
 
 
@@ -66,7 +69,7 @@ public class SPQGenTest {
 
             //    graph2 = GraphHelper.treeToDOT(root, 2);
             //      GraphHelper.printTODOTSPQNode(graph2);
-            //       GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+            GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
             check = root.computeRepresentability(tree.constructedGraph, check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
@@ -91,9 +94,7 @@ public class SPQGenTest {
             }
 
 
-
         }
-
 
 
         // TODO computeNofRoot berchnet spirality und root condition
@@ -110,23 +111,12 @@ public class SPQGenTest {
         treeVertexFaceGenerator.generateCapacities();
 
 
-
-
-
         HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
 
         for (MutablePair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.put(pair, 0);
         }
-
-
-
-
-
-
-
-
 
 
         if (isValidDidimo) {
@@ -157,10 +147,96 @@ public class SPQGenTest {
         }
 
 
-
-
         GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
+
+       GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator);
+       //  FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("test");
+
+
+        Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
+        rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
+        rectangulator.initialize();
+        int cou = rectangulator.rectangularFaceMap.size();
+        System.out.println(cou);
+        //assert (cou == 29);
+
+        int counter2 = 0;
+        List<MutablePair<TreeVertex, TreeVertex>> testList = new ArrayList<>();
+        for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.originaledgeToFaceMap.keySet()
+        ) {
+
+            if (rectangulator.originaledgeToFaceMap.get(new Tuple<TreeVertex, TreeVertex>(edge.getRight(), edge.getLeft())) == null) {
+                counter2++;
+                testList.add(edge);
+            }
+
+
+        }
+        HashSet<PlanarGraphFace<TreeVertex, DefaultEdge>> set = new HashSet(rectangulator.originaledgeToFaceMap.values());
+
+        List<PlanarGraphFace<TreeVertex, DefaultEdge>> frontList = new ArrayList<>(set);
+        System.out.println(counter2);
+
+
+        rectangulator.outerFace.setOrientations();
+
+
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangulator.rectangularFaceMap.keySet()) {
+            int count = 0;
+            int count2 = 0;
+            for (MutablePair<TreeVertex, TreeVertex> edge : face.edgeList) {
+                if (face.getOrthogonalRep().get(edge) != 0) {
+                    count++;
+                    count2 += face.getOrthogonalRep().get(edge);
+
+                }
+
+            }
+            assert (count == 4);
+            assert (count2 == 4);
+            count = 0;
+            count2 = 0;
+            for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.outerFace.edgeList) {
+                if ( rectangulator.outerFace.getOrthogonalRep().get(edge) != 0) {
+                    count++;
+                    count2 +=  rectangulator.outerFace.getOrthogonalRep().get(edge);
+
+                }
+
+            }
+            assert (count == 4);
+            assert (count2 == -4);
+
+
+        }
+
+
+
+
+
+
+
+
+        Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
+        orientator.run();
+
+
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
+        // GraphHelper.printToDOTTreeVertexWeighted(testgraph);
+
+        verticalFlow.generateCapacities();
+
+
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
+        GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
+
+        horizontalFlow.generateCapacities();
+
+        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        coordinator.run();
 
         //     MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
@@ -211,8 +287,12 @@ public class SPQGenTest {
     @Test
     public void teilergraphMassTest() {
 
-        for (int i = 0; i < 1000; i++) {
-            teilerGraphgen();
+        for (int i = 0; i < 1000000; i++) {
+            try {
+                teilerGraphgen();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -370,21 +450,65 @@ public class SPQGenTest {
         }
 
 
-
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
         int cou = rectangulator.rectangularFaceMap.size();
         System.out.println(cou);
-        assert (cou == 24);
+        assert (cou == 29);
+
+        int counter2 = 0;
+        List<MutablePair<TreeVertex, TreeVertex>> testList = new ArrayList<>();
+        for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.originaledgeToFaceMap.keySet()
+        ) {
+
+            if (rectangulator.originaledgeToFaceMap.get(new Tuple<TreeVertex, TreeVertex>(edge.getRight(), edge.getLeft())) == null) {
+                counter2++;
+                testList.add(edge);
+            }
 
 
+        }
+        System.out.println(counter2);
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangulator.rectangularFaceMap.keySet()) {
+            int count = 0;
+            int count2 = 0;
+            for (MutablePair<TreeVertex, TreeVertex> edge : face.edgeList) {
+                if (face.getOrthogonalRep().get(edge) != 0) {
+                    count++;
+                    count2 += face.getOrthogonalRep().get(edge);
 
+                }
+
+            }
+            assert (count == 4);
+            assert (count2 == 4);
+        }
+
+
+        rectangulator.outerFace.setOrientations();
+        Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
+        orientator.run();
+
+
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
+        GraphHelper.printToDOTTreeVertexWeighted(testgraphVer);
+
+        verticalFlow.generateCapacities();
+
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
+        GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
+
+        horizontalFlow.generateCapacities();
+
+        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        coordinator.run();
 
 
         System.out.println("Test");
     }
-
 
 
     @Test
@@ -396,9 +520,6 @@ public class SPQGenTest {
         }
 
     }
-
-
-
 
 
     private void checkSpiralitiesWithinBounds(SPQTree tree) {

@@ -1,6 +1,5 @@
 
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jbpt.hypergraph.abs.Vertex;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -14,7 +13,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
     Map<MutablePair<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
     Map<Integer, ArrayList<MutablePair<V, V>>> sidesMap = new LinkedHashMap<>();
     List<MutablePair<V, V>> edgeList = new ArrayList<>();
-    FaceType type = FaceType.INTERAL;
+    FaceType type = FaceType.INTERNAL;
 
     public FaceType getType() {
         return type;
@@ -112,6 +111,17 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
 
     public void setOrientations() {
+
+        sidesMap.put(0, new ArrayList<>());
+        sidesMap.put(1, new ArrayList<>());
+        sidesMap.put(2, new ArrayList<>());
+        sidesMap.put(3, new ArrayList<>());
+
+
+        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+            assert (arr.size() == 0);
+        }
+
         int[] orientations = {0, 1, 2, 3, 1, 2, 3, 0};
         int counter = 0;
         for (MutablePair<V, V> edge : edgeList
@@ -129,10 +139,100 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         }
 
 
+        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+
+            for (int i = 0; i < arr.size(); i++) {
+
+                if (orthogonalRep.get(arr.get(i)) == -1) {
+                    if (i != arr.size() - 1) {
+                        Collections.rotate(arr, arr.size()-1-i);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+
+
+
+    }
+
+    public void setOrientations(MutablePair<V, V> edge, int orientation) {
+
+        sidesMap.put(0, new ArrayList<>());
+        sidesMap.put(1, new ArrayList<>());
+        sidesMap.put(2, new ArrayList<>());
+        sidesMap.put(3, new ArrayList<>());
+
+
+        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+            assert (arr.size() == 0);
+        }
+
+
+        int[] orientations = {0, 1, 2, 3, 1, 2, 3, 0};
+        int counter = orientation;
+        int startIndex = edgeList.indexOf(edge);
+
+
+        for (int i = 0; i < edgeList.size(); i++) {
+
+            int index = (startIndex + i) % edgeList.size();
+            if (counter >= 0) {
+                getEdgeOrientationMap().put(edgeList.get(index), orientations[(counter % 4)]);
+                sidesMap.get(orientations[(counter % 4)]).add(edgeList.get(index));
+            } else {
+                getEdgeOrientationMap().put(edgeList.get(index), orientations[(counter % 4) + 7]);
+                sidesMap.get(orientations[(counter % 4)+7]).add(edgeList.get(index));
+            }
+
+
+            counter += orthogonalRep.get(edgeList.get(index));
+        }
+
+
+        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+
+            for (int i = 0; i < arr.size(); i++) {
+
+                if (orthogonalRep.get(arr.get(i)) == 1) {
+                    if (i != arr.size() - 1) {
+                        Collections.rotate(arr, arr.size()-1-i);
+                        break;
+                    }
+                }
+            }
+
+        }
+
+
+
+
+
+
+
+
     }
 
 
-    enum FaceType {INTERAL, EXTERNAL}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    enum FaceType {INTERNAL, EXTERNAL, EXTERNAL_PROCESSED}
 
 
 

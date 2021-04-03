@@ -1,24 +1,56 @@
 import org.antlr.v4.runtime.tree.Tree;
 import org.jbpt.hypergraph.abs.Vertex;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class TreeVertex extends Vertex
+public class TreeVertex extends Vertex implements Serializable
 
 {
 
+    public static Supplier<TreeVertex> getvSupplier = new Supplier<TreeVertex>() {
+        private int id = 0;
+
+        @Override
+        public TreeVertex get() {
+
+            return new TreeVertex("v" + id++);
+        }
+    };
     int depth;
     TreeVertex parent;
     List<TreeVertex> children;
     TreeVertex firstVertexInEdge;
     TreeVertex secondVertexInEdge;
     boolean visited = false;
+    boolean dummy = false;
     String realName;
     int numbering;
     int leftAngle;
     int rightAngle;
+    String name = super.getName();
+    ArrayList<TreeVertex> adjecentVertices = new ArrayList<>();
+
+    public TreeVertex(String name) {
+        super(name);
+        this.depth = 0;
+    }
+
+    public TreeVertex(String name, TreeVertex parent) {
+        super(name);
+        this.parent = parent;
+        this.depth = 0;
+    }
+
+    public boolean isDummy() {
+        return dummy;
+    }
+
+    public void setDummy(boolean dummy) {
+        this.dummy = dummy;
+    }
 
     public int getLeftAngle() {
         return leftAngle;
@@ -35,8 +67,6 @@ public class TreeVertex extends Vertex
     public void setRightAngle(int rightAngle) {
         this.rightAngle = rightAngle;
     }
-
-    ArrayList<TreeVertex> adjecentVertices = new ArrayList<>();
 
     public boolean isVisited() {
         return visited;
@@ -70,17 +100,6 @@ public class TreeVertex extends Vertex
         this.secondVertexInEdge = secondVertexInEdge;
     }
 
-    public TreeVertex(String name) {
-        super(name);
-        this.depth = 0;
-    }
-
-    public TreeVertex(String name, TreeVertex parent) {
-        super(name);
-        this.parent = parent;
-        this.depth = 0;
-    }
-
     public List<TreeVertex> getChildren() {
         return children;
     }
@@ -105,21 +124,16 @@ public class TreeVertex extends Vertex
         this.parent = parent;
     }
 
-
-
-    public static Supplier<TreeVertex> getvSupplier = new Supplier<TreeVertex>() {
-        private int id = 0;
-
-        @Override
-        public TreeVertex get() {
-
-            return new TreeVertex("v" + id++);
-        }
-    };
-
     public String getName() {
+        if (super.getName().length() != 0) {
 
-        return super.getName();
+            return super.getName();
+        } else {
+            return name;
+        }
+
+
+
     }
 
 

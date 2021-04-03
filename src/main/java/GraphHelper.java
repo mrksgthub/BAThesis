@@ -9,8 +9,7 @@ import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.util.SupplierUtil;
 
-import java.io.StringWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.*;
 
 public class GraphHelper<V extends TreeVertex, E> {
@@ -72,7 +71,7 @@ public class GraphHelper<V extends TreeVertex, E> {
 
 
     public static MutablePair<TreeVertex, TreeVertex> reverseEdge(MutablePair<TreeVertex, TreeVertex> edge) {
-        return new MutablePair<>(edge.getRight(), edge.getLeft());
+        return new Tuple<>(edge.getRight(), edge.getLeft());
     }
 
 
@@ -255,6 +254,65 @@ public class GraphHelper<V extends TreeVertex, E> {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
+
+
+
+
+public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdge> faceGeneator) throws IOException {
+
+
+    ObjectOutputStream oos = null;
+    FileOutputStream fout = null;
+    try {
+        fout = new FileOutputStream("C:\\graph.ser", false);
+        oos = new ObjectOutputStream(fout);
+        oos.writeObject(faceGeneator);
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    } finally {
+        if (oos != null) {
+            oos.close();
+        }
+    }
+
+}
+
+
+
+    public static FaceGenerator<TreeVertex, DefaultEdge> ReadFaceGeneratorFromFile(String filepath) {
+        filepath = "C:\\graph.ser";
+
+
+        try {
+
+            FileInputStream fileIn = new FileInputStream(filepath);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+
+            FaceGenerator<TreeVertex, DefaultEdge> obj = (FaceGenerator<TreeVertex, DefaultEdge>) objectIn.readObject();
+
+            System.out.println("The Object has been read from the file");
+            objectIn.close();
+            return obj;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
