@@ -38,6 +38,14 @@ public class TreeVertex extends Vertex implements Serializable
         this.depth = 0;
     }
 
+    public TreeVertex(String name, boolean dummy) {
+        super(name);
+        this.depth = 0;
+        this.dummy = dummy;
+    }
+
+
+
     public TreeVertex(String name, TreeVertex parent) {
         super(name);
         this.parent = parent;

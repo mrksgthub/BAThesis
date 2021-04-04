@@ -35,6 +35,13 @@ public class Coordinator {
 
     }
 
+    public Map<TreeVertex, Pair<Integer, Integer>> getEdgeToCoordMap() {
+        return edgeToCoordMap;
+    }
+
+    public void setEdgeToCoordMap(Map<TreeVertex, Pair<Integer, Integer>> edgeToCoordMap) {
+        this.edgeToCoordMap = edgeToCoordMap;
+    }
 
     public void run() {
 
@@ -157,6 +164,15 @@ public class Coordinator {
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
+
+                MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
+                PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
+                assert (face != null);
+                if (visitedMap.get(face) == null) {
+                    visitedMap.putIfAbsent(face, true);
+                    discoveredFaces.add(face);
+                }
+
             }
 
 
@@ -175,6 +191,34 @@ public class Coordinator {
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), newCoordinates);
 
+/*
+                MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
+                PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
+                assert (face != null);
+                if (visitedMap.get(face) == null) {
+                    visitedMap.putIfAbsent(face, true);
+                    discoveredFaces.add(face);
+                }
+*/
+
+            }
+
+
+
+            list = currFace.sidesMap.get(0);
+            length = edgeToCoordMap.get(list.get(0).getLeft()).a;
+            yCoord = edgeToCoordMap.get(list.get(0).getLeft()).b;
+            for (int i = 0; i < list.size(); i++) {
+                length -= horizontalMinCostFlow.getFlowMap().get(horzontalEdgeToArcMap.get(list.get(i)));
+
+
+                newCoordinates = new Pair<>(length, yCoord);
+                if (edgeToCoordMap.get(list.get(i).getRight()) != null) {
+                    assert (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
+                }
+                assert (length > -1);
+                edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
+
 
                 MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
@@ -184,8 +228,20 @@ public class Coordinator {
                     discoveredFaces.add(face);
                 }
 
-
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         }

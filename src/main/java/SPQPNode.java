@@ -268,7 +268,6 @@ public class SPQPNode extends SPQNode {
 
         } else if (sinkVertex.adjecentVertices.size() == 2 && this.getName().equals("Proot")) {
 
-
             hashMap.put((new Tuple<TreeVertex, TreeVertex>(startVertex, sinkVertex)), -1);
             hashMap.put((new Tuple<TreeVertex, TreeVertex>(sinkNodes.get(0), sinkVertex)), 1);
 

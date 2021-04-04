@@ -161,10 +161,10 @@ public class Rectangulator<E> {
                 if (face.getType() == PlanarGraphFace.FaceType.EXTERNAL_PROCESSED) {
 
                     // new outer Rectangle
-                    TreeVertex v1 = new TreeVertex("outer1");
-                    TreeVertex v2 = new TreeVertex("outer2");
-                    TreeVertex v3 = new TreeVertex("outer3");
-                    TreeVertex v4 = new TreeVertex("outer4");
+                    TreeVertex v1 = new TreeVertex("outer1", true);
+                    TreeVertex v2 = new TreeVertex("outer2",  true);
+                    TreeVertex v3 = new TreeVertex("outer3",  true);
+                    TreeVertex v4 = new TreeVertex("outer4", true);
                     MutablePair<TreeVertex, TreeVertex> edge1 = new Tuple<>(v1, v2);
                     MutablePair<TreeVertex, TreeVertex> edge2 = new Tuple<>(v2, v3);
                     MutablePair<TreeVertex, TreeVertex> edge3 = new Tuple<>(v3, v4);
@@ -872,7 +872,7 @@ public class Rectangulator<E> {
                 replacerEdge.add(new Tuple<TreeVertex, TreeVertex>(front.getRight(), null));
 
 
-                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R");
+                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R", true);
                 MutablePair<TreeVertex, TreeVertex> newEdge = new Tuple<>(possibleEdge.getRight(), newVertex);
 
                 edgeList.add(newEdge);
@@ -989,7 +989,7 @@ public class Rectangulator<E> {
                 //
 
 
-                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R");
+                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R", true);
                 // die extendede Edge im neuen Rectangle
                 MutablePair<TreeVertex, TreeVertex> projectedEdge = new Tuple<>(possibleEdge.getRight(), newVertex);
                 // die extended Edge in reverse
@@ -1175,7 +1175,7 @@ public class Rectangulator<E> {
                 replacerEdge.add(new Tuple<TreeVertex, TreeVertex>(front.getRight(), null));
 
 
-                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R");
+                TreeVertex newVertex = new TreeVertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R", true);
                 MutablePair<TreeVertex, TreeVertex> newEdge = new Tuple<>(possibleEdge.getRight(), newVertex);
 
                 edgeList.add(newEdge);
@@ -1318,7 +1318,7 @@ public class Rectangulator<E> {
                 replacerEdge.add(new Tuple<TreeVertex, TreeVertex>(front2.getRight(), null));
 
 
-                TreeVertex newVertex = new TreeVertex(front2.getLeft().getName() + possibleEdge.getRight().getName() + " R");
+                TreeVertex newVertex = new TreeVertex(front2.getLeft().getName() + possibleEdge.getRight().getName() + " R", true);
                 MutablePair<TreeVertex, TreeVertex> newEdge = new Tuple<>(possibleEdge.getRight(), newVertex);
 
                 edgeList.add(newEdge);

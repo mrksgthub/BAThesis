@@ -1,5 +1,8 @@
 import org.antlr.v4.runtime.misc.Pair;
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
+import org.graphstream.graph.implementations.SingleGraph;
 import org.jbpt.graph.MultiGraph;
 import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
@@ -69,7 +72,7 @@ public class SPQGenTest {
 
             //    graph2 = GraphHelper.treeToDOT(root, 2);
             //      GraphHelper.printTODOTSPQNode(graph2);
-            GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+           // GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
             check = root.computeRepresentability(tree.constructedGraph, check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
@@ -102,6 +105,8 @@ public class SPQGenTest {
         if (isValidDidimo = tree.computeNofRoot()) {
             root.getMergedChildren().get(0).computeSpirality();
         }
+        System.out.println("Valid Graph");
+        GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -150,8 +155,8 @@ public class SPQGenTest {
         GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
-       GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator);
-       //  FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("test");
+       //GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator, "C:\\graph.ser");
+       // FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("C:\\graph.ser");
 
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
@@ -247,6 +252,12 @@ public class SPQGenTest {
 
         //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
+        GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(),  "C:\\hashMap.ser");
+        GraphHelper.writeObjectToFile(embedding,  "C:\\adjecency.ser");
+
+       GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
+        graphFrame.main(null);
+
 
         System.out.println("Test");
 
@@ -287,7 +298,7 @@ public class SPQGenTest {
     @Test
     public void teilergraphMassTest() {
 
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 10000; i++) {
             try {
                 teilerGraphgen();
             } catch (IOException e) {
@@ -301,7 +312,7 @@ public class SPQGenTest {
 
     @Test
     public void didimoTest() {
-
+        System.setProperty("org.graphstream.ui", "swing");
         int counter = 0;
         int vertexcounter = 0;
         SPQPNode root = new SPQPNode("Proot");
@@ -507,6 +518,22 @@ public class SPQGenTest {
         coordinator.run();
 
 
+      GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(),  "C:\\hashMap.ser");
+        GraphHelper.writeObjectToFile(embedding,  "C:\\adjecency.ser");
+
+        Map<TreeVertex, Pair<Integer, Integer>> coord = (Map<TreeVertex, Pair<Integer, Integer>>) GraphHelper.readObjectFromFile("C:\\hashMap.ser");
+        Hashtable<TreeVertex, ArrayList<TreeVertex>> embed = (Hashtable<TreeVertex, ArrayList<TreeVertex>>) GraphHelper.readObjectFromFile("C:\\adjecency.ser");
+
+        GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
+        graphFrame.displayGraph();
+
+
+
+
+
+
+
+
         System.out.println("Test");
     }
 
@@ -670,6 +697,50 @@ public class SPQGenTest {
 
         return adjecentsMap;
     }
+
+
+    @Test
+    public void graphStreamTest() {
+        System.setProperty("org.graphstream.ui", "swing");
+
+        Graph graph = new SingleGraph("Tutorial 1");
+
+        graph.addNode("A");
+        Node node = graph.getNode("A");
+        node.setAttribute("xy", 0, 0);
+        graph.addNode("B");
+        node = graph.getNode("B");
+        node.setAttribute("xy", 0, 10);
+
+        graph.addNode("C");
+        node = graph.getNode("C");
+        node.setAttribute("xy", 10, 10);
+
+        graph.addNode("D");
+        node = graph.getNode("D");
+        node.setAttribute("xy", 5, 5);
+
+
+
+/*
+        graph.addEdge("AB", "A", "B");
+        graph.addEdge("BC", "B", "C");
+        graph.addEdge("CA", "C", "A");
+*/
+        graph.display(false);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

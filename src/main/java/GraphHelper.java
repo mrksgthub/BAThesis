@@ -258,13 +258,13 @@ public class GraphHelper<V extends TreeVertex, E> {
 
 
 
-public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdge> faceGeneator) throws IOException {
+public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdge> faceGeneator, String filepath) throws IOException {
 
 
     ObjectOutputStream oos = null;
     FileOutputStream fout = null;
     try {
-        fout = new FileOutputStream("C:\\graph.ser", false);
+        fout = new FileOutputStream(filepath, false);
         oos = new ObjectOutputStream(fout);
         oos.writeObject(faceGeneator);
     } catch (Exception ex) {
@@ -278,9 +278,61 @@ public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdg
 }
 
 
+    public static void writeObjectToFile(Object o, String filepath) {
+
+
+        ObjectOutputStream oos = null;
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(filepath, false);
+            oos = new ObjectOutputStream(fout);
+            oos.writeObject(o);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (oos != null) {
+                try {
+                    oos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    public static Object readObjectFromFile(String filepath) {
+        try {
+
+            FileInputStream fileIn = new FileInputStream(filepath);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+
+            Object obj = objectIn.readObject();
+
+            System.out.println("The Object has been read from the file");
+            objectIn.close();
+            return obj;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
     public static FaceGenerator<TreeVertex, DefaultEdge> ReadFaceGeneratorFromFile(String filepath) {
-        filepath = "C:\\graph.ser";
+      //  filepath = "C:\\graph.ser";
 
 
         try {

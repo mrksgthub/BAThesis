@@ -7,27 +7,6 @@ import java.util.*;
 public class SPQNode {
 
 
-    private double kul;
-    private double kur;
-    private double kvl;
-    private double kvr;
-
-    public List<SPQNode> getMergedChildren() {
-        return mergedChildren;
-    }
-
-    public void setMergedChildren(List<SPQNode> mergedChildren) {
-        this.mergedChildren = mergedChildren;
-    }
-
-    public NodeTypesEnum.NODETYPE getNodeType() {
-        return nodeType;
-    }
-
-    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
-        this.nodeType = nodeType;
-    }
-
     List<SPQNode> children = new ArrayList<>();
     List<SPQNode> mergedChildren = new ArrayList<>();
     HashSet<TreeVertex> nodesInCompnent = new LinkedHashSet<>();
@@ -48,8 +27,56 @@ public class SPQNode {
     int alphavl;
     int alphaur;
     int alphavr;
+    int nodes;
+    SPQNode parent;
+    boolean isroot = false;
+    boolean visited;
+    String name;
+    int counter = 0;
+    NodeTypesEnum.NODETYPE nodeType;
+    TreeVertex startVertex;
+    TreeVertex sinkVertex;
+    List<TreeVertex> aPathFromSourceToSink = new ArrayList<>();
+    double repIntervalLowerBound = 0;
+    double repIntervalUpperBound = 0;
+    private double kul;
+    private double kur;
+    private double kvl;
+    private double kvr;
 
+    public SPQNode() {
 
+    }
+
+    public SPQNode(int nodes) {
+        this.nodes = nodes;
+    }
+
+    public SPQNode(int nodes, String name) {
+        this.nodes = nodes;
+        this.name = name;
+    }
+
+    public SPQNode(String name) {
+        this.nodes = nodes;
+        this.name = name;
+    }
+
+    public List<SPQNode> getMergedChildren() {
+        return mergedChildren;
+    }
+
+    public void setMergedChildren(List<SPQNode> mergedChildren) {
+        this.mergedChildren = mergedChildren;
+    }
+
+    public NodeTypesEnum.NODETYPE getNodeType() {
+        return nodeType;
+    }
+
+    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
+        this.nodeType = nodeType;
+    }
 
     public double getSpirality() {
         return spirality;
@@ -131,19 +158,6 @@ public class SPQNode {
         this.nodesInCompnent = nodesInCompnent;
     }
 
-    int nodes;
-    SPQNode parent;
-    boolean isroot = false;
-    boolean visited;
-    String name;
-    int counter = 0;
-    NodeTypesEnum.NODETYPE nodeType;
-    TreeVertex startVertex;
-    TreeVertex sinkVertex;
-    List<TreeVertex> aPathFromSourceToSink = new ArrayList<>();
-    double repIntervalLowerBound = 0;
-    double repIntervalUpperBound = 0;
-
     public double getRepIntervalLowerBound() {
         return repIntervalLowerBound;
     }
@@ -196,25 +210,6 @@ public class SPQNode {
     public void setName(String name) {
         this.name = name;
     }
-
-    public SPQNode() {
-
-    }
-
-    public SPQNode(int nodes) {
-        this.nodes = nodes;
-    }
-
-    public SPQNode(int nodes, String name) {
-        this.nodes = nodes;
-        this.name = name;
-    }
-
-    public SPQNode(String name) {
-        this.nodes = nodes;
-        this.name = name;
-    }
-
 
     public List<SPQNode> getChildren() {
         return children;
@@ -650,7 +645,7 @@ public class SPQNode {
 
 
 
-            System.out.println("Test");
+           // System.out.println("Test");
 
             this.alphavl = alphavl;
             this.alphavr = alphavr;
@@ -680,7 +675,7 @@ public class SPQNode {
 
 
 
-        System.out.println("Test");
+       // System.out.println("Test");
         }
 
 

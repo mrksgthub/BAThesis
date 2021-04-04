@@ -356,7 +356,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
                 while (nextVertex != startVertex) {
 
-
                     faceObj.getvSet().add(nextVertex);
                     adjVertices.get(faceObj).add(nextVertex);
 
