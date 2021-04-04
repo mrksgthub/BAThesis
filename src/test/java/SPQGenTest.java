@@ -59,8 +59,11 @@ public class SPQGenTest {
 
             root = graphgenSplitGraph.getRoot();
             root.compactTree();
-            //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-            //       GraphHelper.printTODOTSPQNode(graph2);
+            System.out.println("SPQ-Trees");
+         //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
+         //   GraphHelper.printTODOTSPQNode(graph2);
+
+
             tree = new SPQTree(root);
             tree.fillNodeToEdgesTable(tree.getRoot());
             tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
@@ -70,9 +73,9 @@ public class SPQGenTest {
 
             root.computeNodesInComponent();
 
-            //    graph2 = GraphHelper.treeToDOT(root, 2);
-            //      GraphHelper.printTODOTSPQNode(graph2);
-           // GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+         //   graph2 = GraphHelper.treeToDOT(root, 2);
+         //   GraphHelper.printTODOTSPQNode(graph2);
+         //   GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
             check = root.computeRepresentability(tree.constructedGraph, check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
@@ -106,7 +109,7 @@ public class SPQGenTest {
             root.getMergedChildren().get(0).computeSpirality();
         }
         System.out.println("Valid Graph");
-        GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+      //  GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -152,11 +155,11 @@ public class SPQGenTest {
         }
 
 
-        GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+       // GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
-       //GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator, "C:\\graph.ser");
-       // FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("C:\\graph.ser");
+        //GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator, "C:\\graph.ser");
+        // FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("C:\\graph.ser");
 
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
@@ -203,9 +206,9 @@ public class SPQGenTest {
             count = 0;
             count2 = 0;
             for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.outerFace.edgeList) {
-                if ( rectangulator.outerFace.getOrthogonalRep().get(edge) != 0) {
+                if (rectangulator.outerFace.getOrthogonalRep().get(edge) != 0) {
                     count++;
-                    count2 +=  rectangulator.outerFace.getOrthogonalRep().get(edge);
+                    count2 += rectangulator.outerFace.getOrthogonalRep().get(edge);
 
                 }
 
@@ -215,12 +218,6 @@ public class SPQGenTest {
 
 
         }
-
-
-
-
-
-
 
 
         Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
@@ -236,7 +233,7 @@ public class SPQGenTest {
 
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
         DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
-        GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
+      //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
 
         horizontalFlow.generateCapacities();
 
@@ -252,10 +249,10 @@ public class SPQGenTest {
 
         //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
-        GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(),  "C:\\hashMap.ser");
-        GraphHelper.writeObjectToFile(embedding,  "C:\\adjecency.ser");
+        GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(), "C:\\hashMap.ser");
+        GraphHelper.writeObjectToFile(embedding, "C:\\adjecency.ser");
 
-       GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
+        GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
         graphFrame.main(null);
 
 
@@ -316,6 +313,7 @@ public class SPQGenTest {
         int counter = 0;
         int vertexcounter = 0;
         SPQPNode root = new SPQPNode("Proot");
+        root.setRoot();
         TreeVertex source = new TreeVertex("source");
         TreeVertex sink = new TreeVertex("sink");
 
@@ -393,7 +391,6 @@ public class SPQGenTest {
         SPQTree tree = new SPQTree(root);
         root.compactTree();
         tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
-
         root.compactTree2();
 
 
@@ -518,20 +515,14 @@ public class SPQGenTest {
         coordinator.run();
 
 
-      GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(),  "C:\\hashMap.ser");
-        GraphHelper.writeObjectToFile(embedding,  "C:\\adjecency.ser");
+        GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(), "C:\\hashMap.ser");
+        GraphHelper.writeObjectToFile(embedding, "C:\\adjecency.ser");
 
         Map<TreeVertex, Pair<Integer, Integer>> coord = (Map<TreeVertex, Pair<Integer, Integer>>) GraphHelper.readObjectFromFile("C:\\hashMap.ser");
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embed = (Hashtable<TreeVertex, ArrayList<TreeVertex>>) GraphHelper.readObjectFromFile("C:\\adjecency.ser");
 
         GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
         graphFrame.displayGraph();
-
-
-
-
-
-
 
 
         System.out.println("Test");
@@ -729,18 +720,6 @@ public class SPQGenTest {
 */
         graph.display(false);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

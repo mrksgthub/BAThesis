@@ -10,7 +10,7 @@ import java.util.List;
 public class GraphgenSplitGraph {
 
 
-    SPQNode root;
+    SPQPNode root;
 
     DirectedMultigraph<TreeVertex, DefaultEdge> multigraph = new DirectedMultigraph<>(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
     int operations;
@@ -31,6 +31,7 @@ public class GraphgenSplitGraph {
     public GraphgenSplitGraph(int operations) {
         this.operations = operations;
         root = new SPQPNode("Proot");
+        root.setRoot();
         root.setNodeType(NodeTypesEnum.NODETYPE.P);
         TreeVertex vertex = new TreeVertex("source");
         TreeVertex vertex2 = new TreeVertex("sink");
@@ -60,11 +61,11 @@ public class GraphgenSplitGraph {
 
     }
 
-    public SPQNode getRoot() {
+    public SPQPNode getRoot() {
         return root;
     }
 
-    public void setRoot(SPQNode root) {
+    public void setRoot(SPQPNode root) {
         this.root = root;
     }
 
@@ -72,8 +73,8 @@ public class GraphgenSplitGraph {
 
 
         DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
-         randomnewSNode(edge);
-
+      //   randomnewSNode(edge);
+        newInitialPNode(edge);
 
        // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
 
@@ -85,13 +86,10 @@ public class GraphgenSplitGraph {
             if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
                 randomnewPNode(edge);
             } else {
-
                 randomnewSNode(edge);
             }
 
         }
-      //  GraphHelper.printToDOTTreeVertex(graphgenSplitGraph.getMultigraph());
-
 
         // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
@@ -105,6 +103,30 @@ public class GraphgenSplitGraph {
 
 
     //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
+    }
+
+    private void newInitialPNode(DefaultEdge edge) {
+
+        DefaultEdge edge1 = multigraph.addEdge( multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
+
+        randomnewSNode(edge);
+        randomnewSNode(edge1);
+
+
+
+
+
+
     }
 
     private void randomnewSNode(DefaultEdge edge) {
@@ -186,11 +208,11 @@ public class GraphgenSplitGraph {
     }
 
 
-    public SPQNode getNode() {
+    public SPQPNode getNode() {
         return root;
     }
 
-    public void setNode(SPQNode node) {
+    public void setNode(SPQPNode node) {
         this.root = node;
     }
 
