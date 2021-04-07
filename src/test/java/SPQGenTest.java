@@ -53,7 +53,7 @@ public class SPQGenTest {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(30, 20);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(30, 30);
             graphgenSplitGraph.generateGraph();
 
 
@@ -79,6 +79,10 @@ public class SPQGenTest {
             check = root.computeRepresentability(tree.constructedGraph, check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
+                if (!check) {
+                    System.out.println("Didimo rejected at source");
+                }
+
             }
 
             boolean tamassiaValid = true;
@@ -93,11 +97,12 @@ public class SPQGenTest {
 
             } catch (Exception e) {
                 tamassiaValid = false;
+
+                System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
             }
 
-            if (tamassiaValid != check) {
-                System.out.println("fehler");
-            }
+
+            assert (tamassiaValid == check);
 
 
         }
@@ -107,9 +112,9 @@ public class SPQGenTest {
         boolean isValidDidimo = false;
         if (isValidDidimo = tree.computeNofRoot()) {
             root.getMergedChildren().get(0).computeSpirality();
+            System.out.println("------------------------------------------------Valid Graph-------------------------------------------------------");
+            //  GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
         }
-        System.out.println("Valid Graph");
-      //  GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -253,7 +258,7 @@ public class SPQGenTest {
         GraphHelper.writeObjectToFile(embedding, "C:\\adjecency.ser");
 
         GraphFrame graphFrame = new GraphFrame(coordinator.getEdgeToCoordMap(), embedding);
-        graphFrame.main(null);
+      //  graphFrame.main(null);
 
 
         System.out.println("Test");

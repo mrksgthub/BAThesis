@@ -72,12 +72,6 @@ public class SPQTree {
             root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
 
 
-
-          //  DijkstraShortestPath dijkstraShortestPath = new DijkstraShortestPath(constructedGraph);
-        //    GraphPath<TreeVertex, DefaultEdge> test = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
-
-         //   GraphPath<TreeVertex, DefaultEdge> test2 = dijkstraShortestPath.getPath(root.getStartVertex(), root.getSinkVertex());
-        //    root.setaPathFromSourceToSink(test2.getVertexList());
         } else {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());
@@ -109,7 +103,6 @@ public class SPQTree {
         int spirality = 99999;
 
         if (root.getMergedChildren().get(0).startNodes.size() == 1 && root.getMergedChildren().get(0).sinkNodes.size() == 1 ) {
-
             spirality = 2;
         } else if (root.getMergedChildren().get(0).startNodes.size() >= 2 && root.getMergedChildren().get(0).sinkNodes.size() >= 2) {
 

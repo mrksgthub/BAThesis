@@ -81,7 +81,7 @@ public class GraphFrame {
 
 
 
-      //  graph.display(false);
+        graph.display(false);
 
 
 

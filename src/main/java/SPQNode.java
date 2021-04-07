@@ -175,7 +175,7 @@ public class SPQNode {
         this.repIntervalUpperBound = repIntervalUpperBound;
     }
 
-    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval() {
 
         return true;
     }
@@ -521,13 +521,10 @@ public class SPQNode {
         }
 
         if (this.mergedChildren.size() != 0) {
-
-            if (!calculateRepresentabilityInterval(graph)) {
-
+            if (!calculateRepresentabilityInterval()) {
                 check = false;
             }
         }
-
         return check;
     }
 

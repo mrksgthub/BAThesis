@@ -1,7 +1,4 @@
-import org.antlr.v4.runtime.misc.Pair;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.HashMap;
 
@@ -30,7 +27,7 @@ public class SPQPNode extends SPQNode {
     }
 
     @Override
-    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval() {
 
 
         if (mergedChildren.size() == 3) {
@@ -146,7 +143,6 @@ public class SPQPNode extends SPQNode {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
                     return false;
                 }
-
 
             } else { // I_3dO_alphaBeta
 

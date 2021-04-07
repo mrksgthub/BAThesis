@@ -1,7 +1,4 @@
-import org.antlr.v4.runtime.misc.Pair;
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.HashMap;
 
@@ -24,7 +21,7 @@ public class SPQQNode extends SPQNode {
 
 
     @Override
-    public boolean calculateRepresentabilityInterval(DirectedMultigraph<TreeVertex, DefaultEdge> graph) {
+    public boolean calculateRepresentabilityInterval() {
         int l = mergedChildren.size();
         if (l == 0) {
             l = 1;
