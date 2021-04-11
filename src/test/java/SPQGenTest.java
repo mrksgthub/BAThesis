@@ -3,21 +3,13 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.jbpt.graph.MultiGraph;
-import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
-import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
-import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
-import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.*;
 
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.*;
 
 
@@ -76,7 +68,7 @@ public class SPQGenTest {
          //   graph2 = GraphHelper.treeToDOT(root, 2);
          //   GraphHelper.printTODOTSPQNode(graph2);
          //   GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
-            check = root.computeRepresentability(tree.constructedGraph, check);
+            check = root.computeRepresentability(check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
                 if (!check) {
@@ -97,7 +89,6 @@ public class SPQGenTest {
 
             } catch (Exception e) {
                 tamassiaValid = false;
-
                 System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
             }
 
@@ -401,7 +392,7 @@ public class SPQGenTest {
 
         root.computeNodesInComponent();
         boolean check = true;
-        root.computeRepresentability(tree.constructedGraph, check);
+        root.computeRepresentability(check);
 
 
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);

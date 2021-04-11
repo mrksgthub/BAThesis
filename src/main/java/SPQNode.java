@@ -1,6 +1,4 @@
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.*;
 
@@ -509,12 +507,12 @@ public class SPQNode {
         }
     }
 
-    public boolean computeRepresentability(DirectedMultigraph<TreeVertex, DefaultEdge> graph, Boolean check) {
+    public boolean computeRepresentability(Boolean check) {
 
         boolean temp;
         for (SPQNode root : getMergedChildren()
         ) {
-            temp = root.computeRepresentability(graph, check);
+            temp = root.computeRepresentability(check);
             if (!temp) {
                 check = temp;
             }

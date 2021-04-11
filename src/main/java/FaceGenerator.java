@@ -5,25 +5,23 @@ import org.jgrapht.Graphs;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
-import org.jgrapht.alg.interfaces.PlanarityTestingAlgorithm;
 import org.jgrapht.alg.planar.BoyerMyrvoldPlanarityInspector;
 import org.jgrapht.graph.*;
-import org.jgrapht.graph.DefaultEdge;
 
 import java.io.Serializable;
 import java.util.*;
 
 public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
-    public  TreeVertex sink;
-    public  TreeVertex source;
+    public TreeVertex sink;
+    public TreeVertex source;
     Map<TreeVertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
     List<List<E>> listOfFaces = new ArrayList<>();
     List<List<V>> listOfFaces2 = new ArrayList<>();
     Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
-     BoyerMyrvoldPlanarityInspector.Embedding embedding2;
+    BoyerMyrvoldPlanarityInspector.Embedding embedding2;
     Map<E, Integer> visitsMap = new HashMap<>();
     Map<MutablePair<V, V>, Integer> visitsMap2 = new HashMap<>();
     Map<MutablePair<V, V>, Integer> pairIntegerMap = new HashMap<>();
@@ -31,12 +29,12 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
     HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
     HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>>();
-     DirectedMultigraph<V, E> graph;
-     V startvertex;
-     V sinkVertex;
-     AsUndirectedGraph<V, E> embeddingGraphAsUndirectred;
-    private   DirectedMultigraph<TreeVertex, DefaultEdge> flowNetworkLayout;
-    private  DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> networkGraph;
+    DirectedMultigraph<V, E> graph;
+    V startvertex;
+    V sinkVertex;
+    AsUndirectedGraph<V, E> embeddingGraphAsUndirectred;
+    private DirectedMultigraph<TreeVertex, DefaultEdge> flowNetworkLayout;
+    private DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> networkGraph;
 
     public FaceGenerator(DirectedMultigraph<V, E> graph, V startvertex, V sinkVertex, Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding) {
 
@@ -231,81 +229,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         this.flowNetworkLayout = flowNetworkLayout;
     }
 
-    public void generateFaces() {
-
-
-        List<MutablePair<V, V>> pairList = new ArrayList<>();
-        E edge;
-
-
-        List<MutablePair<V, V>> pairList1 = new ArrayList<>(pairIntegerMap.keySet());
-
-        MutablePair<V, V> startingEdge = new Tuple<V, V>(startvertex, sinkVertex);
-        int x = pairList1.lastIndexOf(startingEdge);
-        Collections.swap(pairList1, 0, x);
-
-
-        Iterator<MutablePair<V, V>> pairIterator = pairList1.iterator();
-        int i = 0;
-
-
-        while (pairIterator.hasNext()
-        ) {
-
-            MutablePair<V, V> edgePair = pairIterator.next();
-            pairList.add(edgePair);
-            List<E> face = new ArrayList<>();
-
-            PlanarGraphFace<V, E> faceObj = new PlanarGraphFace<V, E>(Integer.toString(i++));
-            adjVertices.put(faceObj, new ArrayList<>());
-            planarGraphFaces.add(faceObj);
-
-
-            V startVertex = edgePair.getLeft();
-            List<E> tArrayList = (ArrayList<E>) embedding2.getEdgesAround(startVertex);
-            //     E edge = tArrayList.get(0);
-            V vertex = startVertex;
-            V nextVertex = edgePair.getRight();
-            pairList1.remove(edgePair);
-
-            edge = embeddingGraphAsUndirectred.getEdge(edgePair.getLeft(), edgePair.getRight());
-            face.add(edge);
-
-            faceObj.getvSet().add(vertex);
-            adjVertices.get(faceObj).add(vertex);
-            adjFaces.get(edge).add(faceObj);
-
-
-            while (nextVertex != startVertex) {
-
-                vertex = nextVertex;
-                faceObj.getvSet().add(vertex);
-                adjVertices.get(faceObj).add(vertex);
-
-                tArrayList = embedding2.getEdgesAround(nextVertex);
-                edge = tArrayList.get((tArrayList.indexOf(edge) + 1) % tArrayList.size());
-                adjFaces.get(edge).add(faceObj);
-                nextVertex = Graphs.getOppositeVertex(embeddingGraphAsUndirectred, edge, vertex);
-                edgePair = new Tuple<V, V>(vertex, nextVertex);
-                pairList1.remove(edgePair);
-                pairList.add(edgePair);
-
-                face.add(edge);
-                visitsMap.merge(edge, 1, Integer::sum);
-
-            }
-            listOfFaces.add(face);
-            pairIterator = pairList1.iterator();
-
-        }
-
-
-        flowNetworkLayout = (DirectedMultigraph<TreeVertex, DefaultEdge>) generateFlowNetworkLayout();
-        System.out.println("Test");
-
-
-    }
-
 
     public void generateFaces2() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
 
@@ -384,61 +307,15 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     }
 
 
-    private Graph<TreeVertex, DefaultEdge> generateFlowNetworkLayout() {
-
-
-        DirectedMultigraph<TreeVertex, DefaultEdge> graph = new DirectedMultigraph<>(DefaultEdge.class);
-
-
-        for (TreeVertex nodes : graph.vertexSet()
-        ) {
-            graph.addVertex(nodes);
-
-        }
-        for (PlanarGraphFace<V, E> vePlanarGraphFace : planarGraphFaces
-        ) {
-            graph.addVertex(vePlanarGraphFace);
-        }
-
-
-        for (E edge : adjFaces.keySet()
-        ) {
-            graph.addEdge(adjFaces.get(edge).get(0), adjFaces.get(edge).get(1));
-            graph.addEdge(adjFaces.get(edge).get(1), adjFaces.get(edge).get(0));
-        }
-        for (PlanarGraphFace<V, E> vePlanarGraphFace : adjVertices.keySet()
-        ) {
-            for (TreeVertex vertex : adjVertices.get(vePlanarGraphFace)
-            ) {
-                graph.addEdge(vertex, vePlanarGraphFace);
-            }
-        }
-
-
-        return graph;
-    }
-
-
     public DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {
         networkGraph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-        //  DirectedMultigraph<TreeVertex, DefaultEdge> graph2 = new DirectedMultigraph<>(DefaultEdge.class);
-
-
-        //   sink = new TreeVertex("Mainsink");
-        //   source = new TreeVertex("Mainsource");
-        //   graph.addVertex(sink);
-        //     graph.addVertex(source);
-
 
         List<V> vertexList = listOfFaces2.get(0);
         TreeVertex outerFace = new TreeVertex("0");
         networkGraph.addVertex(outerFace);
-        // Test
-        //     graph2.addVertex(outerFace);
 
         supplyMap.put(outerFace, -1 * (2 * (vertexList.size() - 1) + 4));
 
-        //     graph.setEdgeWeight(graph.addEdge(outerFace, sink), 1);
         for (int j = 0; j < vertexList.size() - 1; j++) {
             TreeVertex temp = vertexList.get(j);
             networkGraph.addVertex(temp);
@@ -448,8 +325,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
             upperMap.put(e, 4);
             lowerMap.put(e, 1);
 
-
-            //     graph.setEdgeWeight(graph.addEdge(source, temp), 1);
         }
 
 
@@ -459,8 +334,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
             TreeVertex innerFace = new TreeVertex(Integer.toString(i));
             networkGraph.addVertex(innerFace);
             supplyMap.put(innerFace, -1 * (2 * (vertexList.size() - 1) - 4));
-
-            //        graph.setEdgeWeight(graph.addEdge(innerFace, sink), 2*(vertexList.size()-1)-4);
 
 
             for (int j = 0; j < vertexList.size() - 1; j++) {
@@ -473,12 +346,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 networkGraph.setEdgeWeight(e, 1);
                 upperMap.put(e, 4);
                 lowerMap.put(e, 1);
-
-
-                //    DefaultWeightedEdge e = graph.addEdge(source, temp);
-                //        if (e != null) {
-                //          graph.setEdgeWeight(e, 4);
-                //      }
 
             }
 
@@ -516,18 +383,17 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 new CapacityScalingMinimumCostFlow<>();
 
 
-        HashMap<DefaultWeightedEdge, Double> costMap = new HashMap();
+        HashMap<DefaultWeightedEdge, Double> costMap = new HashMap<>();
         for (DefaultWeightedEdge edge :
                 networkGraph.edgeSet()) {
 
-
         }
-        ;
 
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow =
                 minimumCostFlowAlgorithm.getMinimumCostFlow(problem);
 
 
+        System.out.println("Test");
     }
 
 

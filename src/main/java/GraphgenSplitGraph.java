@@ -1,4 +1,3 @@
-import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.util.SupplierUtil;
@@ -67,6 +66,67 @@ public class GraphgenSplitGraph {
         this.root = root;
     }
 
+    public void generateGraph2() {
+
+
+        DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+            newInitialPNode(edge);
+        } else {
+            randomnewSNode(edge);
+        }
+
+
+        // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
+
+        for (int i = 0; i < operations; i++) {
+            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
+            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP*2 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
+                randomnewPNode(edge);
+            } else {
+                randomnewSNode(edge);
+            }
+        }
+
+        for (int i = 0; i < operations; i++) {
+            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
+            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < 0 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
+                randomnewPNode(edge);
+            } else {
+                randomnewSNode(edge);
+            }
+        }
+
+
+
+
+
+
+
+        // Start- und Endknoten in die Q-Nodes einfügen
+        for (DefaultEdge edge1 :
+                edgeSPQNodeHashMap.keySet()) {
+            //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
+            //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
+
+            edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
+            edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
+        }
+
+
+      //  System.out.println("test");
+        //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
+    }
+
+
+
     public void generateGraph() {
 
 
@@ -91,13 +151,14 @@ public class GraphgenSplitGraph {
             } else {
                 randomnewSNode(edge);
             }
-
         }
+
+
 
         // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
                 edgeSPQNodeHashMap.keySet()) {
-      //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
+            //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
             //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
 
             edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
@@ -105,9 +166,38 @@ public class GraphgenSplitGraph {
         }
 
 
-        System.out.println("test");
+        //  System.out.println("test");
         //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void newInitialPNode(DefaultEdge edge) {
 
@@ -150,7 +240,46 @@ public class GraphgenSplitGraph {
         addNodeAsRightChild(newQnode, newSnode);
 
     }
+    private void randomnewPNode2(DefaultEdge edge) {
 
+        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
+
+        TreeVertex vertex = multigraph.addVertex();
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
+        DefaultEdge edge2 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+        edges.add(edge2);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+        SPQNode newQnode2 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge2, newQnode2);
+
+        SPQNode newSnode = new SPQSNode(("S" + ++counter));
+        newQnode1.setParent(newSnode);
+        newQnode2.setParent(newSnode);
+
+        newSnode.getChildren().add(newQnode1);
+        newSnode.getChildren().add(newQnode2);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        /*
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 1) == 0) {
+            addNodeAsLeftChild(newSnode, newPnode);
+        } else {
+            addNodeAsRightChild(newSnode, newPnode);
+        }
+*/
+        addNodeAsRightChild(newSnode, newPnode);
+
+        //möglicherweise addNodeAsLeftChild hinzuf+gen und dann random wäheln welche
+
+
+    }
 
     private void randomnewPNode(DefaultEdge edge) {
 
@@ -179,12 +308,10 @@ public class GraphgenSplitGraph {
         newSnode.getChildren().add(newQnode2);
 
         nodeUmhaengen(oldQNode, newPnode);
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 1) == 0) {
-            addNodeAsLeftChild(newSnode, newPnode);
-        } else {
-            addNodeAsRightChild(newSnode, newPnode);
-        }
-       //möglicherweise addNodeAsLeftChild hinzuf+gen und dann random wäheln welche
+
+        addNodeAsRightChild(newSnode, newPnode);
+
+
 
 
     }

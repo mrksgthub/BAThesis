@@ -1,5 +1,4 @@
 import org.antlr.v4.runtime.misc.Pair;
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
@@ -141,9 +140,7 @@ public class Coordinator {
 
                 newCoordinates = new Pair<>(xCoord, length);
                 Pair<Integer, Integer> vertex = edgeToCoordMap.get(edge.getRight());
-                if (vertex != null) {
-                    assert (edgeToCoordMap.get(edge.getRight()).equals(newCoordinates));
-                }
+                assert vertex == null || (edgeToCoordMap.get(edge.getRight()).equals(newCoordinates));
                 assert (length > -1);
                 edgeToCoordMap.put(edge.getRight(), new Pair<>(xCoord, length));
 
@@ -158,9 +155,7 @@ public class Coordinator {
 
 
                 newCoordinates = new Pair<>(length, yCoord);
-                if (edgeToCoordMap.get(list.get(i).getRight()) != null) {
-                    assert (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
-                }
+                assert edgeToCoordMap.get(list.get(i).getRight()) == null || (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
@@ -184,9 +179,7 @@ public class Coordinator {
 
 
                 newCoordinates = new Pair<>(xCoord, length);
-                if (edgeToCoordMap.get(list.get(i).getRight()) != null) {
-                    assert (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
-                }
+                assert edgeToCoordMap.get(list.get(i).getRight()) == null || (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
 
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), newCoordinates);
@@ -204,7 +197,6 @@ public class Coordinator {
             }
 
 
-
             list = currFace.sidesMap.get(0);
             length = edgeToCoordMap.get(list.get(0).getLeft()).a;
             yCoord = edgeToCoordMap.get(list.get(0).getLeft()).b;
@@ -213,9 +205,7 @@ public class Coordinator {
 
 
                 newCoordinates = new Pair<>(length, yCoord);
-                if (edgeToCoordMap.get(list.get(i).getRight()) != null) {
-                    assert (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
-                }
+                assert edgeToCoordMap.get(list.get(i).getRight()) == null || (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
@@ -229,19 +219,6 @@ public class Coordinator {
                 }
 
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         }
