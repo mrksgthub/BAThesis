@@ -66,7 +66,7 @@ public class GraphgenSplitGraph {
         this.root = root;
     }
 
-    public void generateGraph2() {
+    public void generateGraph() {
 
 
         DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
@@ -80,28 +80,32 @@ public class GraphgenSplitGraph {
 
         // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < operations; i++) {
+        for (int i = 0; i < 1*operations; i++) {
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP*2 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
                 randomnewPNode(edge);
             } else {
                 randomnewSNode(edge);
             }
         }
 
-        for (int i = 0; i < operations; i++) {
+        int counter = 0;
+        for (int i = 0; i < 1*operations; i++) {
+
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < 0 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
-                randomnewPNode(edge);
-            } else {
+            if (degreeOfedgeSource < 4 && degreeOfedgeSink < 4  && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2) ) {
                 randomnewSNode(edge);
+            } else {
+                i++;
+                counter++;
             }
+
         }
 
 
@@ -123,11 +127,13 @@ public class GraphgenSplitGraph {
 
       //  System.out.println("test");
         //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
+
+        counter = counter + 1 -1;
     }
 
 
 
-    public void generateGraph() {
+    public void generateGraph2() {
 
 
         DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
@@ -171,7 +177,64 @@ public class GraphgenSplitGraph {
     }
 
 
+    public void generateGraph3() {
 
+
+        DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+            newInitialPNode(edge);
+        } else {
+            randomnewSNode(edge);
+        }
+
+
+        // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
+
+        for (int i = 0; i < 1*operations; i++) {
+            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
+            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
+                randomnewPNode(edge);
+            } else {
+                randomnewSNode(edge);
+            }
+        }
+
+        for (int i = 0; i < 2*operations; i++) {
+            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+
+            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
+            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < 0 && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
+                randomnewPNode(edge);
+            } else {
+                randomnewSNode(edge);
+            }
+        }
+
+
+
+
+
+
+
+        // Start- und Endknoten in die Q-Nodes einfügen
+        for (DefaultEdge edge1 :
+                edgeSPQNodeHashMap.keySet()) {
+            //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
+            //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
+
+            edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
+            edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
+        }
+
+
+        //  System.out.println("test");
+        //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
+    }
 
 
 

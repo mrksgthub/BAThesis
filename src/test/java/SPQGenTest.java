@@ -18,7 +18,7 @@ public class SPQGenTest {
     @Test
     public void graphGen() {
 
-        SPQGen2 spqGen2 = new SPQGen2(1000);
+        SPQGen2 spqGen2 = new SPQGen2(10000);
         spqGen2.generate();
 
 
@@ -39,13 +39,16 @@ public class SPQGenTest {
         SPQTree tree = new SPQTree(root);
 
         Boolean check = false;
+        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+
+
 
         int counter = 0;
         while (!check) {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(30, 30);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(50, 30);
             graphgenSplitGraph.generateGraph();
 
 
@@ -57,30 +60,37 @@ public class SPQGenTest {
 
 
             tree = new SPQTree(root);
-            tree.fillNodeToEdgesTable(tree.getRoot());
-            tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
+         //   tree.fillNodeToEdgesTable(tree.getRoot());
+            tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
 
             // normale repräsentation
-            root.compactTree2();
+            root.generateQstarNodes();
 
-            root.computeNodesInComponent();
+            root.computeAdjecentVertices();
 
          //   graph2 = GraphHelper.treeToDOT(root, 2);
          //   GraphHelper.printTODOTSPQNode(graph2);
          //   GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+
+            embedding = erstelleHashtablefuerFacegenerator(tree);
+
+
             check = root.computeRepresentability(check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
                 if (!check) {
-                    System.out.println("Didimo rejected at source");
+                    System.out.println("Didimo rejected at source Node");
                 }
+            }
 
+            if (!check) {
+                continue;
             }
 
             boolean tamassiaValid = true;
             try {
 
-                Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
+            //    Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
                 FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
@@ -107,7 +117,10 @@ public class SPQGenTest {
             //  GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
         }
 
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
+      //  Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+     //   angulator.run();
+
+      //  Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
@@ -386,11 +399,11 @@ public class SPQGenTest {
 
         SPQTree tree = new SPQTree(root);
         root.compactTree();
-        tree.determineSandPnodes(tree.getRoot(), tree.getVisited());
-        root.compactTree2();
+        tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
+        root.generateQstarNodes();
 
 
-        root.computeNodesInComponent();
+        root.computeAdjecentVertices();
         boolean check = true;
         root.computeRepresentability(check);
 

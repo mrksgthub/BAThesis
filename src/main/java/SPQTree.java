@@ -1,6 +1,4 @@
-import org.jgrapht.GraphPath;
 import org.jgrapht.Graphs;
-import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -9,11 +7,10 @@ import java.util.*;
 public class SPQTree {
 
     SPQNode root;
-    Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable = new Hashtable();
+    Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable = new Hashtable<>();
     Set<SPQNode> visited = new LinkedHashSet<SPQNode>();
     DirectedMultigraph<TreeVertex, DefaultEdge> constructedGraph = new DirectedMultigraph<TreeVertex, DefaultEdge>(DefaultEdge.class);
     Hashtable<SPQNode, HashSet<SPQNode>> vertexAdjMap = new Hashtable<>();
-
 
 
     public Set<SPQNode> getVisited() {
@@ -26,9 +23,6 @@ public class SPQTree {
 
     public SPQTree(SPQNode root) {
         this.root = root;
-
-
-
 
 
     }
@@ -59,50 +53,41 @@ public class SPQTree {
         }
     }
 
-    public void determineSandPnodes(SPQNode root, Set<SPQNode> visited) {
+    public void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root, Set<SPQNode> visited) {
         visited.add(root);
 
 
         for (SPQNode node : root.getMergedChildren()
         ) {
-            determineSandPnodes(node, visited);
+            setStartAndSinkNodesOrBuildConstructedGraph(node, visited);
         }
         if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
             root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
             root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
 
-
         } else {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());
             constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());
-
-
-
         }
 
     }
 
     public void determineAdjecents() {
 
-        for (TreeVertex vertex: constructedGraph.vertexSet()
-             ) {
+        for (TreeVertex vertex : constructedGraph.vertexSet()
+        ) {
             Set<TreeVertex> adjSetStart = Graphs.neighborSetOf(constructedGraph, vertex);
 
         }
-
-
-
-
 
     }
 
     public boolean computeNofRoot() {
 
-
         int spirality = 99999;
 
-        if (root.getMergedChildren().get(0).startNodes.size() == 1 && root.getMergedChildren().get(0).sinkNodes.size() == 1 ) {
+        if (root.getMergedChildren().get(0).startNodes.size() == 1 && root.getMergedChildren().get(0).sinkNodes.size() == 1) {
             spirality = 2;
         } else if (root.getMergedChildren().get(0).startNodes.size() >= 2 && root.getMergedChildren().get(0).sinkNodes.size() >= 2) {
 
@@ -121,10 +106,6 @@ public class SPQTree {
             return false;
         }
     }
-
-
-
-
 
 
 }

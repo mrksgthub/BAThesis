@@ -373,12 +373,12 @@ public class SPQNode {
 
     }
 
-    public void compactTree2() {
+    public void generateQstarNodes() {
 
 
         for (SPQNode spQNode : mergedChildren
         ) {
-            spQNode.compactTree2();
+            spQNode.generateQstarNodes();
         }
 
         if ((this.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
@@ -392,7 +392,7 @@ public class SPQNode {
     }
 
 
-    public void computeNodesInComponent() {
+    public void computeAdjecentVertices() {
 
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
             startVertex.adjecentVertices.add(sinkVertex);
@@ -402,7 +402,7 @@ public class SPQNode {
 
         for (SPQNode spQNode : mergedChildren
         ) {
-            spQNode.computeNodesInComponent();
+            spQNode.computeAdjecentVertices();
         }
 
         if (mergedChildren.size() > 0) {
