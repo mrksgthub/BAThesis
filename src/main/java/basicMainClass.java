@@ -25,6 +25,8 @@ public class basicMainClass {
         SPQTree tree = spqGenerator.getTree();
         SPQNode root = spqGenerator.getRoot();
 
+        SPQExporter spqExporter = new SPQExporter(tree);
+        spqExporter.run(root);
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding, root);

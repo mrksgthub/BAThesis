@@ -321,10 +321,7 @@ public class Rectangulator<E> {
                         if (counter2 > 4 && counter != -4) {
                             dequeStack.push(faceObj);
                         }
-
                         rectangularFaceMap.remove(faceObj);
-
-
 
                     }
 

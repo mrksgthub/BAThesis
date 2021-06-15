@@ -12,6 +12,7 @@ public class SPQGenerator {
     SPQNode root;
     SPQTree tree;
 
+
     public void run(int size, int chanceOfP) {
 
 

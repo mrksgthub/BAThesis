@@ -211,7 +211,6 @@ public class GraphHelper<V extends TreeVertex, E> {
 
             for (SPQNode node :
                     root.getChildren()) {
-
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun(node, map, graph);
@@ -230,11 +229,9 @@ public class GraphHelper<V extends TreeVertex, E> {
 
             for (SPQNode node :
                     root.mergedChildren) {
-
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun2(node, map, graph);
-
             }
         }
     }
