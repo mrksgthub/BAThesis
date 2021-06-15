@@ -3,8 +3,13 @@ import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.nio.dot.DOTExporter;
 
+import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 public class SPQExporter {
@@ -48,6 +53,12 @@ public class SPQExporter {
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
         System.out.println(writer.toString());
+        Paths.get(fileName);
+        try {
+            Files.write(Paths.get(fileName), writer.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -120,6 +131,7 @@ public class SPQExporter {
     public void run(SPQNode root, String fileName) {
 
         printTODOTSPQNode(treeToDOT(root, 2));
+        writeTODOTSPQNode(treeToDOT(root, 2), fileName);
 
 
     }

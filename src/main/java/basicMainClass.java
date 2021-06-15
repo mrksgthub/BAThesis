@@ -27,6 +27,7 @@ public class basicMainClass {
 
         SPQExporter spqExporter = new SPQExporter(tree);
         spqExporter.run(root);
+        spqExporter.run(root, "C:/a.txt");
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding, root);
