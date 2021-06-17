@@ -19,7 +19,7 @@ public class basicMainClass {
         SPQNode root;
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(500, 30);
+        spqGenerator.run(10, 30);
 
 
         tree = spqGenerator.getTree();
@@ -42,7 +42,7 @@ public class basicMainClass {
         Embedder embedder = new Embedder(embedding, root);
         embedder.run(root);
 
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
 
@@ -54,6 +54,9 @@ public class basicMainClass {
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
 
+
+        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        tamassiaRepresentation.run();
 ////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////

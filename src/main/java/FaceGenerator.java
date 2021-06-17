@@ -1,7 +1,5 @@
 
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
@@ -25,7 +23,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     Map<E, Integer> visitsMap = new HashMap<>();
     Map<MutablePair<V, V>, Integer> visitsMap2 = new HashMap<>();
     Map<MutablePair<V, V>, Integer> pairIntegerMap = new HashMap<>();
-    Set<PlanarGraphFace<V, E>> planarGraphFaces = new LinkedHashSet<>();
+    List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
     HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
     HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
     HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>>();
@@ -133,11 +131,11 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         this.pairIntegerMap = pairIntegerMap;
     }
 
-    public Set<PlanarGraphFace<V, E>> getPlanarGraphFaces() {
+    public List<PlanarGraphFace<V, E>> getPlanarGraphFaces() {
         return planarGraphFaces;
     }
 
-    public void setPlanarGraphFaces(Set<PlanarGraphFace<V, E>> planarGraphFaces) {
+    public void setPlanarGraphFaces(ArrayList<PlanarGraphFace<V, E>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
     }
 
@@ -311,8 +309,8 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         networkGraph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 
         List<V> vertexList = listOfFaces2.get(0);
-        TreeVertex outerFace = new TreeVertex("0");
-        networkGraph.addVertex(outerFace);
+        TreeVertex outerFace = planarGraphFaces.get(0);
+        networkGraph.addVertex(planarGraphFaces.get(0));
 
         supplyMap.put(outerFace, -1 * (2 * (vertexList.size() - 1) + 4));
 
@@ -320,7 +318,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
             TreeVertex temp = vertexList.get(j);
             networkGraph.addVertex(temp);
             supplyMap.put(temp, 4);
-            DefaultWeightedEdge e = networkGraph.addEdge(temp, outerFace);
+            DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(0));
             networkGraph.setEdgeWeight(e, 1);
             upperMap.put(e, 4);
             lowerMap.put(e, 1);
@@ -331,18 +329,16 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         for (int i = 1; i < listOfFaces2.size(); i++) {
 
             vertexList = listOfFaces2.get(i);
-            TreeVertex innerFace = new TreeVertex(Integer.toString(i));
-            networkGraph.addVertex(innerFace);
+            TreeVertex innerFace = planarGraphFaces.get(i);
+            networkGraph.addVertex(planarGraphFaces.get(i));
             supplyMap.put(innerFace, -1 * (2 * (vertexList.size() - 1) - 4));
 
 
             for (int j = 0; j < vertexList.size() - 1; j++) {
                 TreeVertex temp = vertexList.get(j);
-
                 networkGraph.addVertex(temp);
                 supplyMap.put(temp, 4);
-
-                DefaultWeightedEdge e = networkGraph.addEdge(temp, innerFace);
+                DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(i));
                 networkGraph.setEdgeWeight(e, 1);
                 upperMap.put(e, 4);
                 lowerMap.put(e, 1);
@@ -356,7 +352,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         return networkGraph;
     }
 
-    public void generateCapacities() {
+    public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> generateCapacities() {
 
 
         List<V> vertexList = listOfFaces2.get(0);
@@ -393,7 +389,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 minimumCostFlowAlgorithm.getMinimumCostFlow(problem);
 
 
-        System.out.println("Test");
+        return minimumCostFlow;
     }
 
 

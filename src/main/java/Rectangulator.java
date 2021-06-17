@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Rectangulator<E> {
 
-    Set<PlanarGraphFace<TreeVertex, E>> planarGraphFaces = new HashSet<PlanarGraphFace<TreeVertex, E>>();
+    List<PlanarGraphFace<TreeVertex, E>> planarGraphFaces;
 
     HashMap<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> frontMap = new HashMap<>();
     HashMap<PlanarGraphFace<TreeVertex, E>, PlanarGraphFace<TreeVertex, E>> rectangularFaceMap = new LinkedHashMap<>();
@@ -20,11 +20,11 @@ public class Rectangulator<E> {
     int counter = 100;
     List<MutablePair<TreeVertex, TreeVertex>> startingEdges = new ArrayList<>();
 
-    public Set<PlanarGraphFace<TreeVertex, E>> getPlanarGraphFaces() {
+    public List<PlanarGraphFace<TreeVertex, E>> getPlanarGraphFaces() {
         return planarGraphFaces;
     }
 
-    public void setPlanarGraphFaces(Set<PlanarGraphFace<TreeVertex, E>> planarGraphFaces) {
+    public void setPlanarGraphFaces(List<PlanarGraphFace<TreeVertex, E>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
     }
 
@@ -68,7 +68,7 @@ public class Rectangulator<E> {
         this.originaledgeToFaceMap = originaledgeToFaceMap;
     }
 
-    public Rectangulator(Set<PlanarGraphFace<TreeVertex, E>> planarGraphFaces) {
+    public Rectangulator(List<PlanarGraphFace<TreeVertex, E>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
     }
 
