@@ -448,7 +448,7 @@ public class SPQNode {
             }
             if (mergedChildren.get(i).getNodeType() != NodeTypesEnum.NODETYPE.Q) {
                 if (qNodes.size() > 0) {
-                    SPQQNode newQ = new SPQQNode(this.getName() + "Qstar" + counter++);
+                    SPQQNode newQ = new SPQQNode(  "Qstar" + counter++ + this.getName());
                     newQ.setMergedChildren(qNodes);
                     newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
                     newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
@@ -460,7 +460,7 @@ public class SPQNode {
             }
         }
         if (qNodes.size() > 0) {
-            SPQQNode newQ = new SPQQNode(this.getName() + "Qstar" + counter++);
+            SPQQNode newQ = new SPQQNode( "Qstar" + counter++ + this.getName());
             newQ.setMergedChildren(qNodes);
             newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
             newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());

@@ -30,8 +30,8 @@ public class GraphgenSplitGraph {
         root = new SPQPNode("Proot");
         root.setRoot();
         root.setNodeType(NodeTypesEnum.NODETYPE.P);
-        TreeVertex vertex = new TreeVertex("source");
-        TreeVertex vertex2 = new TreeVertex("sink");
+        TreeVertex vertex = new TreeVertex("vsource");
+        TreeVertex vertex2 = new TreeVertex("vsink");
         multigraph.addVertex(vertex);
         multigraph.addVertex(vertex2);
         multigraph.addEdge(vertex, vertex2);

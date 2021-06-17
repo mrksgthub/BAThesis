@@ -61,7 +61,7 @@ public class SPQTree {
         ) {
             setStartAndSinkNodesOrBuildConstructedGraph(node, visited);
         }
-        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
+        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q || root.getMergedChildren().size() > 0) {
             root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
             root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
 

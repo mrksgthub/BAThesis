@@ -18,6 +18,8 @@ public class Embedder {
         embedding.putIfAbsent(node.getStartVertex(), node.getStartVertex().adjecentVertices);
         embedding.putIfAbsent(node.getSinkVertex(), node.getSinkVertex().adjecentVertices);
 
+        assert (node.getStartVertex() != null);
+        assert (node.getSinkVertex() != null);
 
         for (SPQNode child: node.getMergedChildren()
              ) {
