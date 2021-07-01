@@ -106,7 +106,7 @@ public class Coordinator {
             edgeToCoordMap.put(list.get(i).getLeft(), new Pair<>(length, yCoord));
         }
 
-
+        // x-Koordinaten festlegen:
         length = 0;
         list = outerFace.sidesMap.get(3);
         xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;

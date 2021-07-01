@@ -47,16 +47,16 @@ public class basicMainClass {
 
 
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-        didimoRepresentability.run();
+       didimoRepresentability.run();
 
-        root.getMergedChildren().get(0).computeSpirality();
+      root.getMergedChildren().get(0).computeSpirality();
 
-        Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+       Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
 
 
-        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        tamassiaRepresentation.run();
+      //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+      //  tamassiaRepresentation.run();
 ////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////
