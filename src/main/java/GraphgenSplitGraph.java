@@ -13,8 +13,8 @@ public class GraphgenSplitGraph {
 
     DirectedMultigraph<TreeVertex, DefaultEdge> multigraph = new DirectedMultigraph<>(TreeVertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
     int operations;
-    List<DefaultEdge> edges = new ArrayList();
-    HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap();
+    List<DefaultEdge> edges = new ArrayList<>();
+    HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
     int counter = 0;
     private double chanceOfP = 50;
 
@@ -93,7 +93,7 @@ public class GraphgenSplitGraph {
         }
 
         int counter = 0;
-        for (int i = 0; i < 1*operations; i++) {
+        for (int i = 0; i < 0.5*operations; i++) {
 
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
@@ -374,7 +374,9 @@ public class GraphgenSplitGraph {
 
         addNodeAsRightChild(newSnode, newPnode);
 
-
+        // TODO Sinnvoll?
+        randomnewSNode(edge1);
+        randomnewSNode(edge2);
 
 
     }

@@ -19,7 +19,7 @@ public class basicMainClass {
         SPQNode root;
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(10, 30);
+        spqGenerator.run(20, 20);
 
 
         tree = spqGenerator.getTree();
@@ -44,6 +44,8 @@ public class basicMainClass {
 
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
+
+        System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
 
 
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
