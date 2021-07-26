@@ -261,7 +261,7 @@ public class SPQPNode extends SPQNode {
             hashMap.put((new Tuple<>(startVertex, sinkVertex)), -1);
             hashMap.put((new Tuple<>(sinkNodes.get(0), sinkVertex)), 1);
 
-            System.out.println("Test");
+          //  System.out.println("Test");
 
 
         }

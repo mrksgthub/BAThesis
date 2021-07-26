@@ -5,7 +5,6 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.*;
-
 import org.jgrapht.traverse.DepthFirstIterator;
 import org.junit.jupiter.api.Test;
 

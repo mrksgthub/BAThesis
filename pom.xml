@@ -53,7 +53,7 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -63,7 +63,12 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-io</artifactId>
-            <version>1.5.0</version>
+            <version>1.5.1</version>
+        </dependency>
+        <dependency>
+        <groupId>org.jheaps</groupId>
+        <artifactId>jheaps</artifactId>
+        <version>0.14</version>
         </dependency>
     </dependencies>
 

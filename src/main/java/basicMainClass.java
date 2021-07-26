@@ -19,7 +19,7 @@ public class basicMainClass {
         SPQNode root;
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(20, 20);
+        spqGenerator.run(30000, 0);
 
 
         tree = spqGenerator.getTree();
@@ -45,26 +45,37 @@ public class basicMainClass {
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
-        System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
 
+        // Zeit:
+        long startTime = System.currentTimeMillis();
 
+/*
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-       didimoRepresentability.run();
+        didimoRepresentability.run();
 
-      root.getMergedChildren().get(0).computeSpirality();
 
-       Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println("Didimo Zeit: " + elapsedTime);
+
+
+        root.getMergedChildren().get(0).computeSpirality();
+        Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
+*/
 
-
-      //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-      //  tamassiaRepresentation.run();
+          TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+         tamassiaRepresentation.run();
 ////////////////////////////////////////////
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 
 // orthogonal rep muss gesetted werden
 
+        System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());

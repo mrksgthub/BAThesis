@@ -350,7 +350,7 @@ public class Rectangulator<E> {
             startingEdges = new ArrayList<>();
             boolean test = originaledgeToFaceMap.containsValue(face);
 
-            System.out.println("Test");
+       //     System.out.println("Test");
 
         }
 
@@ -838,7 +838,7 @@ public class Rectangulator<E> {
             startingEdges = new ArrayList<>();
             boolean test = originaledgeToFaceMap.containsValue(face);
 
-            System.out.println("Test");
+          //  System.out.println("Test");
 
         }
 
@@ -917,7 +917,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-                System.out.println("Test");
+             //   System.out.println("Test");
 
 
                 try {
@@ -1029,7 +1029,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-                System.out.println("Test");
+         //       System.out.println("Test");
 
 
                 try {
@@ -1055,7 +1055,7 @@ public class Rectangulator<E> {
         }
 
 
-        System.out.println("Test");
+    //    System.out.println("Test");
 
 
         newFront.add(new Tuple<TreeVertex, TreeVertex>(front.getLeft(), front.getRight()));
@@ -1221,7 +1221,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-                System.out.println("Test");
+               //  System.out.println("Test");
 
 
                 try {
@@ -1358,7 +1358,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front2;
-                System.out.println("Test");
+           //     System.out.println("Test");
 
 
                 try {

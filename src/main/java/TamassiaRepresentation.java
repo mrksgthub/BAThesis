@@ -23,9 +23,6 @@ public class TamassiaRepresentation {
 
     public void run() {
 
-
-
-
         boolean tamassiaValid = true;
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
         try {

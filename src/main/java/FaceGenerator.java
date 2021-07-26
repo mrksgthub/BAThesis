@@ -354,7 +354,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
     public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> generateCapacities() {
 
-
+/*
         List<V> vertexList = listOfFaces2.get(0);
 
         int capacity = 2 * (vertexList.size() - 1) - 4;
@@ -368,7 +368,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
 
         }
-
+*/
 
         MinimumCostFlowProblem<TreeVertex,
                 DefaultWeightedEdge> problem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<>(
@@ -379,11 +379,13 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 new CapacityScalingMinimumCostFlow<>();
 
 
+        /*
         HashMap<DefaultWeightedEdge, Double> costMap = new HashMap<>();
         for (DefaultWeightedEdge edge :
                 networkGraph.edgeSet()) {
 
         }
+        */
 
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow =
                 minimumCostFlowAlgorithm.getMinimumCostFlow(problem);

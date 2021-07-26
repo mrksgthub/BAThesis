@@ -93,7 +93,7 @@ public class GraphgenSplitGraph {
         }
 
         int counter = 0;
-        for (int i = 0; i < 0.5*operations; i++) {
+        for (int i = 0; i < 0.2*operations; i++) {
 
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
@@ -303,6 +303,7 @@ public class GraphgenSplitGraph {
         addNodeAsRightChild(newQnode, newSnode);
 
     }
+
     private void randomnewPNode2(DefaultEdge edge) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
@@ -367,6 +368,9 @@ public class GraphgenSplitGraph {
         newQnode1.setParent(newSnode);
         newQnode2.setParent(newSnode);
 
+
+        // TODO hier noch eine if-STruktur, um der Linken Seite einzufügen?
+
         newSnode.getChildren().add(newQnode1);
         newSnode.getChildren().add(newQnode2);
 
@@ -375,8 +379,18 @@ public class GraphgenSplitGraph {
         addNodeAsRightChild(newSnode, newPnode);
 
         // TODO Sinnvoll?
-        randomnewSNode(edge1);
-        randomnewSNode(edge2);
+
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+
+            randomnewSNode(edge1);
+        } else {
+            randomnewSNode(edge2);
+        }
+
+
+
+  
+
 
 
     }

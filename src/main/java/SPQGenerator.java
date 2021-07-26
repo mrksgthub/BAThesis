@@ -6,14 +6,27 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SPQGenerator {
 
     SPQNode root;
     SPQTree tree;
+    private long elapsedTime2;
 
 
     public void run(int size, int chanceOfP) {
+
+        Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        logger.setLevel(Level.ALL);
+        Handler handler = new ConsoleHandler();
+        handler.setLevel(Level.ALL);
+        logger.addHandler(handler);
+
+
 
 
         Boolean check = false;
@@ -46,6 +59,10 @@ public class SPQGenerator {
             embedding = erstelleHashtablefuerFacegenerator(tree);
 
 
+
+            // Zeit:
+            long startTime = System.currentTimeMillis();
+
             check = root.computeRepresentability(check);
             if (check) {
                 check = (tree.computeNofRoot()) ? check : false;
@@ -58,6 +75,14 @@ public class SPQGenerator {
                 continue;
             }
 
+            // Zeit:
+            long stopTime = System.currentTimeMillis();
+            long elapsedTime = stopTime - startTime;
+            logger.info("Didimo Zeit: " + elapsedTime);
+
+            System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
+
+
             boolean tamassiaValid = true;
             try {
 
@@ -65,8 +90,17 @@ public class SPQGenerator {
                 FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
-                DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-                treeVertexFaceGenerator.generateCapacities();
+                // Zeit2:
+                long startTime2 = System.currentTimeMillis();
+
+             //   DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+            //    treeVertexFaceGenerator.generateCapacities();
+
+                // Zeit2:
+                long stopTime2 = System.currentTimeMillis();
+                long elapsedTime2 = stopTime2 - startTime2;
+                logger.info("Tamassia Zeit: " + elapsedTime2);
+
 
             } catch (Exception e) {
                 tamassiaValid = false;

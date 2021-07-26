@@ -50,7 +50,7 @@ public class SPQQNode extends SPQNode {
 
 
 
-        System.out.println("Test");
+      //  System.out.println("Test");
     }
 
 
