@@ -1,50 +1,62 @@
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.*;
 
 public class MaxFLow {
 
 
-    @Test
+    private TreeVertex solverSource;
+    private TreeVertex solverSink;
+    private  SPQTree tree;
+    private  SPQNode root;
+    private FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator;
+
+    public FaceGenerator<TreeVertex, DefaultEdge> getTreeVertexFaceGenerator() {
+        return treeVertexFaceGenerator;
+    }
+
+    public void setTreeVertexFaceGenerator(FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator) {
+        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+    }
+
+    private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+
+
+    public MaxFLow(SPQTree tree, SPQNode root, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator) {
+        this.tree = tree;
+        this.root = root;
+        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+    }
+
+
+
+
     public void run() {
 
-        SPQTree tree;
-        SPQNode root;
+
+        solverSource = new TreeVertex("solverSource");
+        solverSink = new TreeVertex("solverSink");
+
+        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
 
 
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-        spqImporter.run();
+        MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
 
 
-        tree = spqImporter.tree;
-        root = tree.getRoot();
+        test33.getMaximumFlow(solverSource, solverSink);
+        test33.getFlowMap();
 
 
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
-        Embedder embedder = new Embedder(embedding, root);
-        embedder.run(root);
+        setOrthogonalRep(test33.getFlowMap(), treeVertexFaceGenerator.getPlanarGraphFaces());
 
+    }
 
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
-        treeVertexFaceGenerator.generateFaces2();
-
-
-        MaxFLow maxFLow = new MaxFLow();
-
-        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple =
-                new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
-
-
-        TreeVertex solverSource = new TreeVertex("solverSource");
-        TreeVertex solverSink = new TreeVertex("solverSink");
-
+    private void generateFlowGraph(SPQTree tree, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
 
@@ -56,7 +68,7 @@ public class MaxFLow {
             neighbors = tree.constructedGraph.outDegreeOf(vertex) + tree.constructedGraph.inDegreeOf(vertex);
             simple.addVertex(vertex);
             DefaultWeightedEdge e1 = simple.addEdge(solverSource, vertex);
-            simple.setEdgeWeight(e1, 4-neighbors);
+            simple.setEdgeWeight(e1, 4 - neighbors);
         }
 
 
@@ -84,10 +96,9 @@ public class MaxFLow {
         }
 
 
-        System.out.println("OuterFace to Sink: " + neighborOfFace);
+      //  System.out.println("OuterFace to Sink: " + neighborOfFace);
 
         // Inner Faces:
-
         for (int i = 1; i < treeVertexFaceGenerator.listOfFaces2.size(); i++) {
 
             vertexList = treeVertexFaceGenerator.listOfFaces2.get(i);
@@ -100,7 +111,7 @@ public class MaxFLow {
             edge = simple.addEdge(face, solverSink);
             simple.setEdgeWeight(edge, neighborOfFace);
 
-            System.out.println("InnerFace to Sink: " + neighborOfFace);
+        //    System.out.println("InnerFace to Sink: " + neighborOfFace);
 
             // Vertex zu Face
             for (int j = 0; j < vertexList.size() - 1; j++) {
@@ -111,18 +122,76 @@ public class MaxFLow {
             }
 
         }
+    }
 
 
-        MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
 
 
-        test33.getMaximumFlow(solverSource, solverSink);
-        test33.getFlowMap();
+
+    private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces) {
 
 
+        // Erstelle Map um die Kante y zu beommen, welche in Facette x auf Knoten z endet.
+        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>>> map = new HashMap<>();
+
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : planarGraphFaces
+        ) {
+            HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> pairVectorMap = new HashMap<>();
+            map.put(face, pairVectorMap);
+
+            Map<MutablePair<TreeVertex, TreeVertex>, Integer> s1 = face.getOrthogonalRep();
+            for (MutablePair<TreeVertex, TreeVertex> pair :
+                    face.getOrthogonalRep().keySet()) {
+
+                pairVectorMap.put(pair.getRight(), pair);
+
+            }
+        }
+
+
+        // Weise der Kante y, aus Facette x. doe Knoten z als Endknoten hat den entsprechenden Wert zu
+        for (DefaultWeightedEdge edge : flowMap.keySet()
+        ) {
+
+            if (simple.getEdgeSource(edge) != solverSink && simple.getEdgeSource(edge) != solverSource && simple.getEdgeTarget(edge) != solverSink && simple.getEdgeTarget(edge) != solverSource) {
+                DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> graph = simple;
+
+                HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
+
+                MutablePair<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
+
+
+                PlanarGraphFace<TreeVertex, DefaultEdge> tempFace;
+                Double aDouble = flowMap.get(edge);
+                if (aDouble == 0.0) {
+                    tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
+                    tempFace.getOrthogonalRep().put(pair, 1);
+                } else if (aDouble == 1.0) {
+                    tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
+                    tempFace.getOrthogonalRep().put(pair, 0);
+                } else if (aDouble == 2.0) {
+                    tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
+                    tempFace.getOrthogonalRep().put(pair, -1);
+                }
+
+                System.out.println("test");
+            }
+        }
 
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

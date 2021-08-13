@@ -284,7 +284,7 @@ public class GraphgenSplitGraph {
 
     }
 
-    private void randomnewSNode(DefaultEdge edge) {
+    private DefaultEdge[] randomnewSNode(DefaultEdge edge) {
 
         TreeVertex vertex = multigraph.addVertex();
         DefaultEdge edge1 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
@@ -302,7 +302,9 @@ public class GraphgenSplitGraph {
         nodeUmhaengen(oldQNode, newSnode);
         addNodeAsRightChild(newQnode, newSnode);
 
-    }
+        DefaultEdge[] arr = {edge1, edge2};
+        return arr;
+        }
 
     private void randomnewPNode2(DefaultEdge edge) {
 
@@ -345,7 +347,8 @@ public class GraphgenSplitGraph {
 
     }
 
-    private void randomnewPNode(DefaultEdge edge) {
+    //TODO Original randomnewPNode
+    private void randomnewPNode3(DefaultEdge edge) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
 
@@ -387,13 +390,72 @@ public class GraphgenSplitGraph {
             randomnewSNode(edge2);
         }
 
+    }
 
 
-  
+
+    private void randomnewPNode(DefaultEdge edge) {
+
+        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
+
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
 
 
+        DefaultEdge[] arr1 = randomnewSNode(edge);
+
+        DefaultEdge[] arr2 = randomnewSNode(edge1);
+
+
+
+
+        // TODO Sinnvoll?
+
+
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+
+            randomnewSNode(arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)]);
+        } else {
+            randomnewSNode(arr2[GraphHelper.getRandomNumberUsingNextInt(0, 1)]);
+        }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     public <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
