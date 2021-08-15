@@ -93,7 +93,7 @@ public class GraphgenSplitGraph {
         }
 
         int counter = 0;
-        for (int i = 0; i < 0.2*operations; i++) {
+        for (int i = 0; i < 0.0*operations; i++) {
 
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
@@ -411,22 +411,42 @@ public class GraphgenSplitGraph {
         addNodeAsRightChild(newQnode1, newPnode);
 
 
-        DefaultEdge[] arr1 = randomnewSNode(edge);
-
-        DefaultEdge[] arr2 = randomnewSNode(edge1);
-
+        DefaultEdge[] arr1 = new DefaultEdge[2];
 
 
 
         // TODO Sinnvoll?
 
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+
+            arr1 = randomnewSNode(edge);
+        } else {
+            arr1 = randomnewSNode(edge1);
+        }
+
+
+        for (int i = 0; i < 3; i++) {
+
 
         if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
 
-            randomnewSNode(arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)]);
+            DefaultEdge tempEdge1 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+            arr1 = randomnewSNode(tempEdge1);
+
         } else {
-            randomnewSNode(arr2[GraphHelper.getRandomNumberUsingNextInt(0, 1)]);
+            DefaultEdge tempEdge2 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+            arr1 =randomnewSNode(tempEdge2);
+
         }
+
+
+        }
+
+
+
+
+
+
 
     }
 

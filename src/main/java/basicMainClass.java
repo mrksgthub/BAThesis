@@ -19,7 +19,7 @@ public class basicMainClass {
         SPQNode root;
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(30, 39);
+        spqGenerator.run(3000, 39);
 
 
         tree = spqGenerator.getTree();
