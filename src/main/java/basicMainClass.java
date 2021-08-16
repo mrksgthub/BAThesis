@@ -19,7 +19,7 @@ public class basicMainClass {
         SPQNode root;
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(3000, 39);
+        spqGenerator.run(90000, 20);
 
 
         tree = spqGenerator.getTree();
@@ -49,9 +49,19 @@ public class basicMainClass {
         // Zeit:
         long startTime = System.currentTimeMillis();
 
-/*
+
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
         didimoRepresentability.run();
+
+
+
+
+
+
+        root.getMergedChildren().get(0).computeSpirality();
+        Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+        angulator.run();
+
 
 
 
@@ -60,15 +70,17 @@ public class basicMainClass {
         System.out.println("Didimo Zeit: " + elapsedTime);
 
 
-        root.getMergedChildren().get(0).computeSpirality();
-        Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
-        angulator.run();
-*/
+        startTime = System.currentTimeMillis();
 
-          TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-         tamassiaRepresentation.run();
+        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        tamassiaRepresentation.run();
+
+
+
+         stopTime = System.currentTimeMillis();
+         elapsedTime = stopTime - startTime;
+        System.out.println("Didimo Zeit: " + elapsedTime);
 ////////////////////////////////////////////
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -86,6 +98,7 @@ public class basicMainClass {
         Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
         orientator.run();
 
+        System.out.println("Nach Orientator");
 
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
         DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
@@ -99,6 +112,8 @@ public class basicMainClass {
         //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
 
         horizontalFlow.generateCapacities();
+
+        System.out.println("Nach den FlowNetworks");
 
         Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();

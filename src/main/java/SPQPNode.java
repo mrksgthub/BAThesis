@@ -45,7 +45,7 @@ public class SPQPNode extends SPQNode {
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
                 repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
-                System.out.println("3 Children" + " " + this.getName());
+            //    System.out.println("3 Children" + " " + this.getName());
 
 
             } else {
@@ -88,7 +88,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 2, mR) + gamma / 2;
                     repIntervalUpperBound = Math.min(ML, MR + 2) - gamma / 2;
 
-                    System.out.println("I2Oab" + " " + this.getName());
+                  //  System.out.println("I2Oab" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
@@ -126,7 +126,7 @@ public class SPQPNode extends SPQNode {
                     pdU = 1;
                     pdV = 0;
 
-                    System.out.println("I_3rl reverse" + this.getName());
+                //    System.out.println("I_3rl reverse" + this.getName());
 
                 }
                 double lBound = mL - MR;
@@ -137,7 +137,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
                     repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
 
-                    System.out.println("I3_dd" + " " + this.getName());
+               //     System.out.println("I3_dd" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
@@ -155,11 +155,11 @@ public class SPQPNode extends SPQNode {
                     pd = (mergedChildren.get(0).startNodes.size() == 2) ? 0 : 1;
 
 
-                    System.out.println("I_3dOab reverse" + this.getName());
+            //        System.out.println("I_3dOab reverse" + this.getName());
 
                 } else { // check Sink
                     pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
-                    System.out.println("NI_3dOab normal" + " " + this.getName());
+             //       System.out.println("NI_3dOab normal" + " " + this.getName());
 
                 }
 

@@ -85,7 +85,7 @@ public class GraphgenSplitGraph {
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
                 randomnewPNode(edge);
             } else {
                 randomnewSNode(edge);
@@ -417,7 +417,7 @@ public class GraphgenSplitGraph {
 
         // TODO Sinnvoll?
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 0) {
 
             arr1 = randomnewSNode(edge);
         } else {
@@ -425,7 +425,7 @@ public class GraphgenSplitGraph {
         }
 
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
 
 
         if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {

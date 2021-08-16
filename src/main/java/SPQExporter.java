@@ -37,7 +37,7 @@ public class SPQExporter {
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-        System.out.println(writer.toString());
+     //   System.out.println(writer.toString());
     }
 
     public void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
@@ -52,7 +52,7 @@ public class SPQExporter {
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-        System.out.println(writer.toString());
+       // System.out.println(writer.toString());
         Paths.get(fileName);
         try {
             Files.write(Paths.get(fileName), writer.toString().getBytes(StandardCharsets.UTF_8));
