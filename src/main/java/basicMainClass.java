@@ -18,8 +18,9 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
+
         SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(90000, 20);
+        spqGenerator.run(3000, 20);
 
 
         tree = spqGenerator.getTree();
@@ -72,8 +73,13 @@ public class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        tamassiaRepresentation.run();
+       //TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+       // tamassiaRepresentation.run();
+
+        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+       test.run();
+
+
 
 
 

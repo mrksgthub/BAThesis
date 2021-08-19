@@ -27,7 +27,7 @@ public class TamassiaMaxFlowTest {
         treeVertexFaceGenerator.generateFaces2();
 
 
-        MaxFLow test = new MaxFLow(tree, root, treeVertexFaceGenerator);
+        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
 
 
         test.run();
