@@ -11,8 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HorizontalEdgeFlow {
 
+public class HorizontalEdgeFlow implements Runnable {
+
+    private Thread t;
+    private String threadName = "horizontal";
 
     HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
     Map<TreeVertex, Integer> supplyMap = new HashMap<>();
@@ -136,6 +139,23 @@ public class HorizontalEdgeFlow {
 
 
     }
+
+
+    @Override
+    public void run() {
+        System.out.println("Horizontal Edge Flow");
+        generateCapacities();
+    }
+    public void start () {
+        System.out.println("Starting " +  threadName );
+        if (t == null) {
+            t = new Thread (this, threadName);
+            t.start ();
+        }
+    }
+
+
+
 
 
 }

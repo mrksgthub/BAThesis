@@ -6,16 +6,53 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SPQGenerator {
+public class SPQGenerator implements Callable {
 
+    private BlockingQueue<SPQGenerator> blockingQueue;
     SPQNode root;
     SPQTree tree;
+    int size;
+    int chanceOfP;
     private long elapsedTime2;
+    private GraphgenSplitGraph graphgenSplitGraph;
+
+    public SPQGenerator(int size, int chanceOfP) {
+        this.size = size;
+        this.chanceOfP = chanceOfP;
+    }
+
+    public SPQGenerator(int size, int chanceOfP, BlockingQueue<SPQGenerator> blockingQueue) {
+
+        this.size = size;
+        this.chanceOfP = chanceOfP;
+        this.blockingQueue = blockingQueue;
+
+
+
+    }
+
+    public GraphgenSplitGraph getGraphgenSplitGraph() {
+        return graphgenSplitGraph;
+    }
+
+    public void setGraphgenSplitGraph(GraphgenSplitGraph graphgenSplitGraph) {
+        this.graphgenSplitGraph = graphgenSplitGraph;
+    }
+
+    public SPQGenerator() {
+    }
+
+
+    public void run() {
+        run(size, chanceOfP);
+    }
 
 
     public void run(int size, int chanceOfP) {
@@ -27,8 +64,6 @@ public class SPQGenerator {
         logger.addHandler(handler);
 
 
-
-
         Boolean check = false;
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
 
@@ -37,7 +72,7 @@ public class SPQGenerator {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP);
+            graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP);
             graphgenSplitGraph.generateGraph();
 
 
@@ -57,7 +92,6 @@ public class SPQGenerator {
 
 
             embedding = erstelleHashtablefuerFacegenerator(tree);
-
 
 
             // Zeit:
@@ -93,8 +127,8 @@ public class SPQGenerator {
                 // Zeit2:
                 long startTime2 = System.currentTimeMillis();
 
-             //   DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-            //    treeVertexFaceGenerator.generateCapacities();
+                //   DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+                //    treeVertexFaceGenerator.generateCapacities();
 
                 // Zeit2:
                 long stopTime2 = System.currentTimeMillis();
@@ -115,7 +149,6 @@ public class SPQGenerator {
 
 
     }
-
 
 
     public Hashtable<TreeVertex, ArrayList<TreeVertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
@@ -160,6 +193,16 @@ public class SPQGenerator {
 
     public void setTree(SPQTree tree) {
         this.tree = tree;
+    }
+
+
+
+
+    @Override
+    public SPQGenerator call() throws Exception {
+        run();
+        blockingQueue.put(this);
+        return this;
     }
 }
 

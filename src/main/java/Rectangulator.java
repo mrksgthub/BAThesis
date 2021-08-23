@@ -1,5 +1,4 @@
 
-import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -101,9 +100,6 @@ public class Rectangulator<E> {
     }
 
 
-
-
-
     public void initialize() {
         List<PlanarGraphFace<TreeVertex, E>> faceList = new ArrayList<>(planarGraphFaces);
         Deque<PlanarGraphFace<TreeVertex, E>> dequeStack = new ArrayDeque<>(planarGraphFaces);
@@ -114,7 +110,7 @@ public class Rectangulator<E> {
             face = dequeStack.pop();
 
             int count = 0;
-            for (MutablePair<TreeVertex,TreeVertex> edge : face.getEdgeList()) {
+            for (MutablePair<TreeVertex, TreeVertex> edge : face.getEdgeList()) {
                 if ((Math.abs(face.getOrthogonalRep().get(edge)) == 1)) {
                     count++;
                 }
@@ -162,8 +158,8 @@ public class Rectangulator<E> {
 
                     // new outer Rectangle
                     TreeVertex v1 = new TreeVertex("outer1", true);
-                    TreeVertex v2 = new TreeVertex("outer2",  true);
-                    TreeVertex v3 = new TreeVertex("outer3",  true);
+                    TreeVertex v2 = new TreeVertex("outer2", true);
+                    TreeVertex v3 = new TreeVertex("outer3", true);
                     TreeVertex v4 = new TreeVertex("outer4", true);
                     MutablePair<TreeVertex, TreeVertex> edge1 = new Tuple<>(v1, v2);
                     MutablePair<TreeVertex, TreeVertex> edge2 = new Tuple<>(v2, v3);
@@ -274,7 +270,6 @@ public class Rectangulator<E> {
                     //    assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(pair)) != null);
 
 
-
                     originaledgeToFaceMap.put(pair, (PlanarGraphFace<TreeVertex, DefaultEdge>) faceObj);
 
                     int counter = newOrthogonalRep.get(pair);
@@ -293,7 +288,6 @@ public class Rectangulator<E> {
                         faceObj.getOrthogonalRep().put(iterator, newOrthogonalRep.get(iterator));
                         faceObj.edgeList.add(iterator);
                         //   assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(iterator)) != null);
-
 
 
                         counter += newOrthogonalRep.get(iterator);
@@ -338,31 +332,19 @@ public class Rectangulator<E> {
             }
 
 
-
-
             if (startingEdges.size() == 0 && !face.getName().equals("0")) {
                 rectangularFaceMap.put(face, face);
             }
 
 
-
-
             startingEdges = new ArrayList<>();
-            boolean test = originaledgeToFaceMap.containsValue(face);
+            //    boolean test = originaledgeToFaceMap.containsValue(face);
 
-       //     System.out.println("Test");
+            //     System.out.println("Test");
 
         }
 
     }
-
-
-
-
-
-
-
-
 
 
     public void initialize3() {
@@ -375,7 +357,7 @@ public class Rectangulator<E> {
             face = dequeStack.pop();
 
             int count = 0;
-            for (MutablePair<TreeVertex,TreeVertex> edge : face.getEdgeList()) {
+            for (MutablePair<TreeVertex, TreeVertex> edge : face.getEdgeList()) {
                 if ((Math.abs(face.getOrthogonalRep().get(edge)) == 1)) {
                     count++;
                 }
@@ -472,7 +454,7 @@ public class Rectangulator<E> {
                     for (MutablePair<TreeVertex, TreeVertex> edge : frontList
                     ) {
                         //projectEdgeExternalFace(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront, externalFronts);
-                    //    projectEdge2(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront);
+                        //    projectEdge2(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront);
                     }
 
                     Set<MutablePair<TreeVertex, TreeVertex>> externalFrontSet = new LinkedHashSet<>(externalFronts.values());
@@ -483,7 +465,7 @@ public class Rectangulator<E> {
                         MutablePair<TreeVertex, TreeVertex> edge = edgeList.get(0);
                         projectExternalEdge(edge, nexts, externalFronts, newOrthogonalRep, face.getEdgeOrientationMap(), face.sidesMap);
                         for (int i = 1; i < edgeList.size() - 1; i++) {
-                              projectEdge2(edgeList.get(i), nexts, externalFronts, newOrthogonalRep, face, vertexToFront);
+                            projectEdge2(edgeList.get(i), nexts, externalFronts, newOrthogonalRep, face, vertexToFront);
 
                         }
                     }
@@ -502,7 +484,7 @@ public class Rectangulator<E> {
                     for (MutablePair<TreeVertex, TreeVertex> edge : frontList
                     ) {
 
-                     //   projectEdgeExternalFace(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront, externalFronts);
+                        //   projectEdgeExternalFace(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront, externalFronts);
                         projectEdge2(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront);
                     }
 
@@ -520,7 +502,7 @@ public class Rectangulator<E> {
                 visitedMap.put(pair, false);
             }
             for (MutablePair<TreeVertex, TreeVertex> pair :
-                  //  visitedMap.keySet()
+                //  visitedMap.keySet()
                     startingEdges
             ) {
                 if (!visitedMap.get(pair)) {
@@ -529,8 +511,7 @@ public class Rectangulator<E> {
                     rectangularFaceMap.put(faceObj, face);
                     faceObj.getOrthogonalRep().put(pair, newOrthogonalRep.get(pair));
                     faceObj.edgeList.add(pair);
-                //    assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(pair)) != null);
-
+                    //    assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(pair)) != null);
 
 
                     originaledgeToFaceMap.put(pair, (PlanarGraphFace<TreeVertex, DefaultEdge>) faceObj);
@@ -550,8 +531,7 @@ public class Rectangulator<E> {
 
                         faceObj.getOrthogonalRep().put(iterator, newOrthogonalRep.get(iterator));
                         faceObj.edgeList.add(iterator);
-                     //   assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(iterator)) != null);
-
+                        //   assert (originaledgeToFaceMap.get(GraphHelper.reverseEdge(iterator)) != null);
 
 
                         counter += newOrthogonalRep.get(iterator);
@@ -583,7 +563,6 @@ public class Rectangulator<E> {
                         rectangularFaceMap.remove(faceObj);
 
 
-
                     }
 
                     for (MutablePair<TreeVertex, TreeVertex> edge : faceObj.edgeList
@@ -594,15 +573,9 @@ public class Rectangulator<E> {
             }
 
 
-
-
-
-
             if (startingEdges.size() == 0 && !face.getName().equals("0")) {
                 rectangularFaceMap.put(face, face);
             }
-
-
 
 
             startingEdges = new ArrayList<>();
@@ -613,7 +586,6 @@ public class Rectangulator<E> {
         }
 
     }
-
 
 
     public void initialize2() {
@@ -838,15 +810,11 @@ public class Rectangulator<E> {
             startingEdges = new ArrayList<>();
             boolean test = originaledgeToFaceMap.containsValue(face);
 
-          //  System.out.println("Test");
+            //  System.out.println("Test");
 
         }
 
     }
-
-
-
-
 
 
     private void projectEdgeExternalFace(MutablePair<TreeVertex, TreeVertex> front, Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> nexts, Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> fronts, Map<MutablePair<TreeVertex, TreeVertex>, Integer> newOrthogonalRep, PlanarGraphFace<TreeVertex, E> face, Map<TreeVertex, MutablePair<TreeVertex, TreeVertex>> vertexToFront, Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> externalFronts) {
@@ -917,7 +885,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-             //   System.out.println("Test");
+                //   System.out.println("Test");
 
 
                 try {
@@ -1029,7 +997,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-         //       System.out.println("Test");
+                //       System.out.println("Test");
 
 
                 try {
@@ -1055,7 +1023,7 @@ public class Rectangulator<E> {
         }
 
 
-    //    System.out.println("Test");
+        //    System.out.println("Test");
 
 
         newFront.add(new Tuple<TreeVertex, TreeVertex>(front.getLeft(), front.getRight()));
@@ -1221,7 +1189,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front;
-               //  System.out.println("Test");
+                //  System.out.println("Test");
 
 
                 try {
@@ -1271,6 +1239,7 @@ public class Rectangulator<E> {
 
 
     private void projectEdge2(MutablePair<TreeVertex, TreeVertex> front, Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> nexts, Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> fronts, Map<MutablePair<TreeVertex, TreeVertex>, Integer> newOrthogonalRep, PlanarGraphFace<TreeVertex, E> face, Map<TreeVertex, MutablePair<TreeVertex, TreeVertex>> vertexToFront) {
+
         originaledgeToFaceMap.remove(front);
         MutablePair<TreeVertex, TreeVertex> possibleEdge = nexts.get(front);
         MutablePair<TreeVertex, TreeVertex> beforeTempEdge = possibleEdge;
@@ -1279,22 +1248,14 @@ public class Rectangulator<E> {
         List<MutablePair<TreeVertex, TreeVertex>> replacerEdge = new ArrayList<>();
         MutablePair<TreeVertex, TreeVertex> originalFront = new Tuple<TreeVertex, TreeVertex>(front.getLeft(), front.getRight());
 
-        StringBuilder test = new StringBuilder();
+
         Deque<MutablePair<TreeVertex, TreeVertex>> stack = new ArrayDeque<>();
 
         while (possibleEdge != front) {
             stack.push(possibleEdge);
             possibleEdge = nexts.get(possibleEdge);
-            Integer t = newOrthogonalRep.get(possibleEdge);
-            assert (t != null);
-            test.append(t);
+
         }
-        Pattern pattern = Pattern.compile("(1)(0)*(-1)(0)*(-1)");
-        Matcher m = pattern.matcher(test.toString());
-        m.find();
-     //   m.group();
-     //   int start = m.start();
-     //   int end = m.end();
 
         MutablePair<TreeVertex, TreeVertex> edgeBeforeFront = stack.getFirst();
 
@@ -1322,7 +1283,6 @@ public class Rectangulator<E> {
                 MutablePair<TreeVertex, TreeVertex> newEdge2 = new Tuple<>(newVertex, edgeList.get(0).getLeft());
                 edgeList.add(newEdge2);
 
-
                 newOrthogonalRep.put(possibleEdge, 0);
                 newOrthogonalRep.put(newEdge, 1);
                 newOrthogonalRep.put(newEdge2, newOrthogonalRep.get(front2));
@@ -1332,7 +1292,6 @@ public class Rectangulator<E> {
                 if (fronts.get(front2) != null) {
                     fronts.put(newEdge2, fronts.get(front));
                 }
-
 
                 front2.setRight(newVertex);
 
@@ -1345,10 +1304,9 @@ public class Rectangulator<E> {
 
                 //Update the "rest" of the face
 
-
                 MutablePair<TreeVertex, TreeVertex> newEdgeReverse = new Tuple<>(front2.getRight(), possibleEdge.getRight());
                 newOrthogonalRep.put(newEdgeReverse, 1);
-                newOrthogonalRep.put(new Tuple<TreeVertex, TreeVertex>(front2.getLeft(), front2.getRight()), 1);
+                newOrthogonalRep.put(new Tuple<>(front2.getLeft(), front2.getRight()), 1);
                 newFront.get((newFront.size() - 1)).setLeft(front2.getRight());
                 replacerEdge.get((newFront.size() - 1)).setRight(front2.getRight());
 
@@ -1358,8 +1316,7 @@ public class Rectangulator<E> {
 
 
                 possibleEdge = front2;
-           //     System.out.println("Test");
-
+                //     System.out.println("Test");
 
                 try {
                     for (MutablePair<TreeVertex, TreeVertex> edge :
@@ -1374,14 +1331,13 @@ public class Rectangulator<E> {
                 edgeList = new ArrayList<>();
             }
 
-
             beforeTempEdge = possibleEdge;
             possibleEdge = nexts.get(possibleEdge);
             assert (possibleEdge != null);
         }
-        newFront.add(new Tuple<TreeVertex, TreeVertex>(front2.getLeft(), front2.getRight()));
+        newFront.add(new Tuple<>(front2.getLeft(), front2.getRight()));
         //TODO orthogonalRep der Front im Benachbarten Vertex updaten
-        replacerEdge.add(new Tuple<TreeVertex, TreeVertex>(front2.getRight(), (front2.getLeft())));
+        replacerEdge.add(new Tuple<>(front2.getRight(), (front2.getLeft())));
         MutablePair<TreeVertex, TreeVertex> originalFrontReverse = GraphHelper.reverseEdge(originalFront);
         PlanarGraphFace<TreeVertex, DefaultEdge> neighbouringFace = originaledgeToFaceMap.get(originalFrontReverse);
         originaledgeToFaceMap.remove(originalFrontReverse);
@@ -1401,7 +1357,6 @@ public class Rectangulator<E> {
         assert (pos > -1);
         neigbouringFaceEdgeList.remove(pos);
         neigbouringFaceEdgeList.addAll(pos, replacerEdge);
-
 
         nexts.remove(front);
         startingEdges.addAll(newFront);

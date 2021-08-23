@@ -2,12 +2,21 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swing_viewer.ViewPanel;
+import org.graphstream.ui.view.View;
+import org.graphstream.ui.view.Viewer;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.*;
 
 public class basicMainClass {
 
@@ -15,12 +24,18 @@ public class basicMainClass {
     public static void main(String[] args) {
         System.setProperty("org.graphstream.ui", "swing");
 
+        ExecutorService executorService =
+                new ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS,
+                        new LinkedBlockingQueue<Runnable>());
+        List<Callable<Object>> callableList = new ArrayList<>();
+
+
         SPQTree tree;
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator();
-        spqGenerator.run(3000, 20);
+        SPQGenerator spqGenerator = new SPQGenerator(10, 0);
+        spqGenerator.run();
 
 
         tree = spqGenerator.getTree();
@@ -55,15 +70,9 @@ public class basicMainClass {
         didimoRepresentability.run();
 
 
-
-
-
-
         root.getMergedChildren().get(0).computeSpirality();
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
-
-
 
 
         long stopTime = System.currentTimeMillis();
@@ -73,18 +82,15 @@ public class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-       //TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-       // tamassiaRepresentation.run();
+        //TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        // tamassiaRepresentation.run();
 
-        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-       test.run();
-
-
+         MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+           test.run();
 
 
-
-         stopTime = System.currentTimeMillis();
-         elapsedTime = stopTime - startTime;
+        stopTime = System.currentTimeMillis();
+        elapsedTime = stopTime - startTime;
         System.out.println("Didimo Zeit: " + elapsedTime);
 ////////////////////////////////////////////
 
@@ -106,18 +112,29 @@ public class basicMainClass {
 
         System.out.println("Nach Orientator");
 
+
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
         DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
         // GraphHelper.printToDOTTreeVertexWeighted(testgraph);
-
-        verticalFlow.generateCapacities();
+        // verticalFlow.generateCapacities();
 
 
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
         DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
+        //  horizontalFlow.generateCapacities();
 
-        horizontalFlow.generateCapacities();
+
+
+        callableList.add(Executors.callable(verticalFlow));
+        callableList.add(Executors.callable(horizontalFlow));
+
+        try {
+            executorService.invokeAll(callableList);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         System.out.println("Nach den FlowNetworks");
 
@@ -154,9 +171,20 @@ public class basicMainClass {
         }
 
 
+
         graph.display(false);
 
 
+
+
+
+
     }
+
+
+
+
+
+
 
 }

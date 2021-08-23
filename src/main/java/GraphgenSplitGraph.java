@@ -26,6 +26,7 @@ public class GraphgenSplitGraph {
 
 
     public GraphgenSplitGraph(int operations) {
+        // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.operations = operations;
         root = new SPQPNode("Proot");
         root.setRoot();
@@ -425,7 +426,7 @@ public class GraphgenSplitGraph {
         }
 
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
 
 
         if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
