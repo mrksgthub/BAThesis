@@ -569,16 +569,6 @@ public class SPQNode {
             this.getMergedChildren().get(0).setSpirality(this.spirality + 2);
             this.getMergedChildren().get(1).setSpirality(this.spirality);
             this.getMergedChildren().get(2).setSpirality(this.spirality - 2);
-           /*
-            anglesStart.add(1);
-            anglesStart.add(1);
-            anglesStart.add(1);
-            anglesStart.add(1);
-            anglesSink.add(1);
-            anglesSink.add(1);
-            anglesSink.add(1);
-            anglesSink.add(1);
-*/
 
         } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 2) {
             int alphaul = 9999;

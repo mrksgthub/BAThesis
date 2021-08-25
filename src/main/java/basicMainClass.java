@@ -34,7 +34,7 @@ public class basicMainClass {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(10, 0);
+        SPQGenerator spqGenerator = new SPQGenerator(80, 30);
         spqGenerator.run();
 
 
@@ -46,7 +46,8 @@ public class basicMainClass {
         spqExporter.run(root, "C:/a.txt");
 
 
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+    //    SPQImporter spqImporter = new SPQImporter("C:/a.txt");
         spqImporter.run();
 
 
@@ -82,11 +83,11 @@ public class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-        //TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        // tamassiaRepresentation.run();
+        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        tamassiaRepresentation.run();
 
-         MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-           test.run();
+       //  MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+       //    test.run();
 
 
         stopTime = System.currentTimeMillis();

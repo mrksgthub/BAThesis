@@ -29,8 +29,8 @@ public class graphBuilder {
         //  SPQGenerator spqGenerator = new SPQGenerator(60000, 30, blockingQueue);
         //   SPQGenerator spqGen = spqGenerator.call();
 
-        int ops = 60000;
-        int chanceOfP = 25;
+        int ops = 90000;
+        int chanceOfP = 20;
 
 
         ArrayList<Callable<Object>> arrList = new ArrayList<>();

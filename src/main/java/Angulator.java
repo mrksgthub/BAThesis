@@ -56,6 +56,7 @@ public class Angulator {
                 test.add(face);
                 if (Math.abs(edgeCount) == 4) {
                     System.out.println("Fehler");
+                    throw new RuntimeException("IllegalGraph");
 
                 }
             }
