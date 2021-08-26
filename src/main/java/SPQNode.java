@@ -526,17 +526,6 @@ public class SPQNode {
         return check;
     }
 
-    public int computeHowManyCommonNodesThisAndSet(HashSet<TreeVertex> tempHashSet) {
-        int counter = 0;
-        for (TreeVertex node : tempHashSet
-        ) {
-            if (nodesInCompnent.contains(node)) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
 
     public void computeSpirality() {
 
@@ -651,6 +640,10 @@ public class SPQNode {
 
 
         assert (getRepIntervalLowerBound() <= getRepIntervalUpperBound());
+        if (this.getMergedChildren().size() > 0) {
+            assert (getRepIntervalLowerBound() <= spirality);
+            assert (spirality <= getRepIntervalUpperBound());
+        }
 
 
     }

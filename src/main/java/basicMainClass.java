@@ -2,17 +2,10 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.swing_viewer.ViewPanel;
-import org.graphstream.ui.view.View;
-import org.graphstream.ui.view.Viewer;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -21,7 +14,7 @@ import java.util.concurrent.*;
 public class basicMainClass {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         System.setProperty("org.graphstream.ui", "swing");
 
         ExecutorService executorService =
@@ -47,7 +40,7 @@ public class basicMainClass {
 
 
         SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
-    //    SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        //  SPQImporter spqImporter = new SPQImporter("C:/a.txt");
         spqImporter.run();
 
 
@@ -62,6 +55,12 @@ public class basicMainClass {
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
+        for (TreeVertex vertex : tree.constructedGraph.vertexSet()
+        ) {
+            int i = tree.constructedGraph.degreeOf(vertex);
+            assert (i <= 4);
+        }
+
 
         // Zeit:
         long startTime = System.currentTimeMillis();
@@ -72,6 +71,8 @@ public class basicMainClass {
 
 
         root.getMergedChildren().get(0).computeSpirality();
+
+
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
 
@@ -83,11 +84,11 @@ public class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        tamassiaRepresentation.run();
+        //   TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        //   tamassiaRepresentation.run();
 
-       //  MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-       //    test.run();
+        //  MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        //  test.run();
 
 
         stopTime = System.currentTimeMillis();
@@ -124,7 +125,6 @@ public class basicMainClass {
         DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();
-
 
 
         callableList.add(Executors.callable(verticalFlow));
@@ -172,20 +172,10 @@ public class basicMainClass {
         }
 
 
-
         graph.display(false);
 
 
-
-
-
-
     }
-
-
-
-
-
 
 
 }

@@ -97,6 +97,20 @@ public class graphBuilder {
                     FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
                     treeVertexFaceGenerator.generateFaces2();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
 
 
@@ -115,6 +129,17 @@ public class graphBuilder {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+
+
+
+
+
+
+
+
+
+
 
 
             return null;

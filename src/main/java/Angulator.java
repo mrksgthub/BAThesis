@@ -21,7 +21,7 @@ public class Angulator {
     }
 
 
-    public void run() {
+    public void run() throws Exception {
 
     //    this.treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, tree.getRoot().getStartVertex(), tree.getRoot().getSinkVertex(), embedding);
     //    treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
@@ -54,9 +54,11 @@ public class Angulator {
             if (Math.abs(edgeCount) != 4) {
                 //    assert(Math.abs(edgeCount) == 4);
                 test.add(face);
-                if (Math.abs(edgeCount) == 4) {
+                if (Math.abs(edgeCount) != 4) {
                     System.out.println("Fehler");
-                    throw new RuntimeException("IllegalGraph");
+
+                        throw new Exception("IllegalGraph");
+
 
                 }
             }

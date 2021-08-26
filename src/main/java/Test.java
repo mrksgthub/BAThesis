@@ -54,7 +54,11 @@ public class Test {
                 root.getMergedChildren().get(0).computeSpirality();
 
                 Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
-                angulator.run();
+                try {
+                    angulator.run();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
 
 
                 //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);

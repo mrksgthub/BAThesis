@@ -31,6 +31,69 @@ public class SPQGenTest {
 
 
     @Test
+    public void teilGraphTest() throws Exception {
+
+        for (int i = 0; i < 100000; i++) {
+            teilGraphTestRunner();
+
+            System.out.println(i + ". Iteration");
+        }
+
+
+
+    }
+
+
+
+    public void teilGraphTestRunner() throws Exception {
+
+        SPQTree tree;
+        SPQNode root;
+
+
+        SPQGenerator spqGenerator = new SPQGenerator(80, 30);
+        spqGenerator.run();
+
+
+        tree = spqGenerator.getTree();
+        root = spqGenerator.getRoot();
+
+        SPQExporter spqExporter = new SPQExporter(tree);
+        spqExporter.run(root);
+        spqExporter.run(root, "C:/a.txt");
+
+
+        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+       // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+        spqImporter.run();
+
+
+        tree = spqImporter.tree;
+        root = tree.getRoot();
+
+
+        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+        Embedder embedder = new Embedder(embedding, root);
+        embedder.run(root);
+        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        treeVertexFaceGenerator.generateFaces2();
+        TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        tamassiaRepresentation.run();
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    @Test
     public void teilerGraphgen() throws IOException {
 
 
@@ -47,7 +110,7 @@ public class SPQGenTest {
             counter++;
             check = true;
 
-            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(50, 30);
+            GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(500, 30);
             graphgenSplitGraph.generateGraph();
 
 

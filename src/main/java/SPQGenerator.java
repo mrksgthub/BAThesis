@@ -23,6 +23,7 @@ public class SPQGenerator implements Callable {
     private long elapsedTime2;
     private GraphgenSplitGraph graphgenSplitGraph;
 
+
     public SPQGenerator(int size, int chanceOfP) {
         this.size = size;
         this.chanceOfP = chanceOfP;
@@ -57,11 +58,11 @@ public class SPQGenerator implements Callable {
 
     public void run(int size, int chanceOfP) {
 
-        Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        logger.setLevel(Level.ALL);
-        Handler handler = new ConsoleHandler();
-        handler.setLevel(Level.ALL);
-        logger.addHandler(handler);
+       // Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+       // logger.setLevel(Level.ALL);
+       // Handler handler = new ConsoleHandler();
+       // handler.setLevel(Level.ALL);
+      //  logger.addHandler(handler);
 
 
         Boolean check = false;
@@ -112,7 +113,7 @@ public class SPQGenerator implements Callable {
             // Zeit:
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-            logger.info("Didimo Zeit: " + elapsedTime);
+           // logger.info("Didimo Zeit: " + elapsedTime);
 
             System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
 
@@ -133,7 +134,7 @@ public class SPQGenerator implements Callable {
                 // Zeit2:
                 long stopTime2 = System.currentTimeMillis();
                 long elapsedTime2 = stopTime2 - startTime2;
-                logger.info("Tamassia Zeit: " + elapsedTime2);
+                // logger.info("Tamassia Zeit: " + elapsedTime2);
 
 
             } catch (Exception e) {
@@ -143,6 +144,18 @@ public class SPQGenerator implements Callable {
 
 
             assert (tamassiaValid == check);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         }

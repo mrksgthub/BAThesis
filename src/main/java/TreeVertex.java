@@ -10,7 +10,7 @@ public class TreeVertex extends Vertex implements Serializable
 
 {
 
-    public static Supplier<TreeVertex> getvSupplier = new Supplier<TreeVertex>() {
+    public static Supplier<TreeVertex> getvSupplier = new Supplier<>() {
         private int id = 0;
 
         @Override
@@ -26,10 +26,6 @@ public class TreeVertex extends Vertex implements Serializable
     TreeVertex secondVertexInEdge;
     boolean visited = false;
     boolean dummy = false;
-    String realName;
-    int numbering;
-    int leftAngle;
-    int rightAngle;
     String name = super.getName();
     ArrayList<TreeVertex> adjecentVertices = new ArrayList<>();
 
@@ -52,29 +48,7 @@ public class TreeVertex extends Vertex implements Serializable
         this.depth = 0;
     }
 
-    public boolean isDummy() {
-        return dummy;
-    }
 
-    public void setDummy(boolean dummy) {
-        this.dummy = dummy;
-    }
-
-    public int getLeftAngle() {
-        return leftAngle;
-    }
-
-    public void setLeftAngle(int leftAngle) {
-        this.leftAngle = leftAngle;
-    }
-
-    public int getRightAngle() {
-        return rightAngle;
-    }
-
-    public void setRightAngle(int rightAngle) {
-        this.rightAngle = rightAngle;
-    }
 
     public boolean isVisited() {
         return visited;
@@ -84,13 +58,6 @@ public class TreeVertex extends Vertex implements Serializable
         this.visited = visited;
     }
 
-    public String getRealName() {
-        return realName;
-    }
-
-    public void setRealName(String realName) {
-        this.realName = realName;
-    }
 
     public TreeVertex getFirstVertexInEdge() {
         return firstVertexInEdge;

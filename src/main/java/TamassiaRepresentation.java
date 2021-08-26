@@ -21,7 +21,7 @@ public class TamassiaRepresentation {
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;
     }
 
-    public void run() {
+    public void run() throws Exception {
 
         boolean tamassiaValid = true;
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
@@ -33,6 +33,7 @@ public class TamassiaRepresentation {
         } catch (Exception e) {
             tamassiaValid = false;
             System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
+            throw new Exception("IllegalGraph");
         }
 
 
