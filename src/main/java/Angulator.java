@@ -42,14 +42,38 @@ public class Angulator {
 
 
         List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
+        HashMap<TreeVertex, Integer> anglesMap = new HashMap<>();
+
+
+
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+
         ) {
             int edgeCount = 0;
             for (MutablePair<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
+
+                int angle = pairIntegerMap.get(pair);
+
+                if (angle == -1) {
+                    angle = 3;
+                }
+                if (angle == 0) {
+                    angle = 2;
+                }
+                if (angle == 1) {
+                    angle = 1;
+                }
+
+               if( anglesMap.putIfAbsent(pair.getRight(), angle) != null){
+
+                   anglesMap.put(pair.getRight(), anglesMap.get(pair.getRight()) + angle);
+               }
+
             }
+
 
             if (Math.abs(edgeCount) != 4) {
                 //    assert(Math.abs(edgeCount) == 4);
@@ -57,18 +81,23 @@ public class Angulator {
                 if (Math.abs(edgeCount) != 4) {
                     System.out.println("Fehler");
 
-                        throw new Exception("IllegalGraph");
-
-
                 }
             }
-
 
         }
 
 
 
 
+        for (TreeVertex vertex: anglesMap.keySet()
+        ) {
+            Integer integer = anglesMap.get(vertex);
+            if (integer == 4) {
+            } else {
+                System.out.println(("FehlerWinkel"));
+            }
+
+        }
 
 
 

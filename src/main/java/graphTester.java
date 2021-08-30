@@ -37,7 +37,7 @@ public class graphTester {
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(SAMPLE_CSV_FILE));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("Graph", "Size", "Method", "Time in s"));
+                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "Time in s"));
         ) {
 
             for (String fileName: listOfFiles
@@ -64,6 +64,7 @@ public class graphTester {
             int nodes = graph.vertexSet().size();
 
 
+                System.out.println(fileName);
             long startTime = System.currentTimeMillis();
 
 
@@ -79,12 +80,12 @@ public class graphTester {
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
             System.out.println("Didimo Zeit: " + elapsedTime);
-
+            long didimoTime = elapsedTime;
 
             startTime = System.currentTimeMillis();
 
 
-            csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
+            // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
 
             TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
             tamassiaRepresentation.run();
@@ -96,7 +97,7 @@ public class graphTester {
             elapsedTime = stopTime - startTime;
             System.out.println("Tamassia Zeit: " + elapsedTime);
 
-            csvPrinter.printRecord(nodes, faces, "Tamassia", elapsedTime);
+            csvPrinter.printRecord(nodes, faces, didimoTime, elapsedTime);
 
 
 

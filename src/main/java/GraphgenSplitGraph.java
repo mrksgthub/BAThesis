@@ -81,7 +81,7 @@ public class GraphgenSplitGraph {
 
         // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < 1*operations; i++) {
+        for (int i = 0; i < 1 * operations; i++) {
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
@@ -94,13 +94,13 @@ public class GraphgenSplitGraph {
         }
 
         int counter = 0;
-        for (int i = 0; i < 0.0*operations; i++) {
+        for (int i = 0; i < 0.0 * operations; i++) {
 
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (degreeOfedgeSource < 4 && degreeOfedgeSink < 4  && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2) ) {
+            if (degreeOfedgeSource < 4 && degreeOfedgeSink < 4 && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2)) {
                 randomnewSNode(edge);
             } else {
                 i++;
@@ -108,11 +108,6 @@ public class GraphgenSplitGraph {
             }
 
         }
-
-
-
-
-
 
 
         // Start- und Endknoten in die Q-Nodes einfügen
@@ -126,12 +121,11 @@ public class GraphgenSplitGraph {
         }
 
 
-      //  System.out.println("test");
+        //  System.out.println("test");
         //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
 
-        counter = counter + 1 -1;
+        counter = counter + 1 - 1;
     }
-
 
 
     public void generateGraph2() {
@@ -159,7 +153,6 @@ public class GraphgenSplitGraph {
                 randomnewSNode(edge);
             }
         }
-
 
 
         // Start- und Endknoten in die Q-Nodes einfügen
@@ -192,7 +185,7 @@ public class GraphgenSplitGraph {
 
         // GraphHelper.printToDOT(GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < 1*operations; i++) {
+        for (int i = 0; i < 1 * operations; i++) {
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
@@ -204,7 +197,7 @@ public class GraphgenSplitGraph {
             }
         }
 
-        for (int i = 0; i < 2*operations; i++) {
+        for (int i = 0; i < 2 * operations; i++) {
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
@@ -215,12 +208,6 @@ public class GraphgenSplitGraph {
                 randomnewSNode(edge);
             }
         }
-
-
-
-
-
-
 
         // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
@@ -236,31 +223,6 @@ public class GraphgenSplitGraph {
         //  System.out.println("test");
         //    GraphHelper.printTODOTSPQNode(GraphHelper.treeToDOT(root, 1));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void newInitialPNode(DefaultEdge edge) {
@@ -305,7 +267,7 @@ public class GraphgenSplitGraph {
 
         DefaultEdge[] arr = {edge1, edge2};
         return arr;
-        }
+    }
 
     private void randomnewPNode2(DefaultEdge edge) {
 
@@ -394,7 +356,6 @@ public class GraphgenSplitGraph {
     }
 
 
-
     private void randomnewPNode(DefaultEdge edge) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
@@ -411,14 +372,11 @@ public class GraphgenSplitGraph {
         nodeUmhaengen(oldQNode, newPnode);
         addNodeAsRightChild(newQnode1, newPnode);
 
-
         DefaultEdge[] arr1 = new DefaultEdge[2];
-
-
 
         // TODO Sinnvoll?
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 0) {
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < -1) {
 
             arr1 = randomnewSNode(edge);
         } else {
@@ -429,54 +387,22 @@ public class GraphgenSplitGraph {
         for (int i = 0; i < 3; i++) {
 
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
 
-            DefaultEdge tempEdge1 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
-            arr1 = randomnewSNode(tempEdge1);
+                DefaultEdge tempEdge1 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge1);
 
-        } else {
-            DefaultEdge tempEdge2 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
-            arr1 =randomnewSNode(tempEdge2);
+            } else {
+                DefaultEdge tempEdge2 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge2);
+
+            }
+
 
         }
-
-
-        }
-
-
-
-
-
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {

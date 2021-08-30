@@ -12,6 +12,15 @@ import java.util.concurrent.*;
 public class graphBuilder {
 
 
+    public static int CHANCE_OF_P = 60;
+    private static int OPS = 200;
+
+    public graphBuilder(int CHANCE_OF_P, int OPS) {
+
+        graphBuilder.CHANCE_OF_P = CHANCE_OF_P;
+        graphBuilder.OPS = OPS;
+    }
+
     public static void main(String[] args) throws Exception {
 
 
@@ -29,19 +38,16 @@ public class graphBuilder {
         //  SPQGenerator spqGenerator = new SPQGenerator(60000, 30, blockingQueue);
         //   SPQGenerator spqGen = spqGenerator.call();
 
-        int ops = 90000;
-        int chanceOfP = 20;
-
 
         ArrayList<Callable<Object>> arrList = new ArrayList<>();
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
-        arrList.add(new SPQGenerator(ops, chanceOfP, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
+        arrList.add(new SPQGenerator(OPS, CHANCE_OF_P, blockingQueue));
         arrList.add(new Consumer(blockingQueue));
 
 
@@ -98,19 +104,6 @@ public class graphBuilder {
                     treeVertexFaceGenerator.generateFaces2();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
                     System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
 
 
@@ -122,24 +115,13 @@ public class graphBuilder {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Thread.sleep( 5000);
+                    Thread.sleep(5000);
 
 
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-
-
-
-
-
-
-
-
-
-
 
 
             return null;

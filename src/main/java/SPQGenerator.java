@@ -8,10 +8,6 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class SPQGenerator implements Callable {
 
@@ -36,7 +32,6 @@ public class SPQGenerator implements Callable {
         this.blockingQueue = blockingQueue;
 
 
-
     }
 
     public GraphgenSplitGraph getGraphgenSplitGraph() {
@@ -51,18 +46,18 @@ public class SPQGenerator implements Callable {
     }
 
 
-    public void run() {
+    public void run() throws Exception {
         run(size, chanceOfP);
     }
 
 
-    public void run(int size, int chanceOfP) {
+    public void run(int size, int chanceOfP) throws Exception {
 
-       // Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-       // logger.setLevel(Level.ALL);
-       // Handler handler = new ConsoleHandler();
-       // handler.setLevel(Level.ALL);
-      //  logger.addHandler(handler);
+        // Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+        // logger.setLevel(Level.ALL);
+        // Handler handler = new ConsoleHandler();
+        // handler.setLevel(Level.ALL);
+        //  logger.addHandler(handler);
 
 
         Boolean check = false;
@@ -93,6 +88,13 @@ public class SPQGenerator implements Callable {
 
 
             embedding = erstelleHashtablefuerFacegenerator(tree);
+            for (TreeVertex vertex : tree.constructedGraph.vertexSet()
+            ) {
+                int i = tree.constructedGraph.degreeOf(vertex);
+                if (i > 4) {
+                    continue;
+                }
+            }
 
 
             // Zeit:
@@ -107,55 +109,42 @@ public class SPQGenerator implements Callable {
             }
 
             if (!check) {
-                continue;
+                // continue;
             }
 
             // Zeit:
             long stopTime = System.currentTimeMillis();
             long elapsedTime = stopTime - startTime;
-           // logger.info("Didimo Zeit: " + elapsedTime);
+            // logger.info("Didimo Zeit: " + elapsedTime);
 
             System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
 
 
             boolean tamassiaValid = true;
-            try {
 
+            try {
                 //    Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
                 FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
-
                 // Zeit2:
                 long startTime2 = System.currentTimeMillis();
-
-                //   DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-                //    treeVertexFaceGenerator.generateCapacities();
-
+                DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+                treeVertexFaceGenerator.generateCapacities();
                 // Zeit2:
                 long stopTime2 = System.currentTimeMillis();
                 long elapsedTime2 = stopTime2 - startTime2;
                 // logger.info("Tamassia Zeit: " + elapsedTime2);
-
-
             } catch (Exception e) {
                 tamassiaValid = false;
                 System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
             }
 
-
             assert (tamassiaValid == check);
-
-
-
-
-
-
-
-
-
-
-
-
+            // assert(false);
+            // tamassiaValid = false;
+            if (tamassiaValid != check) {
+                throw new Exception("AHHHH");
+            }
 
 
         }
@@ -207,8 +196,6 @@ public class SPQGenerator implements Callable {
     public void setTree(SPQTree tree) {
         this.tree = tree;
     }
-
-
 
 
     @Override

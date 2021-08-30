@@ -26,6 +26,177 @@ public class SPQPNode extends SPQNode {
         this.nodeType = nodeType;
     }
 
+
+    public boolean calculateRepresentabilityInterval2() {
+
+
+        if (mergedChildren.size() == 3) {
+
+            // Lemma 6
+            double mL = mergedChildren.get(0).getRepIntervalLowerBound();
+            double mC = mergedChildren.get(1).getRepIntervalLowerBound();
+            double mR = mergedChildren.get(2).getRepIntervalLowerBound();
+            double ML = mergedChildren.get(0).getRepIntervalUpperBound();
+            double MC = mergedChildren.get(1).getRepIntervalUpperBound();
+            double MR = mergedChildren.get(2).getRepIntervalUpperBound();
+
+            double maxLB = Math.max(mL - 2, mC);
+            maxLB = Math.max(maxLB, mR + 2);
+
+            double minUB = Math.min(ML - 2, MC);
+            minUB = Math.min(minUB, MR + 2);
+
+
+            if (maxLB <= minUB) {
+                repIntervalLowerBound = Math.max(mL - 2, mC);
+                repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
+                repIntervalUpperBound = Math.min(ML - 2, MC);
+                repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
+                //    System.out.println("3 Children" + " " + this.getName());
+
+
+            } else {
+                System.out.println("Intervals do not overlap P has 3 Children" + " " + this.getName());
+                return false;
+            }
+
+
+        } else if (mergedChildren.size() == 2) {
+
+            SPQNode leftSNode = mergedChildren.get(0);
+            SPQNode rightSNode = mergedChildren.get(1);
+
+
+            double mL = leftSNode.getRepIntervalLowerBound();
+            double mR = rightSNode.getRepIntervalLowerBound();
+            double ML = leftSNode.getRepIntervalUpperBound();
+            double MR = rightSNode.getRepIntervalUpperBound();
+
+
+            //TODO wurde geändert von dem auskommentierten zu diesem hier
+            inDegreeCounterStart = startNodes.size();
+            inDegreeCounterSink = sinkNodes.size();
+
+            outDegreeCounterStart = startVertex.adjecentVertices.size() - inDegreeCounterStart;
+            outDegreeCounterSink = sinkVertex.adjecentVertices.size() - inDegreeCounterSink;
+
+
+            if (inDegreeCounterStart == 2 && inDegreeCounterSink == 2) { // I_2O_alphaBeta
+
+                // Lemmma 8
+                double gamma = outDegreeCounterStart + outDegreeCounterSink - 2;
+
+                double lBound = mL - MR;
+                double upBound = ML - mR;
+
+                double minUB = Math.min(upBound, 4 - gamma);
+                double maxLB = Math.max(lBound, 2);
+
+                if (maxLB <= minUB) {
+
+                    repIntervalLowerBound = Math.max(mL - 2, mR) + gamma / 2;
+                    repIntervalUpperBound = Math.min(ML, MR + 2) - gamma / 2;
+
+                    //  System.out.println("I2Oab" + " " + this.getName());
+
+                } else {
+                    System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
+                    return false;
+                }
+
+            } else if ((inDegreeCounterStart == 3 && inDegreeCounterSink == 3))  // I_3dd
+            {
+                double pdV = 9999;
+                double pdU = 9999;
+
+                mL = leftSNode.getRepIntervalLowerBound();
+                mR = rightSNode.getRepIntervalLowerBound();
+                ML = leftSNode.getRepIntervalUpperBound();
+                MR = rightSNode.getRepIntervalUpperBound();
+
+
+                // Was tun falls erstes oder zweites child eine Q node ist
+                if ((mergedChildren.get(0).startNodes.size() == 2) && (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3ll
+                    pdU = 0;
+                    pdV = 0;
+                } else if ((mergedChildren.get(1).startNodes.size() == 2) && (mergedChildren.get(1).sinkNodes.size() == 2)) //I3rr
+                { // FIxbar indem man Q2 zu nem Qstar macht
+
+                    pdU = 1;
+                    pdV = 1;
+                } else if ((mergedChildren.get(1).startNodes.size() == 2) && (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3lr
+
+                    pdU = 0;
+                    pdV = 1;
+
+                } else if ((mergedChildren.get(0).startNodes.size() == 2) && (mergedChildren.get(1).sinkNodes.size() == 2)) { //I3rl
+                    pdU = 1;
+                    pdV = 0;
+
+                }
+                double lBound = mL - MR;
+                double upBound = ML - mR;
+
+
+                if ((lBound <= 3) && (3 <= upBound)) {
+
+                    repIntervalLowerBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
+                    repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
+
+                    //     System.out.println("I3_dd" + " " + this.getName());
+
+                } else {
+                    System.out.println("No rectalinear I3dd'" + " " + this.getName());
+                    return false;
+                }
+
+            } else { // I_3dO_alphaBeta
+
+                double pd = 9999;
+                double gamma = outDegreeCounterStart + outDegreeCounterSink - 2;
+
+                if (inDegreeCounterStart == 3) {
+
+                    //TODO wurde geändert
+                    pd = (mergedChildren.get(0).startNodes.size() == 2) ? 0 : 1;
+
+
+                    //        System.out.println("I_3dOab reverse" + this.getName());
+
+                } else { // check Sink
+                    pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
+                    //       System.out.println("NI_3dOab normal" + " " + this.getName());
+
+                }
+
+                double lBound = mL - MR;
+                double upBound = ML - mR;
+
+                double minUB = Math.min(upBound, 3.5 - gamma);
+                double maxLB = Math.max(lBound, 2.5);
+
+                if (maxLB <= minUB) {
+
+                    repIntervalLowerBound = Math.max(mL - 1.5, mR + 1) + (gamma - pd) / 2;
+                    repIntervalUpperBound = Math.min(ML - 0.5, MR + 2) - (gamma + pd) / 2;
+                } else {
+                    System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
+                    return false;
+                }
+
+            }
+
+
+        } else {
+            System.out.println("Invalid number of Children for P-Node");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // Backup
     @Override
     public boolean calculateRepresentabilityInterval() {
 
@@ -45,7 +216,7 @@ public class SPQPNode extends SPQNode {
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
                 repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
-            //    System.out.println("3 Children" + " " + this.getName());
+                //    System.out.println("3 Children" + " " + this.getName());
 
 
             } else {
@@ -88,7 +259,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 2, mR) + gamma / 2;
                     repIntervalUpperBound = Math.min(ML, MR + 2) - gamma / 2;
 
-                  //  System.out.println("I2Oab" + " " + this.getName());
+                    //  System.out.println("I2Oab" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
@@ -108,7 +279,6 @@ public class SPQPNode extends SPQNode {
                 // Was tun falls erstes oder zweites child eine Q node ist
                 if ((mergedChildren.get(0).startNodes.size() == 2) && (mergedChildren.get(0).sinkNodes.size() == 2)) { //I3ll
 
-
                     pdU = 0;
                     pdV = 0;
                 } else if ((mergedChildren.get(1).startNodes.size() == 2) && (mergedChildren.get(1).sinkNodes.size() == 2)) //I3rr
@@ -126,7 +296,7 @@ public class SPQPNode extends SPQNode {
                     pdU = 1;
                     pdV = 0;
 
-                //    System.out.println("I_3rl reverse" + this.getName());
+                    //    System.out.println("I_3rl reverse" + this.getName());
 
                 }
                 double lBound = mL - MR;
@@ -137,7 +307,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
                     repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
 
-               //     System.out.println("I3_dd" + " " + this.getName());
+                    //     System.out.println("I3_dd" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
@@ -155,11 +325,11 @@ public class SPQPNode extends SPQNode {
                     pd = (mergedChildren.get(0).startNodes.size() == 2) ? 0 : 1;
 
 
-            //        System.out.println("I_3dOab reverse" + this.getName());
+                    //        System.out.println("I_3dOab reverse" + this.getName());
 
                 } else { // check Sink
                     pd = (mergedChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
-             //       System.out.println("NI_3dOab normal" + " " + this.getName());
+                    //       System.out.println("NI_3dOab normal" + " " + this.getName());
 
                 }
 
@@ -185,6 +355,7 @@ public class SPQPNode extends SPQNode {
 
         return true;
     }
+
 
     @Override
     public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
@@ -261,7 +432,7 @@ public class SPQPNode extends SPQNode {
             hashMap.put((new Tuple<>(startVertex, sinkVertex)), -1);
             hashMap.put((new Tuple<>(sinkNodes.get(0), sinkVertex)), 1);
 
-          //  System.out.println("Test");
+            //  System.out.println("Test");
 
 
         }

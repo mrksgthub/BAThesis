@@ -2,11 +2,13 @@ import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.*;
@@ -21,13 +23,13 @@ public class basicMainClass {
                 new ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS,
                         new LinkedBlockingQueue<Runnable>());
         List<Callable<Object>> callableList = new ArrayList<>();
-
+        assert (false);
 
         SPQTree tree;
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(80, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(700, 35);
         spqGenerator.run();
 
 
@@ -39,8 +41,11 @@ public class basicMainClass {
         spqExporter.run(root, "C:/a.txt");
 
 
-        SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
-        //  SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+       // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+
+      //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\31995N666F.txt");
+      //  SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\3532N511F.txt");
+        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
         spqImporter.run();
 
 
@@ -58,9 +63,21 @@ public class basicMainClass {
         for (TreeVertex vertex : tree.constructedGraph.vertexSet()
         ) {
             int i = tree.constructedGraph.degreeOf(vertex);
-            assert (i <= 4);
+            if (i > 4)  {
+                throw new Exception("Illegal Graph: maxDegree of nodes = " + i);
+            }
         }
 
+
+        HashMap parentsList = new HashMap<>();
+        root.determineParents(root, parentsList);
+
+
+
+
+
+        ConnectivityInspector inspector = new ConnectivityInspector<>(tree.constructedGraph);
+        inspector.isConnected();
 
         // Zeit:
         long startTime = System.currentTimeMillis();

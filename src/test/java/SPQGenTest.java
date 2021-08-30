@@ -29,11 +29,23 @@ public class SPQGenTest {
 
     }
 
+    @Test
+    public void GraphBuilder() {
+
+
+
+
+
+    }
+
+
+
+
 
     @Test
     public void teilGraphTest() throws Exception {
 
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10000; i++) {
             teilGraphTestRunner();
 
             System.out.println(i + ". Iteration");
@@ -51,7 +63,7 @@ public class SPQGenTest {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(80, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(3000, 30);
         spqGenerator.run();
 
 
@@ -62,15 +74,22 @@ public class SPQGenTest {
         spqExporter.run(root);
         spqExporter.run(root, "C:/a.txt");
 
-
         SPQImporter spqImporter = new SPQImporter("C:/a.txt");
        // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+        //
+       // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\127kN19kF.txt");
         spqImporter.run();
 
-
         tree = spqImporter.tree;
-        root = tree.getRoot();
+        root = spqImporter.tree.getRoot();
 
+        for (TreeVertex vertex : tree.constructedGraph.vertexSet()
+        ) {
+            int i = tree.constructedGraph.degreeOf(vertex);
+            if (i > 4) {
+                throw new Exception("Illegal Graph: maxDegree of nodes = " + i);
+            }
+        }
 
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding, root);
@@ -79,6 +98,7 @@ public class SPQGenTest {
         treeVertexFaceGenerator.generateFaces2();
         TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
         tamassiaRepresentation.run();
+
 
 
 

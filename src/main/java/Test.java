@@ -29,7 +29,11 @@ public class Test {
             @Override
             public void actionPerformed(ActionEvent e) {
                 SPQGenerator spqGenerator = new SPQGenerator();
-                spqGenerator.run(10, 30);
+                try {
+                    spqGenerator.run(10, 30);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
                 tree = spqGenerator.getTree();
                 root = spqGenerator.getRoot();
 

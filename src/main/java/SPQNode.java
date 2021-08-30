@@ -35,8 +35,8 @@ public class SPQNode {
     TreeVertex startVertex;
     TreeVertex sinkVertex;
     List<TreeVertex> aPathFromSourceToSink = new ArrayList<>();
-    double repIntervalLowerBound = 0;
-    double repIntervalUpperBound = 0;
+    double repIntervalLowerBound = 999;
+    double repIntervalUpperBound = -990;
     private double kul;
     private double kur;
     private double kvl;
@@ -518,7 +518,7 @@ public class SPQNode {
             }
         }
 
-        if (this.mergedChildren.size() != 0) {
+        if (this.mergedChildren.size() != 0 && !this.isRoot) {
             if (!calculateRepresentabilityInterval()) {
                 check = false;
             }
@@ -653,4 +653,27 @@ public class SPQNode {
     }
 
 
-}
+
+
+    public void determineParents(SPQNode node, HashMap<String, ArrayList<SPQNode>> map) {
+
+
+        for (SPQNode root : node.mergedChildren
+        ) {
+            map.put(root.getName(), new ArrayList<SPQNode>());
+            map.get(root.getName()).add(node);
+            determineParents(root, map);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+    }

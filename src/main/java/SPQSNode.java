@@ -24,6 +24,9 @@ public class SPQSNode extends SPQNode{
 
     @Override
     public boolean calculateRepresentabilityInterval() {
+        repIntervalLowerBound = 0;
+        repIntervalUpperBound = 0;
+
         for (SPQNode node : mergedChildren
         ) {
             repIntervalLowerBound += node.getRepIntervalLowerBound();
