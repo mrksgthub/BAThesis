@@ -269,7 +269,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 face.add(startVertex);
                 face.add(nextVertex);
 
-                faceObj.getvSet().add(vertex);
+           //     faceObj.getvSet().add(vertex);
                 adjVertices.get(faceObj).add(vertex);
                 adjFaces2.put(pair, faceObj); // Hier zum checken einfach um die beiden Faces zu finden einfach adjFaces2 nach <a,b> und <b,a> untersuchen
                 faceObj.getOrthogonalRep().put(pair, 999);
@@ -277,7 +277,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
                 while (nextVertex != startVertex) {
 
-                    faceObj.getvSet().add(nextVertex);
+           //         faceObj.getvSet().add(nextVertex);
                     adjVertices.get(faceObj).add(nextVertex);
 
                     tArrayList = (List<V>) embedding.get(nextVertex);
@@ -352,23 +352,60 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         return networkGraph;
     }
 
-    public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> generateCapacities() {
 
-/*
+
+
+    public DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> generateFlowNetworkLayout3() {
+        networkGraph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+
         List<V> vertexList = listOfFaces2.get(0);
+        TreeVertex outerFace = planarGraphFaces.get(0);
+        networkGraph.addVertex(planarGraphFaces.get(0));
 
-        int capacity = 2 * (vertexList.size() - 1) - 4;
+        supplyMap.put(outerFace, -1 * (2 * (vertexList.size() - 1) + 4));
 
-        for (int i = 1; i < listOfFaces2.size() - 1; i++) {
+        for (int j = 0; j < vertexList.size() - 1; j++) {
+            TreeVertex temp = vertexList.get(j);
+            networkGraph.addVertex(temp);
+            supplyMap.put(temp, 4);
+            DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(0));
+            networkGraph.setEdgeWeight(e, 1);
+            upperMap.put(e, 4);
+            lowerMap.put(e, 1);
+
+        }
+
+
+        for (int i = 1; i < listOfFaces2.size(); i++) {
 
             vertexList = listOfFaces2.get(i);
+            TreeVertex innerFace = planarGraphFaces.get(i);
+            networkGraph.addVertex(planarGraphFaces.get(i));
+            supplyMap.put(innerFace, -1 * (2 * (vertexList.size() - 1) - 4));
 
 
-            capacity = 2 * (vertexList.size() - 1) - 4;
+            for (int j = 0; j < vertexList.size() - 1; j++) {
+                TreeVertex temp = vertexList.get(j);
+                networkGraph.addVertex(temp);
+                supplyMap.put(temp, 4);
+                DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(i));
+                networkGraph.setEdgeWeight(e, 1);
+                upperMap.put(e, 4);
+                lowerMap.put(e, 1);
+
+            }
 
 
         }
-*/
+
+
+        return networkGraph;
+    }
+
+
+
+    public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> generateCapacities() {
+
 
         MinimumCostFlowProblem<TreeVertex,
                 DefaultWeightedEdge> problem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<>(
@@ -379,13 +416,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 new CapacityScalingMinimumCostFlow<>();
 
 
-        /*
-        HashMap<DefaultWeightedEdge, Double> costMap = new HashMap<>();
-        for (DefaultWeightedEdge edge :
-                networkGraph.edgeSet()) {
-
-        }
-        */
 
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow =
                 minimumCostFlowAlgorithm.getMinimumCostFlow(problem);

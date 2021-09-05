@@ -1,5 +1,6 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,10 +28,27 @@ public class TamassiaMaxFlowTest {
         treeVertexFaceGenerator.generateFaces2();
 
 
+        MaxFlow test2 = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        test2.run();
+
         MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        test.run2();
 
 
-        test.run();
+        MaxFlow test3 = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        test3.run3();
+
+
+
+
+        for (DefaultWeightedEdge edge : test.flowMap2.keySet()
+                ) {
+            Double aDouble = test.flowMap2.get(edge);
+            Double aDouble1 = test2.flowMap.get(edge);
+          boolean asdf =  aDouble == aDouble1;
+        }
+
+
 
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face: test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
@@ -44,12 +62,6 @@ public class TamassiaMaxFlowTest {
             assert (Math.abs(sum) == 4);
 
         }
-
-
-
-
-
-
 
     }
 }

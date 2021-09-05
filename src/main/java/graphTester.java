@@ -37,7 +37,7 @@ public class graphTester {
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(SAMPLE_CSV_FILE));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "Time in s"));
+                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"));
         ) {
 
             for (String fileName: listOfFiles
@@ -87,17 +87,30 @@ public class graphTester {
 
             // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
 
-            TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-            tamassiaRepresentation.run();
+           // TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+          //  tamassiaRepresentation.run();
 
 
             // MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
             //   test.run();
             stopTime = System.currentTimeMillis();
             elapsedTime = stopTime - startTime;
+                long tamassiaMinFlowTime = elapsedTime;
             System.out.println("Tamassia Zeit: " + elapsedTime);
 
-            csvPrinter.printRecord(nodes, faces, didimoTime, elapsedTime);
+
+                startTime = System.currentTimeMillis();
+
+
+                MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+                test.run3();
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+                long tamassiaPushTime = elapsedTime;
+                System.out.println("TamassiaPush Zeit: " + elapsedTime);
+
+
+            csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
 
 
 

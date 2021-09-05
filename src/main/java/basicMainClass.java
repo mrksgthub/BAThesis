@@ -1,4 +1,5 @@
 import org.antlr.v4.runtime.misc.Pair;
+import org.apache.commons.lang3.tuple.MutablePair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -29,7 +30,7 @@ public class basicMainClass {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(700, 35);
+        SPQGenerator spqGenerator = new SPQGenerator(6, 20);
         spqGenerator.run();
 
 
@@ -41,10 +42,10 @@ public class basicMainClass {
         spqExporter.run(root, "C:/a.txt");
 
 
-       // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+        //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\55664N2389F.txt");
 
-      //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\31995N666F.txt");
-      //  SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\3532N511F.txt");
+        // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\163386N20963F.txt");
+        //  SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\3532N511F.txt");
         SPQImporter spqImporter = new SPQImporter("C:/a.txt");
         spqImporter.run();
 
@@ -63,7 +64,7 @@ public class basicMainClass {
         for (TreeVertex vertex : tree.constructedGraph.vertexSet()
         ) {
             int i = tree.constructedGraph.degreeOf(vertex);
-            if (i > 4)  {
+            if (i > 4) {
                 throw new Exception("Illegal Graph: maxDegree of nodes = " + i);
             }
         }
@@ -73,16 +74,13 @@ public class basicMainClass {
         root.determineParents(root, parentsList);
 
 
-
-
-
         ConnectivityInspector inspector = new ConnectivityInspector<>(tree.constructedGraph);
         inspector.isConnected();
 
         // Zeit:
         long startTime = System.currentTimeMillis();
 
-
+/*
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
         didimoRepresentability.run();
 
@@ -93,7 +91,7 @@ public class basicMainClass {
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
         angulator.run();
 
-
+*/
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Didimo Zeit: " + elapsedTime);
@@ -101,17 +99,46 @@ public class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-        //   TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        //   tamassiaRepresentation.run();
+        //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        // tamassiaRepresentation.run();
 
-        //  MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-        //  test.run();
+          MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+          test.run3();
 
 
         stopTime = System.currentTimeMillis();
         elapsedTime = stopTime - startTime;
-        System.out.println("Didimo Zeit: " + elapsedTime);
+        System.out.println("Tamassia Zeit: " + elapsedTime);
 ////////////////////////////////////////////
+
+
+
+
+
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face: test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
+        ) {
+            int sum = 0;
+            for (MutablePair<TreeVertex, TreeVertex> edge: face.orthogonalRep.keySet()
+            ) {
+                sum += face.orthogonalRep.get(edge);
+            }
+
+            assert (Math.abs(sum) == 4);
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /////////////////////////////////////////////////////////////////////////////////////

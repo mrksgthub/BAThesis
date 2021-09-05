@@ -1,21 +1,26 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
+import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MaxFlow {
 
 
     private TreeVertex solverSource;
     private TreeVertex solverSink;
-    private  SPQTree tree;
-    private  SPQNode root;
+    private SPQTree tree;
+    private SPQNode root;
     private FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator;
     private int counter;
+    public Map<DefaultWeightedEdge, Double> flowMap;
+    public Map<DefaultWeightedEdge, Double> flowMap2;
 
     public FaceGenerator<TreeVertex, DefaultEdge> getTreeVertexFaceGenerator() {
         return treeVertexFaceGenerator;
@@ -35,8 +40,6 @@ public class MaxFlow {
     }
 
 
-
-
     public void run() {
 
 
@@ -47,18 +50,75 @@ public class MaxFlow {
 
 
         MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
+       // MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
 
+        MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
+        flowMap = test33.getFlowMap();
 
-      MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue =  test33.getMaximumFlow(solverSource, solverSink);
-        test33.getFlowMap();
-
-        if (maxFlowValue.getValue() != counter){
+        if (maxFlowValue.getValue() != counter) {
             throw new IllegalArgumentException("Blub");
         }
 
-        setOrthogonalRep(test33.getFlowMap(), treeVertexFaceGenerator.getPlanarGraphFaces());
+
+        setOrthogonalRep(flowMap, treeVertexFaceGenerator.getPlanarGraphFaces());
 
     }
+
+
+    public void run2() {
+
+        solverSource = new TreeVertex("solverSource");
+        solverSink = new TreeVertex("solverSink");
+        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
+
+        EdmondsKarp edmondsKarp = new EdmondsKarp(simple);
+
+        edmondsKarp.initialize();
+
+
+        flowMap2 = edmondsKarp.maxFlow;
+        setOrthogonalRep(edmondsKarp.maxFlow, treeVertexFaceGenerator.getPlanarGraphFaces());
+
+    }
+
+
+
+
+    public void run3() {
+
+        solverSource = new TreeVertex("solverSource");
+        solverSink = new TreeVertex("solverSink");
+        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
+
+        PushRelabel pushRelabel = new PushRelabel(simple);
+
+        pushRelabel.initialize();
+
+
+        flowMap2 = pushRelabel.maxFlow;
+        setOrthogonalRep(pushRelabel.maxFlow, treeVertexFaceGenerator.getPlanarGraphFaces());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void generateFlowGraph(SPQTree tree, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
@@ -103,7 +163,7 @@ public class MaxFlow {
         }
 
 
-      //  System.out.println("OuterFace to Sink: " + neighborOfFace);
+        //  System.out.println("OuterFace to Sink: " + neighborOfFace);
 
         // Inner Faces:
         for (int i = 1; i < treeVertexFaceGenerator.listOfFaces2.size(); i++) {
@@ -118,7 +178,7 @@ public class MaxFlow {
             edge = simple.addEdge(face, solverSink);
             simple.setEdgeWeight(edge, neighborOfFace);
 
-        //    System.out.println("InnerFace to Sink: " + neighborOfFace);
+            //    System.out.println("InnerFace to Sink: " + neighborOfFace);
 
             // Vertex zu Face
             for (int j = 0; j < vertexList.size() - 1; j++) {
@@ -130,9 +190,6 @@ public class MaxFlow {
 
         }
     }
-
-
-
 
 
     private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces) {
@@ -181,28 +238,14 @@ public class MaxFlow {
                     tempFace.getOrthogonalRep().put(pair, -1);
                 }
 
-             //   System.out.println("test");
+                //   System.out.println("test");
             }
-
 
 
         }
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
