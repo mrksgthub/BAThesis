@@ -2,12 +2,15 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class GraphDrawOptions extends JDialog {
+    public boolean run = false;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JRadioButton tamassiaPushRelabelRadioButton;
     private JRadioButton didimoRadioButton;
     private ButtonGroup buttonGroup1;
+
+    WinkelAlgorithmus winkelAlgorithmus;
 
     enum WinkelAlgorithmus            // Enum-Typ
     {
@@ -23,14 +26,6 @@ public class GraphDrawOptions extends JDialog {
 
         tamassiaPushRelabelRadioButton.setMnemonic(KeyEvent.VK_0);
         didimoRadioButton.setMnemonic(KeyEvent.VK_1);
-
-
-
-
-
-
-
-
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -62,7 +57,18 @@ public class GraphDrawOptions extends JDialog {
 
     private void onOK() {
         // add your code here
-      int a =  buttonGroup1.getSelection().getMnemonic();
+        int selection = buttonGroup1.getSelection().getMnemonic();
+
+        switch (selection) {
+            case KeyEvent.VK_1:
+                winkelAlgorithmus = WinkelAlgorithmus.DIDIMO;
+            case KeyEvent.VK_0:
+                winkelAlgorithmus = WinkelAlgorithmus.PUSH_RELABEL;
+        }
+        run = true;
+        dispose();
+
+
 
     }
 

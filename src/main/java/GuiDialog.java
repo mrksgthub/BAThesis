@@ -60,6 +60,7 @@ public class GuiDialog extends JDialog {
             JOptionPane.showMessageDialog(null, "Nur Werte von 0-" + Integer.MAX_VALUE +" möglich");
             e.printStackTrace();
         }
+
         dispose();
     }
 
