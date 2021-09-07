@@ -30,7 +30,7 @@ public class basicMainClass {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(6, 20);
+        SPQGenerator spqGenerator = new SPQGenerator(60000, 20);
         spqGenerator.run();
 
 
@@ -153,7 +153,7 @@ public class basicMainClass {
         rectangulator.outerFace.setOrientations();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
+        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
         orientator.run();
 
         System.out.println("Nach Orientator");

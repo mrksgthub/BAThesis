@@ -5,7 +5,6 @@ import org.graphstream.graph.implementations.SingleGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
-
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,24 +12,47 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 
-public class Test {
+public class GuiTest extends JFrame {
+
+
+    private static SPQTree tree;
+    private static  SPQNode root;
     private JButton drawGraphButton;
     private JButton button2;
     private JButton button3;
     private JLabel test;
     private JPanel panel1;
-    private static SPQTree tree;
-    private static SPQNode root;
+    private JPanel Texts;
+    private JLabel ChanceOfP;
+    private JLabel opsField;
 
 
-    public Test() {
+    int ops;
+    int chanceOfP;
+
+
+
+
+
+
+
+    public GuiTest() {
 
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                GuiDialog dialog1 = new GuiDialog();
+                dialog1.pack();
+                dialog1.setVisible(true);
+                opsField.setText(String.valueOf("Ops: " + dialog1.ops));
+                ChanceOfP.setText(String.valueOf("Chance of P: " + dialog1.chanceOfP));
+                ops = dialog1.ops;
+                chanceOfP = dialog1.chanceOfP;
+
+
                 SPQGenerator spqGenerator = new SPQGenerator();
                 try {
-                    spqGenerator.run(10, 30);
+                    spqGenerator.run(ops, chanceOfP);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -134,24 +156,47 @@ public class Test {
 
             }
         });
+        button3.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GuiDialog dialog1 = new GuiDialog();
+                dialog1.pack();
+                dialog1.setVisible(true);
+                opsField.setText(String.valueOf("Ops: " + dialog1.ops));
+                ChanceOfP.setText(String.valueOf("Chance of P: " + dialog1.chanceOfP));
+                ops = dialog1.ops;
+                chanceOfP = dialog1.chanceOfP;
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     public static void main(String[] args) {
 
-
         System.setProperty("org.graphstream.ui", "swing");
 
-
         JFrame frame = new JFrame("Test");
-        frame.setContentPane(new Test().panel1);
+        frame.setContentPane(new GuiTest().panel1);
+
         
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
 
-
-
-
     }
+
 
 }

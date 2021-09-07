@@ -13,7 +13,9 @@ public class TamassiaMaxFlowTest {
     void name() {
 
 
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+       // SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+
+        SPQImporter spqImporter = new SPQImporter("C:/Graphs/19139N2214F.txt");
         spqImporter.run();
         SPQTree tree = spqImporter.tree;
 

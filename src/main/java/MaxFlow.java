@@ -138,7 +138,6 @@ public class MaxFlow {
 
         }
 
-
         int neighborOfFace = 0;
 
         // OuterFace
@@ -211,7 +210,6 @@ public class MaxFlow {
 
             }
         }
-
 
         // Weise der Kante y, aus Facette x. doe Knoten z als Endknoten hat den entsprechenden Wert zu
         for (DefaultWeightedEdge edge : flowMap.keySet()
