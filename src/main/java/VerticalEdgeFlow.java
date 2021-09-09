@@ -2,7 +2,6 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -14,24 +13,17 @@ import java.util.Map;
 
 public class VerticalEdgeFlow implements Runnable {
 
-    private Thread t;
-    private String threadName = "vertical";
-
-
     HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
     Map<TreeVertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph;
     Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
-
-
     List<PlanarGraphFace<TreeVertex, DefaultEdge>> rectangleList = new ArrayList<>();
-
     PlanarGraphFace<TreeVertex, DefaultEdge> outerFace;
+    private Thread t;
+    private String threadName = "vertical";
+    private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph;
     private MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
-
-
 
 
     public VerticalEdgeFlow(List<PlanarGraphFace<TreeVertex, DefaultEdge>> rectangleList, PlanarGraphFace<TreeVertex, DefaultEdge> outerFace) {
@@ -87,8 +79,6 @@ public class VerticalEdgeFlow implements Runnable {
             upperMap.put(e, Integer.MAX_VALUE);
             lowerMap.put(e, 1);
         }
-
-
 
 
         for (int j = 0; j < rectangleList.size(); j++) {
@@ -147,11 +137,11 @@ public class VerticalEdgeFlow implements Runnable {
         generateCapacities();
     }
 
-    public void start () {
-        System.out.println("Starting " +  threadName );
+    public void start() {
+        System.out.println("Starting " + threadName);
         if (t == null) {
-            t = new Thread (this, threadName);
-            t.start ();
+            t = new Thread(this, threadName);
+            t.start();
         }
     }
 

@@ -3,7 +3,6 @@ package GraphGenerators;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.SpanningTreeAlgorithm;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleGraph;
 
@@ -16,19 +15,13 @@ public class mainclass {
 
         SpanningTreeAlgorithm<DefaultWeightedEdge> alg2;
         alg2 = new KruskalMinimumSpanningTree<>(stringGraph);
-        SpanningTreeAlgorithm.SpanningTree<DefaultWeightedEdge> asdf =  alg2.getSpanningTree();
+        SpanningTreeAlgorithm.SpanningTree<DefaultWeightedEdge> asdf = alg2.getSpanningTree();
 
 
     }
 
 
-
-
-
-
-
-    private static Graph<String, DefaultWeightedEdge> createStringGraph()
-    {
+    private static Graph<String, DefaultWeightedEdge> createStringGraph() {
         Graph<String, DefaultWeightedEdge> g = new SimpleGraph<>(DefaultWeightedEdge.class);
 
         String v1 = "v1";

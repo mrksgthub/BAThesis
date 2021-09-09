@@ -24,7 +24,6 @@ public class Orientator<E> {
     public void run() {
 
 
-
         //   outerFace.setOrientations();
         List<PlanarGraphFace<TreeVertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(originalFaceList);
         List<PlanarGraphFace<TreeVertex, E>> discoveredFaces = new ArrayList<>();
@@ -53,7 +52,7 @@ public class Orientator<E> {
 
         for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
-            MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(edge.getRight(), edge.getLeft());
+            MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<TreeVertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
@@ -73,9 +72,9 @@ public class Orientator<E> {
             for (MutablePair<TreeVertex, TreeVertex> edge : currFace.getEdgeList()
             ) {
 
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(edge.getRight(), edge.getLeft());
+                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
                 PlanarGraphFace<TreeVertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
-                 assert (face != null);
+                assert (face != null);
                 if (visitedMap.get(face) == null) {
                     visitedMap.putIfAbsent(face, true);
                     face.setOrientations(reverseEdge, ((currFace.getEdgeOrientationMap().get(edge) + 2) % 4));
@@ -86,36 +85,9 @@ public class Orientator<E> {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         System.out.println("Hello");
 
     }
-
-
 
 
 }

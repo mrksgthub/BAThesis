@@ -30,9 +30,6 @@ public class graphTester {
         listFilesForFolder(folder, listOfFiles);
 
 
-
-
-
         try (
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(SAMPLE_CSV_FILE));
 
@@ -40,7 +37,7 @@ public class graphTester {
                         .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"));
         ) {
 
-            for (String fileName: listOfFiles
+            for (String fileName : listOfFiles
             ) {
 
                 System.out.println(fileName);
@@ -59,44 +56,44 @@ public class graphTester {
                 FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2();
 
-            DirectedMultigraph<TreeVertex, DefaultEdge> graph = spqImporter.tree.constructedGraph;
-            int faces = treeVertexFaceGenerator.planarGraphFaces.size();
-            int nodes = graph.vertexSet().size();
+                DirectedMultigraph<TreeVertex, DefaultEdge> graph = spqImporter.tree.constructedGraph;
+                int faces = treeVertexFaceGenerator.planarGraphFaces.size();
+                int nodes = graph.vertexSet().size();
 
 
                 System.out.println(fileName);
-            long startTime = System.currentTimeMillis();
+                long startTime = System.currentTimeMillis();
 
 
-            DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-            didimoRepresentability.run();
+                DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
+                didimoRepresentability.run();
 
 
-            root.getMergedChildren().get(0).computeSpirality();
-            Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
-            angulator.run();
+                root.getMergedChildren().get(0).computeSpirality();
+                Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+                angulator.run();
 
 
-            long stopTime = System.currentTimeMillis();
-            long elapsedTime = stopTime - startTime;
-            System.out.println("Didimo Zeit: " + elapsedTime);
-            long didimoTime = elapsedTime;
+                long stopTime = System.currentTimeMillis();
+                long elapsedTime = stopTime - startTime;
+                System.out.println("Didimo Zeit: " + elapsedTime);
+                long didimoTime = elapsedTime;
 
-            startTime = System.currentTimeMillis();
-
-
-            // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
-
-           // TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-          //  tamassiaRepresentation.run();
+                startTime = System.currentTimeMillis();
 
 
-            // MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-            //   test.run();
-            stopTime = System.currentTimeMillis();
-            elapsedTime = stopTime - startTime;
+                // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
+
+                // TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+                //  tamassiaRepresentation.run();
+
+
+                // MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+                //   test.run();
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
                 long tamassiaMinFlowTime = elapsedTime;
-            System.out.println("Tamassia Zeit: " + elapsedTime);
+                System.out.println("Tamassia Zeit: " + elapsedTime);
 
 
                 startTime = System.currentTimeMillis();
@@ -110,10 +107,7 @@ public class graphTester {
                 System.out.println("TamassiaPush Zeit: " + elapsedTime);
 
 
-            csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
-
-
-
+                csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
 
 
             }
@@ -130,9 +124,9 @@ public class graphTester {
     }
 
 
-   /*
-   https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
-    */
+    /*
+    https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
+     */
     public static void listFilesForFolder(final File folder, List<String> listOfFiles) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
@@ -143,7 +137,6 @@ public class graphTester {
             }
         }
     }
-
 
 
 }

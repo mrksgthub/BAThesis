@@ -13,18 +13,18 @@ public class SPQTree {
     Hashtable<SPQNode, HashSet<SPQNode>> vertexAdjMap = new Hashtable<>();
 
 
+    public SPQTree(SPQNode root) {
+        this.root = root;
+
+
+    }
+
     public Set<SPQNode> getVisited() {
         return visited;
     }
 
     public void setVisited(Set<SPQNode> visited) {
         this.visited = visited;
-    }
-
-    public SPQTree(SPQNode root) {
-        this.root = root;
-
-
     }
 
     public SPQNode getRoot() {

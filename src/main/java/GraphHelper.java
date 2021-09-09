@@ -54,8 +54,6 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
-
-
     public static void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)
 
@@ -71,21 +69,8 @@ public class GraphHelper<V extends TreeVertex, E> {
 
 
     public static MutablePair<TreeVertex, TreeVertex> reverseEdge(MutablePair<TreeVertex, TreeVertex> edge) {
-        return new Tuple<>(edge.getRight(), edge.getLeft());
+        return new TupleEdge<>(edge.getRight(), edge.getLeft());
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     /**
@@ -202,7 +187,7 @@ public class GraphHelper<V extends TreeVertex, E> {
 
     public static void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
-      map.computeIfAbsent(root, k -> false);
+        map.computeIfAbsent(root, k -> false);
 
 
         if (!map.get(root)) {
@@ -218,6 +203,7 @@ public class GraphHelper<V extends TreeVertex, E> {
             }
         }
     }
+
     public static void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
@@ -237,34 +223,30 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
-
-
     public static int getRandomNumberUsingNextInt(int min, int max) {
         Random random = new Random();
         return random.nextInt(max - min) + min;
     }
 
 
+    public static void writeFaceGeneatorToFile(FaceGenerator<TreeVertex, DefaultEdge> faceGeneator, String filepath) throws IOException {
 
 
-public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdge> faceGeneator, String filepath) throws IOException {
-
-
-    ObjectOutputStream oos = null;
-    FileOutputStream fout = null;
-    try {
-        fout = new FileOutputStream(filepath, false);
-        oos = new ObjectOutputStream(fout);
-        oos.writeObject(faceGeneator);
-    } catch (Exception ex) {
-        ex.printStackTrace();
-    } finally {
-        if (oos != null) {
-            oos.close();
+        ObjectOutputStream oos = null;
+        FileOutputStream fout = null;
+        try {
+            fout = new FileOutputStream(filepath, false);
+            oos = new ObjectOutputStream(fout);
+            oos.writeObject(faceGeneator);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            if (oos != null) {
+                oos.close();
+            }
         }
-    }
 
-}
+    }
 
 
     public static void writeObjectToFile(Object o, String filepath) {
@@ -309,19 +291,8 @@ public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdg
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
     public static FaceGenerator<TreeVertex, DefaultEdge> ReadFaceGeneratorFromFile(String filepath) {
-      //  filepath = "C:\\graph.ser";
+        //  filepath = "C:\\graph.ser";
 
 
         try {
@@ -340,20 +311,6 @@ public static void writeFaceGeneatorToFile (FaceGenerator<TreeVertex, DefaultEdg
             return null;
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

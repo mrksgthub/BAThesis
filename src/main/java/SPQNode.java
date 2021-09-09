@@ -1,26 +1,19 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SPQNode {
 
 
     List<SPQNode> children = new ArrayList<>();
     List<SPQNode> mergedChildren = new ArrayList<>();
-    HashSet<TreeVertex> nodesInCompnent = new LinkedHashSet<>();
-    HashSet<TreeVertex> inDegreeStarVertexSet = new LinkedHashSet<>();
-    HashSet<TreeVertex> inDegreeSinkVertexSet = new LinkedHashSet<>();
-    HashSet<TreeVertex> outDegreeStartVertexSet = new LinkedHashSet<>();
-    HashSet<TreeVertex> outDegreeSinkVertexSet = new LinkedHashSet<>();
+
     List<TreeVertex> startNodes = new ArrayList<>();
     List<TreeVertex> sinkNodes = new ArrayList<>();
-    int inDegreeStartVertex = 9999;
-    int inDegreeSinkVertex = 9999;
-    int outDegreeStartVertex = 9999;
-    int outDegreeSinkVertex = 9999;
+
     double spirality = 999999;
-    ArrayList<Integer> anglesStart = new ArrayList<>();
-    ArrayList<Integer> anglesSink = new ArrayList<>();
     int alphaul;
     int alphavl;
     int alphaur;
@@ -34,7 +27,6 @@ public class SPQNode {
     NodeTypesEnum.NODETYPE nodeType;
     TreeVertex startVertex;
     TreeVertex sinkVertex;
-    List<TreeVertex> aPathFromSourceToSink = new ArrayList<>();
     double repIntervalLowerBound = 999;
     double repIntervalUpperBound = -990;
     private double kul;
@@ -85,77 +77,6 @@ public class SPQNode {
         this.spirality = spirality;
     }
 
-    public HashSet<TreeVertex> getInDegreeStarVertexSet() {
-        return inDegreeStarVertexSet;
-    }
-
-    public void setInDegreeStarVertexSet(HashSet<TreeVertex> inDegreeStarVertexSet) {
-        this.inDegreeStarVertexSet = inDegreeStarVertexSet;
-    }
-
-    public HashSet<TreeVertex> getInDegreeSinkVertexSet() {
-        return inDegreeSinkVertexSet;
-    }
-
-    public void setInDegreeSinkVertexSet(HashSet<TreeVertex> inDegreeSinkVertexSet) {
-        this.inDegreeSinkVertexSet = inDegreeSinkVertexSet;
-    }
-
-    public HashSet<TreeVertex> getOutDegreeStartVertexSet() {
-        return outDegreeStartVertexSet;
-    }
-
-    public void setOutDegreeStartVertexSet(HashSet<TreeVertex> outDegreeStartVertexSet) {
-        this.outDegreeStartVertexSet = outDegreeStartVertexSet;
-    }
-
-    public HashSet<TreeVertex> getOutDegreeSinkVertexSet() {
-        return outDegreeSinkVertexSet;
-    }
-
-    public void setOutDegreeSinkVertexSet(HashSet<TreeVertex> outDegreeSinkVertexSet) {
-        this.outDegreeSinkVertexSet = outDegreeSinkVertexSet;
-    }
-
-    public int getInDegreeStartVertex() {
-        return inDegreeStartVertex;
-    }
-
-    public void setInDegreeStartVertex(int inDegreeStartVertex) {
-        this.inDegreeStartVertex = inDegreeStartVertex;
-    }
-
-    public int getInDegreeSinkVertex() {
-        return inDegreeSinkVertex;
-    }
-
-    public void setInDegreeSinkVertex(int inDegreeSinkVertex) {
-        this.inDegreeSinkVertex = inDegreeSinkVertex;
-    }
-
-    public int getOutDegreeStartVertex() {
-        return outDegreeStartVertex;
-    }
-
-    public void setOutDegreeStartVertex(int outDegreeStartVertex) {
-        this.outDegreeStartVertex = outDegreeStartVertex;
-    }
-
-    public int getOutDegreeSinkVertex() {
-        return outDegreeSinkVertex;
-    }
-
-    public void setOutDegreeSinkVertex(int outDegreeSinkVertex) {
-        this.outDegreeSinkVertex = outDegreeSinkVertex;
-    }
-
-    public HashSet<TreeVertex> getNodesInCompnent() {
-        return nodesInCompnent;
-    }
-
-    public void setNodesInCompnent(HashSet<TreeVertex> nodesInCompnent) {
-        this.nodesInCompnent = nodesInCompnent;
-    }
 
     public double getRepIntervalLowerBound() {
         return repIntervalLowerBound;
@@ -176,14 +97,6 @@ public class SPQNode {
     public boolean calculateRepresentabilityInterval() {
 
         return true;
-    }
-
-    public List<TreeVertex> getaPathFromSourceToSink() {
-        return aPathFromSourceToSink;
-    }
-
-    public void setaPathFromSourceToSink(List<TreeVertex> aPathFromSourceToSink) {
-        this.aPathFromSourceToSink = aPathFromSourceToSink;
     }
 
     public TreeVertex getStartVertex() {
@@ -214,17 +127,6 @@ public class SPQNode {
         return children;
     }
 
-    public void setChildren(List<SPQNode> children) {
-        this.children = children;
-    }
-
-    public int getNodes() {
-        return nodes;
-    }
-
-    public void setNodes(int nodes) {
-        this.nodes = nodes;
-    }
 
     public SPQNode getParent() {
         return parent;
@@ -236,99 +138,6 @@ public class SPQNode {
 
     public boolean isIsroot() {
         return isroot;
-    }
-
-    public void setIsroot(boolean isroot) {
-        this.isroot = isroot;
-    }
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-    public void setVisited(boolean visited) {
-        this.visited = visited;
-    }
-
-
-    public SPQNode generateTree(int size) {
-        isroot = true;
-        visited = true;
-        nodes = size;
-
-        children.add(new SPQNode(nodes / 2));
-        children.add(new SPQNode(nodes / 2));
-
-        children.get(0).generateNode(nodes / 2, this);
-        children.get(1).generateNode(nodes / 2, this);
-
-        return this;
-
-    }
-
-    public SPQNode generateTree2(int size) {
-        isroot = true;
-        visited = true;
-        nodes = size;
-
-        children.add(new SPQNode(nodes - 1));
-        children.add(new SPQNode(1));
-
-        children.get(0).generateNode2(nodes - 1, this);
-
-        return this;
-
-    }
-
-
-    public void generateNode(int size, SPQNode node) {
-        visited = true;
-        parent = node;
-
-        if (size > 2) {
-
-            Random random = new Random();
-            int size2 = random.nextInt(size / 2) + 2;
-            int size3 = size / size2;
-
-
-            for (int i = 0; i < size2; i++) {
-
-                children.add(new SPQNode(size3));
-
-            }
-
-            for (int i = 0; i < children.size(); i++) {
-                children.get(i).generateNode(size3, this);
-            }
-
-        }
-
-    }
-
-
-    public void generateNode2(int size, SPQNode node) {
-        visited = true;
-        parent = node;
-
-        if (size > 1) {
-
-
-            int size2 = GraphHelper.getRandomNumberUsingNextInt(1, size);
-            int size3 = size - size2;
-
-
-            children.add(new SPQNode(size2));
-            children.add(new SPQNode(size3));
-
-
-            children.get(0).generateNode2(size2, this);
-            children.get(1).generateNode2(size3, this);
-
-
-        } else {
-
-        }
     }
 
 
@@ -448,7 +257,7 @@ public class SPQNode {
             }
             if (mergedChildren.get(i).getNodeType() != NodeTypesEnum.NODETYPE.Q) {
                 if (qNodes.size() > 0) {
-                    SPQQNode newQ = new SPQQNode(  "Qstar" + counter++ + this.getName());
+                    SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
                     newQ.setMergedChildren(qNodes);
                     newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
                     newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
@@ -460,7 +269,7 @@ public class SPQNode {
             }
         }
         if (qNodes.size() > 0) {
-            SPQQNode newQ = new SPQQNode( "Qstar" + counter++ + this.getName());
+            SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
             newQ.setMergedChildren(qNodes);
             newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
             newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
@@ -653,27 +462,16 @@ public class SPQNode {
     }
 
 
-
-
     public void determineParents(SPQNode node, HashMap<String, ArrayList<SPQNode>> map) {
 
 
         for (SPQNode root : node.mergedChildren
         ) {
-            map.put(root.getName(), new ArrayList<SPQNode>());
+            map.put(root.getName(), new ArrayList<>());
             map.get(root.getName()).add(node);
             determineParents(root, map);
         }
     }
 
 
-
-
-
-
-
-
-
-
-
-    }
+}

@@ -1,6 +1,5 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
-import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -13,14 +12,21 @@ import java.util.Map;
 public class MaxFlow {
 
 
+    public Map<DefaultWeightedEdge, Double> flowMap;
+    public Map<DefaultWeightedEdge, Double> flowMap2;
     private TreeVertex solverSource;
     private TreeVertex solverSink;
     private SPQTree tree;
     private SPQNode root;
     private FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator;
     private int counter;
-    public Map<DefaultWeightedEdge, Double> flowMap;
-    public Map<DefaultWeightedEdge, Double> flowMap2;
+    private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+
+    public MaxFlow(SPQTree tree, SPQNode root, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator) {
+        this.tree = tree;
+        this.root = root;
+        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+    }
 
     public FaceGenerator<TreeVertex, DefaultEdge> getTreeVertexFaceGenerator() {
         return treeVertexFaceGenerator;
@@ -29,16 +35,6 @@ public class MaxFlow {
     public void setTreeVertexFaceGenerator(FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator) {
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;
     }
-
-    private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
-
-
-    public MaxFlow(SPQTree tree, SPQNode root, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator) {
-        this.tree = tree;
-        this.root = root;
-        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
-    }
-
 
     public void run() {
 
@@ -50,7 +46,7 @@ public class MaxFlow {
 
 
         MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
-       // MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
+        // MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
 
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
@@ -82,8 +78,6 @@ public class MaxFlow {
     }
 
 
-
-
     public void run3() {
 
         solverSource = new TreeVertex("solverSource");
@@ -99,25 +93,6 @@ public class MaxFlow {
         setOrthogonalRep(pushRelabel.maxFlow, treeVertexFaceGenerator.getPlanarGraphFaces());
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private void generateFlowGraph(SPQTree tree, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple) {

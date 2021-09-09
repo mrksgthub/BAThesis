@@ -21,14 +21,13 @@ public class Embedder {
         assert (node.getStartVertex() != null);
         assert (node.getSinkVertex() != null);
 
-        for (SPQNode child: node.getMergedChildren()
-             ) {
+        for (SPQNode child : node.getMergedChildren()
+        ) {
             run(child);
         }
 
 
     }
-
 
 
 }

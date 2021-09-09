@@ -131,7 +131,7 @@ public class PushRelabel extends MaxFlowImp {
         ) {
 
             // excessFlow[vertexIndex] > 0 && heights[vertexIndex] <= heights[edge.v] && was removed
-            if ( edge.capacity - edge.flow > 0) {
+            if (edge.capacity - edge.flow > 0) {
                 min = Math.min(min, heights[edge.v]);
             }
             heights[vertexIndex] = (int) (1 + min);

@@ -1,4 +1,4 @@
-public class SPQSNode extends SPQNode{
+public class SPQSNode extends SPQNode {
 
     NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.S;
 
@@ -35,11 +35,6 @@ public class SPQSNode extends SPQNode{
 
         return true;
     }
-
-
-
-
-
 
 
 }

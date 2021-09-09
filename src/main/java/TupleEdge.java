@@ -1,9 +1,9 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 
-public class Tuple<L,R> extends MutablePair<L, R> {
+public class TupleEdge<L, R> extends MutablePair<L, R> {
 
 
-    public Tuple(L l, R r) {
+    public TupleEdge(L l, R r) {
         setLeft(l);
         setRight(r);
 
@@ -16,7 +16,6 @@ public class Tuple<L,R> extends MutablePair<L, R> {
         result = 31 * result + getRight().hashCode();
         return result;
     }
-
 
 
 }

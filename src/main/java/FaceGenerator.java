@@ -1,4 +1,3 @@
-
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
@@ -42,8 +41,8 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         for (E edge : graph.edgeSet()
         ) {
             visitsMap.put(edge, 0);
-            pairIntegerMap.put(new Tuple<>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)), 0);
-            pairIntegerMap.put(new Tuple<V, V>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)), 0);
+            pairIntegerMap.put(new TupleEdge<>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)), 0);
+            pairIntegerMap.put(new TupleEdge<V, V>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)), 0);
             adjFaces.put(edge, new ArrayList<PlanarGraphFace<V, E>>());
         }
 
@@ -233,7 +232,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
         List<MutablePair<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
 
-        MutablePair<V, V> startingEdge = new Tuple<>(startvertex, sinkVertex);
+        MutablePair<V, V> startingEdge = new TupleEdge<>(startvertex, sinkVertex);
         int x = pairList.lastIndexOf(startingEdge);
         Collections.swap(pairList, 0, x);
 
@@ -269,7 +268,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 face.add(startVertex);
                 face.add(nextVertex);
 
-           //     faceObj.getvSet().add(vertex);
+                //     faceObj.getvSet().add(vertex);
                 adjVertices.get(faceObj).add(vertex);
                 adjFaces2.put(pair, faceObj); // Hier zum checken einfach um die beiden Faces zu finden einfach adjFaces2 nach <a,b> und <b,a> untersuchen
                 faceObj.getOrthogonalRep().put(pair, 999);
@@ -277,17 +276,16 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
                 while (nextVertex != startVertex) {
 
-           //         faceObj.getvSet().add(nextVertex);
+                    //         faceObj.getvSet().add(nextVertex);
                     adjVertices.get(faceObj).add(nextVertex);
 
                     tArrayList = (List<V>) embedding.get(nextVertex);
                     V temp = nextVertex;
                     nextVertex = tArrayList.get(Math.floorMod((tArrayList.indexOf(vertex) - 1), tArrayList.size()));
-                    MutablePair<V, V> vvPair = new Tuple<>(temp, nextVertex);
+                    MutablePair<V, V> vvPair = new TupleEdge<>(temp, nextVertex);
                     vertex = temp;
                     adjFaces2.put(vvPair, faceObj);
                     faceObj.getOrthogonalRep().put(vvPair, 999);
-
 
                     pairBooleanHashtable.put(vvPair, true);
                     //.add(edgePair);
@@ -353,8 +351,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     }
 
 
-
-
     public DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> generateFlowNetworkLayout3() {
         networkGraph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 
@@ -403,7 +399,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     }
 
 
-
     public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> generateCapacities() {
 
 
@@ -414,7 +409,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
 
         CapacityScalingMinimumCostFlow<TreeVertex, DefaultWeightedEdge> minimumCostFlowAlgorithm =
                 new CapacityScalingMinimumCostFlow<>();
-
 
 
         MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow =

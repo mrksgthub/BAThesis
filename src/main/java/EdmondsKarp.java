@@ -1,13 +1,13 @@
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class EdmondsKarp extends MaxFlowImp {
 // https://github.com/williamfiset/Algorithms/blob/2eed08cd0de39ce73d445e83e6aa1476741edc51/src/main/java/com/williamfiset/algorithms/graphtheory/networkflow/examples/EdmondsKarpExample.java#L154
 //    https://en.wikibooks.org/wiki/Algorithm_Implementation/Graphs/Maximum_flow/Edmonds-Karp
 // Wikipedia
-
 
 
     public EdmondsKarp(DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph) {
@@ -67,7 +67,7 @@ public class EdmondsKarp extends MaxFlowImp {
             if (current == sink) break;
 
             for (Edge edge : outgoingEdgeLists[current]
-            ){
+            ) {
                 int remainingCap = (int) (edge.capacity - edge.flow);
                 if (parent[edge.v] == null && edge.capacity > edge.flow && edge.v != source) {
                     visited[edge.v] = true;
@@ -82,7 +82,7 @@ public class EdmondsKarp extends MaxFlowImp {
 
         int bottleneck = Integer.MAX_VALUE;
         for (Edge edge = parent[sink]; edge != null; edge = parent[edge.u])
-            bottleneck = (int) Math.min(bottleneck , edge.capacity - edge.flow);
+            bottleneck = (int) Math.min(bottleneck, edge.capacity - edge.flow);
 
 
         for (Edge e = parent[sink]; e != null; e = parent[e.u]) {
@@ -92,9 +92,6 @@ public class EdmondsKarp extends MaxFlowImp {
 
         return bottleneck;
     }
-
-
-
 
 
 }

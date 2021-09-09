@@ -77,7 +77,7 @@ public class Coordinator {
             edgeToCoordMap.put(edge.getRight(), new Pair<>(length, yCoord));
 
 
-            MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(edge.getRight(), edge.getLeft());
+            MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
@@ -160,7 +160,7 @@ public class Coordinator {
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
 
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
+                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
@@ -210,7 +210,7 @@ public class Coordinator {
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
 
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
+                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {

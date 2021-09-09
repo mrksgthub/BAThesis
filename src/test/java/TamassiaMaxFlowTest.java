@@ -13,7 +13,7 @@ public class TamassiaMaxFlowTest {
     void name() {
 
 
-       // SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        // SPQImporter spqImporter = new SPQImporter("C:/a.txt");
 
         SPQImporter spqImporter = new SPQImporter("C:/Graphs/19139N2214F.txt");
         spqImporter.run();
@@ -26,7 +26,7 @@ public class TamassiaMaxFlowTest {
         embedder.run(root);
 
 
-       FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
 
@@ -41,23 +41,19 @@ public class TamassiaMaxFlowTest {
         test3.run3();
 
 
-
-
         for (DefaultWeightedEdge edge : test.flowMap2.keySet()
-                ) {
+        ) {
             Double aDouble = test.flowMap2.get(edge);
             Double aDouble1 = test2.flowMap.get(edge);
-          boolean asdf =  aDouble == aDouble1;
+            boolean asdf = aDouble == aDouble1;
         }
 
 
-
-
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face: test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
-             ) {
+        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
+        ) {
             int sum = 0;
-            for (MutablePair<TreeVertex, TreeVertex> edge: face.orthogonalRep.keySet()
-                 ) {
+            for (MutablePair<TreeVertex, TreeVertex> edge : face.orthogonalRep.keySet()
+            ) {
                 sum += face.orthogonalRep.get(edge);
             }
 

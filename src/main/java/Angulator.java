@@ -4,7 +4,6 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.List;
 
 public class Angulator {
 
@@ -23,120 +22,49 @@ public class Angulator {
 
     public void run() throws Exception {
 
-    //    this.treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, tree.getRoot().getStartVertex(), tree.getRoot().getSinkVertex(), embedding);
-    //    treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
-
-    //    DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-    //    treeVertexFaceGenerator.generateCapacities();
-
-
 
         HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        long startTime = System.currentTimeMillis();
+        winkelHinzufuegen(tree.getRoot(), pairIntegerMap);
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+        System.out.println("Winkel Section  :" + elapsedTime);
 
+        long startTime3 = System.currentTimeMillis();
         for (MutablePair<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
-            pairIntegerMap.put(pair, 0);
+            pairIntegerMap.putIfAbsent(pair, 0);
         }
 
-        winkelHinzufügen(tree.getRoot(), pairIntegerMap);
 
-
-        List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
-        HashMap<TreeVertex, Integer> anglesMap = new HashMap<>();
-
-
-
+        // Füge Winkel zu den Faces hinzu
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
-
         ) {
-            int edgeCount = 0;
+
             for (MutablePair<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
-                edgeCount += pairIntegerMap.get(pair);
 
-                int angle = pairIntegerMap.get(pair);
-
-                if (angle == -1) {
-                    angle = 3;
-                }
-                if (angle == 0) {
-                    angle = 2;
-                }
-                if (angle == 1) {
-                    angle = 1;
-                }
-
-               if( anglesMap.putIfAbsent(pair.getRight(), angle) != null){
-
-                   anglesMap.put(pair.getRight(), anglesMap.get(pair.getRight()) + angle);
-               }
 
             }
-
-
-            if (Math.abs(edgeCount) != 4) {
-                //    assert(Math.abs(edgeCount) == 4);
-                test.add(face);
-                if (Math.abs(edgeCount) != 4) {
-                    System.out.println("Fehler");
-
-                }
-            }
-
         }
 
-
-
-
-        for (TreeVertex vertex: anglesMap.keySet()
-        ) {
-            Integer integer = anglesMap.get(vertex);
-            if (integer == 4) {
-            } else {
-                System.out.println(("FehlerWinkel"));
-            }
-
-        }
-
-
-
-
-
+        long stopTime3 = System.currentTimeMillis();
+        long elapsedTime3 = stopTime3 - startTime3;
+        System.out.println("Angulator Section  :" + elapsedTime3);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void winkelHinzufügen(SPQNode root, HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashmap) {
+    public void winkelHinzufuegen(SPQNode root, HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {
-            winkelHinzufügen(node, hashmap);
+            winkelHinzufuegen(node, hashmap);
         }
         if (root.getMergedChildren().size() > 1 && !root.isIsroot()) {
             root.computeOrthogonalRepresentation(hashmap);
         }
 
     }
-
-
-
-
-
-
 
 
 }

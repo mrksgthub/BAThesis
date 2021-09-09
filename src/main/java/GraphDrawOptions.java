@@ -3,20 +3,13 @@ import java.awt.event.*;
 
 public class GraphDrawOptions extends JDialog {
     public boolean run = false;
+    WinkelAlgorithmus winkelAlgorithmus;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JRadioButton tamassiaPushRelabelRadioButton;
     private JRadioButton didimoRadioButton;
     private ButtonGroup buttonGroup1;
-
-    WinkelAlgorithmus winkelAlgorithmus;
-
-    enum WinkelAlgorithmus            // Enum-Typ
-    {
-        PUSH_RELABEL, DIDIMO  // Enumerationskonstanten
-    }
-
 
     public GraphDrawOptions() {
         setContentPane(contentPane);
@@ -55,6 +48,13 @@ public class GraphDrawOptions extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    public static void main(String[] args) {
+        GraphDrawOptions dialog = new GraphDrawOptions();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
     private void onOK() {
         // add your code here
         int selection = buttonGroup1.getSelection().getMnemonic();
@@ -69,7 +69,6 @@ public class GraphDrawOptions extends JDialog {
         dispose();
 
 
-
     }
 
     private void onCancel() {
@@ -77,10 +76,8 @@ public class GraphDrawOptions extends JDialog {
         dispose();
     }
 
-    public static void main(String[] args) {
-        GraphDrawOptions dialog = new GraphDrawOptions();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    enum WinkelAlgorithmus            // Enum-Typ
+    {
+        PUSH_RELABEL, DIDIMO  // Enumerationskonstanten
     }
 }

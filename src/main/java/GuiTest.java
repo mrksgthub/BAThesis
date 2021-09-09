@@ -1,13 +1,7 @@
-import org.antlr.v4.runtime.misc.Pair;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.DirectedWeightedMultigraph;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -15,187 +9,231 @@ import java.util.Hashtable;
 public class GuiTest extends JFrame {
 
 
+    static SwingWorker worker;
     private static SPQTree tree;
-    private static  SPQNode root;
+    private static SPQNode root;
+
+    int ops;
+    int chanceOfP;
     private JButton drawGraphButton;
     private JButton button2;
-    private JButton button3;
+    private JButton interrupts;
     private JLabel test;
     private JPanel panel1;
     private JPanel Texts;
     private JLabel ChanceOfP;
     private JLabel opsField;
-
-
-    int ops;
-    int chanceOfP;
-
-
-
-
-
+    private JLabel status;
+    private JMenuItem exportButton;
+    private JMenuItem importButton;
+    private JMenu filesMenu;
+    private JMenuBar menuBar;
+    private Boolean hasValidGraph;
 
 
     public GuiTest() {
 
-        button2.addActionListener(new ActionListener() {
+       /* button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GuiDialog dialog1 = new GuiDialog();
                 dialog1.pack();
                 dialog1.setVisible(true);
-                opsField.setText(String.valueOf("Ops: " + dialog1.ops));
-                ChanceOfP.setText(String.valueOf("Chance of P: " + dialog1.chanceOfP));
+                opsField.setText("Ops: " + dialog1.ops);
+                ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
                 ops = dialog1.ops;
                 chanceOfP = dialog1.chanceOfP;
 
 
-                SPQGenerator spqGenerator = new SPQGenerator();
-                try {
-                    spqGenerator.run(ops, chanceOfP);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                tree = spqGenerator.getTree();
-                root = spqGenerator.getRoot();
+                worker = new Thread() {
 
+
+                    public void run() {
+
+                        SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP);
+                        try {
+
+                            Thread t1 = new Thread(spqGenerator);
+                            t1.start();
+                            System.out.println("Graph is being Generated");
+                   *//*         while (!Thread.interrupted() && t1.isAlive()) {
+                                try {
+                                    Thread.sleep(Integer.MAX_VALUE);
+                                } catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+                                    spqGenerator.shutdown();
+                                    System.out.println("Unterbochen");
+                                }
+
+                            }*//*
+
+                            //     spqGenerator.run(ops, chanceOfP);
+                            t1.join();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                        tree = spqGenerator.getTree();
+                        root = spqGenerator.getRoot();
+                        status.setText("Graph Generated");
+                    }
+
+                };
+                worker.start();
             }
+
+
+        });*/
+
+
+        button2.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GuiDialog dialog1 = new GuiDialog();
+                dialog1.pack();
+                dialog1.setVisible(true);
+                opsField.setText("Ops: " + dialog1.ops);
+                ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
+                ops = dialog1.ops;
+                chanceOfP = dialog1.chanceOfP;
+                SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP);
+
+                worker = new SwingWorker() {
+
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        interrupts.setEnabled(true);
+                        //   spqGenerator.run();
+
+                        hasValidGraph = false;
+                        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+
+                        spqGenerator.counter = 0;
+                        while (!hasValidGraph && !isCancelled()) {
+                            hasValidGraph = spqGenerator.generateGraph(spqGenerator.size, chanceOfP);
+
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        super.done();
+                        System.out.println("In Done");
+                        tree = spqGenerator.getTree();
+                        root = spqGenerator.getRoot();
+                        status.setText("Graph Generated");
+                        drawGraphButton.setEnabled(true);
+                        interrupts.setEnabled(false);
+                    }
+                };
+                worker.execute();
+            }
+
         });
 
 
         drawGraphButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
+                status.setText("Drawing Graph");
                 GraphDrawOptions dialog1 = new GraphDrawOptions();
                 dialog1.pack();
                 dialog1.setVisible(true);
 
+                try {
+                    if (dialog1.run && tree != null && root != null) {
 
-                if (dialog1.run == true) {
-                    GraphDrawOptions.WinkelAlgorithmus alg = dialog1.winkelAlgorithmus;
-                    Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
-                    Embedder embedder = new Embedder(embedding, root);
-                    embedder.run(root);
-
-                    FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
-                    treeVertexFaceGenerator.generateFaces2();
-
-
-                    if (alg == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
-
-
-                    DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-                    didimoRepresentability.run();
-
-                    root.getMergedChildren().get(0).computeSpirality();
-
-                    Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
-                    try {
-                        angulator.run();
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                        TestAndAngles angles = new TestAndAngles(tree, root);
+                        angles.run(dialog1.run, dialog1.winkelAlgorithmus);
+                        ////////////////////////////////////////////
+                        // orthogonal rep muss gesetted werden
+                        Thread t = new Thread(new GraphDrawer(angles.treeVertexFaceGenerator.planarGraphFaces, angles.embedding, angles.treeVertexFaceGenerator.adjFaces2));
+                        t.start();
                     }
-
-                    } else if (alg == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
-                        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-                        test.run3();
-                    }
-                    //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-                    //  tamassiaRepresentation.run();
-////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////////////
-
-// orthogonal rep muss gesetted werden
-
-
-                    Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
-                    rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
-                    rectangulator.initialize();
-                    rectangulator.outerFace.setOrientations();
-
-
-                    Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
-                    orientator.run();
-
-
-                    VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
-                    DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
-                    // GraphHelper.printToDOTTreeVertexWeighted(testgraph);
-
-                    verticalFlow.generateCapacities();
-
-
-                    HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
-                    DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
-                    //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
-
-                    horizontalFlow.generateCapacities();
-
-                    Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
-                    coordinator.run();
-
-
-                    Graph graph = new SingleGraph("Tutorial 1");
-
-
-                    for (TreeVertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
-
-                        if (!vertex.dummy) {
-                            graph.addNode(vertex.getName());
-                            Node node = graph.getNode(vertex.getName());
-                            Pair<Integer, Integer> coords = coordinator.getEdgeToCoordMap().get(vertex);
-                            node.setAttribute("xy", coords.a, coords.b);
-                        }
-                    }
-
-
-                    for (TreeVertex treeVertex : embedding.keySet()) {
-
-                        ArrayList<TreeVertex> list = embedding.get(treeVertex);
-
-                        for (TreeVertex vertex1 : list) {
-
-                            if (graph.getEdge(vertex1.getName() + " " + treeVertex.getName()) == null)
-                                graph.addEdge(treeVertex.getName() + " " + vertex1.getName(), treeVertex.getName(), vertex1.getName());
-
-                        }
-
-
-                    }
-
-
-                    graph.display(false);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(panel1, "Invalid Graph", "Alert", JOptionPane.WARNING_MESSAGE);
                 }
-
             }
         });
-        button3.addActionListener(new ActionListener() {
+
+
+        interrupts.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuiDialog dialog1 = new GuiDialog();
-                dialog1.pack();
-                dialog1.setVisible(true);
-                opsField.setText(String.valueOf("Ops: " + dialog1.ops));
-                ChanceOfP.setText(String.valueOf("Chance of P: " + dialog1.chanceOfP));
-                ops = dialog1.ops;
-                chanceOfP = dialog1.chanceOfP;
+                worker.cancel(true);
+                interrupts.setEnabled(false);
 
             }
         });
 
 
+        importButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                status.setText("Import Finished");
+                JFileChooser fc = new JFileChooser();
+                int returnVal = fc.showOpenDialog(panel1);
 
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    //This is where a real application would open the file.
+                    SwingWorker worker1 = new SwingWorker() {
+                        @Override
+                        protected Object doInBackground() throws Exception {
+                            SPQImporter spqImporter = new SPQImporter(file.getAbsolutePath());
+                            spqImporter.run();
+                            tree = spqImporter.tree;
+                            root = tree.getRoot();
+                            ChanceOfP.setText("Vertices: " + tree.constructedGraph.vertexSet().size());
 
+                            return null;
+                        }
 
+                        @Override
+                        protected void done() {
+                            super.done();
+                            System.out.println("In Done");
+                            updateText("Importing done");
+                            drawGraphButton.setEnabled(true);
 
+                        }
+                    };
+                    worker1.execute();
 
+                }
 
+                updateText("Importing done");
+            }
+        });
 
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                status.setText("Exporting Graph");
+                JFileChooser fc = new JFileChooser();
+                int returnVal = fc.showSaveDialog(panel1);
+                if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    File file = fc.getSelectedFile();
+                    //This is where a real application would save the file.
+                    SwingWorker worker1 = new SwingWorker() {
+                        @Override
+                        protected String doInBackground() throws Exception {
+                            SPQExporter exporter = new SPQExporter(tree);
+                            exporter.run(root, file.getAbsolutePath());
 
+                            return "Test";
+                        }
+                    };
+                    worker1.execute();
+                    status.revalidate();
+                    status.repaint();
+
+                }
+            }
+        });
 
 
     }
@@ -206,8 +244,30 @@ public class GuiTest extends JFrame {
 
         JFrame frame = new JFrame("Test");
         frame.setContentPane(new GuiTest().panel1);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
-        
+    }
+
+
+    public void updateText(String text) {
+        status.setText(text);
+        status.paintImmediately(status.getVisibleRect());
+    }
+
+    public void run() {
+
+        System.setProperty("org.graphstream.ui", "swing");
+
+        JFrame frame = new JFrame("Test");
+        frame.setContentPane(new GuiTest().panel1);
+        // frame.setJMenuBar(menuBar);
+        //  menuBar.setLayout(new FlowLayout(FlowLayout.LEADING));
+        //   menuBar.add(filesMenu);
+        //  filesMenu.add(importButton);
+        //  filesMenu.add(exportButton);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);

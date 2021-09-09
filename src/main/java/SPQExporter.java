@@ -8,7 +8,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
@@ -22,22 +21,19 @@ public class SPQExporter {
     }
 
 
-
-
-
     public void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)
 
 
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
-       //     return e.getName();
+            //     return e.getName();
             return ((e.getMergedChildren().size() > 0) ? e.getName() : e.startVertex.getName() + e.sinkVertex.getName());
 
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-     //   System.out.println(writer.toString());
+        //   System.out.println(writer.toString());
     }
 
     public void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
@@ -52,7 +48,7 @@ public class SPQExporter {
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-       // System.out.println(writer.toString());
+        // System.out.println(writer.toString());
         Paths.get(fileName);
         try {
             Files.write(Paths.get(fileName), writer.toString().getBytes(StandardCharsets.UTF_8));
@@ -60,12 +56,6 @@ public class SPQExporter {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
 
 
     public DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root, int integer) {
@@ -101,6 +91,7 @@ public class SPQExporter {
             }
         }
     }
+
     public void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
@@ -122,8 +113,7 @@ public class SPQExporter {
 
     public void run(SPQNode root) {
 
-       printTODOTSPQNode(treeToDOT(root, 2));
-
+        printTODOTSPQNode(treeToDOT(root, 2));
 
     }
 
@@ -132,7 +122,6 @@ public class SPQExporter {
 
         printTODOTSPQNode(treeToDOT(root, 2));
         writeTODOTSPQNode(treeToDOT(root, 2), fileName);
-
 
     }
 }

@@ -1,9 +1,5 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -38,30 +34,24 @@ public class SPQImporter {
 
             tree = new SPQTree(nameToNode.get("Proot"));
             root = (SPQPNode) nameToNode.get("Proot");
+            if (tree.getRoot() == null) {
+                try {
+                    throw new Exception("AHHH");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
             tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
             root.computeAdjecentVertices();
             root.setRoot();
-
-            assert (tree.getRoot() != null);
 
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         return tree.getRoot();
@@ -74,36 +64,36 @@ public class SPQImporter {
                 int i = line.indexOf(" -");
 
                 String s1 = line.substring(0, i).trim();
-                String s2 = line.substring(i + 3, line.length()-1).trim();
+                String s2 = line.substring(i + 3, line.length() - 1).trim();
 
                 nameToNode.get(s1).getMergedChildren().add(nameToNode.get(s2));
 
             } else {
 
                 if (line.length() > 2) {
-                switch (line.charAt(2)) {
-                    case 'Q' -> nameToNode.put(line.substring(0, line.length()-1).trim(), new SPQQNode(line.substring(0, line.length()-1).trim()));
-                    case 'v' -> {
-                        SPQQNode qNode = new SPQQNode(line.substring(0, line.length()-1).trim());
-                        int i = line.lastIndexOf("v");
+                    switch (line.charAt(2)) {
+                        case 'Q' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQQNode(line.substring(0, line.length() - 1).trim()));
+                        case 'v' -> {
+                            SPQQNode qNode = new SPQQNode(line.substring(0, line.length() - 1).trim());
+                            int i = line.lastIndexOf("v");
 
-                        TreeVertex startVertex = new TreeVertex(line.substring(0, i).trim());
-                        nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), startVertex);
-                        qNode.startVertex = nameToTreeVertex.get(line.substring(0, i).trim());
+                            TreeVertex startVertex = new TreeVertex(line.substring(0, i).trim());
+                            nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), startVertex);
+                            qNode.startVertex = nameToTreeVertex.get(line.substring(0, i).trim());
 
-                        TreeVertex sinkVertex = new TreeVertex(line.substring(i, line.length() - 1).trim());
-                        nameToTreeVertex.putIfAbsent(line.substring(i, line.length() - 1).trim(), sinkVertex);
-                        qNode.sinkVertex = nameToTreeVertex.get(line.substring(i, line.length() - 1).trim());
+                            TreeVertex sinkVertex = new TreeVertex(line.substring(i, line.length() - 1).trim());
+                            nameToTreeVertex.putIfAbsent(line.substring(i, line.length() - 1).trim(), sinkVertex);
+                            qNode.sinkVertex = nameToTreeVertex.get(line.substring(i, line.length() - 1).trim());
 
 
-                        nameToNode.put(line.substring(0, line.length()-1).trim(), qNode);
+                            nameToNode.put(line.substring(0, line.length() - 1).trim(), qNode);
+                        }
+                        case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim()));
+                        case 'S' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQSNode(line.substring(0, line.length() - 1).trim()));
+                        default -> System.out.println("bug");
                     }
-                    case 'P' -> nameToNode.put(line.substring(0, line.length()-1).trim(), new SPQPNode(line.substring(0, line.length()-1).trim()));
-                    case 'S' -> nameToNode.put(line.substring(0, line.length()-1).trim(), new SPQSNode(line.substring(0, line.length()-1).trim()));
-                    default -> System.out.println("bug");
-                }
 
-            }
+                }
 
             }
         } catch (Exception e) {
@@ -112,11 +102,6 @@ public class SPQImporter {
         }
 
     }
-
-
-
-
-
 
 
 }

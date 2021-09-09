@@ -1,9 +1,7 @@
 import org.antlr.v4.runtime.misc.Pair;
-import org.graphstream.graph.*;
+import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.*;
-import org.graphstream.ui.view.View;
-import org.graphstream.ui.view.Viewer;
+import org.graphstream.graph.implementations.SingleGraph;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -50,8 +48,6 @@ public class GraphFrame {
         Hashtable<TreeVertex, ArrayList<TreeVertex>> embed = (Hashtable<TreeVertex, ArrayList<TreeVertex>>) GraphHelper.readObjectFromFile("C:\\adjecency.ser");
 
 
-
-
         for (TreeVertex vertex : coord.keySet()) {
 
             assert embed != null;
@@ -70,27 +66,19 @@ public class GraphFrame {
             for (TreeVertex vertex1 : list) {
 
 
-                if(graph.getEdge(vertex1.getName()+" "+treeVertex.getName()) == null)
-                    graph.addEdge(  treeVertex.getName()+" "+vertex1.getName() ,treeVertex.getName(), vertex1.getName());
+                if (graph.getEdge(vertex1.getName() + " " + treeVertex.getName()) == null)
+                    graph.addEdge(treeVertex.getName() + " " + vertex1.getName(), treeVertex.getName(), vertex1.getName());
 
             }
-
 
 
         }
 
 
-
         graph.display(false);
 
 
-
-
-
-
     }
-
-
 
 
     public void displayGraph() {
@@ -98,8 +86,6 @@ public class GraphFrame {
 
 
         Graph graph = new SingleGraph("Tutorial 1");
-
-
 
 
         for (TreeVertex vertex : edgeToCoordMap.keySet()) {
@@ -111,10 +97,7 @@ public class GraphFrame {
         }
 
 
-
-
-      graph.display(false);
-
+        graph.display(false);
 
 
     }

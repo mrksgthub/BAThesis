@@ -1,14 +1,10 @@
-import org.antlr.v4.runtime.tree.Tree;
 import org.jbpt.hypergraph.abs.Vertex;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
-public class TreeVertex extends Vertex implements Serializable
-
-{
+public class TreeVertex extends Vertex implements Serializable {
 
     public static Supplier<TreeVertex> getvSupplier = new Supplier<>() {
         private int id = 0;
@@ -19,77 +15,35 @@ public class TreeVertex extends Vertex implements Serializable
             return new TreeVertex("v" + id++);
         }
     };
+
+    static int counter = 0;
     int depth;
     TreeVertex parent;
-    List<TreeVertex> children;
-    TreeVertex firstVertexInEdge;
-    TreeVertex secondVertexInEdge;
-    boolean visited = false;
     boolean dummy = false;
     String name = super.getName();
     ArrayList<TreeVertex> adjecentVertices = new ArrayList<>();
+    int id;
 
     public TreeVertex(String name) {
         super(name);
         this.depth = 0;
+        id = counter++;
     }
 
     public TreeVertex(String name, boolean dummy) {
         super(name);
         this.depth = 0;
         this.dummy = dummy;
+        id = counter++;
     }
-
-
 
     public TreeVertex(String name, TreeVertex parent) {
         super(name);
         this.parent = parent;
         this.depth = 0;
+        id = counter++;
     }
 
-
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-    public void setVisited(boolean visited) {
-        this.visited = visited;
-    }
-
-
-    public TreeVertex getFirstVertexInEdge() {
-        return firstVertexInEdge;
-    }
-
-    public void setFirstVertexInEdge(TreeVertex firstVertexInEdge) {
-        this.firstVertexInEdge = firstVertexInEdge;
-    }
-
-    public TreeVertex getSecondVertexInEdge() {
-        return secondVertexInEdge;
-    }
-
-    public void setSecondVertexInEdge(TreeVertex secondVertexInEdge) {
-        this.secondVertexInEdge = secondVertexInEdge;
-    }
-
-    public List<TreeVertex> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<TreeVertex> children) {
-        this.children = children;
-    }
-
-    public int getDepth() {
-        return depth;
-    }
-
-    public void setDepth(int depth) {
-        this.depth = depth;
-    }
 
     public TreeVertex getParent() {
         return parent;
@@ -106,15 +60,14 @@ public class TreeVertex extends Vertex implements Serializable
         } else {
             return name;
         }
-
-
-
     }
 
-
-
-
-
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + id;
+        return result;
+    }
 
 
 }

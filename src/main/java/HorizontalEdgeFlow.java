@@ -14,18 +14,17 @@ import java.util.Map;
 
 public class HorizontalEdgeFlow implements Runnable {
 
-    private Thread t;
-    private String threadName = "horizontal";
-
     HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
     Map<TreeVertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
     List<PlanarGraphFace<TreeVertex, DefaultEdge>> rectangleList = new ArrayList<>();
     PlanarGraphFace<TreeVertex, DefaultEdge> outerFace;
+    Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
+    private Thread t;
+    private String threadName = "horizontal";
     private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph;
     private MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
-    Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
 
     public HorizontalEdgeFlow(List<PlanarGraphFace<TreeVertex, DefaultEdge>> rectangleList, PlanarGraphFace<TreeVertex, DefaultEdge> outerFace) {
         this.rectangleList = rectangleList;
@@ -89,8 +88,6 @@ public class HorizontalEdgeFlow implements Runnable {
         }
 
 
-
-
         for (int j = 0; j < rectangleList.size(); j++) {
             TreeVertex face = rectangleList.get(j);
             networkGraph.addVertex(face);
@@ -146,16 +143,14 @@ public class HorizontalEdgeFlow implements Runnable {
         System.out.println("Horizontal Edge Flow");
         generateCapacities();
     }
-    public void start () {
-        System.out.println("Starting " +  threadName );
+
+    public void start() {
+        System.out.println("Starting " + threadName);
         if (t == null) {
-            t = new Thread (this, threadName);
-            t.start ();
+            t = new Thread(this, threadName);
+            t.start();
         }
     }
-
-
-
 
 
 }

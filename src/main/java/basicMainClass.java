@@ -1,5 +1,4 @@
 import org.antlr.v4.runtime.misc.Pair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -30,7 +29,7 @@ public class basicMainClass {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(60000, 20);
+        SPQGenerator spqGenerator = new SPQGenerator(60, 20);
         spqGenerator.run();
 
 
@@ -38,7 +37,7 @@ public class basicMainClass {
         root = spqGenerator.getRoot();
 
         SPQExporter spqExporter = new SPQExporter(tree);
-        spqExporter.run(root);
+        //      spqExporter.run(root);
         spqExporter.run(root, "C:/a.txt");
 
 
@@ -80,7 +79,7 @@ public class basicMainClass {
         // Zeit:
         long startTime = System.currentTimeMillis();
 
-/*
+
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
         didimoRepresentability.run();
 
@@ -89,9 +88,16 @@ public class basicMainClass {
 
 
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        long startTime3 = System.currentTimeMillis();
         angulator.run();
+        long stopTime3 = System.currentTimeMillis();
+        long elapsedTime3 = stopTime3 - startTime3;
 
-*/
+        System.out.println("Angulator  :" + elapsedTime3);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
         System.out.println("Didimo Zeit: " + elapsedTime);
@@ -101,44 +107,19 @@ public class basicMainClass {
 
         //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
         // tamassiaRepresentation.run();
+        long startTime2 = System.currentTimeMillis();
+//        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        long stopTime2 = System.currentTimeMillis();
+        long elapsedTime2 = stopTime2 - startTime2;
+        System.out.println("MaxFlow Init " + elapsedTime2);
 
-          MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
-          test.run3();
+        //     test.run3();
 
 
         stopTime = System.currentTimeMillis();
         elapsedTime = stopTime - startTime;
         System.out.println("Tamassia Zeit: " + elapsedTime);
 ////////////////////////////////////////////
-
-
-
-
-
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face: test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
-        ) {
-            int sum = 0;
-            for (MutablePair<TreeVertex, TreeVertex> edge: face.orthogonalRep.keySet()
-            ) {
-                sum += face.orthogonalRep.get(edge);
-            }
-
-            assert (Math.abs(sum) == 4);
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /////////////////////////////////////////////////////////////////////////////////////

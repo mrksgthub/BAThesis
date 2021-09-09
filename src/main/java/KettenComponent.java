@@ -1,14 +1,10 @@
 import org.jgrapht.Graph;
-import org.jgrapht.Graphs;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class KettenComponent<V,E> {
+public class KettenComponent<V, E> {
 
     V start;
     V end;
-    Graph<V,E> graph;
+    Graph<V, E> graph;
     int startNodeDegree = 0;
     int endNodeDegree = 0;
 
@@ -18,12 +14,12 @@ public class KettenComponent<V,E> {
         this.end = end;
 
     }
-    public KettenComponent(Graph<V,E> graph, V start, V end) {
+
+    public KettenComponent(Graph<V, E> graph, V start, V end) {
         this.start = start;
         this.end = end;
         this.graph = graph;
     }
-
 
 
     public V getStart() {
@@ -36,7 +32,6 @@ public class KettenComponent<V,E> {
     public void setStart(V start) {
         this.start = start;
         startNodeDegree = graph.degreeOf(start);
-
 
 
     }

@@ -31,26 +31,25 @@ public class SPQQNode extends SPQNode {
 
         return true;
     }
-    
+
     @Override
     public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
 
 
         if (spirality >= 0) {
             for (int i = 0; i < spirality; i++) {
-                hashMap.put(new Tuple<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), 1);
-                hashMap.put(new Tuple<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), -1);
+                hashMap.put(new TupleEdge<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), 1);
+                hashMap.put(new TupleEdge<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), -1);
             }
         } else {
             for (int i = 0; i < -spirality; i++) {
-                hashMap.put(new Tuple<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), -1);
-                hashMap.put(new Tuple<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), 1);
+                hashMap.put(new TupleEdge<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex()), -1);
+                hashMap.put(new TupleEdge<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex()), 1);
             }
         }
 
 
-
-      //  System.out.println("Test");
+        //  System.out.println("Test");
     }
 
 

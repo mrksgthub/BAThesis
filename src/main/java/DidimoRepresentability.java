@@ -2,8 +2,7 @@ public class DidimoRepresentability {
 
 
     private final SPQTree tree;
-    private final SPQNode root
-            ;
+    private final SPQNode root;
 
     public DidimoRepresentability(SPQTree tree, SPQNode root) {
         this.tree = tree;
@@ -13,7 +12,7 @@ public class DidimoRepresentability {
     public void run() {
         boolean check = true;
 
-     check = root.computeRepresentability(check);
+        check = root.computeRepresentability(check);
         if (check) {
             check = (tree.computeNofRoot()) ? check : false;
             if (!check) {
@@ -22,15 +21,7 @@ public class DidimoRepresentability {
         }
 
 
-
     }
-
-
-
-
-
-
-
 
 
 }

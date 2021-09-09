@@ -1,4 +1,3 @@
-
 import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.*;
@@ -6,6 +5,15 @@ import java.util.function.Supplier;
 
 public class PlanarGraphFace<V, E> extends TreeVertex {
 
+    public static Supplier<TreeVertex> getvSupplier = new Supplier<TreeVertex>() {
+        private int id = 0;
+
+        @Override
+        public TreeVertex get() {
+
+            return new TreeVertex("v" + id++);
+        }
+    };
     Set<MutablePair<V, V>> pairSet = new HashSet<>();
     Set<V> vSet = new HashSet<>();
     Set<E> edgeSet = new HashSet<>();
@@ -14,6 +22,31 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
     Map<Integer, ArrayList<MutablePair<V, V>>> sidesMap = new LinkedHashMap<>();
     List<MutablePair<V, V>> edgeList = new ArrayList<>();
     FaceType type = FaceType.INTERNAL;
+
+    public PlanarGraphFace() {
+
+        super(Integer.toString(new Random().nextInt(500)));
+        sidesMap.put(0, new ArrayList<>());
+        sidesMap.put(1, new ArrayList<>());
+        sidesMap.put(2, new ArrayList<>());
+        sidesMap.put(3, new ArrayList<>());
+
+
+    }
+
+    public PlanarGraphFace(String name) {
+        super(name);
+        sidesMap.put(0, new ArrayList<>());
+        sidesMap.put(1, new ArrayList<>());
+        sidesMap.put(2, new ArrayList<>());
+        sidesMap.put(3, new ArrayList<>());
+
+
+    }
+
+    public PlanarGraphFace(String name, TreeVertex parent) {
+        super(name, parent);
+    }
 
     public FaceType getType() {
         return type;
@@ -47,34 +80,6 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         this.orthogonalRep = orthogonalRep;
     }
 
-    public PlanarGraphFace() {
-
-        super(Integer.toString(new Random().nextInt(500)));
-        sidesMap.put(0, new ArrayList<>());
-        sidesMap.put(1, new ArrayList<>());
-        sidesMap.put(2, new ArrayList<>());
-        sidesMap.put(3, new ArrayList<>());
-
-
-
-
-    }
-
-    public PlanarGraphFace(String name) {
-        super(name);
-        sidesMap.put(0, new ArrayList<>());
-        sidesMap.put(1, new ArrayList<>());
-        sidesMap.put(2, new ArrayList<>());
-        sidesMap.put(3, new ArrayList<>());
-
-
-    }
-
-    public PlanarGraphFace(String name, TreeVertex parent) {
-        super(name, parent);
-    }
-
-
     public Set<MutablePair<V, V>> getPairSet() {
         return pairSet;
     }
@@ -99,17 +104,6 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         this.edgeSet = edgeSet;
     }
 
-    public static Supplier<TreeVertex> getvSupplier = new Supplier<TreeVertex>() {
-        private int id = 0;
-
-        @Override
-        public TreeVertex get() {
-
-            return new TreeVertex("v" + id++);
-        }
-    };
-
-
     public void setOrientations() {
 
         sidesMap.put(0, new ArrayList<>());
@@ -131,7 +125,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
                 sidesMap.get(orientations[(counter % 4)]).add(edge);
             } else {
                 getEdgeOrientationMap().put(edge, orientations[(counter % 4) + 7]);
-                sidesMap.get(orientations[(counter % 4)+7]).add(edge);
+                sidesMap.get(orientations[(counter % 4) + 7]).add(edge);
             }
 
 
@@ -145,15 +139,13 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
                 if (orthogonalRep.get(arr.get(i)) == -1) {
                     if (i != arr.size() - 1) {
-                        Collections.rotate(arr, arr.size()-1-i);
+                        Collections.rotate(arr, arr.size() - 1 - i);
                         break;
                     }
                 }
             }
 
         }
-
-
 
 
     }
@@ -184,7 +176,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
                 sidesMap.get(orientations[(counter % 4)]).add(edgeList.get(index));
             } else {
                 getEdgeOrientationMap().put(edgeList.get(index), orientations[(counter % 4) + 7]);
-                sidesMap.get(orientations[(counter % 4)+7]).add(edgeList.get(index));
+                sidesMap.get(orientations[(counter % 4) + 7]).add(edgeList.get(index));
             }
 
 
@@ -198,7 +190,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
                 if (orthogonalRep.get(arr.get(i)) == 1) {
                     if (i != arr.size() - 1) {
-                        Collections.rotate(arr, arr.size()-1-i);
+                        Collections.rotate(arr, arr.size() - 1 - i);
                         break;
                     }
                 }
@@ -207,36 +199,10 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         }
 
 
-
-
-
-
-
-
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     enum FaceType {INTERNAL, EXTERNAL, EXTERNAL_PROCESSED}
-
-
-
-
 
 
 }
