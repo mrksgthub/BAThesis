@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -122,7 +123,6 @@ public class Rectangulator<E> {
                 }
             }
 
-
             face.setOrientations();
             Map<MutablePair<TreeVertex, TreeVertex>, Integer> orthogonalRep = face.getOrthogonalRep();
 
@@ -133,12 +133,12 @@ public class Rectangulator<E> {
             Map<MutablePair<TreeVertex, TreeVertex>, MutablePair<TreeVertex, TreeVertex>> externalFronts = new LinkedHashMap<>();
             computeNexts(face.edgeList, nexts, prevs);
 
-
             Map<MutablePair<TreeVertex, TreeVertex>, Integer> newOrthogonalRep = new LinkedHashMap<>();
             newOrthogonalRep.putAll(face.getOrthogonalRep());
 
 
             if (face.getType() == PlanarGraphFace.FaceType.INTERNAL) {
+
                 computeFronts(orthogonalRep, fronts, nexts, prevs, face.edgeList, vertexToFront);
 
                 Set<MutablePair<TreeVertex, TreeVertex>> frontSet = new LinkedHashSet<>(fronts.values());
@@ -190,7 +190,6 @@ public class Rectangulator<E> {
 
                     }
 
-
                     newOrthogonalRep.put(edge1, 1);
                     newOrthogonalRep.put(edge2, 1);
                     newOrthogonalRep.put(edge3, 1);
@@ -222,6 +221,9 @@ public class Rectangulator<E> {
                     }
                 } else {
 
+                    System.out.println("Find Fronts:");
+                    StopWatch stopWatch = new StopWatch();
+                    stopWatch.start();
                     for (MutablePair<TreeVertex, TreeVertex> edge : face.edgeList
                     ) {
                         if (orthogonalRep.get(edge) == -1) {
@@ -229,6 +231,8 @@ public class Rectangulator<E> {
                         }
 
                     }
+                    stopWatch.stop();
+                    System.out.println(" StopWatch: " + stopWatch.getTime());
 
                     Set<MutablePair<TreeVertex, TreeVertex>> frontSet = new LinkedHashSet<>(fronts.values());
                     List<MutablePair<TreeVertex, TreeVertex>> frontList = new ArrayList<>(frontSet);
@@ -238,7 +242,6 @@ public class Rectangulator<E> {
                         //   projectEdgeExternalFace(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront, externalFronts);
                         projectEdge2(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront);
                     }
-
 
                 }
 
@@ -301,7 +304,7 @@ public class Rectangulator<E> {
 
                     assert (Math.abs(counter) == 4);
                     if (counter == -4) {
-                        System.out.println("here");
+                        System.out.println("External Face Processed");
 
                         dequeStack.push(faceObj);
                         faceObj.setType(PlanarGraphFace.FaceType.EXTERNAL_PROCESSED);
@@ -323,12 +326,12 @@ public class Rectangulator<E> {
                 }
             }
 
-
+            //
             if (startingEdges.size() == 0 && face.getName().equals("0") && !processed) {
                 dequeStack.push(face);
             }
 
-
+            // Original external face was rectangular to begin with
             if (startingEdges.size() == 0 && !face.getName().equals("0")) {
                 rectangularFaceMap.put(face, face);
             }
@@ -487,7 +490,6 @@ public class Rectangulator<E> {
             fronts.put(edge, tempEdge);
         } else {
             externalFronts.put(edge, outerRectangle[Math.floorMod(orientations.get(tempEdge) - 1, 4)]);
-
         }
 
 

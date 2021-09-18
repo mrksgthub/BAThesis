@@ -30,7 +30,7 @@ public class SPQGenTest {
     @Test
     public void teilGraphTest() throws Exception {
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             teilGraphTestRunner();
 
             System.out.println(i + ". Iteration");
@@ -46,7 +46,7 @@ public class SPQGenTest {
         SPQNode root;
 
 
-        SPQGenerator spqGenerator = new SPQGenerator(3000, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(300, 30);
         spqGenerator.run();
 
 

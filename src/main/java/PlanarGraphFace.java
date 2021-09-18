@@ -14,6 +14,8 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
             return new TreeVertex("v" + id++);
         }
     };
+
+    static int faceCounter = 0;
     Set<MutablePair<V, V>> pairSet = new HashSet<>();
     Set<V> vSet = new HashSet<>();
     Set<E> edgeSet = new HashSet<>();
@@ -22,10 +24,11 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
     Map<Integer, ArrayList<MutablePair<V, V>>> sidesMap = new LinkedHashMap<>();
     List<MutablePair<V, V>> edgeList = new ArrayList<>();
     FaceType type = FaceType.INTERNAL;
+    int faceIndex;
 
     public PlanarGraphFace() {
-
         super(Integer.toString(new Random().nextInt(500)));
+        faceIndex = faceCounter++;
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());
         sidesMap.put(2, new ArrayList<>());
@@ -36,6 +39,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
     public PlanarGraphFace(String name) {
         super(name);
+        faceIndex = faceCounter++;
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());
         sidesMap.put(2, new ArrayList<>());
@@ -46,6 +50,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
     public PlanarGraphFace(String name, TreeVertex parent) {
         super(name, parent);
+        faceIndex = faceCounter++;
     }
 
     public FaceType getType() {
@@ -104,6 +109,12 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         this.edgeSet = edgeSet;
     }
 
+
+    /**
+     * Legt Orientierung für das äuere Face fest. Dabei wird einer der Kanten die Orientierung 0 zugewiesen und davon
+     * ausgehend der Rest.
+     *
+     */
     public void setOrientations() {
 
         sidesMap.put(0, new ArrayList<>());
@@ -150,6 +161,11 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
     }
 
+    /**
+     * Legt Orientierungen einer Facette bei der die Orientierung von edge festgelegt ist.
+     * @param edge - edge in der Facette
+     * @param orientation - festgelegte Orientierung der edge in der Facette
+     */
     public void setOrientations(MutablePair<V, V> edge, int orientation) {
 
         sidesMap.put(0, new ArrayList<>());

@@ -44,12 +44,8 @@ public class PushRelabel extends MaxFlowImp {
     }
 
 
-    public void determineHeights() {
-
-    }
-
-
     public void initialize() {
+        // initialisiere Arrays
         heights = new int[n];
         heights[source] = n;
         heights[sink] = 0;
@@ -57,24 +53,22 @@ public class PushRelabel extends MaxFlowImp {
         nextNeighbour = new int[n];
         queue = new ArrayDeque<>();
 
+        // Preflow (siehe Wikipedia)
         preflow();
-
 
         for (Edge edge : outgoingEdgeLists[source]
         ) {
             push(edge);
         }
 
-
+        // Push Relabel durchlauf (siehe Wikiedia)
         for (int i = 1; i < n - 1; i++) {
             queue.add(i);
         }
-
         while (!queue.isEmpty()) {
-
             discharge(queue.poll());
-
         }
+
 
         int count = 0;
         for (Edge edge : edges
@@ -94,8 +88,8 @@ public class PushRelabel extends MaxFlowImp {
         }
 
 
-        if (y != x && x != excessFlow[sink]) {
-            throw new RuntimeException("Ungültiges Netzwerk:" + x + y);
+        if (y != x || x != excessFlow[sink]) {
+            throw new RuntimeException("Ungültiges Netzwerk:" + x + y + excessFlow[sink]);
         }
 
 
@@ -103,7 +97,6 @@ public class PushRelabel extends MaxFlowImp {
 
 
     public boolean push(Edge edge) {
-
 
         if (excessFlow[edge.u] > 0 && heights[edge.u] > heights[edge.v]) {
             double f = Math.min(edge.capacity - edge.flow, excessFlow[edge.u]);

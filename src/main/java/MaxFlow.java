@@ -1,5 +1,5 @@
 import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
+import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -45,8 +45,8 @@ public class MaxFlow {
         generateFlowGraph(tree, treeVertexFaceGenerator, simple);
 
 
-        MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
-        // MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
+        // MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
+        MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
 
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
@@ -78,6 +78,10 @@ public class MaxFlow {
     }
 
 
+    /**
+     * Erstellt Flussnetzwerk, führt Push-Relabel Maxflow Algorithmus aus und legt dann Winkel in den orthogonalen
+     * Repräsentationen der Faces fest.
+     */
     public void run3() {
 
         solverSource = new TreeVertex("solverSource");
@@ -95,6 +99,16 @@ public class MaxFlow {
     }
 
 
+    /**
+     * Erstellt ein für den Tamassia-Algorithmus zugeschnittenes Flussnetzwerk (Garg Tamassia 96).
+     * Um die benötigten lower bounds zu gewährleisten müssen die capacities und Kanten angepasst werden.
+     *
+     *
+     *
+     * @param tree
+     * @param treeVertexFaceGenerator
+     * @param simple
+     */
     private void generateFlowGraph(SPQTree tree, FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
@@ -104,7 +118,6 @@ public class MaxFlow {
         counter = 0;
         for (TreeVertex vertex : tree.constructedGraph.vertexSet()
         ) {
-
             neighbors = tree.constructedGraph.outDegreeOf(vertex) + tree.constructedGraph.inDegreeOf(vertex);
             simple.addVertex(vertex);
             DefaultWeightedEdge e1 = simple.addEdge(solverSource, vertex);
@@ -121,6 +134,10 @@ public class MaxFlow {
 
         // vertexList.size() - 1 Aufgrund der Struktur von vertexList: Das erste und letzte Element sind die gleichen die Formel bleibt 2*d(f) +/- 4
         neighborOfFace = 2 * (vertexList.size() - 1) + 4 - (vertexList.size() - 1);
+        if (neighborOfFace < 0) {
+            throw new IllegalArgumentException("Negative Capacity");
+        }
+
 
         // Face zu Sink
         TreeVertex face = treeVertexFaceGenerator.planarGraphFaces.get(0);
@@ -137,14 +154,17 @@ public class MaxFlow {
         }
 
 
-        //  System.out.println("OuterFace to Sink: " + neighborOfFace);
-
         // Inner Faces:
         for (int i = 1; i < treeVertexFaceGenerator.listOfFaces2.size(); i++) {
 
             vertexList = treeVertexFaceGenerator.listOfFaces2.get(i);
 
             neighborOfFace = 2 * (vertexList.size() - 1) - 4 - (vertexList.size() - 1);
+
+            if (neighborOfFace < 0) {
+                throw new IllegalArgumentException("Negative Capacity");
+            }
+
 
             // Face zu Sink
             face = treeVertexFaceGenerator.planarGraphFaces.get(i);
@@ -168,9 +188,9 @@ public class MaxFlow {
 
     private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces) {
 
+        // Erstelle Map um die Kante (y,z) zu beommen, welche in Facette x auf Knoten z endet.
+        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
 
-        // Erstelle Map um die Kante y zu beommen, welche in Facette x auf Knoten z endet.
-        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>>> map = new HashMap<>();
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : planarGraphFaces
         ) {
@@ -196,7 +216,6 @@ public class MaxFlow {
                 HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
 
                 MutablePair<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
-
 
                 PlanarGraphFace<TreeVertex, DefaultEdge> tempFace;
                 Double aDouble = flowMap.get(edge);

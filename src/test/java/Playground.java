@@ -1,3 +1,4 @@
+import org.apache.commons.lang3.time.StopWatch;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.AsGraphUnion;
 import org.jgrapht.graph.DefaultEdge;
@@ -5,6 +6,7 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.util.SupplierUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -109,6 +111,49 @@ https://stackoverflow.com/questions/8766741/changing-contents-of-vertex-with-jgr
 
     @Test
     public void mergeVertices() {
+
+
+    }
+
+
+    @Test
+    public void hashmapArrayTest() {
+
+
+        int[] array = new int[3000000];
+        for (int i = 0; i < array.length; i++) {
+            array[i] = i;
+        }
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for (int i = 0; i < array.length; i++) {
+            map.put(i, i);
+
+        }
+        StopWatch stop = new StopWatch();
+
+        int i = 0;
+        stop.start();
+        for (int interger: array
+             ) {
+            i = interger;
+        }
+        stop.stop();
+        System.out.println(stop.getNanoTime());
+        stop.reset();
+
+
+        stop.start();
+        for (int interger: map.keySet()
+        ) {
+            i = map.get(interger);
+        }
+        stop.stop();
+        System.out.println(stop.getNanoTime());
+
+
+
 
 
     }

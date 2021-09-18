@@ -3,6 +3,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.view.Viewer;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -17,10 +18,12 @@ public class GraphDrawer implements Runnable {
 
     private final List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces;
     private final Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
-    private TestAndAngles angles;
+    double time = Integer.MAX_VALUE;
+    private DidimoTestAndAngles angles;
     private HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> adjFaces2;
 
-    public GraphDrawer(TestAndAngles angles) {
+
+    public GraphDrawer(DidimoTestAndAngles angles) {
         this.angles = angles;
         planarGraphFaces = angles.treeVertexFaceGenerator.planarGraphFaces;
         embedding = angles.embedding;
@@ -112,8 +115,9 @@ public class GraphDrawer implements Runnable {
 
         }
 
-
-        graph.display(false);
+        // https://stackoverflow.com/questions/37530756/dont-close-swing-main-app-when-closing-graphstream
+        Viewer viewer = graph.display(false);
+        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
     }
 
 

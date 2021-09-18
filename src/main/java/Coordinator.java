@@ -9,6 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ *  Zuständig für die Zuweisung von x- und y-Koordinaten an die Knoten des Graphen.
+ *
+ *
+ */
 public class Coordinator {
 
 
@@ -22,6 +27,18 @@ public class Coordinator {
     private HashMap<Object, Object> edgeFaceNeighbourMap = new HashMap<>();
 
 
+    /**
+     *
+     *
+     *
+     *
+     * @param outerFace
+     * @param rectangularFaceMap
+     * @param edgeToArcMap - horizontal Edge to Arc Map
+     * @param edgeToArcMap1 - vertical Edge to Arc Map
+     * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges
+     * @param costFlow - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
+     */
     public Coordinator(PlanarGraphFace<TreeVertex, DefaultEdge> outerFace, HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, PlanarGraphFace<TreeVertex, DefaultEdge>> rectangularFaceMap, Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap, Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
 
         this.outerFace = outerFace;
@@ -42,6 +59,11 @@ public class Coordinator {
         this.edgeToCoordMap = edgeToCoordMap;
     }
 
+
+    /**
+     * Berechnet die Koordinaten des Graphen dadurch, dass es einen Knoten der äußeren Facette auf (0,0) festlegt und
+     * von diesem ausgehend werden alle Koordinaten der Knoten berechnet.
+     */
     public void run() {
 
         List<PlanarGraphFace<TreeVertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(rectangularFaceMap.keySet());
@@ -51,6 +73,7 @@ public class Coordinator {
         visitedMap.put(outerFace, true);
 
 
+        // füge alle Kanten zu einer Kante -> Facette Map hinzu
         for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
             edgeFaceNeighbourMap.put(edge, outerFace);
@@ -66,16 +89,17 @@ public class Coordinator {
         }
 
 
-        edgeToCoordMap.put(outerFace.sidesMap.get(0).get(0).getLeft(), new Pair<>(0, 0));
+
+        edgeToCoordMap.put(outerFace.sidesMap.get(0).get(0).getLeft(), new Pair<>(0, 0)); // bestimme den Knoten mit der (0,0) Koordinate
         int yCoord = edgeToCoordMap.get(outerFace.sidesMap.get(0).get(0).getLeft()).b;
 
-
+        // Bestimme die Koordinaten der Knoten des unteren horizontalen Randes der äußeren Facette
+        // Entdecke alle Facetten, welche am unteren horizontalen Rand der äußeren Facette angrenzen.
         ArrayList<MutablePair<TreeVertex, TreeVertex>> list = outerFace.sidesMap.get(0);
         int length = 0;
         for (MutablePair<TreeVertex, TreeVertex> edge : list) {
             length += horizontalMinCostFlow.getFlowMap().get(horzontalEdgeToArcMap.get(edge));
             edgeToCoordMap.put(edge.getRight(), new Pair<>(length, yCoord));
-
 
             MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
@@ -84,11 +108,10 @@ public class Coordinator {
                 visitedMap.putIfAbsent(face, true);
                 discoveredFaces.add(face);
             }
-
-
         }
 
 
+        // Bestimme die Koordinaten der Knoten des linken vertikalen Randes der äußeren Facette
         length = 0;
         list = outerFace.sidesMap.get(1);
         int xCoord = edgeToCoordMap.get(list.get(list.size() - 1).getRight()).a;
@@ -97,7 +120,7 @@ public class Coordinator {
             edgeToCoordMap.put(list.get(i).getLeft(), new Pair<>(xCoord, length));
         }
 
-
+        // Bestimme die Koordinaten der Knoten des oberen horizontalen Randes der äußeren Facette
         length = 0;
         list = outerFace.sidesMap.get(2);
         yCoord = edgeToCoordMap.get(list.get(list.size() - 1).getRight()).b;
@@ -106,7 +129,7 @@ public class Coordinator {
             edgeToCoordMap.put(list.get(i).getLeft(), new Pair<>(length, yCoord));
         }
 
-        // x-Koordinaten festlegen:
+        // Bestimme die Koordinaten der Knoten des rechten vertikalen Randes der äußeren Facette
         length = 0;
         list = outerFace.sidesMap.get(3);
         xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;
@@ -117,6 +140,7 @@ public class Coordinator {
         }
 
 
+        // Bestimme die Koordinaten der Knoten der inneren Facetten
         Pair<Integer, Integer> newCoordinates;
         while (discoveredFaces.size() > 0) {
 
@@ -184,7 +208,7 @@ public class Coordinator {
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), newCoordinates);
 
-/*
+/* Debug Code:
                 MutablePair<TreeVertex, TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
@@ -224,7 +248,7 @@ public class Coordinator {
         }
 
 
-        System.out.println("Help");
+        System.out.println("Coordinator finished");
     }
 
 

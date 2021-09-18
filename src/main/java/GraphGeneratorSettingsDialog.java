@@ -1,16 +1,18 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
-public class GuiDialog extends JDialog {
-    int ops;
-    int chanceOfP;
+public class GraphGeneratorSettingsDialog extends JDialog {
+    int ops = -1;
+    int chanceOfP = -1;
+    boolean validSettings = false;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textField1;
     private JTextField textField2;
 
-    public GuiDialog() {
+    public GraphGeneratorSettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -44,7 +46,7 @@ public class GuiDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        GuiDialog dialog = new GuiDialog();
+        GraphGeneratorSettingsDialog dialog = new GraphGeneratorSettingsDialog();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -61,6 +63,7 @@ public class GuiDialog extends JDialog {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Nur Werte von 1-" + Integer.MAX_VALUE + " möglich");
             e.printStackTrace();
+            ops = -1;
         }
 
         try {
@@ -68,19 +71,23 @@ public class GuiDialog extends JDialog {
             if (chanceOfP < 0) {
                 throw new NumberFormatException();
             }
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Nur Werte von 0-100 möglich");
             e.printStackTrace();
+            chanceOfP = -1;
         }
-        if (chanceOfP >= 0 || ops >= 0) {
+        if (chanceOfP >= 0 && ops >= 0) {
+            validSettings = true;
             dispose();
+
         }
 
     }
 
     private void onCancel() {
         // add your code here if necessary
+        validSettings = false;
         dispose();
     }
+
 }

@@ -152,8 +152,11 @@ public class SPQGenerator implements Callable, Runnable {
             treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
             // Zeit2:
             long startTime2 = System.currentTimeMillis();
-            DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-            treeVertexFaceGenerator.generateCapacities();
+         //   DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+         //   treeVertexFaceGenerator.generateCapacities();
+            MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+            test.run3();
+
             // Zeit2:
             long stopTime2 = System.currentTimeMillis();
             long elapsedTime2 = stopTime2 - startTime2;
@@ -168,9 +171,15 @@ public class SPQGenerator implements Callable, Runnable {
         // tamassiaValid = false;
         if (tamassiaValid != check) {
             try {
+                SPQExporter spqExporter = new SPQExporter(tree);
+                //      spqExporter.run(root);
+                spqExporter.run(root, "C:/bug.txt");
+
+
                 throw new Exception("AHHHH");
             } catch (Exception e) {
                 e.printStackTrace();
+
             }
         }
         return check;

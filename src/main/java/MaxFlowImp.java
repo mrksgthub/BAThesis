@@ -21,6 +21,13 @@ public class MaxFlowImp {
     List<EdmondsKarp.Edge> edges = new ArrayList<>();
 
 
+    /**
+     * Objekt in welchem der MaxFlow-Algorithmus durchgeführt wird
+     *
+     *
+     *
+     * @param networkGraph
+     */
     public MaxFlowImp(DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph) {
         this.networkGraph = networkGraph;
         n = networkGraph.vertexSet().size();

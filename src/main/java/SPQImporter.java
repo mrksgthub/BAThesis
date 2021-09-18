@@ -48,6 +48,21 @@ public class SPQImporter {
             root.computeAdjecentVertices();
             root.setRoot();
 
+/*            int i = 1;
+            for (TreeVertex v: nameToTreeVertex.values()
+                 ) {
+                if (v.getName().equals("vsource")) {
+                    v.id = 0;
+                } else if ((v.getName().equals("vsink"))) {
+                    v.id = nameToTreeVertex.values().size()-1;
+                } else {
+                    v.id = i++;
+                }
+            }*/
+
+
+
+            System.out.println("Graph Imported");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -96,6 +111,8 @@ public class SPQImporter {
                 }
 
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException(line);

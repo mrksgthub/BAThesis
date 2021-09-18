@@ -17,6 +17,7 @@ public class TreeVertex extends Vertex implements Serializable {
     };
 
     static int counter = 0;
+
     int depth;
     TreeVertex parent;
     boolean dummy = false;

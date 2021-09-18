@@ -50,6 +50,7 @@ public class Orientator<E> {
 
         PlanarGraphFace<TreeVertex, DefaultEdge> currentFace;
 
+        // äußere Facette
         for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
             MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
@@ -64,14 +65,13 @@ public class Orientator<E> {
 
         int i = 0;
 
+        // innere Facetten
         while (discoveredFaces.size() > 0) {
-
 
             PlanarGraphFace<TreeVertex, E> currFace = discoveredFaces.get(0);
             discoveredFaces.remove(0);
             for (MutablePair<TreeVertex, TreeVertex> edge : currFace.getEdgeList()
             ) {
-
                 MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
                 PlanarGraphFace<TreeVertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);

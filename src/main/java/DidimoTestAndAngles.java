@@ -3,15 +3,16 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class TestAndAngles {
+public class DidimoTestAndAngles {
 
 
     SPQTree tree;
     SPQNode root;
+    double time = Integer.MAX_VALUE;
     FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator;
     Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
 
-    public TestAndAngles(SPQTree tree, SPQNode root) {
+    public DidimoTestAndAngles(SPQTree tree, SPQNode root) {
         this.tree = tree;
         this.root = root;
     }
@@ -27,8 +28,8 @@ public class TestAndAngles {
             treeVertexFaceGenerator.generateFaces2();
 
 
+            long startTime3 = System.currentTimeMillis();
             if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
-
 
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
                 didimoRepresentability.run();
@@ -46,7 +47,8 @@ public class TestAndAngles {
                 MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
                 test.run3();
             }
-
+            long stopTime3 = System.currentTimeMillis();
+            time = stopTime3 - startTime3;
 
         }
     }

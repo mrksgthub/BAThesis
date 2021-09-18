@@ -28,9 +28,8 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-
-        SPQGenerator spqGenerator = new SPQGenerator(60, 20);
-        spqGenerator.run();
+       SPQGenerator spqGenerator = new SPQGenerator(500, 0);
+       spqGenerator.run();
 
 
         tree = spqGenerator.getTree();
@@ -44,8 +43,10 @@ public class basicMainClass {
         //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\55664N2389F.txt");
 
         // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\163386N20963F.txt");
-        //  SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\3532N511F.txt");
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        //SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\38321N2774F.txt");
+          SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        // SPQImporter spqImporter = new SPQImporter("C:/bug - Kopie.txt");
+       // SPQImporter spqImporter = new SPQImporter("C:/bug2.txt");
         spqImporter.run();
 
 
@@ -60,13 +61,9 @@ public class basicMainClass {
         FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
-        for (TreeVertex vertex : tree.constructedGraph.vertexSet()
-        ) {
-            int i = tree.constructedGraph.degreeOf(vertex);
-            if (i > 4) {
-                throw new Exception("Illegal Graph: maxDegree of nodes = " + i);
-            }
-        }
+
+        GraphValidifier graphValidifier = new GraphValidifier(tree.constructedGraph, treeVertexFaceGenerator.planarGraphFaces);
+        graphValidifier.run();
 
 
         HashMap parentsList = new HashMap<>();
@@ -90,7 +87,7 @@ public class basicMainClass {
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-        angulator.run();
+        //     angulator.run();
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
@@ -106,14 +103,13 @@ public class basicMainClass {
         startTime = System.currentTimeMillis();
 
         //  TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        // tamassiaRepresentation.run();
+        //   tamassiaRepresentation.run();
         long startTime2 = System.currentTimeMillis();
-//        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("MaxFlow Init " + elapsedTime2);
-
-        //     test.run3();
+        test.run3();
 
 
         stopTime = System.currentTimeMillis();

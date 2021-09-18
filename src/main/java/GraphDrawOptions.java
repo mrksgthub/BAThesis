@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class GraphDrawOptions extends JDialog {
@@ -19,6 +20,7 @@ public class GraphDrawOptions extends JDialog {
 
         tamassiaPushRelabelRadioButton.setMnemonic(KeyEvent.VK_0);
         didimoRadioButton.setMnemonic(KeyEvent.VK_1);
+
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -62,8 +64,12 @@ public class GraphDrawOptions extends JDialog {
         switch (selection) {
             case KeyEvent.VK_1:
                 winkelAlgorithmus = WinkelAlgorithmus.DIDIMO;
+                break;
             case KeyEvent.VK_0:
                 winkelAlgorithmus = WinkelAlgorithmus.PUSH_RELABEL;
+                break;
+            default:
+                throw new IllegalStateException("Button doesn't exist");
         }
         run = true;
         dispose();

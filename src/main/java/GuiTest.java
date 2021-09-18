@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.concurrent.ExecutionException;
 
 
 public class GuiTest extends JFrame {
@@ -16,7 +17,7 @@ public class GuiTest extends JFrame {
     int ops;
     int chanceOfP;
     private JButton drawGraphButton;
-    private JButton button2;
+    private JButton generateGraphButton;
     private JButton interrupts;
     private JLabel test;
     private JPanel panel1;
@@ -28,6 +29,9 @@ public class GuiTest extends JFrame {
     private JMenuItem importButton;
     private JMenu filesMenu;
     private JMenuBar menuBar;
+    private JLabel timeNameLabel;
+    private JLabel timeLabel;
+    private JButton runTestButton;
     private Boolean hasValidGraph;
 
 
@@ -85,49 +89,55 @@ public class GuiTest extends JFrame {
         });*/
 
 
-        button2.addActionListener(new ActionListener() {
+        generateGraphButton.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuiDialog dialog1 = new GuiDialog();
+                GraphGeneratorSettingsDialog dialog1 = new GraphGeneratorSettingsDialog();
                 dialog1.pack();
                 dialog1.setVisible(true);
-                opsField.setText("Ops: " + dialog1.ops);
-                ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
-                ops = dialog1.ops;
-                chanceOfP = dialog1.chanceOfP;
-                SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP);
 
-                worker = new SwingWorker() {
+                if (dialog1.validSettings) {
+                    opsField.setText("Ops: " + dialog1.ops);
+                    ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
+                    ops = dialog1.ops;
+                    chanceOfP = dialog1.chanceOfP;
+                    SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP);
+                    worker = new SwingWorker() {
 
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        interrupts.setEnabled(true);
-                        //   spqGenerator.run();
+                        @Override
+                        protected Object doInBackground() throws Exception {
+                            interrupts.setEnabled(true);
+                            hasValidGraph = false;
+                            Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
 
-                        hasValidGraph = false;
-                        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+                            spqGenerator.counter = 0;
+                            while (!hasValidGraph && !isCancelled()) {
+                                hasValidGraph = spqGenerator.generateGraph(spqGenerator.size, chanceOfP);
 
-                        spqGenerator.counter = 0;
-                        while (!hasValidGraph && !isCancelled()) {
-                            hasValidGraph = spqGenerator.generateGraph(spqGenerator.size, chanceOfP);
-
+                            }
+                            return null;
                         }
-                        return null;
-                    }
 
-                    @Override
-                    protected void done() {
-                        super.done();
-                        System.out.println("In Done");
-                        tree = spqGenerator.getTree();
-                        root = spqGenerator.getRoot();
-                        status.setText("Graph Generated");
-                        drawGraphButton.setEnabled(true);
-                        interrupts.setEnabled(false);
-                    }
-                };
-                worker.execute();
+                        @Override
+                        protected void done() {
+                            super.done();
+                            System.out.println("In Done");
+                            if (hasValidGraph) {
+                                tree = spqGenerator.getTree();
+                                root = spqGenerator.getRoot();
+                                status.setText("Graph Generated");
+                            } else {
+                                status.setText("Graph generation was stopped.");
+                            }
+
+                            drawGraphButton.setEnabled(true);
+                            interrupts.setEnabled(false);
+                            exportButton.setEnabled(true);
+                        }
+                    };
+                    worker.execute();
+                }
             }
 
         });
@@ -144,12 +154,44 @@ public class GuiTest extends JFrame {
                 try {
                     if (dialog1.run && tree != null && root != null) {
 
-                        TestAndAngles angles = new TestAndAngles(tree, root);
+                        DidimoTestAndAngles angles = new DidimoTestAndAngles(tree, root);
                         angles.run(dialog1.run, dialog1.winkelAlgorithmus);
+                        timeLabel.setText(angles.time + " ms");
                         ////////////////////////////////////////////
                         // orthogonal rep muss gesetted werden
-                        Thread t = new Thread(new GraphDrawer(angles.treeVertexFaceGenerator.planarGraphFaces, angles.embedding, angles.treeVertexFaceGenerator.adjFaces2));
-                        t.start();
+
+                        GraphDrawer graphDrawer = new GraphDrawer(angles.treeVertexFaceGenerator.planarGraphFaces, angles.embedding, angles.treeVertexFaceGenerator.adjFaces2);
+                        ChanceOfP.setText("Faces: " + String.valueOf(angles.treeVertexFaceGenerator.getPlanarGraphFaces().size()));
+                        opsField.setText("Vertices: " + tree.constructedGraph.vertexSet().size());
+
+
+                        SwingWorker worker = new SwingWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
+                                graphDrawer.run();
+                                return null;
+                            }
+
+                            @Override
+                            protected void done() {
+                                super.done();
+                                try {
+                                    get();
+                                } catch (ExecutionException e) { // https://stackoverflow.com/questions/6523623/graceful-exception-handling-in-swing-worker
+                                    e.getCause().printStackTrace();
+                                    String msg = String.format("Unexpected problem: %s",
+                                            e.getCause().toString());
+                                    JOptionPane.showMessageDialog(panel1,
+                                            msg, "Error", JOptionPane.ERROR_MESSAGE);
+                                } catch (InterruptedException e) {
+                                    // Process e here
+                                }
+                            }
+                        };
+                        worker.execute();
+
+                    } else {
+                        status.setText("No Graph available.");
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -236,6 +278,50 @@ public class GuiTest extends JFrame {
         });
 
 
+        runTestButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                graphTesterDialog dialog1 = new graphTesterDialog();
+                dialog1.pack();
+                dialog1.setVisible(true);
+
+                SwingWorker worker = new SwingWorker() {
+
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        updateText("Running tests");
+                        graphTester graphTester = new graphTester(dialog1.getDataPath(), dialog1.getFiles());
+                        graphTester.run();
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        super.done();
+                        System.out.println("In Done");
+                        updateText("Finished testing graphs");
+                        try {
+                            get();
+                        } catch (ExecutionException e) { // https://stackoverflow.com/questions/6523623/graceful-exception-handling-in-swing-worker
+                            e.getCause().printStackTrace();
+                            String msg = String.format("Unexpected problem: %s",
+                                    e.getCause().toString());
+                            JOptionPane.showMessageDialog(panel1,
+                                    msg, "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (InterruptedException e) {
+                            // Process e here
+                        }
+                    }
+
+                };
+                if (dialog1.getFiles() != null || dialog1.getDataPath() != null) {
+                    worker.execute();
+                } else {
+                    System.out.println("Not exectued");
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
