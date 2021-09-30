@@ -43,15 +43,15 @@ public class TamassiaRepresentation {
 
 
         // Erstelle Map um die Kante y zu beommen, welche in Facette x auf Knoten z endet.
-        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>>> map = new HashMap<>();
+        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>>> map = new HashMap<>();
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : planarGraphFaces
         ) {
-            HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> pairVectorMap = new HashMap<>();
+            HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>> pairVectorMap = new HashMap<>();
             map.put(face, pairVectorMap);
 
-            Map<MutablePair<TreeVertex, TreeVertex>, Integer> s1 = face.getOrthogonalRep();
-            for (MutablePair<TreeVertex, TreeVertex> pair :
+            Map<TupleEdge<TreeVertex, TreeVertex>, Integer> s1 = face.getOrthogonalRep();
+            for (TupleEdge<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
 
                 pairVectorMap.put(pair.getRight(), pair);
@@ -67,9 +67,9 @@ public class TamassiaRepresentation {
             DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> graph = treeVertexFaceGenerator.getNetworkGraph();
 
 
-            HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
+            HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
 
-            MutablePair<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
+            TupleEdge<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
 
 
             PlanarGraphFace<TreeVertex, DefaultEdge> tempFace;

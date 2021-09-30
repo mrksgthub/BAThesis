@@ -1,5 +1,4 @@
 import org.antlr.v4.runtime.misc.Pair;
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -20,7 +19,7 @@ public class GraphDrawer implements Runnable {
     private final Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
     double time = Integer.MAX_VALUE;
     private DidimoTestAndAngles angles;
-    private HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> adjFaces2;
+    private HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> adjFaces2;
 
 
     public GraphDrawer(DidimoTestAndAngles angles) {
@@ -30,7 +29,7 @@ public class GraphDrawer implements Runnable {
         adjFaces2 = angles.treeVertexFaceGenerator.getAdjFaces2();
     }
 
-    public GraphDrawer(List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces, Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding, HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> adjFaces2) {
+    public GraphDrawer(List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces, Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding, HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> adjFaces2) {
         this.planarGraphFaces = planarGraphFaces;
         this.embedding = embedding;
         this.adjFaces2 = adjFaces2;

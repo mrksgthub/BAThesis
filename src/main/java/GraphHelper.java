@@ -1,15 +1,15 @@
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultUndirectedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.*;
 import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.BreadthFirstIterator;
 import org.jgrapht.util.SupplierUtil;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 public class GraphHelper<V extends TreeVertex, E> {
@@ -68,51 +68,43 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
-    public static MutablePair<TreeVertex, TreeVertex> reverseEdge(MutablePair<TreeVertex, TreeVertex> edge) {
-        return new TupleEdge<>(edge.getRight(), edge.getLeft());
+
+    public static void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String stringPath) {
+        //Create the exporter (without ID provider)
+
+
+        DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexIdProvider((SPQNode e) -> {
+            return e.getName();
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(jgrapthTest, writer);
+        Paths.get(stringPath);
+        try {
+            Files.write(Paths.get(stringPath), writer.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    /**
-     * Replaces the subtree rooted in root2 in graph g2 with the subtree rooted in root1 in graph g1. Graph g1 is left
-     * unchanged.
-     *
-     * @param g1    first graph
-     * @param g2    second graph
-     * @param root1 root of subtree in first graph
-     * @param root2 root of subtree in second graph
-     * @param <V>   vertex type
-     * @param <E>   edge type
-     *              <p>
-     *              https://stackoverflow.com/questions/60606453/jgrapht-replacing-subtree-in-a-directed-acyclic-graph-by-another-subtree
-     */
-    public static <V, E> void replaceSubtree(Graph<V, E> g1, Graph<V, E> g2, V root1, V root2) {
-        //1. Add subtree under root1 to graph g2 as a disconnected component
-        BreadthFirstIterator<V, E> bfs = new BreadthFirstIterator<>(g1, root1);
-        g2.addVertex(bfs.next());
-        while (bfs.hasNext()) {
-            V vertex = bfs.next();
-            V parent = bfs.getParent(vertex);
-            g2.addVertex(vertex);
-            g2.addEdge(parent, vertex, bfs.getSpanningTreeEdge(vertex));
+
+
+
+
+
+    public static TupleEdge<TreeVertex, TreeVertex> reverseEdge(TupleEdge<TreeVertex, TreeVertex> edge, boolean newEdge) {
+
+        if (newEdge) {
+            return new TupleEdge<>(edge.getRight(), edge.getLeft(), edge.winkel * -1);
+        } else {
+            return new TupleEdge<>(edge.getRight(), edge.getLeft());
         }
 
-        //2. Get the edge (object) between root2 and its parent. A special case occurs if root2 is also the root of g2
-        // in which case it does not have a parent.
-        E treeEdge = (g2.incomingEdgesOf(root2).isEmpty() ? null : g2.incomingEdgesOf(root2).iterator().next());
-        V parent = (treeEdge == null ? null : Graphs.getOppositeVertex(g2, treeEdge, root2));
-
-        //3. Remove subtree rooted in vertex k
-        bfs = new BreadthFirstIterator<>(g2, root2);
-        while (bfs.hasNext())
-            g2.removeVertex(bfs.next());
-
-        //4. Reconnect the two components
-        if (parent != null)
-            g2.addEdge(parent, root1, treeEdge);
     }
 
-    //TODO nützliche Funktionen Knoten in Kanten einfügen?!, edge contraction?
+
+
 
     /**
      * Replaces testEdge=(v1, v2) with a series of Edges of length i the first vertex in this series is going to be v1, the last is v2.
@@ -313,4 +305,41 @@ public class GraphHelper<V extends TreeVertex, E> {
     }
 
 
+    public static <V,E>void mergeVertices(DirectedMultigraph<V, E> spqTree, V prevChild, V child) {
+
+        List<V> vs = Graphs.successorListOf(spqTree, child);
+        Graphs.addOutgoingEdges(spqTree, prevChild, vs);
+        spqTree.removeVertex(child);
+
+
+    }
+
+    public static void mergeQVertices(DirectedMultigraph<SPQNode, DefaultEdge> spqTree, SPQNode prevChild, SPQNode child) {
+
+        List<SPQNode> vs = Graphs.successorListOf(spqTree, child);
+        Graphs.addOutgoingEdges(spqTree, prevChild, vs);
+        spqTree.removeVertex(child);
+
+
+
+
+
+
+
+    }
+
+    public static void mergeVerticeWithParent(DirectedMultigraph<SPQNode, DefaultEdge> spqTree, SPQNode parent, SPQNode child) {
+
+
+        List<SPQNode> vs = Graphs.predecessorListOf(spqTree, child);
+        spqTree.addEdge(vs.get(0), child);
+        spqTree.removeVertex(parent);
+
+
+
+
+
+
+
+    }
 }

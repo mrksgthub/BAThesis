@@ -6,6 +6,7 @@ import org.jgrapht.graph.DefaultUndirectedGraph;
 import org.jgrapht.util.SupplierUtil;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -151,7 +152,20 @@ https://stackoverflow.com/questions/8766741/changing-contents-of-vertex-with-jgr
         }
         stop.stop();
         System.out.println(stop.getNanoTime());
+        System.out.println(stop.getTime());
 
+        stop.reset();
+
+
+/*
+        stop.start();
+        for (int interger: map.keySet()
+        ) {
+            int[] array2 = Arrays.copyOf(array, array.length);
+        }
+        stop.stop();
+        System.out.println(stop.getNanoTime());
+*/
 
 
 

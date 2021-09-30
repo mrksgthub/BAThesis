@@ -13,13 +13,17 @@ import java.util.HashMap;
 
 public class SPQExporter {
 
-    private final SPQTree tree;
+    private  SPQTree tree;
+
 
     public SPQExporter(SPQTree tree) {
         this.tree = tree;
 
     }
+    public SPQExporter() {
 
+
+    }
 
     public void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)

@@ -70,5 +70,13 @@ public class TreeVertex extends Vertex implements Serializable {
         return result;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+       // if (!super.equals(o)) return false;
+        TreeVertex that = (TreeVertex) o;
+        return id == that.id;
+    }
 
 }

@@ -11,6 +11,13 @@ public class SPQSNode extends SPQNode {
         super(s);
     }
 
+    public SPQSNode(TreeVertex edgeSource, TreeVertex edgeTarget) {
+
+        super("S" + edgeSource.getName() + edgeTarget.getName()+ id++);
+        this.startVertex = edgeSource;
+        this.sinkVertex = edgeTarget;
+    }
+
 
     @Override
     public NodeTypesEnum.NODETYPE getNodeType() {

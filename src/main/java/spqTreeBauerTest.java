@@ -1,6 +1,5 @@
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
-import org.jgrapht.alg.connectivity.BiconnectivityInspector;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -30,10 +29,25 @@ public class spqTreeBauerTest {
 
 
         DirectedMultigraph<TreeVertex, DefaultEdge> graph = new DirectedMultigraph<>(DefaultEdge.class);
+        DirectedMultigraph<TreeVertex, SPQEdge> graphSPQNodeEdges = new DirectedMultigraph<>(SPQEdge.class);
+        DirectedMultigraph<SPQNode, DefaultEdge> SPQTree = new DirectedMultigraph<>(DefaultEdge.class);
+
 
         Graphs.addGraph(graph, tree.constructedGraph);
 
         graph.removeEdge(root.startVertex, root.sinkVertex);
+
+        for (TreeVertex vertex : graph.vertexSet()) {
+            graphSPQNodeEdges.addVertex(vertex);
+        }
+        for (DefaultEdge edge : graph.edgeSet()) {
+            SPQQNode subNode = new SPQQNode(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), false);
+            SPQQNode node = new SPQQNode(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), true);
+            graphSPQNodeEdges.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), new SPQEdge(node));
+            SPQTree.addVertex(node);
+            SPQTree.addVertex(subNode);
+            SPQTree.addEdge(node, subNode);
+        }
 
 
         TreeVertex prev = root.startVertex;
@@ -41,7 +55,7 @@ public class spqTreeBauerTest {
         //  stack.add(prev);
 
         List<ArrayDeque<TreeVertex>> qNodes = new ArrayList<>();
-        SPQDepthiterator<TreeVertex, DefaultEdge> depthFirstIterator = new SPQDepthiterator(graph, root.startVertex, stack, prev);
+        SPQDepthiterator<TreeVertex, SPQEdge> depthFirstIterator = new SPQDepthiterator(graphSPQNodeEdges, root.startVertex, stack, prev);
 
         while (depthFirstIterator.hasNext()) {
 
@@ -49,13 +63,11 @@ public class spqTreeBauerTest {
             TreeVertex vertex = depthFirstIterator.next();
             stack.add(vertex);
 
-            if (graph.degreeOf(vertex) != 2) {
+            if (graphSPQNodeEdges.degreeOf(vertex) != 2) {
                 qNodes.add(stack);
                 stack = new ArrayDeque<>();
                 stack.add(vertex);
             }
-
-
 
 
             prev = vertex;
@@ -67,28 +79,28 @@ public class spqTreeBauerTest {
 
 
 
-        DirectedMultigraph<SPQNode, DefaultEdge> spqTree = new DirectedMultigraph<>(DefaultEdge.class);
-        DirectedMultigraph<Graph<TreeVertex, DefaultEdge>, DefaultEdge> graphTree = new DirectedMultigraph<>(DefaultEdge.class);
-        BiconnectivityInspector<TreeVertex, DefaultEdge> biconnectivityInspector = new BiconnectivityInspector<>(graph);
+/*        DirectedMultigraph<SPQNode, SPQEdge> spqTree = new DirectedMultigraph<>(SPQEdge.class);
+        DirectedMultigraph<Graph<TreeVertex, SPQEdge>, SPQEdge> graphTree = new DirectedMultigraph<>(SPQEdge.class);
+        BiconnectivityInspector<TreeVertex, SPQEdge> biconnectivityInspector = new BiconnectivityInspector<>(graphSPQNodeEdges);
         biconnectivityInspector.getCutpoints();
 
 
-        Set<Graph<TreeVertex, DefaultEdge>> blocks = biconnectivityInspector.getBlocks();
+        Set<Graph<TreeVertex, SPQEdge>> blocks = biconnectivityInspector.getBlocks();
 
-        ArrayDeque<Graph<TreeVertex, DefaultEdge>> spqQueue = new ArrayDeque<>();
-        spqQueue.offer(graph);
+        ArrayDeque<Graph<TreeVertex, SPQEdge>> spqQueue = new ArrayDeque<>();
+        spqQueue.offer(graphSPQNodeEdges);
         int counter = 0;
 
         while (!spqQueue.isEmpty()) {
 
-            Graph<TreeVertex, DefaultEdge> tempGraph = spqQueue.poll();
-            BiconnectivityInspector<TreeVertex, DefaultEdge> biconnectivityInspector2 = new BiconnectivityInspector<>(tempGraph);
-            Set<Graph<TreeVertex, DefaultEdge>> blocks2 = biconnectivityInspector2.getBlocks();
+            Graph<TreeVertex, SPQEdge> tempGraph = spqQueue.poll();
+            BiconnectivityInspector<TreeVertex, SPQEdge> biconnectivityInspector2 = new BiconnectivityInspector<>(tempGraph);
+            Set<Graph<TreeVertex, SPQEdge>> blocks2 = biconnectivityInspector2.getBlocks();
 
             if (blocks2.size() > 1) {
                 //  spqTree.addVertex(new SPQSNode());
                 graphTree.addVertex(tempGraph);
-                for (Graph<TreeVertex, DefaultEdge> graph3 : blocks2
+                for (Graph<TreeVertex, SPQEdge> graph3 : blocks2
                 ) {
                     graphTree.addVertex(graph3);
                     graphTree.addEdge(tempGraph, graph3);
@@ -98,18 +110,12 @@ public class spqTreeBauerTest {
             } else {
                 spqTree.addVertex(new SPQPNode("v" + counter++));
 
-
-
             }
 
+        }*/
 
 
-
-
-        }
-
-
-        ConnectivityInspector<TreeVertex, DefaultEdge> connectivityInspector = new ConnectivityInspector<>(graph);
+        ConnectivityInspector<TreeVertex, SPQEdge> connectivityInspector = new ConnectivityInspector<>(graphSPQNodeEdges);
         ArrayDeque<TreeVertex> arrayDeque = new ArrayDeque<>(graph.vertexSet());
         connectivityInspector.connectedSets();
 
@@ -117,6 +123,7 @@ public class spqTreeBauerTest {
         arrayDeque.remove(root.sinkVertex);
 
 
+        SPQNode rootNode = null;
 
 
         while (!arrayDeque.isEmpty()) {
@@ -124,21 +131,26 @@ public class spqTreeBauerTest {
             TreeVertex vertex = arrayDeque.pop();
 
 
-            Set<DefaultEdge> inmcomingEdges = graph.incomingEdgesOf(vertex);
-            Set<DefaultEdge> outgoingEdges = graph.outgoingEdgesOf(vertex);
+            Set<SPQEdge> inmcomingEdges = graphSPQNodeEdges.incomingEdgesOf(vertex);
+            Set<SPQEdge> outgoingEdges = graphSPQNodeEdges.outgoingEdgesOf(vertex);
 
-            Iterator<DefaultEdge> iterator = inmcomingEdges.iterator();
+            Iterator<SPQEdge> iterator = inmcomingEdges.iterator();
 
-            DefaultEdge prevEdge;
-            if (inmcomingEdges.size() > 1) {
+            SPQEdge prevEdge;
+            if (inmcomingEdges.size() > 1) { // P-Node
 
                 prevEdge = iterator.next();
-                while (iterator.hasNext() && inmcomingEdges.size() > 1) {
-                    DefaultEdge edge = iterator.next();
+                while (iterator.hasNext() && inmcomingEdges.size() > 1) { // Stack bessere Lösung
+                    SPQEdge edge = iterator.next();
 
-                    if (graph.getEdgeSource(prevEdge) == graph.getEdgeSource(edge)) {
+                    if (graphSPQNodeEdges.getEdgeSource(prevEdge) == graphSPQNodeEdges.getEdgeSource(edge)) {
+                        SPQNode nextNode = edge.node;
+                        edge.node = new SPQPNode(graphSPQNodeEdges.getEdgeSource(edge), graphSPQNodeEdges.getEdgeTarget(edge));
+                        SPQTree.addVertex(edge.node);
+                        SPQTree.addEdge(edge.node, prevEdge.node);
+                        SPQTree.addEdge(edge.node, nextNode);
 
-                        graph.removeEdge(prevEdge);
+                        graphSPQNodeEdges.removeEdge(prevEdge);
                         iterator = inmcomingEdges.iterator();
                     }
                     prevEdge = edge;
@@ -148,12 +160,20 @@ public class spqTreeBauerTest {
 
             iterator = outgoingEdges.iterator();
             prevEdge = iterator.next();
-            if (outgoingEdges.size() > 1) {
+            if (outgoingEdges.size() > 1) { // P-Node
                 while (iterator.hasNext() && outgoingEdges.size() > 1) {
 
-                    DefaultEdge edge = iterator.next();
-                    if (graph.getEdgeTarget(prevEdge) == graph.getEdgeTarget(edge)) {
-                        graph.removeEdge(prevEdge);
+                    SPQEdge edge = iterator.next();
+                    if (graphSPQNodeEdges.getEdgeTarget(prevEdge) == graphSPQNodeEdges.getEdgeTarget(edge)) {
+                        SPQNode nextNode = edge.node;
+                        edge.node = new SPQPNode(graphSPQNodeEdges.getEdgeSource(edge), graphSPQNodeEdges.getEdgeTarget(edge));
+
+
+                        SPQTree.addVertex(edge.node);
+                        SPQTree.addEdge(edge.node, prevEdge.node);
+                        SPQTree.addEdge(edge.node, nextNode);
+
+                        graphSPQNodeEdges.removeEdge(prevEdge);
                         iterator = outgoingEdges.iterator();
 
                     }
@@ -163,22 +183,183 @@ public class spqTreeBauerTest {
             }
 
 
-            inmcomingEdges = graph.incomingEdgesOf(vertex);
-            outgoingEdges = graph.outgoingEdgesOf(vertex);
+            inmcomingEdges = graphSPQNodeEdges.incomingEdgesOf(vertex);
+            outgoingEdges = graphSPQNodeEdges.outgoingEdgesOf(vertex);
 
 
-            if (inmcomingEdges.size() == 1 && outgoingEdges.size() == 1) {
+            if (inmcomingEdges.size() == 1 && outgoingEdges.size() == 1) { // new SNode
 
-                graph.addEdge(graph.getEdgeSource(inmcomingEdges.iterator().next()), graph.getEdgeTarget(outgoingEdges.iterator().next()));
-                graph.removeVertex(vertex);
+                SPQEdge incomingEdge = inmcomingEdges.iterator().next();
+                TreeVertex edgeSource = graphSPQNodeEdges.getEdgeSource(incomingEdge);
+                SPQEdge outgoingEdge = outgoingEdges.iterator().next();
+                TreeVertex edgeTarget = graphSPQNodeEdges.getEdgeTarget(outgoingEdge);
+
+
+                SPQSNode node = new SPQSNode(edgeSource, edgeTarget);
+                graphSPQNodeEdges.addEdge(edgeSource, edgeTarget, new SPQEdge(node));
+                SPQTree.addVertex(node);
+                SPQTree.addEdge(node, incomingEdge.node);
+                SPQTree.addEdge(node, outgoingEdge.node);
+
+                graphSPQNodeEdges.removeVertex(vertex);
                 arrayDeque.remove(vertex);
 
             } else {
                 arrayDeque.offerLast(vertex);
             }
 
+        }
+
+
+        GraphHelper.printTODOTSPQNode(SPQTree);
+
+
+        for (SPQNode spqNode : SPQTree.vertexSet()) {
+            if (SPQTree.inDegreeOf(spqNode) == 0) {
+                rootNode = spqNode;
+                break;
+            }
+        }
+
+
+        // DFS für den contract schritt
+        List<ArrayDeque<SPQNode>> qNodes2 = new ArrayList<>();
+        // create an empty stack and push the root node
+        Stack<SPQNode> stack2 = new Stack();
+        stack2.push(rootNode);
+
+        // create another stack to store postorder traversal
+        Stack<SPQNode> out = new Stack();
+
+        // loop till stack is empty
+        while (!stack2.empty()) {
+
+            SPQNode current = stack2.pop();
+            out.push(current);
+
+
+            for (DefaultEdge edge : SPQTree.outgoingEdgesOf(current)) {
+
+                stack2.push(SPQTree.getEdgeTarget(edge));
+            }
+
 
         }
+
+
+
+        while (!out.isEmpty()) {
+            SPQNode vertex = out.pop();
+
+            if (SPQTree.containsVertex(vertex) && SPQTree.incomingEdgesOf(vertex).size() == 1) {
+
+                DefaultEdge edge = SPQTree.incomingEdgesOf(vertex).stream().iterator().next();
+                SPQNode parentNode = SPQTree.getEdgeSource(edge);
+                ArrayList<SPQNode> parentSuccessors = new ArrayList<>(Graphs.successorListOf(SPQTree, parentNode));
+
+                if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
+                    List<DefaultEdge> childrenSuccesors = new ArrayList<>();
+
+
+          /*          childrenSuccesors.addAll(SPQTree.outgoingEdgesOf(SPQTree.getEdgeTarget(edge)));
+                    for (DefaultEdge outEdge : childrenSuccesors) {
+                        SPQNode edgeTarget = SPQTree.getEdgeTarget(outEdge);
+                        SPQTree.addEdge(parentNode, edgeTarget);
+                    }*/
+
+
+                    List<DefaultEdge> outEdges = new ArrayList<>(SPQTree.outgoingEdgesOf(parentNode));
+                    SPQTree.removeAllEdges(outEdges);
+                    int index = parentSuccessors.indexOf(vertex);
+                    parentSuccessors.remove(index);
+                    parentSuccessors.addAll(index, Graphs.successorListOf(SPQTree, vertex));
+                    Graphs.addOutgoingEdges(SPQTree, parentNode, parentSuccessors);
+
+                    SPQTree.removeVertex(vertex);
+
+
+                    ArrayDeque<SPQNode> childrenList = new ArrayDeque<>(Graphs.successorListOf(SPQTree, parentNode));
+
+
+                    while (childrenList.size() > 1) {
+
+                        SPQNode pop = childrenList.pop();
+                        SPQNode peek = childrenList.peek();
+
+                        if (peek.getNodeType() == NodeTypesEnum.NODETYPE.Q && pop.getNodeType() == NodeTypesEnum.NODETYPE.Q) {
+                            GraphHelper.mergeQVertices(SPQTree, pop, peek);
+                            childrenList.pop(); // remove the merged node
+                            childrenList.push(pop);
+
+                        }
+
+                    }
+
+
+
+                    // if S node only has one Child remove it and connect child to parent
+                    if (SPQTree.containsVertex(vertex) && SPQTree.outgoingEdgesOf(vertex).size() == 1) {
+                        GraphHelper.mergeVerticeWithParent(SPQTree, vertex,  Graphs.successorListOf(SPQTree, vertex).get(0));
+
+                    }
+
+
+                } else if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == NodeTypesEnum.NODETYPE.P)) {
+
+                    if (vertex.getSinkVertex() == parentNode.getSinkVertex() && vertex.getStartVertex() == parentNode.getStartVertex()) {
+
+
+                        List<DefaultEdge> childrenSuccesors = new ArrayList<>();
+
+
+               /*         childrenSuccesors.addAll(SPQTree.outgoingEdgesOf(SPQTree.getEdgeTarget(edge)));
+                        for (DefaultEdge outEdge : childrenSuccesors) {
+                            SPQNode edgeTarget = SPQTree.getEdgeTarget(outEdge);
+                            SPQTree.addEdge(parentNode, edgeTarget);
+                        }*/
+
+                        List<DefaultEdge> outEdges = new ArrayList<>(SPQTree.outgoingEdgesOf(parentNode));
+                        SPQTree.removeAllEdges(outEdges);
+                        int index = parentSuccessors.indexOf(vertex);
+                        parentSuccessors.remove(index);
+                        parentSuccessors.addAll(index, Graphs.successorListOf(SPQTree, vertex));
+                        Graphs.addOutgoingEdges(SPQTree, parentNode, parentSuccessors);
+
+                        SPQTree.removeVertex(SPQTree.getEdgeTarget(edge));
+
+
+                    } else {
+
+                    }
+                }
+            }
+
+        }
+
+
+        SPQQNode sourceSink = new SPQQNode(rootNode.startVertex, rootNode.sinkVertex, false);
+        SPQQNode node = new SPQQNode(rootNode.startVertex, rootNode.sinkVertex, true);
+        SPQTree.addVertex(node);
+        SPQTree.addVertex(sourceSink);
+        SPQTree.addEdge(node, sourceSink);
+
+        SPQNode pRoot = new SPQNode("Proot");
+        SPQTree.addVertex(pRoot);
+        SPQTree.addEdge(pRoot, rootNode);
+        SPQTree.addEdge(pRoot, node);
+
+        GraphHelper.printTODOTSPQNode(SPQTree);
+        GraphHelper.writeTODOTSPQNode(SPQTree, "C:/b.txt");
+
+
+
+
+        SPQImporter spqImporter2 = new SPQImporter("C:/testGraph.txt");
+        spqImporter2.run();
+
+
+
+
 
 
 
@@ -231,5 +412,24 @@ class SPQDepthiterator<V, E> extends DepthFirstIterator<V, E> {
         backEdge = edge;
     }
 
+
+}
+
+class SPQEdge extends DefaultEdge {
+
+    SPQNode node;
+
+    public SPQEdge(SPQNode node) {
+        this.node = node;
+    }
+
+    public SPQNode getNode() {
+        return node;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + getSource() + " : " + getTarget() + " : )";
+    }
 
 }

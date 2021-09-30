@@ -43,12 +43,7 @@ public class SPQImporter {
 
             }
 
-
-            tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-            root.computeAdjecentVertices();
-            root.setRoot();
-
-/*            int i = 1;
+            int i = 1;
             for (TreeVertex v: nameToTreeVertex.values()
                  ) {
                 if (v.getName().equals("vsource")) {
@@ -58,8 +53,15 @@ public class SPQImporter {
                 } else {
                     v.id = i++;
                 }
-            }*/
+            }
 
+            // Damit die nächst ID die der nächste unbenutzte Integer ist.
+            TreeVertex.counter =  nameToTreeVertex.values().size();
+
+            // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
+            tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
+            root.computeAdjecentVertices();
+            root.setRoot();
 
 
             System.out.println("Graph Imported");
@@ -87,20 +89,17 @@ public class SPQImporter {
 
                 if (line.length() > 2) {
                     switch (line.charAt(2)) {
-                        case 'Q' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQQNode(line.substring(0, line.length() - 1).trim()));
-                        case 'v' -> {
+                        case 'Q' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQQNode(line.substring(0, line.length() - 1).trim())); //QStarNodes
+                        case 'v' -> { // erzeuge die Treevertexes
                             SPQQNode qNode = new SPQQNode(line.substring(0, line.length() - 1).trim());
                             int i = line.lastIndexOf("v");
-
-                            TreeVertex startVertex = new TreeVertex(line.substring(0, i).trim());
-                            nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), startVertex);
+                            // Erzeuge Startvertex der QNode
+                            nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), new TreeVertex(line.substring(0, i).trim()));
                             qNode.startVertex = nameToTreeVertex.get(line.substring(0, i).trim());
-
-                            TreeVertex sinkVertex = new TreeVertex(line.substring(i, line.length() - 1).trim());
-                            nameToTreeVertex.putIfAbsent(line.substring(i, line.length() - 1).trim(), sinkVertex);
+                            // Erzeuge Sinkvertex der QNode
+                            nameToTreeVertex.putIfAbsent(line.substring(i, line.length() - 1).trim(), new TreeVertex(line.substring(i, line.length() - 1).trim()));
                             qNode.sinkVertex = nameToTreeVertex.get(line.substring(i, line.length() - 1).trim());
-
-
+                            // Qnode
                             nameToNode.put(line.substring(0, line.length() - 1).trim(), qNode);
                         }
                         case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim()));

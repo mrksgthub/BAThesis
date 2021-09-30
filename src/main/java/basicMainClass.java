@@ -28,8 +28,8 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-       SPQGenerator spqGenerator = new SPQGenerator(500, 0);
-       spqGenerator.run();
+        SPQGenerator spqGenerator = new SPQGenerator(2500, 0);
+        spqGenerator.run();
 
 
         tree = spqGenerator.getTree();
@@ -41,12 +41,12 @@ public class basicMainClass {
 
 
         //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\55664N2389F.txt");
-
         // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\163386N20963F.txt");
         //SPQImporter spqImporter = new SPQImporter("C:\\GraphInvalid\\38321N2774F.txt");
-          SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+      //  SPQImporter spqImporter = new SPQImporter("C:/a.txt");
         // SPQImporter spqImporter = new SPQImporter("C:/bug - Kopie.txt");
-       // SPQImporter spqImporter = new SPQImporter("C:/bug2.txt");
+         SPQImporter spqImporter = new SPQImporter("C:/b.txt");
+      //  SPQImporter spqImporter = new SPQImporter("C:/testGraph.txt");
         spqImporter.run();
 
 
@@ -87,7 +87,7 @@ public class basicMainClass {
         Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-        //     angulator.run();
+             angulator.run();
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 

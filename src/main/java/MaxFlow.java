@@ -189,16 +189,16 @@ public class MaxFlow {
     private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<TreeVertex, DefaultEdge>> planarGraphFaces) {
 
         // Erstelle Map um die Kante (y,z) zu beommen, welche in Facette x auf Knoten z endet.
-        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
+        HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
 
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : planarGraphFaces
         ) {
-            HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> pairVectorMap = new HashMap<>();
+            HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>> pairVectorMap = new HashMap<>();
             map.put(face, pairVectorMap);
 
-            Map<MutablePair<TreeVertex, TreeVertex>, Integer> s1 = face.getOrthogonalRep();
-            for (MutablePair<TreeVertex, TreeVertex> pair :
+            Map<TupleEdge<TreeVertex, TreeVertex>, Integer> s1 = face.getOrthogonalRep();
+            for (TupleEdge<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
 
                 pairVectorMap.put(pair.getRight(), pair);
@@ -213,21 +213,24 @@ public class MaxFlow {
             if (simple.getEdgeSource(edge) != solverSink && simple.getEdgeSource(edge) != solverSource && simple.getEdgeTarget(edge) != solverSink && simple.getEdgeTarget(edge) != solverSource) {
                 DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> graph = simple;
 
-                HashMap<TreeVertex, MutablePair<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
+                HashMap<TreeVertex, TupleEdge<TreeVertex, TreeVertex>> m1 = map.get(graph.getEdgeTarget(edge));
 
-                MutablePair<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
+                TupleEdge<TreeVertex, TreeVertex> pair = m1.get(graph.getEdgeSource(edge));
 
                 PlanarGraphFace<TreeVertex, DefaultEdge> tempFace;
                 Double aDouble = flowMap.get(edge);
                 if (aDouble == 0.0) {
                     tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
                     tempFace.getOrthogonalRep().put(pair, 1);
+                    pair.winkel = 1;
                 } else if (aDouble == 1.0) {
                     tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
                     tempFace.getOrthogonalRep().put(pair, 0);
+                    pair.winkel = 0;
                 } else if (aDouble == 2.0) {
                     tempFace = (PlanarGraphFace<TreeVertex, DefaultEdge>) graph.getEdgeTarget(edge);
                     tempFace.getOrthogonalRep().put(pair, -1);
+                    pair.winkel = -1;
                 }
 
                 //   System.out.println("test");

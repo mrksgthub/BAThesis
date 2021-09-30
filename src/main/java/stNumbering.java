@@ -52,7 +52,7 @@ public class stNumbering {
         edgeInt = new int[graph3.vertexSet().size()];
         Edges.addAll(graph3.edgeSet());
         dfiArray = new int[graph3.vertexSet().size()];
-        vertices = new TreeVertex[graph3.vertexSet().size() * 3];
+        vertices = new TreeVertex[graph3.vertexSet().size()];
 
         int i = 0;
         for (TreeVertex v : graph3.vertexSet()
@@ -139,7 +139,7 @@ class DFTransversal {
 
     }
 
-    public void dfs(TreeVertex vertex) {
+    public void dfs(TreeVertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
 
         int v;
 

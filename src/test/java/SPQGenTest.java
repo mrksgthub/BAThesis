@@ -182,9 +182,9 @@ public class SPQGenTest {
         treeVertexFaceGenerator.generateCapacities();
 
 
-        HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
 
-        for (MutablePair<TreeVertex, TreeVertex> pair :
+        for (TupleEdge<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.put(pair, 0);
         }
@@ -199,7 +199,7 @@ public class SPQGenTest {
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
         ) {
             int edgeCount = 0;
-            for (MutablePair<TreeVertex, TreeVertex> pair :
+            for (TupleEdge<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
@@ -232,11 +232,11 @@ public class SPQGenTest {
         //assert (cou == 29);
 
         int counter2 = 0;
-        List<MutablePair<TreeVertex, TreeVertex>> testList = new ArrayList<>();
-        for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.originaledgeToFaceMap.keySet()
+        List<TupleEdge<TreeVertex, TreeVertex>> testList = new ArrayList<>();
+        for (TupleEdge<TreeVertex, TreeVertex> edge : rectangulator.originaledgeToFaceMap.keySet()
         ) {
 
-            if (rectangulator.originaledgeToFaceMap.get(new TupleEdge<TreeVertex, TreeVertex>(edge.getRight(), edge.getLeft())) == null) {
+            if (rectangulator.originaledgeToFaceMap.get(new TupleEdge<>(edge.getRight(), edge.getLeft())) == null) {
                 counter2++;
                 testList.add(edge);
             }
@@ -255,7 +255,7 @@ public class SPQGenTest {
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangulator.rectangularFaceMap.keySet()) {
             int count = 0;
             int count2 = 0;
-            for (MutablePair<TreeVertex, TreeVertex> edge : face.edgeList) {
+            for (TupleEdge<TreeVertex, TreeVertex> edge : face.edgeList) {
                 if (face.getOrthogonalRep().get(edge) != 0) {
                     count++;
                     count2 += face.getOrthogonalRep().get(edge);
@@ -267,7 +267,7 @@ public class SPQGenTest {
             assert (count2 == 4);
             count = 0;
             count2 = 0;
-            for (MutablePair<TreeVertex, TreeVertex> edge : rectangulator.outerFace.edgeList) {
+            for (TupleEdge<TreeVertex, TreeVertex> edge : rectangulator.outerFace.edgeList) {
                 if (rectangulator.outerFace.getOrthogonalRep().get(edge) != 0) {
                     count++;
                     count2 += rectangulator.outerFace.getOrthogonalRep().get(edge);
@@ -379,7 +379,7 @@ public class SPQGenTest {
     }
 
 
-    public void winkelHinzufügen(SPQNode root, HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashmap) {
+    public void winkelHinzufügen(SPQNode root, HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {

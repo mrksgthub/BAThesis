@@ -1,4 +1,3 @@
-import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class Angulator {
     public void run()  {
 
         // initialize
-        HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
+        HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
         long startTime = System.currentTimeMillis();
         // Rekrusives bestimmen der Winkel: https://arxiv.org/abs/2008.03784 Abschnitt 4 Construction Algorithm:
         winkelHinzufuegen(tree.getRoot(), pairIntegerMap);
@@ -39,7 +38,7 @@ public class Angulator {
         System.out.println("Winkel Section  :" + elapsedTime);
 
         long startTime3 = System.currentTimeMillis();
-        for (MutablePair<TreeVertex, TreeVertex> pair :
+        for (TupleEdge<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.putIfAbsent(pair, 0);
         }
@@ -47,7 +46,7 @@ public class Angulator {
         // Füge Winkel zu den Faces hinzu
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
         ) {
-            for (MutablePair<TreeVertex, TreeVertex> pair :
+            for (TupleEdge<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
             }
@@ -60,7 +59,7 @@ public class Angulator {
     }
 
 
-    public void winkelHinzufuegen(SPQNode root, HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashmap) {
+    public void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {
@@ -87,9 +86,9 @@ public class Angulator {
         //    treeVertexFaceGenerator.generateCapacities();
 
 
-        HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
 
-        for (MutablePair<TreeVertex, TreeVertex> pair :
+        for (TupleEdge<TreeVertex, TreeVertex> pair :
                 treeVertexFaceGenerator.adjFaces2.keySet()) {
             pairIntegerMap.put(pair, 0);
         }
@@ -104,7 +103,7 @@ public class Angulator {
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
         ) {
             int edgeCount = 0;
-            for (MutablePair<TreeVertex, TreeVertex> pair :
+            for (TupleEdge<TreeVertex, TreeVertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);

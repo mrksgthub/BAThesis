@@ -20,12 +20,12 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding;
     BoyerMyrvoldPlanarityInspector.Embedding embedding2;
     Map<E, Integer> visitsMap = new HashMap<>();
-    Map<MutablePair<V, V>, Integer> visitsMap2 = new HashMap<>();
-    Map<MutablePair<V, V>, Integer> pairIntegerMap = new HashMap<>();
+    Map<TupleEdge<V, V>, Integer> visitsMap2 = new HashMap<>();
+    Map<TupleEdge<V, V>, Integer> pairIntegerMap = new HashMap<>();
     List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
     HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
     HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
-    HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>>();
+    HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>>();
     DirectedMultigraph<V, E> graph;
     V startvertex;
     V sinkVertex;
@@ -114,19 +114,19 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         this.visitsMap = visitsMap;
     }
 
-    public Map<MutablePair<V, V>, Integer> getVisitsMap2() {
+    public Map<TupleEdge<V, V>, Integer> getVisitsMap2() {
         return visitsMap2;
     }
 
-    public void setVisitsMap2(Map<MutablePair<V, V>, Integer> visitsMap2) {
+    public void setVisitsMap2(Map<TupleEdge<V, V>, Integer> visitsMap2) {
         this.visitsMap2 = visitsMap2;
     }
 
-    public Map<MutablePair<V, V>, Integer> getPairIntegerMap() {
+    public Map<TupleEdge<V, V>, Integer> getPairIntegerMap() {
         return pairIntegerMap;
     }
 
-    public void setPairIntegerMap(Map<MutablePair<V, V>, Integer> pairIntegerMap) {
+    public void setPairIntegerMap(Map<TupleEdge<V, V>, Integer> pairIntegerMap) {
         this.pairIntegerMap = pairIntegerMap;
     }
 
@@ -154,11 +154,11 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
         this.adjFaces = adjFaces;
     }
 
-    public HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> getAdjFaces2() {
+    public HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> getAdjFaces2() {
         return adjFaces2;
     }
 
-    public void setAdjFaces2(HashMap<MutablePair<V, V>, PlanarGraphFace<V, E>> adjFaces2) {
+    public void setAdjFaces2(HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2) {
         this.adjFaces2 = adjFaces2;
     }
 
@@ -230,24 +230,24 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
     public void generateFaces2() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
 
 
-        List<MutablePair<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
+        List<TupleEdge<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
 
-        MutablePair<V, V> startingEdge = new TupleEdge<>(startvertex, sinkVertex);
+        TupleEdge<V, V> startingEdge = new TupleEdge<>(startvertex, sinkVertex);
         int x = pairList.lastIndexOf(startingEdge);
         Collections.swap(pairList, 0, x);
 
-        LinkedHashMap<MutablePair<V, V>, Boolean> pairBooleanHashtable = new LinkedHashMap<>();
-        for (MutablePair<V, V> pair :
+        LinkedHashMap<TupleEdge<V, V>, Boolean> pairBooleanHashtable = new LinkedHashMap<>();
+        for (TupleEdge<V, V> pair :
                 pairList) {
             pairBooleanHashtable.put(pair, false);
         }
         int i = 0;
 
-        for (MutablePair<V, V> pair :
+        for (TupleEdge<V, V> pair :
                 pairBooleanHashtable.keySet()) {
             if (pairBooleanHashtable.get(pair) == false) {
                 List<V> face = new ArrayList<>();
-                List<MutablePair<V, V>> edgeList = new ArrayList<>();
+                List<TupleEdge<V, V>> edgeList = new ArrayList<>();
                 edgeList.add(pair);
 
                 PlanarGraphFace<V, E> faceObj = new PlanarGraphFace<>(Integer.toString(i++));
@@ -257,7 +257,6 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                 adjVertices.put(faceObj, new ArrayList<>());
                 planarGraphFaces.add(faceObj);
                 faceObj.setEdgeList(edgeList);
-
 
                 V startVertex = pair.getLeft();
                 List<V> tArrayList = (ArrayList<V>) embedding.get(startVertex);
@@ -282,7 +281,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                     tArrayList = (List<V>) embedding.get(nextVertex);
                     V temp = nextVertex;
                     nextVertex = tArrayList.get(Math.floorMod((tArrayList.indexOf(vertex) - 1), tArrayList.size()));
-                    MutablePair<V, V> vvPair = new TupleEdge<>(temp, nextVertex);
+                    TupleEdge<V, V> vvPair = new TupleEdge<>(temp, nextVertex);
                     vertex = temp;
                     adjFaces2.put(vvPair, faceObj);
                     faceObj.getOrthogonalRep().put(vvPair, 999);
@@ -294,6 +293,7 @@ public class FaceGenerator<V extends TreeVertex, E> implements Serializable {
                     visitsMap2.merge(vvPair, 1, Integer::sum);
 
                 }
+                faceObj.computeEdgeToIndexMap();
                 listOfFaces2.add(face);
             }
 

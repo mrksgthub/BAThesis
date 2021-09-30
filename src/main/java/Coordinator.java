@@ -19,8 +19,8 @@ public class Coordinator {
 
     private final PlanarGraphFace<TreeVertex, DefaultEdge> outerFace;
     private final HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, PlanarGraphFace<TreeVertex, DefaultEdge>> rectangularFaceMap;
-    private final Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> horzontalEdgeToArcMap;
-    private final Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> verticalEdgeToArcMap;
+    private final Map<TupleEdge<TreeVertex, TreeVertex>, DefaultWeightedEdge> horzontalEdgeToArcMap;
+    private final Map<TupleEdge<TreeVertex, TreeVertex>, DefaultWeightedEdge> verticalEdgeToArcMap;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> horizontalMinCostFlow;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> verticalMinCostFlow;
     private Map<TreeVertex, Pair<Integer, Integer>> edgeToCoordMap = new HashMap<>();
@@ -39,7 +39,7 @@ public class Coordinator {
      * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges
      * @param costFlow - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
      */
-    public Coordinator(PlanarGraphFace<TreeVertex, DefaultEdge> outerFace, HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, PlanarGraphFace<TreeVertex, DefaultEdge>> rectangularFaceMap, Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap, Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
+    public Coordinator(PlanarGraphFace<TreeVertex, DefaultEdge> outerFace, HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, PlanarGraphFace<TreeVertex, DefaultEdge>> rectangularFaceMap, Map<TupleEdge<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
 
         this.outerFace = outerFace;
         this.rectangularFaceMap = rectangularFaceMap;
@@ -74,14 +74,14 @@ public class Coordinator {
 
 
         // füge alle Kanten zu einer Kante -> Facette Map hinzu
-        for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
             edgeFaceNeighbourMap.put(edge, outerFace);
         }
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangularFaceMap.keySet()
         ) {
-            for (MutablePair<TreeVertex, TreeVertex> edge : face.getEdgeList()
+            for (TupleEdge<TreeVertex, TreeVertex> edge : face.getEdgeList()
             ) {
                 edgeFaceNeighbourMap.put(edge, face);
             }
@@ -95,13 +95,13 @@ public class Coordinator {
 
         // Bestimme die Koordinaten der Knoten des unteren horizontalen Randes der äußeren Facette
         // Entdecke alle Facetten, welche am unteren horizontalen Rand der äußeren Facette angrenzen.
-        ArrayList<MutablePair<TreeVertex, TreeVertex>> list = outerFace.sidesMap.get(0);
+        ArrayList<TupleEdge<TreeVertex, TreeVertex>> list = outerFace.sidesMap.get(0);
         int length = 0;
-        for (MutablePair<TreeVertex, TreeVertex> edge : list) {
+        for (TupleEdge<TreeVertex, TreeVertex> edge : list) {
             length += horizontalMinCostFlow.getFlowMap().get(horzontalEdgeToArcMap.get(edge));
             edgeToCoordMap.put(edge.getRight(), new Pair<>(length, yCoord));
 
-            MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
+            TupleEdge<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
@@ -158,7 +158,7 @@ public class Coordinator {
 
             length = startVertex.b;
             xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;
-            for (MutablePair<TreeVertex, TreeVertex> edge : list) {
+            for (TupleEdge<TreeVertex, TreeVertex> edge : list) {
                 length += verticalMinCostFlow.getFlowMap().get(verticalEdgeToArcMap.get(edge));
 
 
@@ -184,7 +184,7 @@ public class Coordinator {
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
 
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
+                TupleEdge<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
@@ -234,7 +234,7 @@ public class Coordinator {
                 edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(length, yCoord));
 
 
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
+                TupleEdge<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
                 PlanarGraphFace<TreeVertex, DefaultEdge> face = (PlanarGraphFace<TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {

@@ -34,6 +34,7 @@ public class SPQNode {
     private double kvl;
     private double kvr;
     private boolean isRoot;
+    static int id = 0;
 
     public SPQNode() {
 
@@ -457,7 +458,7 @@ public class SPQNode {
 
     }
 
-    public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
+    public void computeOrthogonalRepresentation(HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> hashMap) {
         // System.out.println("Test");
     }
 

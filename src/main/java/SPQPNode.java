@@ -16,6 +16,12 @@ public class SPQPNode extends SPQNode {
         super(name);
     }
 
+    public SPQPNode(TreeVertex edgeSource, TreeVertex edgeTarget) {
+        super("P" + edgeSource.getName() +edgeTarget.getName()+ id++);
+        this.startVertex = edgeSource;
+        this.sinkVertex = edgeTarget;
+    }
+
     @Override
     public NodeTypesEnum.NODETYPE getNodeType() {
         return nodeType;
@@ -358,7 +364,7 @@ public class SPQPNode extends SPQNode {
 
 
     @Override
-    public void computeOrthogonalRepresentation(HashMap<MutablePair<TreeVertex, TreeVertex>, Integer> hashMap) {
+    public void computeOrthogonalRepresentation(HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> hashMap) {
 
         // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
         TreeVertex vertex1 = mergedChildren.get(0).startNodes.get(0);
@@ -367,35 +373,35 @@ public class SPQPNode extends SPQNode {
 
             // Beispiel3-4-10  Außen
             TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size() - 1).startNodes.get(mergedChildren.get(mergedChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>(nextVertexStarRight, startVertex)), 1);
+            hashMap.put((new TupleEdge<>(nextVertexStarRight, startVertex,1)), 1);
 
             //Beispiel 9-4-10
             TreeVertex nextVertexMiddle = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size() - 1).startNodes.get(mergedChildren.get(mergedChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>(startNodes.get(1), startVertex)), 1);
+            hashMap.put((new TupleEdge<>(startNodes.get(1), startVertex,1)), 1);
 
             // Beispiel3-4-10  Außen
-            hashMap.put((new TupleEdge<>(startNodes.get(2), startVertex)), 1);
+            hashMap.put((new TupleEdge<>(startNodes.get(2), startVertex,1)), 1);
 
             // Beispiel5-4-3  Außen
-            hashMap.put((new TupleEdge<>(startNodes.get(0), startVertex)), 1);
+            hashMap.put((new TupleEdge<>(startNodes.get(0), startVertex,1)), 1);
 
         } else if (startNodes.size() == 2 && startVertex.adjecentVertices.size() > 2 && !this.isRoot) {
             // Beispiel 8-6-5 außen
             TreeVertex nextVertexStartLeft = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(vertex1) - 1), startVertex.adjecentVertices.size()));
-            hashMap.put(new TupleEdge<>(vertex1, startVertex), alphaul);
+            hashMap.put(new TupleEdge<>(vertex1, startVertex, alphaul), alphaul);
 
             // Beispiel 5-6-7 Außen
             TreeVertex vertex2 = mergedChildren.get(1).startNodes.get(0);
             TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(vertex2) + 1), startVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>(nextVertexStarRight, startVertex)), alphaur);
+            hashMap.put((new TupleEdge<>(nextVertexStarRight, startVertex,alphaur)), alphaur);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 7-6 an Knoten 6)
-            hashMap.put((new TupleEdge<>(vertex2, startVertex)), ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1);
+            hashMap.put((new TupleEdge<>(vertex2, startVertex, ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1)), ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1);
 
         } else if (startVertex.adjecentVertices.size() == 2 && this.isRoot) {
 
-            hashMap.put((new TupleEdge<>(sinkVertex, startVertex)), 1);
-            hashMap.put((new TupleEdge<>(startNodes.get(0), startVertex)), -1);
+            hashMap.put((new TupleEdge<>(sinkVertex, startVertex, 1)), 1);
+            hashMap.put((new TupleEdge<>(startNodes.get(0), startVertex, 1)), -1);
 
 
         }
@@ -404,33 +410,33 @@ public class SPQPNode extends SPQNode {
         if (sinkNodes.size() == 3 && !this.isRoot) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>(nextVertexSinkLeft, sinkVertex)), 1);
+            hashMap.put((new TupleEdge<>(nextVertexSinkLeft, sinkVertex,1)), 1);
 
             // 8-13-7
-            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex)), 1);
+            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex,1)), 1);
 
             // Beispie 7-13-12  "Zwischen Innenkanten"
-            hashMap.put((new TupleEdge<>(sinkNodes.get(1), sinkVertex)), 1);
+            hashMap.put((new TupleEdge<>(sinkNodes.get(1), sinkVertex,1)), 1);
 
             // Beispie 12-13-14  "Zwischen Innenkanten"
-            hashMap.put((new TupleEdge<>(sinkNodes.get(2), sinkVertex)), 1);
+            hashMap.put((new TupleEdge<>(sinkNodes.get(2), sinkVertex,1)), 1);
 
         } else if (sinkNodes.size() == 2 && sinkVertex.adjecentVertices.size() > 2 && !this.isRoot) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             TreeVertex nextVertexSinkLeft = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>(nextVertexSinkLeft, sinkVertex)), alphavl);
+            hashMap.put((new TupleEdge<>(nextVertexSinkLeft, sinkVertex, alphavl)), alphavl);
 
             // rechter Winkel an Sink Vertex (Außen)
             TreeVertex nextVertexSinkRight = sinkVertex.adjecentVertices.get(Math.floorMod((sinkVertex.adjecentVertices.indexOf(mergedChildren.get(1).sinkNodes.get(0)) - 1), sinkVertex.adjecentVertices.size()));
-            hashMap.put((new TupleEdge<>((mergedChildren.get(1).sinkNodes.get(0)), sinkVertex)), alphavr);
+            hashMap.put((new TupleEdge<>((mergedChildren.get(1).sinkNodes.get(0)), sinkVertex, alphavr)), alphavr);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 9-11-10 an Knoten 11)
-            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex)), (alphavr + alphavl == 2 && (sinkVertex.adjecentVertices.size() == 3)) ? 0 : 1);
+            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex, (alphavr + alphavl == 2 && (sinkVertex.adjecentVertices.size() == 3)) ? 0 : 1)), (alphavr + alphavl == 2 && (sinkVertex.adjecentVertices.size() == 3)) ? 0 : 1);
 
         } else if (sinkVertex.adjecentVertices.size() == 2 && this.isRoot) {
 
-            hashMap.put((new TupleEdge<>(startVertex, sinkVertex)), -1);
-            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex)), 1);
+            hashMap.put((new TupleEdge<>(startVertex, sinkVertex,-1)), -1);
+            hashMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex,1)), 1);
 
             //  System.out.println("Test");
 

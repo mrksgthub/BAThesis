@@ -14,13 +14,13 @@ import java.util.Map;
 
 public class HorizontalEdgeFlow implements Runnable {
 
-    HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
+    HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
     Map<TreeVertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
     List<PlanarGraphFace<TreeVertex, DefaultEdge>> rectangleList = new ArrayList<>();
     PlanarGraphFace<TreeVertex, DefaultEdge> outerFace;
-    Map<MutablePair<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
+    Map<TupleEdge<TreeVertex, TreeVertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
     private Thread t;
     private String threadName = "horizontal";
     private DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> networkGraph;
@@ -30,7 +30,7 @@ public class HorizontalEdgeFlow implements Runnable {
         this.rectangleList = rectangleList;
         this.outerFace = outerFace;
 
-        for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
             edgeToFAceMap.put(edge, outerFace);
         }
@@ -38,7 +38,7 @@ public class HorizontalEdgeFlow implements Runnable {
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangleList
         ) {
-            for (MutablePair<TreeVertex, TreeVertex> edge : face.getEdgeList()
+            for (TupleEdge<TreeVertex, TreeVertex> edge : face.getEdgeList()
             ) {
                 edgeToFAceMap.put(edge, face);
             }
@@ -56,11 +56,11 @@ public class HorizontalEdgeFlow implements Runnable {
         this.minimumCostFlow = minimumCostFlow;
     }
 
-    public HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> getEdgeToFAceMap() {
+    public HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> getEdgeToFAceMap() {
         return edgeToFAceMap;
     }
 
-    public void setEdgeToFAceMap(HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap) {
+    public void setEdgeToFAceMap(HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, DefaultEdge>> edgeToFAceMap) {
         this.edgeToFAceMap = edgeToFAceMap;
     }
 
@@ -73,14 +73,14 @@ public class HorizontalEdgeFlow implements Runnable {
 
 
         supplyMap.put(outerFace, 0);
-        for (MutablePair<TreeVertex, TreeVertex> edge :
+        for (TupleEdge<TreeVertex, TreeVertex> edge :
                 this.outerFace.sidesMap.get(0)) {
-            PlanarGraphFace<TreeVertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge));
+            PlanarGraphFace<TreeVertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
             networkGraph.addVertex(neighbour);
 
             DefaultWeightedEdge e = networkGraph.addEdge(this.outerFace, neighbour);
             edgeToArcMap.put(edge, e);
-            edgeToArcMap.put(GraphHelper.reverseEdge(edge), e);
+            edgeToArcMap.put(GraphHelper.reverseEdge(edge, false), e);
 
             networkGraph.setEdgeWeight(e, 1);
             upperMap.put(e, Integer.MAX_VALUE);
@@ -93,15 +93,15 @@ public class HorizontalEdgeFlow implements Runnable {
             networkGraph.addVertex(face);
             supplyMap.put(face, 0);
 
-            for (MutablePair<TreeVertex, TreeVertex> edge :
+            for (TupleEdge<TreeVertex, TreeVertex> edge :
                     rectangleList.get(j).sidesMap.get(2)) {
-                PlanarGraphFace<TreeVertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge));
+                PlanarGraphFace<TreeVertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
                 networkGraph.addVertex(neighbour);
                 DefaultWeightedEdge e = networkGraph.addEdge(face, neighbour);
 
 
                 edgeToArcMap.put(edge, e);
-                edgeToArcMap.put(GraphHelper.reverseEdge(edge), e);
+                edgeToArcMap.put(GraphHelper.reverseEdge(edge, false), e);
                 networkGraph.setEdgeWeight(e, 1);
                 upperMap.put(e, Integer.MAX_VALUE);
                 lowerMap.put(e, 1);

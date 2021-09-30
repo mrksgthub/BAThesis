@@ -1,5 +1,3 @@
-import org.apache.commons.lang3.tuple.MutablePair;
-
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -16,13 +14,14 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
     };
 
     static int faceCounter = 0;
-    Set<MutablePair<V, V>> pairSet = new HashSet<>();
+    public HashMap<TupleEdge<V,V>, Integer> edgeToIndexMap;
+    Set<TupleEdge<V, V>> pairSet = new HashSet<>();
     Set<V> vSet = new HashSet<>();
     Set<E> edgeSet = new HashSet<>();
-    Map<MutablePair<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
-    Map<MutablePair<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
-    Map<Integer, ArrayList<MutablePair<V, V>>> sidesMap = new LinkedHashMap<>();
-    List<MutablePair<V, V>> edgeList = new ArrayList<>();
+    Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
+    Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
+    Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
+    List<TupleEdge<V, V>> edgeList = new ArrayList<>();
     FaceType type = FaceType.INTERNAL;
     int faceIndex;
 
@@ -61,35 +60,35 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         this.type = type;
     }
 
-    public List<MutablePair<V, V>> getEdgeList() {
+    public List<TupleEdge<V, V>> getEdgeList() {
         return edgeList;
     }
 
-    public void setEdgeList(List<MutablePair<V, V>> edgeList) {
+    public void setEdgeList(List<TupleEdge<V, V>> edgeList) {
         this.edgeList = edgeList;
     }
 
-    public Map<MutablePair<V, V>, Integer> getEdgeOrientationMap() {
+    public Map<TupleEdge<V, V>, Integer> getEdgeOrientationMap() {
         return edgeOrientationMap;
     }
 
-    public void setEdgeOrientationMap(Map<MutablePair<V, V>, Integer> edgeOrientationMap) {
+    public void setEdgeOrientationMap(Map<TupleEdge<V, V>, Integer> edgeOrientationMap) {
         this.edgeOrientationMap = edgeOrientationMap;
     }
 
-    public Map<MutablePair<V, V>, Integer> getOrthogonalRep() {
+    public Map<TupleEdge<V, V>, Integer> getOrthogonalRep() {
         return orthogonalRep;
     }
 
-    public void setOrthogonalRep(Map<MutablePair<V, V>, Integer> orthogonalRep) {
+    public void setOrthogonalRep(Map<TupleEdge<V, V>, Integer> orthogonalRep) {
         this.orthogonalRep = orthogonalRep;
     }
 
-    public Set<MutablePair<V, V>> getPairSet() {
+    public Set<TupleEdge<V, V>> getPairSet() {
         return pairSet;
     }
 
-    public void setPairSet(Set<MutablePair<V, V>> pairSet) {
+    public void setPairSet(Set<TupleEdge<V, V>> pairSet) {
         this.pairSet = pairSet;
     }
 
@@ -123,13 +122,13 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         sidesMap.put(3, new ArrayList<>());
 
 
-        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+        for (ArrayList<TupleEdge<V, V>> arr : sidesMap.values()) {
             assert (arr.size() == 0);
         }
 
         int[] orientations = {0, 1, 2, 3, 1, 2, 3, 0};
         int counter = 0;
-        for (MutablePair<V, V> edge : edgeList
+        for (TupleEdge<V, V> edge : edgeList
         ) {
             if (counter >= 0) {
                 getEdgeOrientationMap().put(edge, orientations[(counter % 4)]);
@@ -144,7 +143,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         }
 
 
-        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+        for (ArrayList<TupleEdge<V, V>> arr : sidesMap.values()) {
 
             for (int i = 0; i < arr.size(); i++) {
 
@@ -166,7 +165,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
      * @param edge - edge in der Facette
      * @param orientation - festgelegte Orientierung der edge in der Facette
      */
-    public void setOrientations(MutablePair<V, V> edge, int orientation) {
+    public void setOrientations(TupleEdge<V, V> edge, int orientation) {
 
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());
@@ -174,7 +173,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         sidesMap.put(3, new ArrayList<>());
 
 
-        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+        for (ArrayList<TupleEdge<V, V>> arr : sidesMap.values()) {
             assert (arr.size() == 0);
         }
 
@@ -200,7 +199,7 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
         }
 
 
-        for (ArrayList<MutablePair<V, V>> arr : sidesMap.values()) {
+        for (ArrayList<TupleEdge<V, V>> arr : sidesMap.values()) {
 
             for (int i = 0; i < arr.size(); i++) {
 
@@ -217,6 +216,14 @@ public class PlanarGraphFace<V, E> extends TreeVertex {
 
     }
 
+    public void computeEdgeToIndexMap() {
+        int i = 0;
+        this.edgeToIndexMap = new HashMap<>();
+        for (TupleEdge<V, V> edge : this.edgeList
+        ) {
+            this.edgeToIndexMap.put(edge, i++);
+        }
+    }
 
     enum FaceType {INTERNAL, EXTERNAL, EXTERNAL_PROCESSED}
 

@@ -10,7 +10,7 @@ public class Orientator<E> {
 
     List<PlanarGraphFace<TreeVertex, DefaultEdge>> originalFaceList = new ArrayList<>();
     PlanarGraphFace<TreeVertex, DefaultEdge> outerFace;
-    HashMap<MutablePair<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, E>> edgeFaceNeighbourMap;
+    HashMap<TupleEdge<TreeVertex, TreeVertex>, PlanarGraphFace<TreeVertex, E>> edgeFaceNeighbourMap;
 
 
     public Orientator(HashMap<PlanarGraphFace<TreeVertex, DefaultEdge>, PlanarGraphFace<TreeVertex, DefaultEdge>> rectangularFaceMap, PlanarGraphFace<TreeVertex, DefaultEdge> outerFace) {
@@ -33,14 +33,14 @@ public class Orientator<E> {
 
         visitedMap.put(outerFace, true);
 
-        for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
             edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<TreeVertex, E>) outerFace);
         }
 
         for (PlanarGraphFace<TreeVertex, DefaultEdge> face : originalFaceList
         ) {
-            for (MutablePair<TreeVertex, TreeVertex> edge : face.getEdgeList()
+            for (TupleEdge<TreeVertex, TreeVertex> edge : face.getEdgeList()
             ) {
                 edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<TreeVertex, E>) face);
             }
@@ -51,9 +51,9 @@ public class Orientator<E> {
         PlanarGraphFace<TreeVertex, DefaultEdge> currentFace;
 
         // äußere Facette
-        for (MutablePair<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<TreeVertex, TreeVertex> edge : outerFace.getEdgeList()
         ) {
-            MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
+            TupleEdge<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<TreeVertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
@@ -70,9 +70,9 @@ public class Orientator<E> {
 
             PlanarGraphFace<TreeVertex, E> currFace = discoveredFaces.get(0);
             discoveredFaces.remove(0);
-            for (MutablePair<TreeVertex, TreeVertex> edge : currFace.getEdgeList()
+            for (TupleEdge<TreeVertex, TreeVertex> edge : currFace.getEdgeList()
             ) {
-                MutablePair<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
+                TupleEdge<TreeVertex, TreeVertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
                 PlanarGraphFace<TreeVertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
