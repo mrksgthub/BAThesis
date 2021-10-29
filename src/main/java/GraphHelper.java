@@ -1,4 +1,5 @@
 import org.apache.commons.lang3.tuple.MutablePair;
+import org.graphstream.stream.file.FileSinkDOT;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.*;
@@ -86,11 +87,28 @@ public class GraphHelper<V extends TreeVertex, E> {
             e.printStackTrace();
         }
     }
+    public static void writeTODOTTreeVertex(Graph<TreeVertex, DefaultEdge> jgrapthTest, String stringPath) {
+        //Create the exporter (without ID provider)
+
+        DOTExporter<TreeVertex, DefaultEdge> exporter = new DOTExporter<>();
+        exporter.setVertexIdProvider((TreeVertex e) -> {
+            return e.getName();
+        });
+        Writer writer = new StringWriter();
+        exporter.exportGraph(jgrapthTest, writer);
+        Paths.get(stringPath);
+        try {
+            Files.write(Paths.get(stringPath), writer.toString().getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
-
-
-
+    public static void writeGraphStreamToFIle(org.graphstream.graph.Graph graph, String directory) throws IOException {
+        FileSinkDOTTreeVertex fs = new FileSinkDOTTreeVertex();
+        fs.writeAll(graph, directory);
+    }
 
 
     public static TupleEdge<TreeVertex, TreeVertex> reverseEdge(TupleEdge<TreeVertex, TreeVertex> edge, boolean newEdge) {

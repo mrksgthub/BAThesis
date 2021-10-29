@@ -376,6 +376,7 @@ public class SPQNode {
             int alphavl = 9999;
             int alphavr = 9999;
 
+            // äquivalent zu outdeg(w)
             kul = ((this.startVertex.adjecentVertices.size() - startNodes.size()) == 1 && this.getMergedChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
             kur = ((this.startVertex.adjecentVertices.size() - startNodes.size()) == 1 && this.getMergedChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
 

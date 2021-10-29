@@ -27,6 +27,30 @@ public class stNumbering {
     DoublyLinkedList<TreeVertex> L;
 
     public static void main(String[] args) {
+
+        /*
+        Andere Methode
+        counter = vertexSet.size()-1
+        Weise s node wert 0 zu
+              t node wert vertexSet.size()-1 und auf stack S
+              while (S.notempty)
+             {
+              alle Kinder von t node auf stackm falls sie keinen Wert bis jetzt haben und weise ihnen counter-- zu.
+             }
+
+
+         */
+
+
+
+
+
+
+
+
+
+
+
         SPQTree tree;
         SPQNode root;
 

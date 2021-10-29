@@ -114,6 +114,14 @@ public class GraphDrawer implements Runnable {
 
         }
 
+
+        for (Node node : graph) {
+            node.setAttribute("ui.label", node.getId());
+        }
+        String styleSheet =
+                "node { text-alignment: at-right; text-color: #222; } node#B { text-alignment: at-left; } node#C { text-alignment: under; }";
+
+        graph.setAttribute("ui.stylesheet", styleSheet);
         // https://stackoverflow.com/questions/37530756/dont-close-swing-main-app-when-closing-graphstream
         Viewer viewer = graph.display(false);
         viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);

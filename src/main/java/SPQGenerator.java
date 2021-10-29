@@ -168,7 +168,7 @@ public class SPQGenerator implements Callable, Runnable {
 
         assert (tamassiaValid == check);
         // assert(false);
-        // tamassiaValid = false;
+       // tamassiaValid = false;
         if (tamassiaValid != check) {
             try {
                 SPQExporter spqExporter = new SPQExporter(tree);

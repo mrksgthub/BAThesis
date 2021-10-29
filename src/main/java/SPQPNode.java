@@ -370,7 +370,7 @@ public class SPQPNode extends SPQNode {
         TreeVertex vertex1 = mergedChildren.get(0).startNodes.get(0);
         if (startNodes.size() == 3 && !this.isRoot) {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
-
+            // Winkel um die Quelle festlegen.
             // Beispiel3-4-10  Außen
             TreeVertex nextVertexStarRight = startVertex.adjecentVertices.get(Math.floorMod((startVertex.adjecentVertices.indexOf(mergedChildren.get(mergedChildren.size() - 1).startNodes.get(mergedChildren.get(mergedChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjecentVertices.size()));
             hashMap.put((new TupleEdge<>(nextVertexStarRight, startVertex,1)), 1);
@@ -399,7 +399,7 @@ public class SPQPNode extends SPQNode {
             hashMap.put((new TupleEdge<>(vertex2, startVertex, ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1)), ((alphaur + alphaul == 2) && (startVertex.adjecentVertices.size() == 3)) ? 0 : 1);
 
         } else if (startVertex.adjecentVertices.size() == 2 && this.isRoot) {
-
+            // Sonderfall: Referenzkante an der Wurzel.
             hashMap.put((new TupleEdge<>(sinkVertex, startVertex, 1)), 1);
             hashMap.put((new TupleEdge<>(startNodes.get(0), startVertex, 1)), -1);
 

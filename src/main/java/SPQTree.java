@@ -83,18 +83,31 @@ public class SPQTree {
 
     }
 
-    public boolean computeNofRoot() {
+    public boolean computeNofRoot() { // Änderungen in neuer v4 aus Paper eingefügt
 
         int spirality = 99999;
 
         if (root.getMergedChildren().get(0).startNodes.size() == 1 && root.getMergedChildren().get(0).sinkNodes.size() == 1) {
-            spirality = 2;
-        } else if (root.getMergedChildren().get(0).startNodes.size() >= 2 && root.getMergedChildren().get(0).sinkNodes.size() >= 2) {
+            
+            if (root.getMergedChildren().get(0).repIntervalLowerBound <= 6 && 2 <= root.getMergedChildren().get(0).repIntervalUpperBound) {
 
-            spirality = 4;
+                spirality = (int) Math.ceil(Math.max(2.0,root.getMergedChildren().get(0).repIntervalLowerBound));
+              //  spirality = 2;
+            }
+
+        } else if (root.getMergedChildren().get(0).startNodes.size() >= 2 && root.getMergedChildren().get(0).sinkNodes.size() >= 2) {
+            if (root.getMergedChildren().get(0).repIntervalLowerBound <= 4 && 4 <= root.getMergedChildren().get(0).repIntervalUpperBound) {
+                spirality = 4;
+            }
+
+
 
         } else {
-            spirality = 3;
+            if (root.getMergedChildren().get(0).repIntervalLowerBound <= 5 && 3 <= root.getMergedChildren().get(0).repIntervalUpperBound) {
+                spirality = (int) Math.ceil(Math.max(3.0,root.getMergedChildren().get(0).repIntervalLowerBound));
+              //  spirality = 3;
+            }
+
         }
 
 

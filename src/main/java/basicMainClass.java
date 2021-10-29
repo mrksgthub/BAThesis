@@ -28,7 +28,7 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(0, 0);
+        SPQGenerator spqGenerator = new SPQGenerator(15, 70);
         spqGenerator.run();
 
 
@@ -37,7 +37,7 @@ public class basicMainClass {
 
         SPQExporter spqExporter = new SPQExporter(tree);
         //      spqExporter.run(root);
-        spqExporter.run(root, "C:/a.txt");
+        //spqExporter.run(root, "C:/a.txt");
 
 
         //  SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\55664N2389F.txt");
@@ -64,6 +64,8 @@ public class basicMainClass {
 
         GraphValidifier graphValidifier = new GraphValidifier(tree.constructedGraph, treeVertexFaceGenerator.planarGraphFaces);
         graphValidifier.run();
+
+        GraphHelper.writeTODOTTreeVertex(tree.constructedGraph, "C:/a-constructedGraph.txt");
 
 
         HashMap parentsList = new HashMap<>();
@@ -109,7 +111,7 @@ public class basicMainClass {
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("MaxFlow Init " + elapsedTime2);
-        test.run3();
+     //   test.run3();
 
 
         stopTime = System.currentTimeMillis();
@@ -192,6 +194,15 @@ public class basicMainClass {
 
         }
 
+        for (Node node : graph) {
+            node.setAttribute("ui.label", node.getId());
+        }
+         String styleSheet =
+                "node { text-alignment: at-right; text-color: #222; } node#B { text-alignment: at-left; } node#C { text-alignment: under; }";
+
+        graph.setAttribute("ui.stylesheet", styleSheet);
+
+        GraphHelper.writeGraphStreamToFIle(graph, "C:/a-graphstreamDOT.dot");
 
         graph.display(false);
 
