@@ -541,6 +541,8 @@ public class Rectangulator<E> {
 
     private void findfronts2(List<TupleEdge<TreeVertex, TreeVertex>> edgeList, Map<TupleEdge<TreeVertex, TreeVertex>, TupleEdge<TreeVertex, TreeVertex>> fronts, Map<TupleEdge<TreeVertex, TreeVertex>, Integer> orthogonalRep, Map<TreeVertex, TupleEdge<TreeVertex, TreeVertex>> vertexToFront, boolean isExternal) {
 
+
+        //TODO Hier könnte man die Stacks so anpassen, dass alle Kanten auf die stacks gelegt werden (also auch die mit 180° Winkeln), aber beim Stringbuilder werden sie ignoriert. Findet man ein 011 im STrink dann peeked und poopwed man so lange bis die 0 gefunden wird und baut so das Rectangular face.
         for (TupleEdge<TreeVertex, TreeVertex> edge : edgeList) {
             edge.winkel = orthogonalRep.get(edge);
         }
