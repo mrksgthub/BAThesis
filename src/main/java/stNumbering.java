@@ -1,3 +1,7 @@
+import Datatypes.SPQNode;
+import Datatypes.SPQTree;
+import Helperclasses.GraphHelper;
+import Helperclasses.SPQImporter;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.AsUndirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
@@ -21,10 +25,10 @@ public class stNumbering {
     static ArrayList<DefaultEdge> Edges = new ArrayList<>();
     static int[] edgeInt;
     static int[] dfiArray;
-    static TreeVertex[] vertices;
-    private static DirectedMultigraph<TreeVertex, DefaultEdge> graph;
-    private static AsUndirectedGraph<TreeVertex, DefaultEdge> graph3;
-    DoublyLinkedList<TreeVertex> L;
+    static Datatypes.Vertex[] vertices;
+    private static DirectedMultigraph<Datatypes.Vertex, DefaultEdge> graph;
+    private static AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
+    DoublyLinkedList<Datatypes.Vertex> L;
 
     public static void main(String[] args) {
 
@@ -58,7 +62,7 @@ public class stNumbering {
         spqImporter.run();
 
 
-        tree = spqImporter.tree;
+        tree = spqImporter.getTree();
         root = tree.getRoot();
 
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
@@ -69,19 +73,19 @@ public class stNumbering {
 
         graph3 = new AsUndirectedGraph<>(graph);
 
-        Graphs.addGraph(graph, tree.constructedGraph);
+        Graphs.addGraph(graph, tree.getConstructedGraph());
         visited = new boolean[graph3.vertexSet().size()];
         childOf = new int[graph3.vertexSet().size()];
         dfs = new int[graph3.vertexSet().size()];
         edgeInt = new int[graph3.vertexSet().size()];
         Edges.addAll(graph3.edgeSet());
         dfiArray = new int[graph3.vertexSet().size()];
-        vertices = new TreeVertex[graph3.vertexSet().size()];
+        vertices = new Datatypes.Vertex[graph3.vertexSet().size()];
 
         int i = 0;
-        for (TreeVertex v : graph3.vertexSet()
+        for (Datatypes.Vertex v : graph3.vertexSet()
         ) {
-            vertices[v.id] = v;
+            vertices[v.getId()] = v;
         }
 
 
@@ -92,13 +96,13 @@ public class stNumbering {
     }
 
 
-    public void dfs(TreeVertex root) {
-        visited[root.id] = true;
+    public void dfs(Datatypes.Vertex root) {
+        visited[root.getId()] = true;
 
-        for (TreeVertex v : Graphs.neighborListOf(graph3, root)
+        for (Datatypes.Vertex v : Graphs.neighborListOf(graph3, root)
         ) {
 
-            if (visited[v.id]) {
+            if (visited[v.getId()]) {
                 dfs(v);
             } else {
 
@@ -109,8 +113,8 @@ public class stNumbering {
     }
 
 
-    public void dfs2(TreeVertex v) {
-        dfs[v.id] = ++i;
+    public void dfs2(Datatypes.Vertex v) {
+        dfs[v.getId()] = ++i;
 
 
     }
@@ -119,13 +123,13 @@ public class stNumbering {
 }
 
 class Vertex {
-    TreeVertex v;
+    Datatypes.Vertex v;
     int id;
     int orientation;
 
-    public Vertex(TreeVertex v) {
+    public Vertex(Datatypes.Vertex v) {
         this.v = v;
-        id = v.id;
+        id = v.getId();
     }
 }
 
@@ -137,23 +141,23 @@ class Edge {
 
 class DFTransversal {
 
-    AsUndirectedGraph<TreeVertex, DefaultEdge> graph3;
-    DirectedMultigraph<TreeVertex, DefaultEdge> dfsTree = new DirectedMultigraph<TreeVertex, DefaultEdge>(DefaultEdge.class);
+    AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
+    DirectedMultigraph<Datatypes.Vertex, DefaultEdge> dfsTree = new DirectedMultigraph<Datatypes.Vertex, DefaultEdge>(DefaultEdge.class);
     boolean[] dfsVisited;
-    TreeVertex[] childOf;
-    List<Stack<TreeVertex>> stackList = new LinkedList<>();
+    Datatypes.Vertex[] childOf;
+    List<Stack<Datatypes.Vertex>> stackList = new LinkedList<>();
     HashMap<DefaultEdge, Boolean> edgesVisited = new HashMap<>();
 
 
-    public DFTransversal(AsUndirectedGraph<TreeVertex, DefaultEdge> graph3) {
+    public DFTransversal(AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3) {
         this.graph3 = graph3;
         dfsVisited = new boolean[graph3.vertexSet().size() * 3];
-        childOf = new TreeVertex[graph3.vertexSet().size() * 3];
+        childOf = new Datatypes.Vertex[graph3.vertexSet().size() * 3];
 
         // Arrays.fill(childOf, -1);
     }
 
-    public void run(TreeVertex vertex) {
+    public void run(Datatypes.Vertex vertex) {
 
         dfs(vertex);
 
@@ -163,13 +167,13 @@ class DFTransversal {
 
     }
 
-    public void dfs(TreeVertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
+    public void dfs(Datatypes.Vertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
 
         int v;
 
         // create a stack used to do iterative DFS
-        Stack<TreeVertex> stack = new Stack<>();
-        Deque<TreeVertex> ear = new ArrayDeque<>();
+        Stack<Datatypes.Vertex> stack = new Stack<>();
+        Deque<Datatypes.Vertex> ear = new ArrayDeque<>();
 
         // push the source node into the stack
         stack.push(vertex);
@@ -181,8 +185,8 @@ class DFTransversal {
 
 
             // if the vertex is already discovered yet, ignore it
-            if (dfsVisited[vertex.id]) {
-                if (childOf[vertex.id] != null) {
+            if (dfsVisited[vertex.getId()]) {
+                if (childOf[vertex.getId()] != null) {
                     //  dfsTree.addEdge(vertex, ear.firstElement());
                     //  stackList.add(ear);
                     //  ear = new Stack<>();
@@ -194,20 +198,20 @@ class DFTransversal {
             // we will reach here if the popped vertex `v`
             // is not discovered yet; print it and process
             // its undiscovered adjacent nodes into the stack
-            dfsVisited[vertex.id] = true;
-            System.out.print(vertex.id + " ");
+            dfsVisited[vertex.getId()] = true;
+            System.out.print(vertex.getId() + " ");
             dfsTree.addVertex(vertex);
-            if (childOf[vertex.id] != null) {
-                dfsTree.addEdge(childOf[vertex.id], vertex);
+            if (childOf[vertex.getId()] != null) {
+                dfsTree.addEdge(childOf[vertex.getId()], vertex);
             }
 
             // do for every edge `v —> u`
-            List<TreeVertex> adj = Graphs.neighborListOf(graph3, vertex);
+            List<Datatypes.Vertex> adj = Graphs.neighborListOf(graph3, vertex);
             for (int i = adj.size() - 1; i >= 0; i--) {
-                TreeVertex u = adj.get(i);
-                if (!dfsVisited[u.id]) {
+                Datatypes.Vertex u = adj.get(i);
+                if (!dfsVisited[u.getId()]) {
                     stack.push(u);
-                    childOf[u.id] = vertex;
+                    childOf[u.getId()] = vertex;
                 }
             }
         }
@@ -217,22 +221,22 @@ class DFTransversal {
 
         while (!ear.isEmpty()) {
 
-            TreeVertex vertex1 = ear.pop();
+            Datatypes.Vertex vertex1 = ear.pop();
 
-            List<TreeVertex> adj = Graphs.neighborListOf(graph3, vertex1);
+            List<Datatypes.Vertex> adj = Graphs.neighborListOf(graph3, vertex1);
             for (int i = adj.size() - 1; i >= 0; i--) {
-                if (adj.get(i) == childOf[vertex1.id] || childOf[adj.get(i).id] == vertex1 || edgesVisited.containsKey(graph3.getEdge(adj.get(i), vertex1))        ) {
+                if (adj.get(i) == childOf[vertex1.getId()] || childOf[adj.get(i).getId()] == vertex1 || edgesVisited.containsKey(graph3.getEdge(adj.get(i), vertex1))        ) {
                     continue;
                 }
 
 
 
                 //backedge found
-                Stack<TreeVertex> newEar = new Stack<>();
+                Stack<Datatypes.Vertex> newEar = new Stack<>();
                 newEar.push(vertex1);
-                visited[vertex1.id] = true;
+                visited[vertex1.getId()] = true;
 
-                TreeVertex vertex2 = adj.get(i);
+                Datatypes.Vertex vertex2 = adj.get(i);
 
 
                 edgesVisited.putIfAbsent(graph3.getEdge(vertex1, vertex2), true);
@@ -242,13 +246,13 @@ class DFTransversal {
 
                     newEar.push(vertex2);
 
-                    if (visited[vertex2.id]) {
+                    if (visited[vertex2.getId()]) {
                         break;
                     }
 
-                    visited[vertex2.id] = true;
+                    visited[vertex2.getId()] = true;
 
-                    vertex2 = childOf[vertex2.id];
+                    vertex2 = childOf[vertex2.getId()];
 
                 }
                 stackList.add(newEar);

@@ -1,4 +1,15 @@
-import org.apache.commons.lang3.tuple.MutablePair;
+import Algorithms.Coordinator;
+import Algorithms.Embedder;
+import Algorithms.FaceGenerator;
+import Algorithms.Flow.TamassiaRepresentation;
+import Datatypes.*;
+import Datatypes.Vertex;
+import GraphGenerators.GraphgenSplitGraph;
+import GraphGenerators.SPQGenerator;
+import Helperclasses.GraphHelper;
+import Helperclasses.SPQExporter;
+import Helperclasses.SPQImporter;
+import Visualizing.*;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -58,26 +69,26 @@ public class SPQGenTest {
         spqExporter.run(root, "C:/a.txt");
 
         SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-        // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\38321N2774F.txt");
+        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\38321N2774F.txt");
         //
-        // SPQImporter spqImporter = new SPQImporter("C:\\Graphs\\127kN19kF.txt");
+        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\127kN19kF.txt");
         spqImporter.run();
 
-        tree = spqImporter.tree;
-        root = spqImporter.tree.getRoot();
+        tree = spqImporter.getTree();
+        root = spqImporter.getTree().getRoot();
 
-        for (TreeVertex vertex : tree.constructedGraph.vertexSet()
+        for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
-            int i = tree.constructedGraph.degreeOf(vertex);
+            int i = tree.getConstructedGraph().degreeOf(vertex);
             if (i > 4) {
                 throw new Exception("Illegal Graph: maxDegree of nodes = " + i);
             }
         }
 
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding, root);
         embedder.run(root);
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
         TamassiaRepresentation tamassiaRepresentation = new TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
         tamassiaRepresentation.run();
@@ -94,7 +105,7 @@ public class SPQGenTest {
         SPQTree tree = new SPQTree(root);
 
         Boolean check = false;
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
 
         int counter = 0;
@@ -109,8 +120,8 @@ public class SPQGenTest {
             root = graphgenSplitGraph.getRoot();
             root.compactTree();
             System.out.println("SPQ-Trees");
-            //   DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
-            //   GraphHelper.printTODOTSPQNode(graph2);
+            //   DefaultDirectedGraph<Datatypes.SPQNode, DefaultEdge> graph2 = Helperclasses.GraphHelper.treeToDOT(root, 2);
+            //   Helperclasses.GraphHelper.printTODOTSPQNode(graph2);
 
 
             tree = new SPQTree(root);
@@ -122,9 +133,9 @@ public class SPQGenTest {
 
             root.computeAdjecentVertices();
 
-            //   graph2 = GraphHelper.treeToDOT(root, 2);
-            //   GraphHelper.printTODOTSPQNode(graph2);
-            //   GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+            //   graph2 = Helperclasses.GraphHelper.treeToDOT(root, 2);
+            //   Helperclasses.GraphHelper.printTODOTSPQNode(graph2);
+            //   Helperclasses.GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
 
             embedding = erstelleHashtablefuerFacegenerator(tree);
 
@@ -144,11 +155,11 @@ public class SPQGenTest {
             boolean tamassiaValid = true;
             try {
 
-                //    Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
-                FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+                //    Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
-                DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+                DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
                 treeVertexFaceGenerator.generateCapacities();
 
             } catch (Exception e) {
@@ -168,24 +179,24 @@ public class SPQGenTest {
         if (isValidDidimo = tree.computeNofRoot()) {
             root.getMergedChildren().get(0).computeSpirality();
             System.out.println("------------------------------------------------Valid Graph-------------------------------------------------------");
-            //  GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
+            //  Helperclasses.GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
         }
 
-        //  Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+        //  Algorithms.Angulator angulator = new Algorithms.Angulator(tree, embedding, treeVertexFaceGenerator);
         //   angulator.run();
 
-        //  Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<TreeVertex, DefaultEdge>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        //  Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
+        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
 
-        DefaultDirectedWeightedGraph<TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+        DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
         treeVertexFaceGenerator.generateCapacities();
 
 
-        HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> pairIntegerMap = new HashMap<>();
+        HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>();
 
-        for (TupleEdge<TreeVertex, TreeVertex> pair :
-                treeVertexFaceGenerator.adjFaces2.keySet()) {
+        for (TupleEdge<Vertex, Vertex> pair :
+                treeVertexFaceGenerator.getAdjFaces2().keySet()) {
             pairIntegerMap.put(pair, 0);
         }
 
@@ -195,11 +206,11 @@ public class SPQGenTest {
         }
 
 
-        List<PlanarGraphFace<TreeVertex, DefaultEdge>> test = new ArrayList<>();
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+        List<PlanarGraphFace<Vertex, DefaultEdge>> test = new ArrayList<>();
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
             int edgeCount = 0;
-            for (TupleEdge<TreeVertex, TreeVertex> pair :
+            for (TupleEdge<Vertex, Vertex> pair :
                     face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 edgeCount += pairIntegerMap.get(pair);
@@ -217,45 +228,45 @@ public class SPQGenTest {
         }
 
 
-        // GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+        // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
-        //GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator, "C:\\graph.ser");
-        // FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = GraphHelper.ReadFaceGeneratorFromFile("C:\\graph.ser");
+        //Helperclasses.GraphHelper.writeFaceGeneatorToFile(treeVertexFaceGenerator, "C:\\graph.ser");
+        // Algorithms.FaceGenerator<Datatypes.TreeVertex, DefaultEdge> treeVertexFaceGenerator2 = Helperclasses.GraphHelper.ReadFaceGeneratorFromFile("C:\\graph.ser");
 
 
-        Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.planarGraphFaces);
+        Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
-        int cou = rectangulator.rectangularFaceMap.size();
+        int cou = rectangulator.getRectangularFaceMap().size();
         System.out.println(cou);
         //assert (cou == 29);
 
         int counter2 = 0;
-        List<TupleEdge<TreeVertex, TreeVertex>> testList = new ArrayList<>();
-        for (TupleEdge<TreeVertex, TreeVertex> edge : rectangulator.originaledgeToFaceMap.keySet()
+        List<TupleEdge<Vertex, Vertex>> testList = new ArrayList<>();
+        for (TupleEdge<Vertex, Vertex> edge : rectangulator.getOriginaledgeToFaceMap().keySet()
         ) {
 
-            if (rectangulator.originaledgeToFaceMap.get(new TupleEdge<>(edge.getRight(), edge.getLeft())) == null) {
+            if (rectangulator.getOriginaledgeToFaceMap().get(new TupleEdge<>(edge.getRight(), edge.getLeft())) == null) {
                 counter2++;
                 testList.add(edge);
             }
 
 
         }
-        HashSet<PlanarGraphFace<TreeVertex, DefaultEdge>> set = new HashSet(rectangulator.originaledgeToFaceMap.values());
+        HashSet<PlanarGraphFace<Vertex, DefaultEdge>> set = new HashSet(rectangulator.getOriginaledgeToFaceMap().values());
 
-        List<PlanarGraphFace<TreeVertex, DefaultEdge>> frontList = new ArrayList<>(set);
+        List<PlanarGraphFace<Vertex, DefaultEdge>> frontList = new ArrayList<>(set);
         System.out.println(counter2);
 
 
-        rectangulator.outerFace.setOrientations();
+        rectangulator.getOuterFace().setOrientations();
 
 
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : rectangulator.rectangularFaceMap.keySet()) {
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : rectangulator.getRectangularFaceMap().keySet()) {
             int count = 0;
             int count2 = 0;
-            for (TupleEdge<TreeVertex, TreeVertex> edge : face.edgeList) {
+            for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()) {
                 if (face.getOrthogonalRep().get(edge) != 0) {
                     count++;
                     count2 += face.getOrthogonalRep().get(edge);
@@ -267,10 +278,10 @@ public class SPQGenTest {
             assert (count2 == 4);
             count = 0;
             count2 = 0;
-            for (TupleEdge<TreeVertex, TreeVertex> edge : rectangulator.outerFace.edgeList) {
-                if (rectangulator.outerFace.getOrthogonalRep().get(edge) != 0) {
+            for (TupleEdge<Vertex, Vertex> edge : rectangulator.getOuterFace().getEdgeList()) {
+                if (rectangulator.getOuterFace().getOrthogonalRep().get(edge) != 0) {
                     count++;
-                    count2 += rectangulator.outerFace.getOrthogonalRep().get(edge);
+                    count2 += rectangulator.getOuterFace().getOrthogonalRep().get(edge);
 
                 }
 
@@ -282,34 +293,34 @@ public class SPQGenTest {
         }
 
 
-        Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
+        Orientator<DefaultEdge> orientator = new Orientator(rectangulator.getRectangularFaceMap(), rectangulator.getOuterFace());
         orientator.run();
 
 
-        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
-        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
-        // GraphHelper.printToDOTTreeVertexWeighted(testgraph);
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.getOriginalFaceList(), rectangulator.getOuterFace());
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
+        // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
 
         verticalFlow.generateCapacities();
 
 
-        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
-        DirectedWeightedMultigraph<TreeVertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
-        //  GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.getOriginalFaceList(), rectangulator.getOuterFace());
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
+        //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
 
         horizontalFlow.generateCapacities();
 
-        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        Coordinator coordinator = new Coordinator(rectangulator.getOuterFace(), rectangulator.getRectangularFaceMap(), verticalFlow.getEdgeToArcMap(), horizontalFlow.getEdgeToArcMap(), verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
-        //     MaximumFlowAlgorithm<TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+        //     MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
 
         //    test33.getMaximumFlow(treeVertexFaceGenerator.source, treeVertexFaceGenerator.sink);
         //    test33.getFlowMap();
 
 
-        //    MinimumCostFlowProblem<TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
+        //    MinimumCostFlowProblem<Datatypes.TreeVertex, DefaultWeightedEdge> minimumCostFlowProblem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<Datatypes.TreeVertex, DefaultWeightedEdge>(treeVertexDefaultEdgeDefaultDirectedWeightedGraph);
 
         GraphHelper.writeObjectToFile(coordinator.getEdgeToCoordMap(), "C:\\hashMap.ser");
         GraphHelper.writeObjectToFile(embedding, "C:\\adjecency.ser");
@@ -323,16 +334,16 @@ public class SPQGenTest {
 
     }
 
-    public Hashtable<TreeVertex, ArrayList<TreeVertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+    public Hashtable<Vertex, ArrayList<Vertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
+        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
-        for (TreeVertex vertex :
-                tree.constructedGraph.vertexSet()) {
+        for (Vertex vertex :
+                tree.getConstructedGraph().vertexSet()) {
 
-            ArrayList<TreeVertex> arrList = new ArrayList<>();
+            ArrayList<Vertex> arrList = new ArrayList<>();
 
-            Set<DefaultEdge> tempIn = tree.constructedGraph.incomingEdgesOf(vertex);
-            Set<DefaultEdge> tempOut = tree.constructedGraph.outgoingEdgesOf(vertex);
+            Set<DefaultEdge> tempIn = tree.getConstructedGraph().incomingEdgesOf(vertex);
+            Set<DefaultEdge> tempOut = tree.getConstructedGraph().outgoingEdgesOf(vertex);
 
 
             ArrayList<DefaultEdge> inEdgesList = new ArrayList<>(tempIn);
@@ -340,10 +351,10 @@ public class SPQGenTest {
             ListIterator<DefaultEdge> tempOutListIterator = new ArrayList<>(tempOut).listIterator();
 
             while (tempInListIterator.hasPrevious()) {
-                arrList.add(tree.constructedGraph.getEdgeSource(tempInListIterator.previous()));
+                arrList.add(tree.getConstructedGraph().getEdgeSource(tempInListIterator.previous()));
             }
             while (tempOutListIterator.hasNext()) {
-                arrList.add(tree.constructedGraph.getEdgeTarget(tempOutListIterator.next()));
+                arrList.add(tree.getConstructedGraph().getEdgeTarget(tempOutListIterator.next()));
             }
 
 
@@ -371,15 +382,15 @@ public class SPQGenTest {
 
     private void checkSpiralitiesWithinBounds(SPQTree tree) {
         for (SPQNode node :
-                tree.visited) {
-            if (node.mergedChildren.size() > 0 && !node.getName().equals("Proot")) {
+                tree.getVisited()) {
+            if (node.getMergedChildren().size() > 0 && !node.getName().equals("Proot")) {
                 assert (node.getRepIntervalLowerBound() <= node.getSpirality() && node.getSpirality() <= node.getRepIntervalUpperBound());
             }
         }
     }
 
 
-    public void winkelHinzufügen(SPQNode root, HashMap<TupleEdge<TreeVertex, TreeVertex>, Integer> hashmap) {
+    public void winkelHinzufügen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {
@@ -407,7 +418,7 @@ public class SPQGenTest {
     }
 
 
-    public SPQQNode addQNode(SPQNode parentNode, int counter, TreeVertex start, TreeVertex sink) {
+    public SPQQNode addQNode(SPQNode parentNode, int counter, Vertex start, Vertex sink) {
         SPQQNode node = new SPQQNode("Q" + counter++);
         node.setParent(parentNode);
         parentNode.getChildren().add(node);
@@ -416,11 +427,11 @@ public class SPQGenTest {
         return node;
     }
 
-    public ArrayList<TreeVertex> generateVertices(int counter) {
-        ArrayList<TreeVertex> list = new ArrayList<>();
+    public ArrayList<Vertex> generateVertices(int counter) {
+        ArrayList<Vertex> list = new ArrayList<>();
 
         for (int i = 0; i < counter; i++) {
-            TreeVertex vertex = new TreeVertex("v" + i);
+            Vertex vertex = new Vertex("v" + i);
             list.add(vertex);
         }
 
@@ -428,7 +439,7 @@ public class SPQGenTest {
     }
 
 
-    public int addQStar(SPQNode parentNode, int counter, int[] nodes, ArrayList<TreeVertex> vertexList) {
+    public int addQStar(SPQNode parentNode, int counter, int[] nodes, ArrayList<Vertex> vertexList) {
         SPQSNode node = new SPQSNode("S" + counter);
 
         for (int i = 0; i < nodes.length - 1; i++) {

@@ -1,3 +1,11 @@
+import Algorithms.Embedder;
+import Algorithms.FaceGenerator;
+import Datatypes.SPQNode;
+import Datatypes.SPQTree;
+import Datatypes.Vertex;
+import GraphGenerators.SPQGenerator;
+import Helperclasses.SPQExporter;
+import Helperclasses.SPQImporter;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -44,24 +52,24 @@ public class graphBuilderST {
                 SPQImporter spqImporter = new SPQImporter("C:/a.txt");
                 spqImporter.run();
 
-                DirectedMultigraph<TreeVertex, DefaultEdge> graph = spqImporter.tree.constructedGraph;
+                DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
 
-                tree = spqImporter.tree;
+                tree = spqImporter.getTree();
                 root = tree.getRoot();
 
 
-                Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+                Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
                 Embedder embedder = new Embedder(embedding, root);
                 embedder.run(root);
 
-                FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces2();
 
 
-                System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.planarGraphFaces.size());
+                System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
 
-                int faces = treeVertexFaceGenerator.planarGraphFaces.size();
+                int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
                 int nodes = graph.vertexSet().size();
 
                 try {

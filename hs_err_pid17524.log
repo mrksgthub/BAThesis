@@ -21,7 +21,7 @@
 Command Line: -javaagent:C:\Program Files\JetBrains\IntelliJ IDEA 2020.3.2\lib\idea_rt.jar=65415:C:\Program Files\JetBrains\IntelliJ IDEA 2020.3.2\bin -XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints -XX:+FlightRecorder -XX:StartFlightRecording=name="graphBuilder_2021_08_22_204930",settings="default",dumponexit=true,filename="C:\Users\marku\graphBuilder_2021_08_22_204930.jfr" -XX:FlightRecorderOptions=stackdepth=2048 -Dfile.encoding=UTF-8 graphBuilder
 
 Host: AMD Ryzen 7 3700X 8-Core Processor             , 16 cores, 31G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1151)
-Time: Sun Aug 22 21:37:29 2021 Mitteleuropäische Sommerzeit elapsed time: 2878.899111 seconds (0d 0h 47m 58s)
+Time: Sun Aug 22 21:37:29 2021 Mitteleuropï¿½ische Sommerzeit elapsed time: 2878.899111 seconds (0d 0h 47m 58s)
 
 ---------------  T H R E A D  ---------------
 
@@ -38,17 +38,17 @@ V  [jvm.dll+0x34e10c]
 C  0x000001d832b3db12
 
 Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
-j  SPQNode.computeAdjecentVertices()V+77
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-J 2289 c2 SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
-j  SPQGenerator.run(II)V+165
-j  SPQGenerator.run()V+9
-j  SPQGenerator.call()LSPQGenerator;+1
+j  Datatypes.SPQNode.computeAdjecentVertices()V+77
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+J 2289 c2 Datatypes.SPQNode.computeAdjecentVertices()V (258 bytes) @ 0x000001d83a8aa894 [0x000001d83a8aa620+0x0000000000000274]
+j  GraphGenerators.SPQGenerator.run(II)V+165
+j  GraphGenerators.SPQGenerator.run()V+9
+j  GraphGenerators.SPQGenerator.call()LSPQGenerator;+1
 j  graphBuilder.main([Ljava/lang/String;)V+46
 v  ~StubRoutines::call_stub
 
@@ -62,7 +62,7 @@ RAX=0x0 is NULL
 RBX=0x0 is NULL
 RCX=0x000000e2ff410000 is an unknown value
 RDX=0x0000000800bbf840 is a pointer to class: 
-SPQNode {0x0000000800bbf848}
+Datatypes.SPQNode {0x0000000800bbf848}
 RSP=0x0000006f53cfdd80 is pointing into the stack for thread: 0x000001d82a8f2960
 RBP=0x0000006f53cff278 is pointing into the stack for thread: 0x000001d82a8f2960
 RSI=0x0000000800000000 is pointing into metadata
@@ -73,7 +73,7 @@ R10=0x000001d832b30000 points into unknown readable memory: 0x0000000000000006 |
 R11=0x0000006f53cfde80 is pointing into the stack for thread: 0x000001d82a8f2960
 R12=0x0000000800000000 is pointing into metadata
 R13=0x0000000800bbf840 is a pointer to class: 
-SPQNode {0x0000000800bbf848}
+Datatypes.SPQNode {0x0000000800bbf848}
 R14=0x00000000000003d8 is an unknown value
 R15=0x000001d82a8f2e40 points into unknown readable memory: 0x0065646f4e515053 | 53 50 51 4e 6f 64 65 00
 
@@ -1008,7 +1008,7 @@ CodeHeap 'non-nmethods': size=7488Kb used=1180Kb max_used=2934Kb free=6307Kb
  full_count=0
 
 Compilation events (20 events):
-Event: 2083.315 Thread 0x000001d8583f27c0 2670       3       GraphgenSplitGraph::newInitialPNode (145 bytes)
+Event: 2083.315 Thread 0x000001d8583f27c0 2670       3       GraphGenerators.GraphgenSplitGraph::newInitialPNode (145 bytes)
 Event: 2083.317 Thread 0x000001d8583f27c0 nmethod 2670 0x000001d833717490 code [0x000001d8337179a0, 0x000001d83371a868]
 Event: 2182.907 Thread 0x000001d8583f27c0 2671       3       java.util.HashMap::treeifyBin (110 bytes)
 Event: 2182.907 Thread 0x000001d8583f27c0 nmethod 2671 0x000001d833716690 code [0x000001d8337168a0, 0x000001d833717028]
@@ -1189,7 +1189,7 @@ Event: 2630.892 Thread 0x000001d85bbe1fb0 DEOPT UNPACKING pc=0x000001d832b7e23f 
 Event: 2825.386 Thread 0x000001d85bbe1fb0 DEOPT PACKING pc=0x000001d83371d0d9 sp=0x0000006f557ff380
 Event: 2825.386 Thread 0x000001d85bbe1fb0 DEOPT UNPACKING pc=0x000001d832b7e23f sp=0x0000006f557fe858 mode 0
 Event: 2878.893 Thread 0x000001d82a8f2960 Uncommon trap: trap_request=0xffffffde fr.pc=0x000001d83a8ab298 relative=0x0000000000000c78
-Event: 2878.893 Thread 0x000001d82a8f2960 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000001d83a8ab298 method=SPQNode.computeAdjecentVertices()V @ 77 c2
+Event: 2878.893 Thread 0x000001d82a8f2960 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000001d83a8ab298 method=Datatypes.SPQNode.computeAdjecentVertices()V @ 77 c2
 Event: 2878.893 Thread 0x000001d82a8f2960 DEOPT PACKING pc=0x000001d83a8ab298 sp=0x0000006f53cff230
 Event: 2878.893 Thread 0x000001d82a8f2960 DEOPT UNPACKING pc=0x000001d832b7e42f sp=0x0000006f53cff1f8 mode 2
 

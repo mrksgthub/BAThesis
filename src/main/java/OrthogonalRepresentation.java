@@ -1,3 +1,4 @@
+import Datatypes.Vertex;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -7,11 +8,11 @@ import java.util.List;
 
 public class OrthogonalRepresentation {
 
-    DefaultDirectedGraph<TreeVertex, DefaultEdge> graph;
-    List<TreeVertex> vertices = new ArrayList<TreeVertex>();
+    DefaultDirectedGraph<Vertex, DefaultEdge> graph;
+    List<Vertex> vertices = new ArrayList<Vertex>();
 
 
-    public OrthogonalRepresentation(DefaultDirectedGraph<TreeVertex, DefaultEdge> graph, List<TreeVertex> vertices) {
+    public OrthogonalRepresentation(DefaultDirectedGraph<Vertex, DefaultEdge> graph, List<Vertex> vertices) {
         this.graph = graph;
         this.vertices = vertices;
     }

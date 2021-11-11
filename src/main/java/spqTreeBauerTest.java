@@ -1,3 +1,7 @@
+import Datatypes.*;
+import Datatypes.Vertex;
+import Helperclasses.GraphHelper;
+import Helperclasses.SPQImporter;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.alg.connectivity.ConnectivityInspector;
@@ -21,23 +25,23 @@ public class spqTreeBauerTest {
         spqImporter.run();
 
 
-        tree = spqImporter.tree;
+        tree = spqImporter.getTree();
         root = tree.getRoot();
 
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph2 = GraphHelper.treeToDOT(root, 2);
         GraphHelper.printTODOTSPQNode(graph2);
 
 
-        DirectedMultigraph<TreeVertex, DefaultEdge> graph = new DirectedMultigraph<>(DefaultEdge.class);
-        DirectedMultigraph<TreeVertex, SPQEdge> graphSPQNodeEdges = new DirectedMultigraph<>(SPQEdge.class);
+        DirectedMultigraph<Vertex, DefaultEdge> graph = new DirectedMultigraph<>(DefaultEdge.class);
+        DirectedMultigraph<Vertex, SPQEdge> graphSPQNodeEdges = new DirectedMultigraph<>(SPQEdge.class);
         DirectedMultigraph<SPQNode, DefaultEdge> SPQTree = new DirectedMultigraph<>(DefaultEdge.class);
 
 
-        Graphs.addGraph(graph, tree.constructedGraph);
+        Graphs.addGraph(graph, tree.getConstructedGraph());
 
-        graph.removeEdge(root.startVertex, root.sinkVertex);
+        graph.removeEdge(root.getStartVertex(), root.getSinkVertex());
 
-        for (TreeVertex vertex : graph.vertexSet()) {
+        for (Vertex vertex : graph.vertexSet()) {
             graphSPQNodeEdges.addVertex(vertex);
         }
         for (DefaultEdge edge : graph.edgeSet()) {
@@ -50,17 +54,17 @@ public class spqTreeBauerTest {
         }
 
 
-        TreeVertex prev = root.startVertex;
-        ArrayDeque<TreeVertex> stack = new ArrayDeque<>();
+        Vertex prev = root.getStartVertex();
+        ArrayDeque<Vertex> stack = new ArrayDeque<>();
         //  stack.add(prev);
 
-        List<ArrayDeque<TreeVertex>> qNodes = new ArrayList<>();
-        SPQDepthiterator<TreeVertex, SPQEdge> depthFirstIterator = new SPQDepthiterator(graphSPQNodeEdges, root.startVertex, stack, prev);
+        List<ArrayDeque<Vertex>> qNodes = new ArrayList<>();
+        SPQDepthiterator<Vertex, SPQEdge> depthFirstIterator = new SPQDepthiterator(graphSPQNodeEdges, root.getStartVertex(), stack, prev);
 
         while (depthFirstIterator.hasNext()) {
 
 
-            TreeVertex vertex = depthFirstIterator.next();
+            Vertex vertex = depthFirstIterator.next();
             stack.add(vertex);
 
             if (graphSPQNodeEdges.degreeOf(vertex) != 2) {
@@ -79,28 +83,28 @@ public class spqTreeBauerTest {
 
 
 
-/*        DirectedMultigraph<SPQNode, SPQEdge> spqTree = new DirectedMultigraph<>(SPQEdge.class);
-        DirectedMultigraph<Graph<TreeVertex, SPQEdge>, SPQEdge> graphTree = new DirectedMultigraph<>(SPQEdge.class);
-        BiconnectivityInspector<TreeVertex, SPQEdge> biconnectivityInspector = new BiconnectivityInspector<>(graphSPQNodeEdges);
+/*        DirectedMultigraph<Datatypes.SPQNode, SPQEdge> spqTree = new DirectedMultigraph<>(SPQEdge.class);
+        DirectedMultigraph<Graph<Datatypes.TreeVertex, SPQEdge>, SPQEdge> graphTree = new DirectedMultigraph<>(SPQEdge.class);
+        BiconnectivityInspector<Datatypes.TreeVertex, SPQEdge> biconnectivityInspector = new BiconnectivityInspector<>(graphSPQNodeEdges);
         biconnectivityInspector.getCutpoints();
 
 
-        Set<Graph<TreeVertex, SPQEdge>> blocks = biconnectivityInspector.getBlocks();
+        Set<Graph<Datatypes.TreeVertex, SPQEdge>> blocks = biconnectivityInspector.getBlocks();
 
-        ArrayDeque<Graph<TreeVertex, SPQEdge>> spqQueue = new ArrayDeque<>();
+        ArrayDeque<Graph<Datatypes.TreeVertex, SPQEdge>> spqQueue = new ArrayDeque<>();
         spqQueue.offer(graphSPQNodeEdges);
         int counter = 0;
 
         while (!spqQueue.isEmpty()) {
 
-            Graph<TreeVertex, SPQEdge> tempGraph = spqQueue.poll();
-            BiconnectivityInspector<TreeVertex, SPQEdge> biconnectivityInspector2 = new BiconnectivityInspector<>(tempGraph);
-            Set<Graph<TreeVertex, SPQEdge>> blocks2 = biconnectivityInspector2.getBlocks();
+            Graph<Datatypes.TreeVertex, SPQEdge> tempGraph = spqQueue.poll();
+            BiconnectivityInspector<Datatypes.TreeVertex, SPQEdge> biconnectivityInspector2 = new BiconnectivityInspector<>(tempGraph);
+            Set<Graph<Datatypes.TreeVertex, SPQEdge>> blocks2 = biconnectivityInspector2.getBlocks();
 
             if (blocks2.size() > 1) {
-                //  spqTree.addVertex(new SPQSNode());
+                //  spqTree.addVertex(new Datatypes.SPQSNode());
                 graphTree.addVertex(tempGraph);
-                for (Graph<TreeVertex, SPQEdge> graph3 : blocks2
+                for (Graph<Datatypes.TreeVertex, SPQEdge> graph3 : blocks2
                 ) {
                     graphTree.addVertex(graph3);
                     graphTree.addEdge(tempGraph, graph3);
@@ -108,19 +112,19 @@ public class spqTreeBauerTest {
 
                 spqQueue.addAll(blocks2);
             } else {
-                spqTree.addVertex(new SPQPNode("v" + counter++));
+                spqTree.addVertex(new Datatypes.SPQPNode("v" + counter++));
 
             }
 
         }*/
 
 
-        ConnectivityInspector<TreeVertex, SPQEdge> connectivityInspector = new ConnectivityInspector<>(graphSPQNodeEdges);
-        ArrayDeque<TreeVertex> arrayDeque = new ArrayDeque<>(graph.vertexSet());
+        ConnectivityInspector<Vertex, SPQEdge> connectivityInspector = new ConnectivityInspector<>(graphSPQNodeEdges);
+        ArrayDeque<Vertex> arrayDeque = new ArrayDeque<>(graph.vertexSet());
         connectivityInspector.connectedSets();
 
-        arrayDeque.remove(root.startVertex);
-        arrayDeque.remove(root.sinkVertex);
+        arrayDeque.remove(root.getStartVertex());
+        arrayDeque.remove(root.getSinkVertex());
 
 
         SPQNode rootNode = null;
@@ -128,7 +132,7 @@ public class spqTreeBauerTest {
 
         while (!arrayDeque.isEmpty()) {
 
-            TreeVertex vertex = arrayDeque.pop();
+            Vertex vertex = arrayDeque.pop();
 
 
             Set<SPQEdge> inmcomingEdges = graphSPQNodeEdges.incomingEdgesOf(vertex);
@@ -190,9 +194,9 @@ public class spqTreeBauerTest {
             if (inmcomingEdges.size() == 1 && outgoingEdges.size() == 1) { // new SNode
 
                 SPQEdge incomingEdge = inmcomingEdges.iterator().next();
-                TreeVertex edgeSource = graphSPQNodeEdges.getEdgeSource(incomingEdge);
+                Vertex edgeSource = graphSPQNodeEdges.getEdgeSource(incomingEdge);
                 SPQEdge outgoingEdge = outgoingEdges.iterator().next();
-                TreeVertex edgeTarget = graphSPQNodeEdges.getEdgeTarget(outgoingEdge);
+                Vertex edgeTarget = graphSPQNodeEdges.getEdgeTarget(outgoingEdge);
 
 
                 SPQSNode node = new SPQSNode(edgeSource, edgeTarget);
@@ -261,10 +265,10 @@ public class spqTreeBauerTest {
                     List<DefaultEdge> childrenSuccesors = new ArrayList<>();
 
 
-          /*          childrenSuccesors.addAll(SPQTree.outgoingEdgesOf(SPQTree.getEdgeTarget(edge)));
+          /*          childrenSuccesors.addAll(Datatypes.SPQTree.outgoingEdgesOf(Datatypes.SPQTree.getEdgeTarget(edge)));
                     for (DefaultEdge outEdge : childrenSuccesors) {
-                        SPQNode edgeTarget = SPQTree.getEdgeTarget(outEdge);
-                        SPQTree.addEdge(parentNode, edgeTarget);
+                        Datatypes.SPQNode edgeTarget = Datatypes.SPQTree.getEdgeTarget(outEdge);
+                        Datatypes.SPQTree.addEdge(parentNode, edgeTarget);
                     }*/
 
 
@@ -312,10 +316,10 @@ public class spqTreeBauerTest {
                         List<DefaultEdge> childrenSuccesors = new ArrayList<>();
 
 
-               /*         childrenSuccesors.addAll(SPQTree.outgoingEdgesOf(SPQTree.getEdgeTarget(edge)));
+               /*         childrenSuccesors.addAll(Datatypes.SPQTree.outgoingEdgesOf(Datatypes.SPQTree.getEdgeTarget(edge)));
                         for (DefaultEdge outEdge : childrenSuccesors) {
-                            SPQNode edgeTarget = SPQTree.getEdgeTarget(outEdge);
-                            SPQTree.addEdge(parentNode, edgeTarget);
+                            Datatypes.SPQNode edgeTarget = Datatypes.SPQTree.getEdgeTarget(outEdge);
+                            Datatypes.SPQTree.addEdge(parentNode, edgeTarget);
                         }*/
 
                         List<DefaultEdge> outEdges = new ArrayList<>(SPQTree.outgoingEdgesOf(parentNode));
@@ -337,8 +341,8 @@ public class spqTreeBauerTest {
         }
 
 
-        SPQQNode sourceSink = new SPQQNode(rootNode.startVertex, rootNode.sinkVertex, false);
-        SPQQNode node = new SPQQNode(rootNode.startVertex, rootNode.sinkVertex, true);
+        SPQQNode sourceSink = new SPQQNode(rootNode.getStartVertex(), rootNode.getSinkVertex(), false);
+        SPQQNode node = new SPQQNode(rootNode.getStartVertex(), rootNode.getSinkVertex(), true);
         SPQTree.addVertex(node);
         SPQTree.addVertex(sourceSink);
         SPQTree.addEdge(node, sourceSink);

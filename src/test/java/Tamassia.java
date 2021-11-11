@@ -1,3 +1,5 @@
+import Datatypes.Vertex;
+import Helperclasses.GraphHelper;
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.PlanarityTestingAlgorithm;
 import org.jgrapht.alg.planar.BoyerMyrvoldPlanarityInspector;
@@ -18,30 +20,30 @@ public class Tamassia {
     public void generateFaces() {
 
 
-        Graph<TreeVertex, DefaultEdge> graph = GraphHelper.getTreeVertexDefaultEdgeDefaultUndirectedGraph();
-        TreeVertex startNode = graph.addVertex();
-        TreeVertex node1 = graph.addVertex();
+        Graph<Vertex, DefaultEdge> graph = GraphHelper.getTreeVertexDefaultEdgeDefaultUndirectedGraph();
+        Vertex startNode = graph.addVertex();
+        Vertex node1 = graph.addVertex();
 
         graph.addEdge(startNode, node1);
 
-        TreeVertex node2 = graph.addVertex();
+        Vertex node2 = graph.addVertex();
         graph.addEdge(node1, node2);
-        TreeVertex node3 = graph.addVertex();
+        Vertex node3 = graph.addVertex();
 
 
         graph.addEdge(node2, node3);
 
-        TreeVertex node4 = graph.addVertex();
+        Vertex node4 = graph.addVertex();
         graph.addEdge(node3, node4);
         graph.addEdge(node4, startNode);
 
         GraphHelper.printToDOTTreeVertex(graph);
 
-        BoyerMyrvoldPlanarityInspector<TreeVertex, DefaultEdge> myrvoldPlanarityInspector = new BoyerMyrvoldPlanarityInspector<>(graph);
-        PlanarityTestingAlgorithm.Embedding<TreeVertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
+        BoyerMyrvoldPlanarityInspector<Vertex, DefaultEdge> myrvoldPlanarityInspector = new BoyerMyrvoldPlanarityInspector<>(graph);
+        PlanarityTestingAlgorithm.Embedding<Vertex, DefaultEdge> embedding = myrvoldPlanarityInspector.getEmbedding();
 
 
-        //FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(embedding);
+        //Algorithms.FaceGenerator<Datatypes.TreeVertex, DefaultEdge> treeVertexFaceGenerator = new Algorithms.FaceGenerator<>(embedding);
         //     treeVertexFaceGenerator.generateFaces();
 
 

@@ -1,3 +1,11 @@
+import Algorithms.Embedder;
+import Algorithms.FaceGenerator;
+import Algorithms.Flow.MaxFlow;
+import Datatypes.PlanarGraphFace;
+import Datatypes.SPQNode;
+import Datatypes.SPQTree;
+import Datatypes.Vertex;
+import Helperclasses.SPQImporter;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -13,20 +21,20 @@ public class TamassiaMaxFlowTest {
     void name() {
 
 
-        // SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/a.txt");
 
         SPQImporter spqImporter = new SPQImporter("C:/Graphs/19139N2214F.txt");
         spqImporter.run();
-        SPQTree tree = spqImporter.tree;
+        SPQTree tree = spqImporter.getTree();
 
         SPQNode root = tree.getRoot();
 
-        Hashtable<TreeVertex, ArrayList<TreeVertex>> embedding = new Hashtable<>();
+        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding, root);
         embedder.run(root);
 
 
-        FaceGenerator<TreeVertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.constructedGraph, root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
 
@@ -49,12 +57,12 @@ public class TamassiaMaxFlowTest {
         }
 
 
-        for (PlanarGraphFace<TreeVertex, DefaultEdge> face : test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
         ) {
             int sum = 0;
-            for (MutablePair<TreeVertex, TreeVertex> edge : face.orthogonalRep.keySet()
+            for (MutablePair<Vertex, Vertex> edge : face.getOrthogonalRep().keySet()
             ) {
-                sum += face.orthogonalRep.get(edge);
+                sum += face.getOrthogonalRep().get(edge);
             }
 
             assert (Math.abs(sum) == 4);

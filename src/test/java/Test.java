@@ -1,3 +1,4 @@
+import Datatypes.TupleEdge;
 import org.antlr.v4.runtime.misc.Pair;
 import org.apache.commons.lang3.tuple.MutablePair;
 import org.jbpt.algo.tree.tctree.TCTree;

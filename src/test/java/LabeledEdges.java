@@ -1,4 +1,5 @@
 
+import Datatypes.SPQNode;
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
 
