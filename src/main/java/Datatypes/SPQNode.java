@@ -21,7 +21,6 @@ public class SPQNode {
     int nodes;
     SPQNode parent;
     boolean isroot = false;
-    boolean visited;
     String name;
     int counter = 0;
     NodeTypesEnum.NODETYPE nodeType;
@@ -50,7 +49,6 @@ public class SPQNode {
     }
 
     public SPQNode(String name) {
-        this.nodes = nodes;
         this.name = name;
     }
 
@@ -83,16 +81,8 @@ public class SPQNode {
         return repIntervalLowerBound;
     }
 
-    public void setRepIntervalLowerBound(int repIntervalLowerBound) {
-        this.repIntervalLowerBound = repIntervalLowerBound;
-    }
-
     public double getRepIntervalUpperBound() {
         return repIntervalUpperBound;
-    }
-
-    public void setRepIntervalUpperBound(int repIntervalUpperBound) {
-        this.repIntervalUpperBound = repIntervalUpperBound;
     }
 
     public boolean calculateRepresentabilityInterval() {
@@ -142,23 +132,6 @@ public class SPQNode {
     }
 
 
-    public <T extends SPQNode> void addNodeAsChild(T node, T parent) {
-        node.setParent(parent);
-        parent.getChildren().add(node);
-
-    }
-
-
-    public <T extends SPQNode> void nodeUmhaengen(T node, T newnode) {
-        //Abhängen
-        node.getParent().getChildren().set(node.getParent().getChildren().indexOf(node), newnode);
-        //neuer Knoten als Parent festlegen
-        newnode.setParent(node.getParent());
-
-        addNodeAsChild(node, newnode);
-
-    }
-
     public boolean isRoot() {
         return this.isRoot;
     }
@@ -177,7 +150,7 @@ public class SPQNode {
             spQNode.compactTree();
         }
         if (this.getParent() != null && this.getNodeType() == this.getParent().getNodeType() && !this.getParent().isRoot()) {
-            nodeMerge(this, this.getParent());
+            mergeNodeWithParent(this, this.getParent());
         }
 
 
@@ -245,8 +218,8 @@ public class SPQNode {
 
     private void mergeQNodes() {
 
-        List<SPQNode> qNodes = new ArrayList<SPQNode>();
-        List<SPQNode> replacementmergedChildren = new ArrayList<SPQNode>();
+        List<SPQNode> qNodes = new ArrayList<>();
+        List<SPQNode> replacementmergedChildren = new ArrayList<>();
 
 
         List<SPQNode> mergedChildren = this.getMergedChildren();
@@ -276,8 +249,6 @@ public class SPQNode {
             newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
             replacementmergedChildren.add(newQ);
 
-            qNodes = new ArrayList<>();
-
             this.setMergedChildren(replacementmergedChildren);
             if (getMergedChildren().size() == 1) {
                 this.getParent().getMergedChildren().set(this.getParent().getMergedChildren().indexOf(this), newQ);
@@ -305,7 +276,7 @@ public class SPQNode {
     }
 
 
-    private void nodeMerge(SPQNode node, SPQNode parent) {
+    private void mergeNodeWithParent(SPQNode node, SPQNode parent) {
 
         int pos = parent.mergedChildren.indexOf(node);
         parent.mergedChildren.remove(node);

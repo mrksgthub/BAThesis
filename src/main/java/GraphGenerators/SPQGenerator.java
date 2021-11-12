@@ -52,10 +52,6 @@ public class SPQGenerator implements Callable, Runnable {
         this.size = size;
     }
 
-    public int getChanceOfP() {
-        return chanceOfP;
-    }
-
     public void setChanceOfP(int chanceOfP) {
         this.chanceOfP = chanceOfP;
     }
@@ -94,10 +90,6 @@ public class SPQGenerator implements Callable, Runnable {
 
     public GraphgenSplitGraph getGraphgenSplitGraph() {
         return graphgenSplitGraph;
-    }
-
-    public void setGraphgenSplitGraph(GraphgenSplitGraph graphgenSplitGraph) {
-        this.graphgenSplitGraph = graphgenSplitGraph;
     }
 
     public void shutdown() {
@@ -201,7 +193,7 @@ public class SPQGenerator implements Callable, Runnable {
             long startTime2 = System.currentTimeMillis();
          //   DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
          //   treeVertexFaceGenerator.generateCapacities();
-            MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+            MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
             test.run3();
 
             // Zeit2:

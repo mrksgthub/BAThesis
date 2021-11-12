@@ -12,7 +12,6 @@ public class PushRelabel extends MaxFlowImp {
 
 
     int[] excessFlow;
-    int[] capacity;
     int[] heights;
     Vertex[] vertices;
     int[] nextNeighbour;
@@ -72,12 +71,10 @@ public class PushRelabel extends MaxFlowImp {
         }
 
 
-        int count = 0;
         for (Edge edge : edges
         ) {
             Double flow = edge.flow;
             maxFlow.putIfAbsent(edge.edge, flow);
-            count++;
         }
 
         double x = 0;
@@ -120,7 +117,6 @@ public class PushRelabel extends MaxFlowImp {
 
     public void relabel(int vertexIndex) {
 
-        boolean assertion = true;
         double min = Integer.MAX_VALUE;
         for (Edge edge : outgoingEdgeLists[vertexIndex]
         ) {

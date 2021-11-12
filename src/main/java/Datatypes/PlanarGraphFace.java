@@ -1,25 +1,11 @@
 package Datatypes;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 public class PlanarGraphFace<V, E> extends Vertex {
 
-    public static Supplier<Vertex> getvSupplier = new Supplier<Vertex>() {
-        private int id = 0;
-
-        @Override
-        public Vertex get() {
-
-            return new Vertex("v" + id++);
-        }
-    };
-
     static int faceCounter = 0;
     public HashMap<TupleEdge<V,V>, Integer> edgeToIndexMap;
-    Set<TupleEdge<V, V>> pairSet = new HashSet<>();
-    Set<V> vSet = new HashSet<>();
-    Set<E> edgeSet = new HashSet<>();
     Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
     Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
     Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
@@ -28,44 +14,8 @@ public class PlanarGraphFace<V, E> extends Vertex {
     int faceIndex;
 
 
-    public static Supplier<Vertex> getGetvSupplier() {
-        return getvSupplier;
-    }
-
-    public static void setGetvSupplier(Supplier<Vertex> getvSupplier) {
-        PlanarGraphFace.getvSupplier = getvSupplier;
-    }
-
-    public static int getFaceCounter() {
-        return faceCounter;
-    }
-
-    public static void setFaceCounter(int faceCounter) {
-        PlanarGraphFace.faceCounter = faceCounter;
-    }
-
-    public HashMap<TupleEdge<V, V>, Integer> getEdgeToIndexMap() {
-        return edgeToIndexMap;
-    }
-
-    public void setEdgeToIndexMap(HashMap<TupleEdge<V, V>, Integer> edgeToIndexMap) {
-        this.edgeToIndexMap = edgeToIndexMap;
-    }
-
     public Map<Integer, ArrayList<TupleEdge<V, V>>> getSidesMap() {
         return sidesMap;
-    }
-
-    public void setSidesMap(Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap) {
-        this.sidesMap = sidesMap;
-    }
-
-    public int getFaceIndex() {
-        return faceIndex;
-    }
-
-    public void setFaceIndex(int faceIndex) {
-        this.faceIndex = faceIndex;
     }
 
     public PlanarGraphFace() {
@@ -115,40 +65,8 @@ public class PlanarGraphFace<V, E> extends Vertex {
         return edgeOrientationMap;
     }
 
-    public void setEdgeOrientationMap(Map<TupleEdge<V, V>, Integer> edgeOrientationMap) {
-        this.edgeOrientationMap = edgeOrientationMap;
-    }
-
     public Map<TupleEdge<V, V>, Integer> getOrthogonalRep() {
         return orthogonalRep;
-    }
-
-    public void setOrthogonalRep(Map<TupleEdge<V, V>, Integer> orthogonalRep) {
-        this.orthogonalRep = orthogonalRep;
-    }
-
-    public Set<TupleEdge<V, V>> getPairSet() {
-        return pairSet;
-    }
-
-    public void setPairSet(Set<TupleEdge<V, V>> pairSet) {
-        this.pairSet = pairSet;
-    }
-
-    public Set<V> getvSet() {
-        return vSet;
-    }
-
-    public void setvSet(Set<V> vSet) {
-        this.vSet = vSet;
-    }
-
-    public Set<E> getEdgeSet() {
-        return edgeSet;
-    }
-
-    public void setEdgeSet(Set<E> edgeSet) {
-        this.edgeSet = edgeSet;
     }
 
 
@@ -157,7 +75,7 @@ public class PlanarGraphFace<V, E> extends Vertex {
      * ausgehend der Rest.
      *
      */
-    public void setOrientations() {
+    public void setOrientationsOuterFacette() {
 
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());
@@ -204,7 +122,7 @@ public class PlanarGraphFace<V, E> extends Vertex {
     }
 
     /**
-     * Legt Orientierungen einer Facette bei der die Orientierung von edge festgelegt ist.
+     * Legt Orientierungen einer Facette fest, bei der die Orientierung von edge festgelegt ist.
      * @param edge - edge in der Facette
      * @param orientation - festgelegte Orientierung der edge in der Facette
      */
@@ -257,15 +175,6 @@ public class PlanarGraphFace<V, E> extends Vertex {
         }
 
 
-    }
-
-    public void computeEdgeToIndexMap() {
-        int i = 0;
-        this.edgeToIndexMap = new HashMap<>();
-        for (TupleEdge<V, V> edge : this.edgeList
-        ) {
-            this.edgeToIndexMap.put(edge, i++);
-        }
     }
 
     public enum FaceType {INTERNAL, EXTERNAL, EXTERNAL_PROCESSED}

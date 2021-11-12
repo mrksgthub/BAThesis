@@ -1,8 +1,8 @@
 package Visualizing;
 
 import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
 import Datatypes.TupleEdge;
+import Datatypes.Vertex;
 import Helperclasses.GraphHelper;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
@@ -11,7 +11,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class VerticalEdgeFlow implements Runnable {
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
     Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
-    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList = new ArrayList<>();
+    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList;
     PlanarGraphFace<Vertex, DefaultEdge> outerFace;
     private Thread t;
     private String threadName = "vertical";
@@ -53,68 +52,12 @@ public class VerticalEdgeFlow implements Runnable {
 
     }
 
-    public HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> getEdgeToFAceMap() {
-        return edgeToFAceMap;
-    }
-
-    public void setEdgeToFAceMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> edgeToFAceMap) {
-        this.edgeToFAceMap = edgeToFAceMap;
-    }
-
-    public Map<Vertex, Integer> getSupplyMap() {
-        return supplyMap;
-    }
-
-    public void setSupplyMap(Map<Vertex, Integer> supplyMap) {
-        this.supplyMap = supplyMap;
-    }
-
-    public Map<DefaultWeightedEdge, Integer> getLowerMap() {
-        return lowerMap;
-    }
-
-    public void setLowerMap(Map<DefaultWeightedEdge, Integer> lowerMap) {
-        this.lowerMap = lowerMap;
-    }
-
-    public Map<DefaultWeightedEdge, Integer> getUpperMap() {
-        return upperMap;
-    }
-
-    public void setUpperMap(Map<DefaultWeightedEdge, Integer> upperMap) {
-        this.upperMap = upperMap;
-    }
-
     public Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> getEdgeToArcMap() {
         return edgeToArcMap;
     }
 
-    public void setEdgeToArcMap(Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap) {
-        this.edgeToArcMap = edgeToArcMap;
-    }
-
-    public List<PlanarGraphFace<Vertex, DefaultEdge>> getRectangleList() {
-        return rectangleList;
-    }
-
-    public void setRectangleList(List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList) {
-        this.rectangleList = rectangleList;
-    }
-
-    public PlanarGraphFace<Vertex, DefaultEdge> getOuterFace() {
-        return outerFace;
-    }
-
-    public void setOuterFace(PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
-        this.outerFace = outerFace;
-    }
-
     public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> getMinimumCostFlow() {
         return minimumCostFlow;
-    }
-
-    public void setMinimumCostFlow(MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow) {
-        this.minimumCostFlow = minimumCostFlow;
     }
 
     public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {

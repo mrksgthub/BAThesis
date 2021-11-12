@@ -1,6 +1,5 @@
 package Datatypes;
 
-import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -9,17 +8,11 @@ import java.util.*;
 public class SPQTree {
 
     SPQNode root;
-    Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable = new Hashtable<>();
-    Set<SPQNode> visited = new LinkedHashSet<SPQNode>();
-    DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<Vertex, DefaultEdge>(DefaultEdge.class);
-    Hashtable<SPQNode, HashSet<SPQNode>> vertexAdjMap = new Hashtable<>();
+    Set<SPQNode> visited = new LinkedHashSet<>();
+    DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
 
     public DirectedMultigraph<Vertex, DefaultEdge> getConstructedGraph() {
         return constructedGraph;
-    }
-
-    public void setConstructedGraph(DirectedMultigraph<Vertex, DefaultEdge> constructedGraph) {
-        this.constructedGraph = constructedGraph;
     }
 
     public SPQTree(SPQNode root) {
@@ -32,34 +25,12 @@ public class SPQTree {
         return visited;
     }
 
-    public void setVisited(Set<SPQNode> visited) {
-        this.visited = visited;
-    }
-
     public SPQNode getRoot() {
         return root;
     }
 
     public void setRoot(SPQNode root) {
         this.root = root;
-    }
-
-    public Hashtable<SPQNode, List<SPQNode>> getNodeTOedgesTable() {
-        return nodeTOedgesTable;
-    }
-
-    public void setNodeTOedgesTable(Hashtable<SPQNode, List<SPQNode>> nodeTOedgesTable) {
-        this.nodeTOedgesTable = nodeTOedgesTable;
-    }
-
-    public void fillNodeToEdgesTable(SPQNode root) {
-
-        nodeTOedgesTable.putIfAbsent(root, root.mergedChildren);
-
-        for (SPQNode node : root.mergedChildren
-        ) {
-            fillNodeToEdgesTable(node);
-        }
     }
 
     public void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root, Set<SPQNode> visited) {
@@ -78,16 +49,6 @@ public class SPQTree {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());
             constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());
-        }
-
-    }
-
-    public void determineAdjecents() {
-
-        for (Vertex vertex : constructedGraph.vertexSet()
-        ) {
-            Set<Vertex> adjSetStart = Graphs.neighborSetOf(constructedGraph, vertex);
-
         }
 
     }

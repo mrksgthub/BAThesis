@@ -1,8 +1,8 @@
 package Visualizing;
 
 import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
 import Datatypes.TupleEdge;
+import Datatypes.Vertex;
 import Helperclasses.GraphHelper;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
@@ -11,7 +11,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +22,7 @@ public class HorizontalEdgeFlow implements Runnable {
     Map<Vertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList = new ArrayList<>();
+    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList;
     PlanarGraphFace<Vertex, DefaultEdge> outerFace;
     Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
     private Thread t;
@@ -53,68 +52,12 @@ public class HorizontalEdgeFlow implements Runnable {
 
     }
 
-    public Map<Vertex, Integer> getSupplyMap() {
-        return supplyMap;
-    }
-
-    public void setSupplyMap(Map<Vertex, Integer> supplyMap) {
-        this.supplyMap = supplyMap;
-    }
-
-    public Map<DefaultWeightedEdge, Integer> getLowerMap() {
-        return lowerMap;
-    }
-
-    public void setLowerMap(Map<DefaultWeightedEdge, Integer> lowerMap) {
-        this.lowerMap = lowerMap;
-    }
-
-    public Map<DefaultWeightedEdge, Integer> getUpperMap() {
-        return upperMap;
-    }
-
-    public void setUpperMap(Map<DefaultWeightedEdge, Integer> upperMap) {
-        this.upperMap = upperMap;
-    }
-
-    public List<PlanarGraphFace<Vertex, DefaultEdge>> getRectangleList() {
-        return rectangleList;
-    }
-
-    public void setRectangleList(List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList) {
-        this.rectangleList = rectangleList;
-    }
-
-    public PlanarGraphFace<Vertex, DefaultEdge> getOuterFace() {
-        return outerFace;
-    }
-
-    public void setOuterFace(PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
-        this.outerFace = outerFace;
-    }
-
     public Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> getEdgeToArcMap() {
         return edgeToArcMap;
     }
 
-    public void setEdgeToArcMap(Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap) {
-        this.edgeToArcMap = edgeToArcMap;
-    }
-
     public MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> getMinimumCostFlow() {
         return minimumCostFlow;
-    }
-
-    public void setMinimumCostFlow(MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow) {
-        this.minimumCostFlow = minimumCostFlow;
-    }
-
-    public HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> getEdgeToFAceMap() {
-        return edgeToFAceMap;
-    }
-
-    public void setEdgeToFAceMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> edgeToFAceMap) {
-        this.edgeToFAceMap = edgeToFAceMap;
     }
 
     public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {
@@ -126,6 +69,7 @@ public class HorizontalEdgeFlow implements Runnable {
 
 
         supplyMap.put(outerFace, 0);
+        // Erstellt die Bögen vom outer Face zu den inneren Faces am unteren Rand der äußeren Facette
         for (TupleEdge<Vertex, Vertex> edge :
                 this.outerFace.getSidesMap().get(0)) {
             PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
@@ -140,7 +84,7 @@ public class HorizontalEdgeFlow implements Runnable {
             lowerMap.put(e, 1);
         }
 
-
+        // Gehe alle inneren Facetten durch, um die Bögen von der Facette face zur darüberliegenden Facetten
         for (int j = 0; j < rectangleList.size(); j++) {
             Vertex face = rectangleList.get(j);
             networkGraph.addVertex(face);

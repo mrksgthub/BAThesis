@@ -16,12 +16,12 @@ public class MaxFlowImp {
     int n;
     HashMap<Vertex, Integer> treeVertexIntergerHashMap = new HashMap<>();
     Vertex[] treeVertexArr;
-    ArrayList<EdmondsKarp.Edge>[] outgoingEdgeLists;
+    ArrayList<Edge>[] outgoingEdgeLists;
     boolean[] visited;
     int source = 0;
     int sink;
     HashMap<DefaultWeightedEdge, Double> maxFlow = new HashMap<>();
-    List<EdmondsKarp.Edge> edges = new ArrayList<>();
+    List<Edge> edges = new ArrayList<>();
 
 
     /**
@@ -36,7 +36,7 @@ public class MaxFlowImp {
         n = networkGraph.vertexSet().size();
         sink = n - 1;
         treeVertexArr = new Vertex[n];
-        outgoingEdgeLists = new ArrayList[n];
+        outgoingEdgeLists = (ArrayList<Edge>[]) new ArrayList[n];
         visited = new boolean[n];
 
         // initialise Arrays

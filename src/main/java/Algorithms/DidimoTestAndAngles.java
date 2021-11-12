@@ -90,7 +90,7 @@ public class DidimoTestAndAngles {
                 }
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
-                MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
                 test.run3();
             }
             long stopTime3 = System.currentTimeMillis();

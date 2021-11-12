@@ -277,6 +277,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                 faceObj.getOrthogonalRep().put(pair, 999);
 
 
+                // Bestimmung einer Facette: Nachdem man ein Startknoten gefunden hat sucht man ab jetzt immer den Folgeknoten bis man wieder am Startknoten ankommt
                 while (nextVertex != startVertex) {
 
                     //         faceObj.getvSet().add(nextVertex);
@@ -291,13 +292,12 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                     faceObj.getOrthogonalRep().put(vvPair, 999);
 
                     pairBooleanHashtable.put(vvPair, true);
-                    //.add(edgePair);
                     edgeList.add(vvPair);
                     face.add(nextVertex);
                     visitsMap2.merge(vvPair, 1, Integer::sum);
 
                 }
-                faceObj.computeEdgeToIndexMap();
+             //   faceObj.computeEdgeToIndexMap();
                 listOfFaces2.add(face);
             }
 

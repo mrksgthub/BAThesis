@@ -49,13 +49,13 @@ public class basicMainClass {
 
         SPQExporter spqExporter = new SPQExporter(tree);
         //      spqExporter.run(root);
-        spqExporter.run(root, "C:/a.txt");
+        spqExporter.run(root, "C:/a.dot");
 
 
         //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\55664N2389F.txt");
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\163386N20963F.txt");
         //Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\GraphInvalid\\38321N2774F.txt");
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
+        SPQImporter spqImporter = new SPQImporter("C:/a.dot");
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/bug - Kopie.txt");
       //   Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/b.txt");
       //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/testGraph.txt");
@@ -77,7 +77,7 @@ public class basicMainClass {
         GraphValidifier graphValidifier = new GraphValidifier(tree.getConstructedGraph(), treeVertexFaceGenerator.getPlanarGraphFaces());
         graphValidifier.run();
 
-        GraphHelper.writeTODOTTreeVertex(tree.getConstructedGraph(), "C:/a-constructedGraph.txt");
+        GraphHelper.writeTODOTTreeVertex(tree.getConstructedGraph(), "C:/a-constructedGraph.dot");
 
 
         HashMap parentsList = new HashMap<>();
@@ -119,7 +119,7 @@ public class basicMainClass {
         //  Algorithms.Flow.TamassiaRepresentation tamassiaRepresentation = new Algorithms.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
         //   tamassiaRepresentation.run();
         long startTime2 = System.currentTimeMillis();
-        MaxFlow test = new MaxFlow(tree, root, treeVertexFaceGenerator);
+        MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
@@ -141,7 +141,7 @@ public class basicMainClass {
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
-        rectangulator.getOuterFace().setOrientations();
+        rectangulator.getOuterFace().setOrientationsOuterFacette();
 
 
         Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularFaceMap(), rectangulator.getOuterFace());
@@ -151,7 +151,7 @@ public class basicMainClass {
 
 
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.getOriginalFaceList(), rectangulator.getOuterFace());
-        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
+         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 

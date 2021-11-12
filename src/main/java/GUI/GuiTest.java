@@ -19,7 +19,6 @@ import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
 
 
-
 public class GuiTest extends JFrame {
 
 
@@ -50,57 +49,6 @@ public class GuiTest extends JFrame {
 
     public GuiTest() {
 
-       /* button2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GuiDialog dialog1 = new GuiDialog();
-                dialog1.pack();
-                dialog1.setVisible(true);
-                opsField.setText("Ops: " + dialog1.ops);
-                ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
-                ops = dialog1.ops;
-                chanceOfP = dialog1.chanceOfP;
-
-
-                worker = new Thread() {
-
-
-                    public void run() {
-
-                        GraphGenerators.SPQGenerator spqGenerator = new GraphGenerators.SPQGenerator(ops, chanceOfP);
-                        try {
-
-                            Thread t1 = new Thread(spqGenerator);
-                            t1.start();
-                            System.out.println("Graph is being Generated");
-                   *//*         while (!Thread.interrupted() && t1.isAlive()) {
-                                try {
-                                    Thread.sleep(Integer.MAX_VALUE);
-                                } catch (InterruptedException ex) {
-                                    ex.printStackTrace();
-                                    spqGenerator.shutdown();
-                                    System.out.println("Unterbochen");
-                                }
-
-                            }*//*
-
-                            //     spqGenerator.run(ops, chanceOfP);
-                            t1.join();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        tree = spqGenerator.getTree();
-                        root = spqGenerator.getRoot();
-                        status.setText("Graph Generated");
-                    }
-
-                };
-                worker.start();
-            }
-
-
-        });*/
-
 
         generateGraphButton.addActionListener(new ActionListener() {
 
@@ -124,7 +72,7 @@ public class GuiTest extends JFrame {
                             hasValidGraph = false;
                             Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
-                            spqGenerator.setCounter(0);;
+                            spqGenerator.setCounter(0);
                             while (!hasValidGraph && !isCancelled()) {
                                 hasValidGraph = spqGenerator.generateGraph(spqGenerator.getSize(), chanceOfP);
 

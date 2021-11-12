@@ -28,26 +28,6 @@ public class Orientator<E> {
         return originalFaceList;
     }
 
-    public void setOriginalFaceList(List<PlanarGraphFace<Vertex, DefaultEdge>> originalFaceList) {
-        this.originalFaceList = originalFaceList;
-    }
-
-    public PlanarGraphFace<Vertex, DefaultEdge> getOuterFace() {
-        return outerFace;
-    }
-
-    public void setOuterFace(PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
-        this.outerFace = outerFace;
-    }
-
-    public HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> getEdgeFaceNeighbourMap() {
-        return edgeFaceNeighbourMap;
-    }
-
-    public void setEdgeFaceNeighbourMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap) {
-        this.edgeFaceNeighbourMap = edgeFaceNeighbourMap;
-    }
-
     public void run() {
 
 

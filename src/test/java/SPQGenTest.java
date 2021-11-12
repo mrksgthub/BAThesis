@@ -96,7 +96,7 @@ public class SPQGenTest {
 
     }
 
-
+/*
     @Test
     public void teilerGraphgen() throws IOException {
 
@@ -332,7 +332,7 @@ public class SPQGenTest {
         System.out.println("Test");
 
 
-    }
+    }*/
 
     public Hashtable<Vertex, ArrayList<Vertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
@@ -365,6 +365,7 @@ public class SPQGenTest {
     }
 
 
+/*
     @Test
     public void teilergraphMassTest() {
 
@@ -378,6 +379,7 @@ public class SPQGenTest {
         }
 
     }
+*/
 
 
     private void checkSpiralitiesWithinBounds(SPQTree tree) {

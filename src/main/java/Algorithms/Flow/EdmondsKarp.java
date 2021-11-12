@@ -71,7 +71,6 @@ public class EdmondsKarp extends MaxFlowImp {
 
             for (Edge edge : outgoingEdgeLists[current]
             ) {
-                int remainingCap = (int) (edge.capacity - edge.flow);
                 if (parent[edge.v] == null && edge.capacity > edge.flow && edge.v != source) {
                     visited[edge.v] = true;
                     q.offer(edge.v);

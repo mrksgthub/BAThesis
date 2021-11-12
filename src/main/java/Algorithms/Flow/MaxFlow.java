@@ -19,15 +19,13 @@ public class MaxFlow {
     public Map<DefaultWeightedEdge, Double> flowMap2;
     private Vertex solverSource;
     private Vertex solverSink;
-    private SPQTree tree;
-    private SPQNode root;
+    private final SPQTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
     private int counter;
-    private DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+    private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
-    public MaxFlow(SPQTree tree, SPQNode root, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
+    public MaxFlow(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
         this.tree = tree;
-        this.root = root;
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;
     }
 
@@ -117,7 +115,7 @@ public class MaxFlow {
         simple.addVertex(solverSink);
 
         // solverSource to Vertex
-        int neighbors = 0;
+        int neighbors;
         counter = 0;
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
@@ -129,11 +127,10 @@ public class MaxFlow {
 
         }
 
-        int neighborOfFace = 0;
+        int neighborOfFace;
 
         // OuterFace
         List<Vertex> vertexList = treeVertexFaceGenerator.getListOfFaces2().get(0);
-        Vertex outerFace = treeVertexFaceGenerator.getPlanarGraphFaces().get(0);
 
         // vertexList.size() - 1 Aufgrund der Struktur von vertexList: Das erste und letzte Element sind die gleichen die Formel bleibt 2*d(f) +/- 4
         neighborOfFace = 2 * (vertexList.size() - 1) + 4 - (vertexList.size() - 1);
