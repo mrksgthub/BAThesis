@@ -11,13 +11,11 @@ import java.util.List;
 public class Angulator {
 
 
-    private final Hashtable<Vertex, ArrayList<Vertex>> embedding;
     private final SPQTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
 
-    public Angulator(SPQTree tree, Hashtable<Vertex, ArrayList<Vertex>> embedding, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
+    public Angulator(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
         this.tree = tree;
-        this.embedding = embedding;
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;
 
     }

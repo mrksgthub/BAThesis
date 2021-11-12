@@ -36,18 +36,18 @@ public class GraphValidifier {
         }
 
         HashMap<Object, Integer> vertexMap = new HashMap<>();
-        HashMap<Object, Object> EdgeMap = new HashMap<>();
+        HashMap<Object, Object> edgeMap = new HashMap<>();
 
         for (PlanarGraphFace face : planarGraphFaces
         ) {
-            for ( Object edge :  face.getOrthogonalRep().keySet()
+            for ( Object edge :  face.getEdgeList()
                     ) {
                 TupleEdge<Vertex, Vertex> tuple = (TupleEdge<Vertex, Vertex>) edge;
 
                 if (vertexMap.putIfAbsent( tuple.left, 1) != null) {
                     vertexMap.put(tuple.left, vertexMap.get(tuple.left)+1);
                 }
-                if (EdgeMap.get(tuple.left) == face) {
+                if (edgeMap.get(tuple.left) == face) {
                     throw new Exception("Vertex appears twice in edgelist of a face");
                 }
 

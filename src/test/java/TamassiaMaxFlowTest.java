@@ -30,7 +30,7 @@ public class TamassiaMaxFlowTest {
         SPQNode root = tree.getRoot();
 
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-        Embedder embedder = new Embedder(embedding, root);
+        Embedder embedder = new Embedder(embedding);
         embedder.run(root);
 
 

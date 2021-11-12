@@ -70,7 +70,7 @@ public class graphTester {
 
 
                 Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding, root);
+                Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -90,7 +90,7 @@ public class graphTester {
 
 
                 root.getMergedChildren().get(0).computeSpirality();
-                Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
                 angulator.run();
 
 
@@ -182,7 +182,7 @@ public class graphTester {
 
 
                 Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding, root);
+                Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -213,7 +213,7 @@ public class graphTester {
                     didimoRepresentability.run();
 
                     root.getMergedChildren().get(0).computeSpirality();
-                    Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+                    Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
                     angulator.run();
 
                     stopTime = System.currentTimeMillis();

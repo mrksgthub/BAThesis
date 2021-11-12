@@ -67,7 +67,7 @@ public class basicMainClass {
 
 
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-        Embedder embedder = new Embedder(embedding, root);
+        Embedder embedder = new Embedder(embedding);
         embedder.run(root);
 
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -98,7 +98,7 @@ public class basicMainClass {
         root.getMergedChildren().get(0).computeSpirality();
 
 
-        Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+        Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
              angulator.run();

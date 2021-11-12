@@ -1,3 +1,5 @@
+package Testing;
+
 import Algorithms.Embedder;
 import Algorithms.FaceGenerator;
 import Datatypes.SPQNode;
@@ -59,7 +61,7 @@ public class graphBuilderST {
 
 
                 Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding, root);
+                Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);

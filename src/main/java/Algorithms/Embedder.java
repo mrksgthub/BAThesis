@@ -9,12 +9,10 @@ import java.util.Hashtable;
 public class Embedder {
 
 
-    private final SPQNode root;
     private final Hashtable<Vertex, ArrayList<Vertex>> embedding;
 
-    public Embedder(Hashtable<Vertex, ArrayList<Vertex>> embedding, SPQNode root) {
+    public Embedder(Hashtable<Vertex, ArrayList<Vertex>> embedding) {
         this.embedding = embedding;
-        this.root = root;
 
     }
 

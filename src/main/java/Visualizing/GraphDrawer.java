@@ -1,7 +1,6 @@
 package Visualizing;
 
 import Algorithms.Coordinator;
-import Algorithms.DidimoTestAndAngles;
 import Datatypes.PlanarGraphFace;
 import Datatypes.Vertex;
 import Datatypes.TupleEdge;
@@ -25,16 +24,8 @@ public class GraphDrawer implements Runnable {
     private final List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
     private final Hashtable<Vertex, ArrayList<Vertex>> embedding;
     double time = Integer.MAX_VALUE;
-    private DidimoTestAndAngles angles;
-    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2;
+    private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2;
 
-
-    public GraphDrawer(DidimoTestAndAngles angles) {
-        this.angles = angles;
-        planarGraphFaces = angles.getTreeVertexFaceGenerator().getPlanarGraphFaces();
-        embedding = angles.getEmbedding();
-        adjFaces2 = angles.getTreeVertexFaceGenerator().getAdjFaces2();
-    }
 
     public GraphDrawer(List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2) {
         this.planarGraphFaces = planarGraphFaces;
@@ -95,7 +86,7 @@ public class GraphDrawer implements Runnable {
         coordinator.run();
 
 
-        Graph graph = new SingleGraph("Tutorial 1");
+        Graph graph = new SingleGraph("Test");
         for (Vertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
 
             if (!vertex.isDummy()) {

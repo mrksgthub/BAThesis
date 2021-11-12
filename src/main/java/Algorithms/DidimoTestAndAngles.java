@@ -67,7 +67,7 @@ public class DidimoTestAndAngles {
     public void run(boolean wasAlgorithmnSelected, GraphDrawOptions.WinkelAlgorithmus algorithmm) {
         if (wasAlgorithmnSelected) {
             embedding = new Hashtable<>();
-            Embedder embedder = new Embedder(embedding, root);
+            Embedder embedder = new Embedder(embedding);
             embedder.run(root);
 
             treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
@@ -82,7 +82,7 @@ public class DidimoTestAndAngles {
 
                 root.getMergedChildren().get(0).computeSpirality();
 
-                Angulator angulator = new Angulator(tree, embedding, treeVertexFaceGenerator);
+                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
                 try {
                     angulator.run();
                 } catch (Exception ex) {

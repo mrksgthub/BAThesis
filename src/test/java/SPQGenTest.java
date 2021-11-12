@@ -1,25 +1,17 @@
-import Algorithms.Coordinator;
 import Algorithms.Embedder;
 import Algorithms.FaceGenerator;
 import Algorithms.Flow.TamassiaRepresentation;
 import Datatypes.*;
 import Datatypes.Vertex;
-import GraphGenerators.GraphgenSplitGraph;
 import GraphGenerators.SPQGenerator;
-import Helperclasses.GraphHelper;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
-import Visualizing.*;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.DirectedWeightedMultigraph;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.*;
 
 
@@ -86,7 +78,7 @@ public class SPQGenTest {
         }
 
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-        Embedder embedder = new Embedder(embedding, root);
+        Embedder embedder = new Embedder(embedding);
         embedder.run(root);
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
