@@ -30,6 +30,7 @@ public class SPQGenTest {
     }
 
 
+/*
     @Test
     public void teilGraphTest() throws Exception {
 
@@ -41,7 +42,9 @@ public class SPQGenTest {
 
 
     }
+*/
 
+/*
 
     public void teilGraphTestRunner() throws Exception {
 
@@ -87,6 +90,7 @@ public class SPQGenTest {
 
 
     }
+*/
 
 /*
     @Test
@@ -174,7 +178,7 @@ public class SPQGenTest {
             //  Helperclasses.GraphHelper.printToDOTTreeVertex(tree.constructedGraph);
         }
 
-        //  Algorithms.Angulator angulator = new Algorithms.Angulator(tree, embedding, treeVertexFaceGenerator);
+        //  Algorithms.Didimo.Angulator angulator = new Algorithms.Didimo.Angulator(tree, embedding, treeVertexFaceGenerator);
         //   angulator.run();
 
         //  Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);

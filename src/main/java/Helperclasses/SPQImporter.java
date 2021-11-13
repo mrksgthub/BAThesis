@@ -13,12 +13,50 @@ public class SPQImporter {
 
     private final String fileName;
     HashMap<String, SPQNode> nameToNode = new HashMap<>();
+    HashMap<SPQNode, List<SPQNode>> nodeToAdjList = new HashMap<>();
+    HashMap<Vertex, Boolean> treeMap = new HashMap<>();
     HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
     SPQPNode root;
     SPQTree tree;
 
     public SPQImporter(String s) {
         this.fileName = s;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public HashMap<String, SPQNode> getNameToNode() {
+        return nameToNode;
+    }
+
+    public void setNameToNode(HashMap<String, SPQNode> nameToNode) {
+        this.nameToNode = nameToNode;
+    }
+
+    public HashMap<SPQNode, List<SPQNode>> getNodeToAdjList() {
+        return nodeToAdjList;
+    }
+
+    public void setNodeToAdjList(HashMap<SPQNode, List<SPQNode>> nodeToAdjList) {
+        this.nodeToAdjList = nodeToAdjList;
+    }
+
+    public HashMap<Vertex, Boolean> getTreeMap() {
+        return treeMap;
+    }
+
+    public void setTreeMap(HashMap<Vertex, Boolean> treeMap) {
+        this.treeMap = treeMap;
+    }
+
+    public HashMap<String, Vertex> getNameToTreeVertex() {
+        return nameToTreeVertex;
+    }
+
+    public void setNameToTreeVertex(HashMap<String, Vertex> nameToTreeVertex) {
+        this.nameToTreeVertex = nameToTreeVertex;
     }
 
     public SPQPNode getRoot() {
@@ -65,7 +103,7 @@ public class SPQImporter {
             for (Vertex v: nameToTreeVertex.values()
                  ) {
                 if (v.getName().equals("vsource")) {
-                    v.setId(0);
+                    v.setId(0);;
                 } else if ((v.getName().equals("vsink"))) {
                     v.setId( nameToTreeVertex.values().size()-1);
                 } else {

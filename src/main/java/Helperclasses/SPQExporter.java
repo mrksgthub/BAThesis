@@ -41,7 +41,7 @@ public class SPQExporter {
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-        System.out.println(writer);
+        //   System.out.println(writer.toString());
     }
 
     public void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
@@ -128,7 +128,7 @@ public class SPQExporter {
 
     public void run(SPQNode root, String fileName) {
 
-     //   printTODOTSPQNode(treeToDOT(root, 2)); // Im Moment inaktiv
+        printTODOTSPQNode(treeToDOT(root, 2));
         writeTODOTSPQNode(treeToDOT(root, 2), fileName);
 
     }

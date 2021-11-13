@@ -1,4 +1,4 @@
-package Algorithms;
+package Algorithms.Didimo;
 
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;

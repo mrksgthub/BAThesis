@@ -1,4 +1,4 @@
-package Algorithms;
+package Visualizing;
 
 import Datatypes.PlanarGraphFace;
 import Datatypes.Vertex;
@@ -252,7 +252,7 @@ public class Coordinator {
         }
 
 
-        System.out.println("Algorithms.Coordinator finished");
+        System.out.println("Visualizing.Coordinator finished");
     }
 
 

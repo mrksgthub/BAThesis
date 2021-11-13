@@ -1,8 +1,8 @@
 package Visualizing;
 
 import Datatypes.PlanarGraphFace;
-import Datatypes.TupleEdge;
 import Datatypes.Vertex;
+import Datatypes.TupleEdge;
 import Helperclasses.GraphHelper;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
@@ -11,6 +11,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class HorizontalEdgeFlow implements Runnable {
     Map<Vertex, Integer> supplyMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList;
+    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList = new ArrayList<>();
     PlanarGraphFace<Vertex, DefaultEdge> outerFace;
     Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
     private Thread t;
@@ -52,6 +53,10 @@ public class HorizontalEdgeFlow implements Runnable {
 
     }
 
+    public Map<Vertex, Integer> getSupplyMap() {
+        return supplyMap;
+    }
+
     public Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> getEdgeToArcMap() {
         return edgeToArcMap;
     }
@@ -69,7 +74,6 @@ public class HorizontalEdgeFlow implements Runnable {
 
 
         supplyMap.put(outerFace, 0);
-        // Erstellt die Bögen vom outer Face zu den inneren Faces am unteren Rand der äußeren Facette
         for (TupleEdge<Vertex, Vertex> edge :
                 this.outerFace.getSidesMap().get(0)) {
             PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
@@ -84,7 +88,7 @@ public class HorizontalEdgeFlow implements Runnable {
             lowerMap.put(e, 1);
         }
 
-        // Gehe alle inneren Facetten durch, um die Bögen von der Facette face zur darüberliegenden Facetten
+
         for (int j = 0; j < rectangleList.size(); j++) {
             Vertex face = rectangleList.get(j);
             networkGraph.addVertex(face);

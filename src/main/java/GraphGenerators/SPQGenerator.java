@@ -146,7 +146,6 @@ public class SPQGenerator implements Callable, Runnable {
 
         // normale repräsentation
         root.generateQstarNodes();
-
         root.computeAdjecentVertices();
 
 

@@ -45,7 +45,7 @@ public class SPQTree {
             root.setStartVertex(root.getMergedChildren().get(0).getStartVertex());
             root.setSinkVertex(root.getMergedChildren().get(root.getMergedChildren().size() - 1).getSinkVertex());
 
-        } else { // ist eine Q-Node
+        } else {
             constructedGraph.addVertex(root.getStartVertex());
             constructedGraph.addVertex(root.getSinkVertex());
             constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());

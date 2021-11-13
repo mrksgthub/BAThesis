@@ -17,12 +17,13 @@ public class Orientator<E> {
     HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap;
 
 
-    public Orientator(HashMap<PlanarGraphFace<Vertex, DefaultEdge>, PlanarGraphFace<Vertex, DefaultEdge>> rectangularFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
+    public Orientator(HashMap<PlanarGraphFace<Vertex, DefaultEdge>, PlanarGraphFace<Vertex, DefaultEdge>> rectangularInnerFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
 
-        originalFaceList.addAll(rectangularFaceMap.keySet());
+        originalFaceList.addAll(rectangularInnerFaceMap.keySet());
         this.outerFace = outerFace;
 
     }
+
 
     public List<PlanarGraphFace<Vertex, DefaultEdge>> getOriginalFaceList() {
         return originalFaceList;
@@ -69,8 +70,6 @@ public class Orientator<E> {
                 discoveredFaces.add(face);
             }
         }
-
-        int i = 0;
 
         // innere Facetten
         while (discoveredFaces.size() > 0) {

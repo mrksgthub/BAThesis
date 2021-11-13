@@ -1,7 +1,7 @@
 package Testing;
 
-import Algorithms.Angulator;
-import Algorithms.DidimoRepresentability;
+import Algorithms.Didimo.Angulator;
+import Algorithms.Didimo.DidimoRepresentability;
 import Algorithms.Embedder;
 import Algorithms.FaceGenerator;
 import Algorithms.Flow.MaxFlow;

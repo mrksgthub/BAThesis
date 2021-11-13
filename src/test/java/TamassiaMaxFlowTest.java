@@ -17,6 +17,7 @@ import java.util.Hashtable;
 public class TamassiaMaxFlowTest {
 
 
+/*
     @Test
     void name() {
 
@@ -70,4 +71,6 @@ public class TamassiaMaxFlowTest {
         }
 
     }
+}
+*/
 }

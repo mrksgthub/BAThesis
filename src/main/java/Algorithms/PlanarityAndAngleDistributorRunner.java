@@ -1,5 +1,7 @@
 package Algorithms;
 
+import Algorithms.Didimo.Angulator;
+import Algorithms.Didimo.DidimoRepresentability;
 import Algorithms.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
@@ -10,7 +12,7 @@ import org.jgrapht.graph.DefaultEdge;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class DidimoTestAndAngles {
+public class PlanarityAndAngleDistributorRunner {
 
 
     SPQTree tree;
@@ -19,7 +21,7 @@ public class DidimoTestAndAngles {
     FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
     Hashtable<Vertex, ArrayList<Vertex>> embedding;
 
-    public DidimoTestAndAngles(SPQTree tree, SPQNode root) {
+    public PlanarityAndAngleDistributorRunner(SPQTree tree, SPQNode root) {
         this.tree = tree;
         this.root = root;
     }

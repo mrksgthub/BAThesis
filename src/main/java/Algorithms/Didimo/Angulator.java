@@ -1,5 +1,6 @@
-package Algorithms;
+package Algorithms.Didimo;
 
+import Algorithms.FaceGenerator;
 import Datatypes.*;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -11,10 +12,11 @@ import java.util.List;
 public class Angulator {
 
 
+
     private final SPQTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
 
-    public Angulator(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
+    public Angulator(SPQTree tree,  FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
         this.tree = tree;
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;
 
@@ -40,12 +42,12 @@ public class Angulator {
 
         long startTime3 = System.currentTimeMillis();
         for (TupleEdge<Vertex, Vertex> pair :
-                treeVertexFaceGenerator.adjFaces2.keySet()) {
+                treeVertexFaceGenerator.getAdjFaces2().keySet()) {
             pairIntegerMap.putIfAbsent(pair, 0);
         }
 
         // Füge Winkel zu den Faces hinzu
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
             for (TupleEdge<Vertex, Vertex> pair :
                     face.getOrthogonalRep().keySet()) {
@@ -56,7 +58,7 @@ public class Angulator {
 
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
-        System.out.println("Algorithms.Angulator Section  :" + elapsedTime3);
+        System.out.println("Algorithms.Didimo.Angulator Section  :" + elapsedTime3);
     }
 
 
@@ -66,7 +68,7 @@ public class Angulator {
                 root.getMergedChildren()) {
             winkelHinzufuegen(node, hashmap);
         }
-        if (root.getMergedChildren().size() > 1 && !root.isRoot()) {
+        if (root.getMergedChildren().size() > 1 && !root.isIsroot()) { // IsRoot IS WICHTIG!!
             root.computeOrthogonalRepresentation(hashmap);
         }
 
@@ -90,7 +92,7 @@ public class Angulator {
         HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>();
 
         for (TupleEdge<Vertex, Vertex> pair :
-                treeVertexFaceGenerator.adjFaces2.keySet()) {
+                treeVertexFaceGenerator.getAdjFaces2().keySet()) {
             pairIntegerMap.put(pair, 0);
         }
 
@@ -101,7 +103,7 @@ public class Angulator {
 
 
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.planarGraphFaces
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
             int edgeCount = 0;
             for (TupleEdge<Vertex, Vertex> pair :

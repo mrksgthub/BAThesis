@@ -1,9 +1,8 @@
 package Visualizing;
 
-import Algorithms.Coordinator;
 import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
 import Datatypes.TupleEdge;
+import Datatypes.Vertex;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -59,7 +58,7 @@ public class GraphDrawer implements Runnable {
 
 
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
-        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 
@@ -82,11 +81,12 @@ public class GraphDrawer implements Runnable {
 
         System.out.println("Nach den FlowNetworks");
 
+        // Lege Koordinaten fest
         Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
-
-        Graph graph = new SingleGraph("Test");
+        // Graphstream
+        Graph graph = new SingleGraph("Graph");
         for (Vertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
 
             if (!vertex.isDummy()) {

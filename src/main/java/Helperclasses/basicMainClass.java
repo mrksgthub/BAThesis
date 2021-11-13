@@ -1,15 +1,14 @@
 package Helperclasses;
 
 import Algorithms.*;
+import Algorithms.Didimo.Angulator;
+import Algorithms.Didimo.DidimoRepresentability;
 import Algorithms.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;
 import GraphGenerators.SPQGenerator;
-import Visualizing.HorizontalEdgeFlow;
-import Visualizing.Orientator;
-import Visualizing.Rectangulator;
-import Visualizing.VerticalEdgeFlow;
+import Visualizing.*;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -40,7 +39,7 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(3000, 10);
+        SPQGenerator spqGenerator = new SPQGenerator(30, 10);
         spqGenerator.run();
 
 
@@ -105,7 +104,7 @@ public class basicMainClass {
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
-        System.out.println("Algorithms.Angulator  :" + elapsedTime3);
+        System.out.println("Algorithms.Didimo.Angulator  :" + elapsedTime3);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -123,7 +122,7 @@ public class basicMainClass {
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
-        test.run3();
+   //     test.run3();
 
 
         stopTime = System.currentTimeMillis();

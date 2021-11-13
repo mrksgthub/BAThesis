@@ -152,14 +152,14 @@ public class Rectangulator<E> {
                         originaledgeToFaceMap.put(edge, outerFace);
 
                     }
-                   //  outerFace.computeEdgeToIndexMap();
+                  //  outerFace.computeEdgeToIndexMap();
 
                     newOrthogonalRep.put(edge1, 1);
                     newOrthogonalRep.put(edge2, 1);
                     newOrthogonalRep.put(edge3, 1);
                     newOrthogonalRep.put(edge4, 1);
                     face.setOrientationsOuterFacette();
-                 //   face.computeEdgeToIndexMap();
+            //        face.computeEdgeToIndexMap();
 
                     computeExternalFront(orthogonalRep, fronts, externalFronts, nexts, face.getEdgeOrientationMap(), outerRectangle, face.getEdgeList());
 
@@ -282,7 +282,7 @@ public class Rectangulator<E> {
                         }
                         rectangularFaceMap.remove(faceObj);
                     }
-            //        faceObj.computeEdgeToIndexMap();
+             //       faceObj.computeEdgeToIndexMap();
                     for (TupleEdge<Vertex, Vertex> edge : faceObj.getEdgeList()
                     ) {
                         originaledgeToFaceMap.put(new TupleEdge<>(edge.getLeft(), edge.getRight()), (PlanarGraphFace<Vertex, DefaultEdge>) faceObj);
