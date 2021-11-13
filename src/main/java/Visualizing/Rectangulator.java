@@ -351,11 +351,11 @@ public class Rectangulator<E> {
                 replacerEdge.add(new TupleEdge<>(restOfOldFront.getRight(), restOfOldFront.getLeft()));
 
                 newOrthogonalRep.put(possibleEdge, 0);
-                possibleEdge.setWinkel(0);
+          //      possibleEdge.setWinkel(0);
                 newOrthogonalRep.put(projectedEdge, 1);
-                projectedEdge.setWinkel(1);
+         //       projectedEdge.setWinkel(1);
                 newOrthogonalRep.put(restOfOldFront, newOrthogonalRep.get(front));
-                restOfOldFront.setWinkel(newOrthogonalRep.get(front));
+          //      restOfOldFront.setWinkel(newOrthogonalRep.get(front));
 
                 // Falls die Kante, welche eine Front hat geteilt wird, daher muss die Frontsmap geupdated werden, da sonst die front nicht getroffen wird
                 if (externalFronts.get(front) != null) {
@@ -376,9 +376,9 @@ public class Rectangulator<E> {
                 nexts.put(possibleEdge, projectedEdge);
                 nexts.put(projectedEdge, restOfOldFront);
                 newOrthogonalRep.put(projectedEdgeReverse, 1);
-                projectedEdgeReverse.setWinkel(1);
+             //   projectedEdgeReverse.setWinkel(1);
                 newOrthogonalRep.put(new TupleEdge<>(front.getLeft(), front.getRight()), 1);
-                front.setWinkel(1);
+            //    front.setWinkel(1);
 
                 nexts.put(restOfOldFront, edgeThatfollowsOldFront);
                 newFront.add(new TupleEdge<>(restOfOldFront.getLeft(), restOfOldFront.getRight()));

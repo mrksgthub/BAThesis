@@ -43,23 +43,24 @@ public class Angulator {
         long startTime3 = System.currentTimeMillis();
         for (TupleEdge<Vertex, Vertex> pair :
                 treeVertexFaceGenerator.getAdjFaces2().keySet()) {
-            pairIntegerMap.putIfAbsent(pair, 0);
+       //     pairIntegerMap.putIfAbsent(pair, 0);
         }
 
         // Füge Winkel zu den Faces hinzu
         for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
             for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
+                pairIntegerMap.putIfAbsent(pair, 0);
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
             }
         }
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
+    /*    for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
             for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
             }
-        }
+        }*/
 
 
 
