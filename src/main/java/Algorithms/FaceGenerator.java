@@ -93,7 +93,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
     }
 
 
-    public void generateFaces2() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
+    public void generateFaces() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
 
 
        // List<TupleEdge<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());

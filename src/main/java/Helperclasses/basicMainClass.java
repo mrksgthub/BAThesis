@@ -39,7 +39,7 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(30, 10);
+        SPQGenerator spqGenerator = new SPQGenerator(100, 10);
         spqGenerator.run();
 
 
@@ -70,7 +70,7 @@ public class basicMainClass {
         embedder.run(root);
 
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-        treeVertexFaceGenerator.generateFaces2();
+        treeVertexFaceGenerator.generateFaces();
 
 
         GraphValidifier graphValidifier = new GraphValidifier(tree.getConstructedGraph(), treeVertexFaceGenerator.getPlanarGraphFaces());
@@ -94,7 +94,9 @@ public class basicMainClass {
         didimoRepresentability.run();
 
 
-        root.getMergedChildren().get(0).computeSpirality();
+       // root.getMergedChildren().get(0).computeSpirality();
+
+        tree.computeSpirality(root.getMergedChildren().get(0));
 
 
         Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
@@ -122,7 +124,7 @@ public class basicMainClass {
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
-   //     test.run3();
+       // test.run3();
 
 
         stopTime = System.currentTimeMillis();
@@ -140,22 +142,22 @@ public class basicMainClass {
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.initialize();
-        rectangulator.getOuterFace().setOrientationsOuterFacette();
+       // rectangulator.getOuterFace().setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularFaceMap(), rectangulator.getOuterFace());
+        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectuangularInnerFaces(), rectangulator.getOuterFace());
         orientator.run();
 
         System.out.println("Nach Visualizing.Orientator");
 
 
-        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.getOriginalFaceList(), rectangulator.getOuterFace());
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.getOrientatedInnerFaces(), rectangulator.getOuterFace());
          DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 
 
-        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.getOriginalFaceList(), rectangulator.getOuterFace());
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.getOrientatedInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();
@@ -173,7 +175,7 @@ public class basicMainClass {
 
         System.out.println("Nach den FlowNetworks");
 
-        Coordinator coordinator = new Coordinator(rectangulator.getOuterFace(), rectangulator.getRectangularFaceMap(), verticalFlow.getEdgeToArcMap(), horizontalFlow.getEdgeToArcMap(), verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        Coordinator coordinator = new Coordinator(rectangulator.getOuterFace(), rectangulator.getRectuangularInnerFaces(), verticalFlow.getEdgeToArcMap(), horizontalFlow.getEdgeToArcMap(), verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
 

@@ -109,7 +109,7 @@ public class graphBuilder {
                     embedder.run(root);
 
                     FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-                    treeVertexFaceGenerator.generateFaces2();
+                    treeVertexFaceGenerator.generateFaces();
 
 
                     System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());

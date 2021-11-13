@@ -23,6 +23,18 @@ public class SPQQNode extends SPQNode {
     }
 
 
+    @Override
+    public void addToSourceAndSinkLists(SPQNode nodes) {
+        if ((nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q) && nodes.mergedChildren.size() == 0) {
+            if (this.getStartVertex() == nodes.getStartVertex()) {
+                startNodes.add(nodes.getSinkVertex());
+            }
+            if (this.getSinkVertex() == nodes.getSinkVertex()) {
+                sinkNodes.add(nodes.getStartVertex());
+            }
+        }
+    }
+
 
     @Override
     public NodeTypesEnum.NODETYPE getNodeType() {

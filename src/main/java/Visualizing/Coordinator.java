@@ -22,7 +22,7 @@ public class Coordinator {
 
 
     private final PlanarGraphFace<Vertex, DefaultEdge> outerFace;
-    private final HashMap<PlanarGraphFace<Vertex, DefaultEdge>, PlanarGraphFace<Vertex, DefaultEdge>> rectangularFaceMap;
+    private final List<PlanarGraphFace<Vertex, DefaultEdge>> rectangularFaceMap;
     private final Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> horzontalEdgeToArcMap;
     private final Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> verticalEdgeToArcMap;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> horizontalMinCostFlow;
@@ -35,18 +35,17 @@ public class Coordinator {
      *
      *
      *
-     *
-     * @param outerFace
-     * @param rectangularFaceMap
+     *  @param outerFace
+     * @param innerFaceList
      * @param edgeToArcMap - horizontal Edge to Arc Map
      * @param edgeToArcMap1 - vertical Edge to Arc Map
      * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges
      * @param costFlow - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
      */
-    public Coordinator(PlanarGraphFace<Vertex, DefaultEdge> outerFace, HashMap<PlanarGraphFace<Vertex, DefaultEdge>, PlanarGraphFace<Vertex, DefaultEdge>> rectangularFaceMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
+    public Coordinator(PlanarGraphFace<Vertex, DefaultEdge> outerFace, List<PlanarGraphFace<Vertex, DefaultEdge>> innerFaceList, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
 
         this.outerFace = outerFace;
-        this.rectangularFaceMap = rectangularFaceMap;
+        this.rectangularFaceMap = innerFaceList;
         this.horzontalEdgeToArcMap = edgeToArcMap1;
         this.verticalEdgeToArcMap = edgeToArcMap;
         this.horizontalMinCostFlow = costFlow;
@@ -70,7 +69,7 @@ public class Coordinator {
      */
     public void run() {
 
-        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(rectangularFaceMap.keySet());
+        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(rectangularFaceMap);
         List<PlanarGraphFace<Vertex, DefaultEdge>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();
         HashMap<PlanarGraphFace<Vertex, DefaultEdge>, Boolean> visitedMap = new HashMap<>();
@@ -83,7 +82,7 @@ public class Coordinator {
             edgeFaceNeighbourMap.put(edge, outerFace);
         }
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : rectangularFaceMap.keySet()
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : rectangularFaceMap
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {

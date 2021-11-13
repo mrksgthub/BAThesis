@@ -21,11 +21,11 @@ public class SPQGenerator implements Callable, Runnable {
     SPQTree tree;
     int size;
     int chanceOfP;
+    int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
     private long elapsedTime2;
     private GraphgenSplitGraph graphgenSplitGraph;
     private volatile boolean shutdown = false;
-     int counter;
 
     public SPQGenerator(int size, int chanceOfP) {
         this.size = size;
@@ -80,12 +80,12 @@ public class SPQGenerator implements Callable, Runnable {
         this.shutdown = shutdown;
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
-
     public int getCounter() {
         return counter;
+    }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
     }
 
     public GraphgenSplitGraph getGraphgenSplitGraph() {
@@ -125,7 +125,7 @@ public class SPQGenerator implements Callable, Runnable {
 
     }
 
-     public Boolean generateGraph(int size, int chanceOfP) {
+    public Boolean generateGraph(int size, int chanceOfP) {
         Hashtable<Vertex, ArrayList<Vertex>> embedding;
         Boolean check;
         counter++;
@@ -136,20 +136,23 @@ public class SPQGenerator implements Callable, Runnable {
 
 
         root = graphgenSplitGraph.getRoot();
-        root.compactTree();
+        //    root.compactTree();
         System.out.println("SPQ-Trees");
 
         tree = new SPQTree(root);
 
-
+        tree.compactTree(tree.getRoot());
         tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-
+        tree.generateQStarNodes(tree.getRoot());
+        tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
+        tree.generateAdjecencyListMaP(tree.getRoot());
         // normale repräsentation
-        root.generateQstarNodes();
-        root.computeAdjecentVertices();
+        //   root.generateQstarNodes();
+        // root.computeAdjecentVertices();
 
 
-        embedding = erstelleHashtablefuerFacegenerator(tree);
+        /*embedding = erstelleHashtablefuerFacegenerator(tree);*/
+        embedding = tree.getVertexToAdjecencyListMap();
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
             int i = tree.getConstructedGraph().degreeOf(vertex);
@@ -187,11 +190,11 @@ public class SPQGenerator implements Callable, Runnable {
         try {
             //    Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
             FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-            treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
+            treeVertexFaceGenerator.generateFaces(); // counterclockwise = inner, clockwise = outerFacette
             // Zeit2:
             long startTime2 = System.currentTimeMillis();
-         //   DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-         //   treeVertexFaceGenerator.generateCapacities();
+            //   DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
+            //   treeVertexFaceGenerator.generateCapacities();
             MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
             test.run3();
 
@@ -206,7 +209,7 @@ public class SPQGenerator implements Callable, Runnable {
 
         assert (tamassiaValid == check);
         // assert(false);
-       // tamassiaValid = false;
+        // tamassiaValid = false;
         if (tamassiaValid != check) {
             try {
                 SPQExporter spqExporter = new SPQExporter(tree);

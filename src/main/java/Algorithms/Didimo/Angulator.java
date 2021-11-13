@@ -49,11 +49,21 @@ public class Angulator {
         // Füge Winkel zu den Faces hinzu
         for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
         ) {
-            for (TupleEdge<Vertex, Vertex> pair :
-                    face.getOrthogonalRep().keySet()) {
+            for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
                 face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
             }
         }
+
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
+        ) {
+            for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
+                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
+            }
+        }
+
+
+
+
 
 
         long stopTime3 = System.currentTimeMillis();

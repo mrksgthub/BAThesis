@@ -18,6 +18,12 @@ public class Rectangulator<E> {
     PlanarGraphFace<Vertex, DefaultEdge> outerFace = new PlanarGraphFace<>("externalFace");
     int counter = 100;
     List<TupleEdge<Vertex, Vertex>> startingEdges = new ArrayList<>();
+    List<PlanarGraphFace<Vertex, E>> rectuangularInnerFaces = new ArrayList<PlanarGraphFace<Vertex, E>>();
+
+
+    public List<PlanarGraphFace<Vertex, E>> getRectuangularInnerFaces() {
+        return rectuangularInnerFaces;
+    }
 
     public Rectangulator(List<PlanarGraphFace<Vertex, E>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
@@ -308,6 +314,7 @@ public class Rectangulator<E> {
 
         }
 
+        rectuangularInnerFaces.addAll(rectangularFaceMap.keySet());
     }
 
 
@@ -781,9 +788,6 @@ public class Rectangulator<E> {
         originaledgeToFaceMap.put(new TupleEdge<>(replacerEdge.get(replacerEdge.size() - 1).getLeft(), replacerEdge.get(replacerEdge.size() - 1).getRight()), neighbouringFace);
 
         int pos = neigbouringFaceEdgeList.indexOf(originalFrontReverse);
-
-        /*    neighbouringFace.computeEdgeToIndexMap();*/
-        /*  int pos = neighbouringFace.edgeToIndexMap.get(originalFrontReverse);*/
         assert (pos > -1);
         neigbouringFaceEdgeList.remove(pos);
         neigbouringFaceEdgeList.addAll(pos, replacerEdge);

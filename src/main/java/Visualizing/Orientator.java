@@ -12,41 +12,43 @@ import java.util.List;
 public class Orientator<E> {
 
 
-    List<PlanarGraphFace<Vertex, DefaultEdge>> originalFaceList = new ArrayList<>();
-    PlanarGraphFace<Vertex, DefaultEdge> outerFace;
+    List<PlanarGraphFace<Vertex, DefaultEdge>> orientatedInnerFaces = new ArrayList<>();
+    PlanarGraphFace<Vertex, DefaultEdge> orientatedOuterFace;
     HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap;
 
 
-    public Orientator(HashMap<PlanarGraphFace<Vertex, DefaultEdge>, PlanarGraphFace<Vertex, DefaultEdge>> rectangularInnerFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
+    public Orientator(List<PlanarGraphFace<Vertex, DefaultEdge>> rectangularInnerFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
 
-        originalFaceList.addAll(rectangularInnerFaceMap.keySet());
-        this.outerFace = outerFace;
+      //  originalFaceList.addAll(rectangularInnerFaceMap.keySet());
+
+        orientatedInnerFaces = rectangularInnerFaceMap;
+        this.orientatedOuterFace = outerFace;
 
     }
 
 
-    public List<PlanarGraphFace<Vertex, DefaultEdge>> getOriginalFaceList() {
-        return originalFaceList;
+    public List<PlanarGraphFace<Vertex, DefaultEdge>> getOrientatedInnerFaces() {
+        return orientatedInnerFaces;
     }
 
     public void run() {
 
 
-        //   outerFace.setOrientations();
-        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(originalFaceList);
+        orientatedOuterFace.setOrientationsOuterFacette();
+        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(orientatedInnerFaces);
         List<PlanarGraphFace<Vertex, E>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();
         HashMap<PlanarGraphFace, Boolean> visitedMap = new HashMap<>();
 
 
-        visitedMap.put(outerFace, true);
+        visitedMap.put(orientatedOuterFace, true);
 
-        for (TupleEdge<Vertex, Vertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
         ) {
-            edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex, E>) outerFace);
+            edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex, E>) orientatedOuterFace);
         }
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : originalFaceList
+        for (PlanarGraphFace<Vertex, DefaultEdge> face : orientatedInnerFaces
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {
@@ -59,14 +61,14 @@ public class Orientator<E> {
         PlanarGraphFace<Vertex, DefaultEdge> currentFace;
 
         // äußere Facette
-        for (TupleEdge<Vertex, Vertex> edge : outerFace.getEdgeList()
+        for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
         ) {
             TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<Vertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
                 visitedMap.putIfAbsent(face, true);
-                face.setOrientations(reverseEdge, (outerFace.getEdgeOrientationMap().get(edge)));
+                face.setOrientations(reverseEdge, (orientatedOuterFace.getEdgeOrientationMap().get(edge)));
                 discoveredFaces.add(face);
             }
         }

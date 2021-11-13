@@ -68,12 +68,14 @@ public class PlanarityAndAngleDistributorRunner {
 
     public void run(boolean wasAlgorithmnSelected, GraphDrawOptions.WinkelAlgorithmus algorithmm) {
         if (wasAlgorithmnSelected) {
-            embedding = new Hashtable<>();
-            Embedder embedder = new Embedder(embedding);
-            embedder.run(root);
+           // embedding = new Hashtable<>();
+          //  Embedder embedder = new Embedder(embedding);
+           // embedder.run(root);
 
+            tree.generateAdjecencyListMaP(tree.getRoot());
+            embedding = tree.getVertexToAdjecencyListMap();
             treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-            treeVertexFaceGenerator.generateFaces2();
+            treeVertexFaceGenerator.generateFaces();
 
 
             long startTime3 = System.currentTimeMillis();
@@ -82,7 +84,8 @@ public class PlanarityAndAngleDistributorRunner {
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
                 didimoRepresentability.run();
 
-                root.getMergedChildren().get(0).computeSpirality();
+               // root.getMergedChildren().get(0).computeSpirality();
+                tree.computeSpirality(root.getMergedChildren().get(0));
 
                 Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
                 try {

@@ -67,5 +67,19 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
     }
 
 
+    @Override
+    public boolean equals(Object obj) {
+        TupleEdge<Vertex, Vertex> edge = (TupleEdge<Vertex, Vertex>) obj;
+        TupleEdge<Vertex, Vertex> thisEdge = (TupleEdge<Vertex, Vertex>) this;
+
+        if (thisEdge.left.getId() == edge.left.getId() && thisEdge.right.getId() == edge.right.getId()) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
 
 }

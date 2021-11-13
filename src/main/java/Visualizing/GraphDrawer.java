@@ -21,14 +21,14 @@ import java.util.concurrent.*;
 public class GraphDrawer implements Runnable {
 
     private final List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
-    private final Hashtable<Vertex, ArrayList<Vertex>> embedding;
+    private final Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
     double time = Integer.MAX_VALUE;
     private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2;
 
 
     public GraphDrawer(List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2) {
         this.planarGraphFaces = planarGraphFaces;
-        this.embedding = embedding;
+        this.vertexToAdjListMap = embedding;
         this.adjFaces2 = adjFaces2;
     }
 
@@ -48,22 +48,22 @@ public class GraphDrawer implements Runnable {
 
         rectangulator.setOriginaledgeToFaceMap(adjFaces2);
         rectangulator.initialize();
-        rectangulator.outerFace.setOrientationsOuterFacette();
+       // rectangulator.outerFace.setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularFaceMap(), rectangulator.outerFace);
+        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectuangularInnerFaces(), rectangulator.outerFace);
         orientator.run();
 
         System.out.println("Nach Visualizing.Orientator");
 
 
-        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.orientatedInnerFaces, orientator.orientatedOuterFace);
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 
 
-        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.originalFaceList, rectangulator.outerFace);
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.orientatedInnerFaces, orientator.orientatedOuterFace);
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();
@@ -82,7 +82,7 @@ public class GraphDrawer implements Runnable {
         System.out.println("Nach den FlowNetworks");
 
         // Lege Koordinaten fest
-        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularFaceMap(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectuangularInnerFaces(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
         // Graphstream
@@ -98,9 +98,9 @@ public class GraphDrawer implements Runnable {
         }
 
 
-        for (Vertex treeVertex : embedding.keySet()) {
+        for (Vertex treeVertex : vertexToAdjListMap.keySet()) {
 
-            ArrayList<Vertex> list = embedding.get(treeVertex);
+            ArrayList<Vertex> list = vertexToAdjListMap.get(treeVertex);
 
             for (Vertex vertex1 : list) {
 

@@ -72,7 +72,7 @@ public class SPQNode {
         return spirality;
     }
 
-    public void setSpirality(double spirality) {
+    public void setSpiralityOfChildren(double spirality) {
         this.spirality = spirality;
     }
 
@@ -175,12 +175,21 @@ public class SPQNode {
     }
 
 
+    public void generateQstarChildren() {
+
+    }
+
+
+
+
+
+
+
+
+
     public void computeAdjecentVertices() {
 
-        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
-            startVertex.adjecentVertices.add(sinkVertex);
-            sinkVertex.adjecentVertices.add(0, startVertex);
-        }
+        addToAdjecencyListsSinkAndSource();
 
 
         for (SPQNode spQNode : mergedChildren
@@ -191,28 +200,28 @@ public class SPQNode {
         if (mergedChildren.size() > 0) {
             for (SPQNode nodes :
                     mergedChildren) {
-                /*
-                nodesInCompnent.addAll(nodes.getNodesInCompnent());
-*/
-                if ((nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q) && nodes.mergedChildren.size() == 0) {
-                    if (this.getStartVertex() == nodes.getStartVertex()) {
-                        startNodes.add(nodes.getSinkVertex());
-                    }
-                    if (this.getSinkVertex() == nodes.getSinkVertex()) {
-                        sinkNodes.add(nodes.getStartVertex());
-                    }
-                } else {
-                    if (this.getStartVertex() == nodes.getStartVertex()) {
-                        startNodes.addAll(nodes.startNodes);
-                    }
-                    if (this.getSinkVertex() == nodes.getSinkVertex()) {
-                        sinkNodes.addAll(nodes.sinkNodes);
-                    }
 
-                }
+                addToSourceAndSinkLists(nodes);
             }
         }
 
+    }
+
+    public void addToSourceAndSinkLists(SPQNode nodes) {
+
+            if (this.getStartVertex() == nodes.getStartVertex()) {
+                startNodes.addAll(nodes.startNodes);
+            }
+            if (this.getSinkVertex() == nodes.getSinkVertex()) {
+                sinkNodes.addAll(nodes.sinkNodes);
+            }
+    }
+
+    public void addToAdjecencyListsSinkAndSource() {
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
+            startVertex.adjecentVertices.add(sinkVertex);
+            sinkVertex.adjecentVertices.add(0, startVertex);
+        }
     }
 
 
@@ -276,7 +285,7 @@ public class SPQNode {
     }
 
 
-    private void mergeNodeWithParent(SPQNode node, SPQNode parent) {
+    void mergeNodeWithParent(SPQNode node, SPQNode parent) {
 
         int pos = parent.mergedChildren.indexOf(node);
         parent.mergedChildren.remove(node);
@@ -316,7 +325,7 @@ public class SPQNode {
             double delta = 0;
             for (SPQNode node :
                     mergedChildren) {
-                node.setSpirality(node.getRepIntervalUpperBound());
+                node.setSpiralityOfChildren(node.getRepIntervalUpperBound());
                 delta += (node.getRepIntervalUpperBound());
             }
             delta -= this.spirality;
@@ -325,7 +334,7 @@ public class SPQNode {
                 for (SPQNode node :
                         mergedChildren) {
                     double temp = Math.min(delta, node.getRepIntervalUpperBound() - node.getRepIntervalLowerBound());
-                    node.setSpirality(node.getSpirality() - temp);
+                    node.setSpiralityOfChildren(node.getSpirality() - temp);
                     delta -= temp;
                     if (delta == 0) {
                         break;
@@ -336,9 +345,9 @@ public class SPQNode {
             assert delta == 0;
 
         } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 3) {
-            this.getMergedChildren().get(0).setSpirality(this.spirality + 2);
-            this.getMergedChildren().get(1).setSpirality(this.spirality);
-            this.getMergedChildren().get(2).setSpirality(this.spirality - 2);
+            this.getMergedChildren().get(0).setSpiralityOfChildren(this.spirality + 2);
+            this.getMergedChildren().get(1).setSpiralityOfChildren(this.spirality);
+            this.getMergedChildren().get(2).setSpiralityOfChildren(this.spirality - 2);
 
         } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getMergedChildren().size() == 2) {
             int alphaul = 9999;
@@ -380,7 +389,7 @@ public class SPQNode {
                     alphavl = arrV[j];
                     double temp = this.spirality + kul * arrU[i] + kvl * arrV[j];
                     if (this.getMergedChildren().get(0).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(0).getRepIntervalUpperBound()) {
-                        this.getMergedChildren().get(0).setSpirality(this.spirality + kul * alphaul + kvl * alphavl);
+                        this.getMergedChildren().get(0).setSpiralityOfChildren(this.spirality + kul * alphaul + kvl * alphavl);
                         break outerloop;
                     }
                 }
@@ -394,7 +403,7 @@ public class SPQNode {
                     alphavr = arrV[j];
                     double temp = this.spirality - kur * arrU[i] - kvr * arrV[j];
                     if (this.getMergedChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getMergedChildren().get(1).getRepIntervalUpperBound() && alphaul + alphaur > 0 && alphavl + alphavr > 0) {
-                        this.getMergedChildren().get(1).setSpirality(this.spirality - kur * alphaur - kvr * alphavr);
+                        this.getMergedChildren().get(1).setSpiralityOfChildren(this.spirality - kur * alphaur - kvr * alphavr);
                         break outerloop2;
                     }
                 }
@@ -447,4 +456,6 @@ public class SPQNode {
     }
 
 
+    public void setSpiralityOfChildren() {
+    }
 }

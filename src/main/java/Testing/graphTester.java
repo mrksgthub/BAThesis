@@ -74,7 +74,7 @@ public class graphTester {
                 embedder.run(root);
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-                treeVertexFaceGenerator.generateFaces2();
+                treeVertexFaceGenerator.generateFaces();
 
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
                 int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
@@ -186,7 +186,7 @@ public class graphTester {
                 embedder.run(root);
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
-                treeVertexFaceGenerator.generateFaces2();
+                treeVertexFaceGenerator.generateFaces();
 
                 try {
                     GraphValidifier graphValidifier = new GraphValidifier(tree.getConstructedGraph(), treeVertexFaceGenerator.getPlanarGraphFaces());
