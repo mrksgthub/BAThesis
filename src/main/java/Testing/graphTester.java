@@ -90,7 +90,7 @@ public class graphTester {
 
 
                 root.getMergedChildren().get(0).computeSpirality();
-                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
+                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 angulator.run();
 
 
@@ -213,7 +213,7 @@ public class graphTester {
                     didimoRepresentability.run();
 
                     root.getMergedChildren().get(0).computeSpirality();
-                    Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
+                    Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                     angulator.run();
 
                     stopTime = System.currentTimeMillis();

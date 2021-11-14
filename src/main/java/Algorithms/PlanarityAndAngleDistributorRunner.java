@@ -87,7 +87,7 @@ public class PlanarityAndAngleDistributorRunner {
                // root.getMergedChildren().get(0).computeSpirality();
                 tree.computeSpirality(root.getMergedChildren().get(0));
 
-                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
+                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 try {
                     angulator.run();
                 } catch (Exception ex) {

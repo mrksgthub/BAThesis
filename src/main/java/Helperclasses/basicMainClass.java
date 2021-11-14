@@ -99,7 +99,7 @@ public class basicMainClass {
         tree.computeSpirality(root.getMergedChildren().get(0));
 
 
-        Angulator angulator = new Angulator(tree, treeVertexFaceGenerator);
+        Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
              angulator.run();

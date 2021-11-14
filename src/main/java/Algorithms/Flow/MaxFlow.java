@@ -8,6 +8,7 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ public class MaxFlow {
     private Vertex solverSink;
     private final SPQTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
+    List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
     private int counter;
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
@@ -33,8 +35,8 @@ public class MaxFlow {
         return treeVertexFaceGenerator;
     }
 
-    public void setTreeVertexFaceGenerator(FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
-        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+    public void setTreeVertexFaceGenerator( List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
+        this.planarGraphFaces = planarGraphFaces;
     }
 
     public void run() {
@@ -43,7 +45,7 @@ public class MaxFlow {
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
 
-        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
+        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
 
 
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
@@ -66,7 +68,7 @@ public class MaxFlow {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
+        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
 
         EdmondsKarp edmondsKarp = new EdmondsKarp(simple);
 
@@ -87,7 +89,7 @@ public class MaxFlow {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, treeVertexFaceGenerator, simple);
+        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
 
         PushRelabel pushRelabel = new PushRelabel(simple);
 
@@ -107,10 +109,10 @@ public class MaxFlow {
      *
      *
      * @param tree
-     * @param treeVertexFaceGenerator
+     * @param planarGraphFaces
      * @param simple
      */
-    private void generateFlowGraph(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
+    private void generateFlowGraph(SPQTree tree, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
 
@@ -124,12 +126,113 @@ public class MaxFlow {
             DefaultWeightedEdge e1 = simple.addEdge(solverSource, vertex);
             simple.setEdgeWeight(e1, 4 - neighbors);
             counter += 4 - neighbors;
-
         }
+
 
         int neighborOfFace;
 
         // OuterFace
+        List<TupleEdge<Vertex,Vertex>> edgeList = planarGraphFaces.get(0).getEdgeList();
+/*        for (TupleEdge<Vertex, Vertex> edge: treeVertexFaceGenerator.getPlanarGraphFaces().get(0).getEdgeList()
+        ) {
+            vertexList2.add(edge.getLeft());
+        }*/
+      // List<Vertex> vertexList = treeVertexFaceGenerator.getListOfFaces2().get(0);
+
+        // edgeList.size() Aufgrund der Struktur von vertexList: Das erste und letzte Element sind die gleichen die Formel bleibt 2*d(f) +/- 4
+        neighborOfFace = 2 * (edgeList.size()) + 4 - (edgeList.size());
+        if (neighborOfFace < 0) {
+            throw new IllegalArgumentException("Negative Capacity");
+        }
+
+
+        // Face zu Sink
+        Vertex face = planarGraphFaces.get(0);
+        simple.addVertex(face);
+        DefaultWeightedEdge edge = simple.addEdge(face, solverSink);
+        simple.setEdgeWeight(edge, neighborOfFace);
+
+        // Vertex zu Face
+        for (int j = 0; j < edgeList.size() ; j++) {
+            Vertex vertex = edgeList.get(j).getLeft();
+            neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+            edge = simple.addEdge(vertex, face);
+            simple.setEdgeWeight(edge, 4 - neighbors);
+        }
+
+
+        // Inner Faces:
+        for (int i = 1; i < planarGraphFaces.size(); i++) {
+
+            edgeList = planarGraphFaces.get(i).getEdgeList();
+
+            neighborOfFace = 2 * (edgeList.size()) - 4 - (edgeList.size());
+
+            if (neighborOfFace < 0) {
+                throw new IllegalArgumentException("Negative Capacity");
+            }
+
+
+            // Face zu Sink
+            face = planarGraphFaces.get(i);
+            simple.addVertex(face);
+            edge = simple.addEdge(face, solverSink);
+            simple.setEdgeWeight(edge, neighborOfFace);
+
+            //    System.out.println("InnerFace to Sink: " + neighborOfFace);
+
+            // Vertex zu Face
+            for (int j = 0; j < edgeList.size() ; j++) {
+                Vertex vertex = edgeList.get(j).getLeft();
+                neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+                edge = simple.addEdge(vertex, face);
+                simple.setEdgeWeight(edge, 4 - neighbors);
+            }
+
+        }
+    }
+
+
+
+    private void generateFlowGraph2(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
+        simple.addVertex(solverSource);
+        simple.addVertex(solverSink);
+
+
+   /*     ArrayList<Vertex> vertexList = new ArrayList<>();
+        for (TupleEdge<Vertex, Vertex> edge: treeVertexFaceGenerator.getPlanarGraphFaces().get(0).getEdgeList()
+             ) {
+            vertexList.add(edge.getLeft());
+        }
+
+        */
+
+
+
+
+
+
+        // solverSource to Vertex
+        int neighbors;
+        counter = 0;
+        for (Vertex vertex : tree.getConstructedGraph().vertexSet()
+        ) {
+            neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+            simple.addVertex(vertex);
+            DefaultWeightedEdge e1 = simple.addEdge(solverSource, vertex);
+            simple.setEdgeWeight(e1, 4 - neighbors);
+            counter += 4 - neighbors;
+        }
+
+
+        int neighborOfFace;
+
+        // OuterFace
+        List<Vertex> vertexList2 = new ArrayList<>();
+        for (TupleEdge<Vertex, Vertex> edge: treeVertexFaceGenerator.getPlanarGraphFaces().get(0).getEdgeList()
+        ) {
+            vertexList2.add(edge.getLeft());
+        }
         List<Vertex> vertexList = treeVertexFaceGenerator.getListOfFaces2().get(0);
 
         // vertexList.size() - 1 Aufgrund der Struktur von vertexList: Das erste und letzte Element sind die gleichen die Formel bleibt 2*d(f) +/- 4
@@ -146,8 +249,8 @@ public class MaxFlow {
         simple.setEdgeWeight(edge, neighborOfFace);
 
         // Vertex zu Face
-        for (int j = 0; j < vertexList.size() - 1; j++) {
-            Vertex vertex = vertexList.get(j);
+        for (int j = 0; j < vertexList2.size() ; j++) {
+            Vertex vertex = vertexList2.get(j);
             neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
             edge = simple.addEdge(vertex, face);
             simple.setEdgeWeight(edge, 4 - neighbors);
@@ -184,6 +287,32 @@ public class MaxFlow {
 
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
