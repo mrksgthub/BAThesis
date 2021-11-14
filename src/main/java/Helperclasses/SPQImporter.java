@@ -98,7 +98,7 @@ public class SPQImporter {
                 }
 
             }
-
+            // Stelle sicher, dass die Knoten die richtigen IDs haben
             int i = 1;
             for (Vertex v: nameToTreeVertex.values()
                  ) {
@@ -113,11 +113,14 @@ public class SPQImporter {
 
             // Damit die nächst ID die der nächste unbenutzte Integer ist.
             Vertex.setCounter( nameToTreeVertex.values().size());
+            root.setRoot();
 
             // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
             tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-            root.computeAdjecentVertices();
-            root.setRoot();
+            tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
+            tree.generateAdjecencyListMaP(tree.getRoot());
+         //   root.computeAdjecentVertices();
+
 
 
             System.out.println("Graph Imported");

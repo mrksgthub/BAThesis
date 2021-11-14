@@ -89,7 +89,8 @@ public class graphTester {
                 didimoRepresentability.run();
 
 
-                root.getMergedChildren().get(0).computeSpirality();
+           //     root.getMergedChildren().get(0).computeSpirality();
+                tree.computeSpirality(root.getMergedChildren().get(0));
                 Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 angulator.run();
 
@@ -212,7 +213,9 @@ public class graphTester {
                     DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
                     didimoRepresentability.run();
 
-                    root.getMergedChildren().get(0).computeSpirality();
+                   // root.getMergedChildren().get(0).computeSpirality();
+
+                    tree.computeSpirality(root.getMergedChildren().get(0));
                     Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                     angulator.run();
 

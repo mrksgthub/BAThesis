@@ -165,13 +165,16 @@ public class SPQGenerator implements Callable, Runnable {
         // Zeit:
         long startTime = System.currentTimeMillis();
 
-        check = root.computeRepresentability(check);
+/*        check = root.computeRepresentability(check);
         if (check) {
             check = (tree.computeNofRoot()) ? check : false;
             if (!check) {
                 System.out.println("Didimo rejected at source Node");
             }
-        }
+        }*/
+
+        check = tree.computeRepresentability();
+
 
         if (!check) {
             // continue;

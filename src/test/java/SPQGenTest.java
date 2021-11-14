@@ -394,7 +394,7 @@ public class SPQGenTest {
                 root.getMergedChildren()) {
             winkelHinzufügen(node, hashmap);
         }
-        if (root.getMergedChildren().size() > 1 && !root.isIsroot()) {
+        if (root.getMergedChildren().size() > 1 && !root.isRoot()) {
             root.computeOrthogonalRepresentation(hashmap);
         }
 

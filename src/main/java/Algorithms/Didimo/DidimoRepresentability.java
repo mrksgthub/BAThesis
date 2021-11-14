@@ -17,14 +17,17 @@ public class DidimoRepresentability {
     public void run() {
         boolean check = true;
 
-        check = root.computeRepresentability(check);
+        check = tree.computeRepresentability();
+
+
+  /*              root.computeRepresentability(check);
         if (check) {
             check = (tree.computeNofRoot()) ? check : false;
             if (!check) {
                 System.out.println("Didimo rejected at source Node");
             }
         }
-
+*/
 
     }
 

@@ -39,7 +39,7 @@ public class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(100, 10);
+        SPQGenerator spqGenerator = new SPQGenerator(1000, 40);
         spqGenerator.run();
 
 
@@ -80,7 +80,7 @@ public class basicMainClass {
 
 
         HashMap parentsList = new HashMap<>();
-        root.determineParents(root, parentsList);
+      //  root.determineParents(root, parentsList);
 
 
         ConnectivityInspector inspector = new ConnectivityInspector<>(tree.getConstructedGraph());

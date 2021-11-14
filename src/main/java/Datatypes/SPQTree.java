@@ -67,8 +67,7 @@ public class SPQTree {
 
     public void compactTree(SPQNode root) {
 
-        root.getMergedChildren().addAll(root.getChildren());
-
+        root.getMergedChildren().addAll(root.getChildren()); // mergedChildren sind die Kinder im SPQ*Baum
 
         for (SPQNode node : root.getChildren()
         ) {
@@ -156,9 +155,41 @@ public class SPQTree {
 
     }
 
+    public Boolean computeRepresentability() {
+        Boolean check = true;
+        check = this.computeRepresentabilityIntervals(root, check);
+        if (check) {
+            check = (this.computeNofRoot()) ? check : false;
+            if (!check) {
+                System.out.println("Didimo rejected at source Node");
+            }
+        }
+        return check;
+    }
 
 
 
+
+
+
+    private Boolean computeRepresentabilityIntervals(SPQNode root, Boolean check) {
+
+        boolean temp;
+        for (SPQNode node : root.getMergedChildren()
+        ) {
+            temp = this.computeRepresentabilityIntervals(node, check);
+            if (!temp) {
+                check = temp;
+            }
+        }
+
+        if (root.getMergedChildren().size() != 0 && !root.isRoot()) {
+            if (!root.calculateRepresentabilityInterval()) {
+                check = false;
+            }
+        }
+        return check;
+    }
 
 
 
