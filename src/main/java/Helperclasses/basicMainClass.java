@@ -51,9 +51,9 @@ public class basicMainClass {
         spqExporter.run(root, "C:/a.dot");
 
 
-        //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\55664N2389F.txt");
+       // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\10002N9F.txt");
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\163386N20963F.txt");
-        //Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\GraphInvalid\\38321N2774F.txt");
+      //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\GraphInvalid\\10002N9F.txt");
         SPQImporter spqImporter = new SPQImporter("C:/a.dot");
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/bug - Kopie.txt");
       //   Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/b.txt");
@@ -120,7 +120,7 @@ public class basicMainClass {
         //  Algorithms.Flow.TamassiaRepresentation tamassiaRepresentation = new Algorithms.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
         //   tamassiaRepresentation.run();
         long startTime2 = System.currentTimeMillis();
-        MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
+        MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);

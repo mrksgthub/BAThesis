@@ -95,7 +95,7 @@ public class PlanarityAndAngleDistributorRunner {
                 }
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
-                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
+                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.run3();
             }
             long stopTime3 = System.currentTimeMillis();

@@ -119,7 +119,7 @@ public class graphTester {
                 startTime = System.currentTimeMillis();
 
 
-                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
+                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.run3();
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
@@ -247,7 +247,7 @@ public class graphTester {
                 long tamassiaPushTime = 0;
                 try {
                     startTime = System.currentTimeMillis();
-                    MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator);
+                    MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                     test.run3();
                     stopTime = System.currentTimeMillis();
                     elapsedTime = stopTime - startTime;

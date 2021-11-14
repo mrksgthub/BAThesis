@@ -26,9 +26,9 @@ public class MaxFlow {
     private int counter;
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
-    public MaxFlow(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
+    public MaxFlow(SPQTree tree, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
         this.tree = tree;
-        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+        this.planarGraphFaces = planarGraphFaces;
     }
 
     public FaceGenerator<Vertex, DefaultEdge> getTreeVertexFaceGenerator() {
@@ -45,7 +45,7 @@ public class MaxFlow {
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
 
-        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
+        generateFlowGraph(tree, planarGraphFaces, simple);
 
 
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
@@ -59,7 +59,7 @@ public class MaxFlow {
         }
 
 
-        setOrthogonalRep(flowMap, treeVertexFaceGenerator.getPlanarGraphFaces());
+        setOrthogonalRep(flowMap, planarGraphFaces);
 
     }
 
@@ -68,7 +68,7 @@ public class MaxFlow {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
+        generateFlowGraph(tree, planarGraphFaces, simple);
 
         EdmondsKarp edmondsKarp = new EdmondsKarp(simple);
 
@@ -76,7 +76,7 @@ public class MaxFlow {
 
 
         flowMap2 = edmondsKarp.maxFlow;
-        setOrthogonalRep(edmondsKarp.maxFlow, treeVertexFaceGenerator.getPlanarGraphFaces());
+        setOrthogonalRep(edmondsKarp.maxFlow, planarGraphFaces);
 
     }
 
@@ -89,7 +89,7 @@ public class MaxFlow {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, treeVertexFaceGenerator.getPlanarGraphFaces(), simple);
+        generateFlowGraph(tree, planarGraphFaces, simple);
 
         PushRelabel pushRelabel = new PushRelabel(simple);
 
@@ -97,7 +97,7 @@ public class MaxFlow {
 
 
         flowMap2 = pushRelabel.maxFlow;
-        setOrthogonalRep(pushRelabel.maxFlow, treeVertexFaceGenerator.getPlanarGraphFaces());
+        setOrthogonalRep(pushRelabel.maxFlow, planarGraphFaces);
 
     }
 
