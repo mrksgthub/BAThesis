@@ -21,6 +21,8 @@ public class SPQGenerator implements Callable, Runnable {
     SPQTree tree;
     int size;
     int chanceOfP;
+    private int maxDeg =4;
+    private int einfachheit = 1;
     int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
     private long elapsedTime2;
@@ -42,6 +44,15 @@ public class SPQGenerator implements Callable, Runnable {
     }
 
     public SPQGenerator() {
+    }
+
+    public SPQGenerator(int ops, int chanceOfP, int maxDeg, int einfachheit) {
+        this.size = ops;
+        this.chanceOfP = chanceOfP;
+
+
+        this.maxDeg = maxDeg;
+        this.einfachheit = einfachheit;
     }
 
     public int getSize() {
@@ -104,15 +115,7 @@ public class SPQGenerator implements Callable, Runnable {
 
     public void run(int size, int chanceOfP) {
 
-        // Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-        // logger.setLevel(Level.ALL);
-        // Handler handler = new ConsoleHandler();
-        // handler.setLevel(Level.ALL);
-        //  logger.addHandler(handler);
-
-
         Boolean check = false;
-        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
         counter = 0;
         while (!check && !shutdown) {
@@ -131,7 +134,7 @@ public class SPQGenerator implements Callable, Runnable {
         counter++;
         check = true;
 
-        graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP);
+        graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP, maxDeg, einfachheit);
         graphgenSplitGraph.generateGraph();
 
 

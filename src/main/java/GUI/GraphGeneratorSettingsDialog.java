@@ -6,12 +6,32 @@ import java.awt.event.*;
 public class GraphGeneratorSettingsDialog extends JDialog {
     int ops = -1;
     int chanceOfP = -1;
+    int maxDeg = -1;
+    int einfachheit = -1;
     boolean validSettings = false;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textField1;
     private JTextField textField2;
+    private JTextField textField3;
+    private JTextField textField4;
+
+    public int getOps() {
+        return ops;
+    }
+
+    public int getChanceOfP() {
+        return chanceOfP;
+    }
+
+    public int getMaxDeg() {
+        return maxDeg;
+    }
+
+    public int getEinfachheit() {
+        return einfachheit;
+    }
 
     public GraphGeneratorSettingsDialog() {
         setContentPane(contentPane);
@@ -77,11 +97,53 @@ public class GraphGeneratorSettingsDialog extends JDialog {
             e.printStackTrace();
             chanceOfP = -1;
         }
-        if (chanceOfP >= 0 && ops >= 0) {
+
+        try {
+            maxDeg = Integer.parseInt(textField3.getText());
+            if (maxDeg < 2 || maxDeg > 4) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 2-4 möglich");
+            e.printStackTrace();
+            maxDeg = -1;
+        }
+
+        try {
+            einfachheit = Integer.parseInt(textField4.getText());
+            if (einfachheit < 1) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 1+ möglich");
+            e.printStackTrace();
+            einfachheit = -1;
+        }
+
+
+
+
+
+
+
+
+
+        if (chanceOfP >= 0 && ops >= 0   &&   (maxDeg >= 2 && maxDeg <= 4)   && (einfachheit >= 1)  ) {
             validSettings = true;
             dispose();
 
         }
+
+
+
+
+
+
+
+
+
+
+
 
     }
 

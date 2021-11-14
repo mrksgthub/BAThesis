@@ -21,6 +21,8 @@ public class GraphgenSplitGraph {
     HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
     int counter = 0;
     private double chanceOfP = 50;
+    private int maxDeg = 4;
+    private int einfachheit = 1;
 
     public GraphgenSplitGraph(int operations, double chanceOfP) {
 
@@ -61,6 +63,13 @@ public class GraphgenSplitGraph {
         edgeSPQNodeHashMap.put(multigraph.getEdge(vertex, vertex2), qLeft);
 
 
+    }
+
+    public GraphgenSplitGraph(int operations, int chanceOfP, int maxDeg, int einfachheit) {
+        this(operations);
+        this.chanceOfP = chanceOfP;
+        this.maxDeg = maxDeg;
+        this.einfachheit = einfachheit;
     }
 
     public SPQPNode getRoot() {
@@ -104,7 +113,7 @@ public class GraphgenSplitGraph {
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (degreeOfedgeSource < 4 && degreeOfedgeSink < 4 && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2)) {
+            if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2)) {
                 randomnewSNode(edge);
             } else {
                 i++;
@@ -205,7 +214,7 @@ public class GraphgenSplitGraph {
         }
 
 
-        for (int i = 0; i <1; i++) {
+        for (int i = 0; i <einfachheit; i++) {
 
 
             if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
