@@ -45,16 +45,6 @@ public class stNumbering {
 
          */
 
-
-
-
-
-
-
-
-
-
-
         SPQTree tree;
         SPQNode root;
 
