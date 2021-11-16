@@ -7,7 +7,7 @@ import java.util.List;
 public class SPQNode {
 
 
-    List<SPQNode> children = new ArrayList<>();
+    private List<SPQNode> children = new ArrayList<>();
     List<SPQNode> mergedChildren = new ArrayList<>();
 
     List<Vertex> startNodes = new ArrayList<>();
@@ -18,12 +18,11 @@ public class SPQNode {
     int alphavl;
     int alphaur;
     int alphavr;
-    int nodes;
-    SPQNode parent;
-    boolean isroot = false;
-    String name;
+    private SPQNode parent;
+    private boolean isroot = false;
+    private String name;
     int counter = 0;
-    NodeTypesEnum.NODETYPE nodeType;
+    private NodeTypesEnum.NODETYPE nodeType;
     Vertex startVertex;
     Vertex sinkVertex;
     double repIntervalLowerBound = 999;
@@ -31,16 +30,14 @@ public class SPQNode {
     private boolean isRoot = false;
     static int id = 0;
 
-    public SPQNode() {
+    SPQNode() {
 
     }
 
     public SPQNode(int nodes) {
-        this.nodes = nodes;
     }
 
     public SPQNode(int nodes, String name) {
-        this.nodes = nodes;
         this.name = name;
     }
 
@@ -52,16 +49,12 @@ public class SPQNode {
         return mergedChildren;
     }
 
-    public void setMergedChildren(List<SPQNode> mergedChildren) {
+    void setMergedChildren(List<SPQNode> mergedChildren) {
         this.mergedChildren = mergedChildren;
     }
 
     public NodeTypesEnum.NODETYPE getNodeType() {
         return nodeType;
-    }
-
-    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
-        this.nodeType = nodeType;
     }
 
     public double getSpirality() {
@@ -106,7 +99,7 @@ public class SPQNode {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
@@ -132,7 +125,7 @@ public class SPQNode {
         return this.isRoot;
     }
 
-    public void setRoot() {
+    void setRoot() {
         isRoot = true;
 
     }
@@ -216,66 +209,6 @@ public class SPQNode {
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
             startVertex.adjecentVertices.add(sinkVertex);
             sinkVertex.adjecentVertices.add(0, startVertex);
-        }
-    }
-
-
-    private void mergeQNodes() {
-
-        List<SPQNode> qNodes = new ArrayList<>();
-        List<SPQNode> replacementmergedChildren = new ArrayList<>();
-
-
-        List<SPQNode> mergedChildren = this.getMergedChildren();
-
-        for (int i = 0; i < mergedChildren.size(); i++) {
-
-            if ((mergedChildren.get(i).getNodeType() == NodeTypesEnum.NODETYPE.Q)) {
-                qNodes.add(mergedChildren.get(i));
-            }
-            if (mergedChildren.get(i).getNodeType() != NodeTypesEnum.NODETYPE.Q) {
-                if (qNodes.size() > 0) {
-                    SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
-                    newQ.setMergedChildren(qNodes);
-                    newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
-                    newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
-                    replacementmergedChildren.add(newQ);
-
-                    qNodes = new ArrayList<>();
-                }
-                replacementmergedChildren.add(mergedChildren.get(i));
-            }
-        }
-        if (qNodes.size() > 0) {
-            SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
-            newQ.setMergedChildren(qNodes);
-            newQ.setSinkVertex(newQ.getMergedChildren().get(newQ.getMergedChildren().size() - 1).getSinkVertex());
-            newQ.setStartVertex(newQ.getMergedChildren().get(0).getStartVertex());
-            replacementmergedChildren.add(newQ);
-
-            this.setMergedChildren(replacementmergedChildren);
-            if (getMergedChildren().size() == 1) {
-                this.getParent().getMergedChildren().set(this.getParent().getMergedChildren().indexOf(this), newQ);
-            }
-        } else if (replacementmergedChildren.size() > 1) {
-            this.setMergedChildren(replacementmergedChildren);
-
-        }
-    }
-
-    public void fixQNode() {
-
-        for (SPQNode node :
-                mergedChildren) {
-
-            if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.mergedChildren.size() == 0) {
-                SPQNode newQ = new SPQQNode("Qstar" + node.getName());
-                newQ.setParent(this);
-                newQ.setStartVertex(node.getStartVertex());
-                newQ.setSinkVertex(node.getSinkVertex());
-                newQ.mergedChildren.add(node);
-                this.mergedChildren.set(this.mergedChildren.indexOf(node), newQ);
-            }
         }
     }
 

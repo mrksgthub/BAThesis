@@ -29,7 +29,7 @@ public class SPQExporter {
 
     }
 
-    public void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
+    private void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)
 
 
@@ -44,7 +44,7 @@ public class SPQExporter {
         System.out.println(writer.toString());
     }
 
-    public void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
+    private void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
         //Create the exporter (without ID provider)
 
 
@@ -66,7 +66,7 @@ public class SPQExporter {
     }
 
 
-    public DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root, int integer) {
+    private DefaultDirectedGraph<SPQNode, DefaultEdge> treeToDOT(SPQNode root, int integer) {
         DefaultDirectedGraph<SPQNode, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
         HashMap<SPQNode, Boolean> nodeHashMap = new HashMap<SPQNode, Boolean>();
 
@@ -81,7 +81,7 @@ public class SPQExporter {
     }
 
 
-    public void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+    private void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
 
@@ -100,7 +100,7 @@ public class SPQExporter {
         }
     }
 
-    public void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+    private void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
 

@@ -13,13 +13,13 @@ import java.util.List;
 public class GraphgenSplitGraph {
 
 
-    SPQPNode root;
+    private SPQPNode root;
 
-    DirectedMultigraph<Vertex, DefaultEdge> multigraph = new DirectedMultigraph<>(Vertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
-    int operations;
-    List<DefaultEdge> edges = new ArrayList<>();
-    HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
-    int counter = 0;
+    private DirectedMultigraph<Vertex, DefaultEdge> multigraph = new DirectedMultigraph<>(Vertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+    private int operations;
+    private List<DefaultEdge> edges = new ArrayList<>();
+    private HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
+    private int counter = 0;
     private double chanceOfP = 50;
     private int maxDeg = 4;
     private int einfachheit = 1;
@@ -31,7 +31,7 @@ public class GraphgenSplitGraph {
     }
 
 
-    public GraphgenSplitGraph(int operations) {
+    private GraphgenSplitGraph(int operations) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.operations = operations;
         root = new SPQPNode("Proot");
@@ -235,7 +235,7 @@ public class GraphgenSplitGraph {
     }
 
 
-    public <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
+    private <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
         node.setParent(parent);
         parent.getChildren().add(node);
 
@@ -247,7 +247,7 @@ public class GraphgenSplitGraph {
     }
 
 
-    public <T extends SPQNode> void nodeUmhaengen(T node, T newnode) {
+    private <T extends SPQNode> void nodeUmhaengen(T node, T newnode) {
         //Abhängen
         node.getParent().getChildren().set(node.getParent().getChildren().indexOf(node), newnode);
         //neuer Knoten als Parent festlegen

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class SPQPNode extends SPQNode {
 
-    NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.P;
+    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.P;
     private int inDegreeCounterStart;
     private int inDegreeCounterSink;
     private int outDegreeCounterStart;
@@ -31,7 +31,6 @@ public class SPQPNode extends SPQNode {
         return nodeType;
     }
 
-    @Override
     public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
         this.nodeType = nodeType;
     }

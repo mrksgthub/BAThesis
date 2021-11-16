@@ -17,13 +17,13 @@ import java.util.concurrent.Callable;
 
 public class SPQGenerator implements Callable, Runnable {
 
-    SPQNode root;
-    SPQTree tree;
-    int size;
-    int chanceOfP;
+    private SPQNode root;
+    private SPQTree tree;
+    private int size;
+    private int chanceOfP;
     private int maxDeg =4;
     private int einfachheit = 1;
-    int counter;
+    private int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
     private long elapsedTime2;
     private GraphgenSplitGraph graphgenSplitGraph;
@@ -113,7 +113,7 @@ public class SPQGenerator implements Callable, Runnable {
     }
 
 
-    public void run(int size, int chanceOfP) {
+    private void run(int size, int chanceOfP) {
 
         Boolean check = false;
 
@@ -144,11 +144,16 @@ public class SPQGenerator implements Callable, Runnable {
 
         tree = new SPQTree(root);
 
+/*
         tree.compactTree(tree.getRoot());
         tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
         tree.generateQStarNodes(tree.getRoot());
         tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
         tree.generateAdjecencyListMaP(tree.getRoot());
+*/
+
+        tree.transformToValidSPQStarTree();
+
         // normale repräsentation
         //   root.generateQstarNodes();
         // root.computeAdjecentVertices();

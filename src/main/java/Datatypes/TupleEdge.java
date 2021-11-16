@@ -4,10 +4,10 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 public class TupleEdge<L, R> extends MutablePair<L, R> {
 
-    static int idCounter = 0;
-    int id = 0;
-    int winkel = -10;
-    int counter = -20;
+    private static int idCounter = 0;
+    private int id = 0;
+    private int winkel = -10;
+    private int counter = -20;
 
     public static int getIdCounter() {
         return idCounter;
@@ -15,6 +15,16 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
 
     public static void setIdCounter(int idCounter) {
         TupleEdge.idCounter = idCounter;
+    }
+
+    public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, boolean newEdge) {
+
+        if (newEdge) {
+            return new TupleEdge<>(edge.getRight(), edge.getLeft(), edge.getWinkel()*-1);
+        } else {
+            return new TupleEdge<>(edge.getRight(), edge.getLeft());
+        }
+
     }
 
     public int getId() {

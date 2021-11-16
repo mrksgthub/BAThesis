@@ -16,13 +16,13 @@ import java.util.Map;
 public class MaxFlow {
 
 
-    public Map<DefaultWeightedEdge, Double> flowMap;
-    public Map<DefaultWeightedEdge, Double> flowMap2;
+    private Map<DefaultWeightedEdge, Double> flowMap;
+    private Map<DefaultWeightedEdge, Double> flowMap2;
     private Vertex solverSource;
     private Vertex solverSink;
     private final SPQTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
-    List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
+    private List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
     private int counter;
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 

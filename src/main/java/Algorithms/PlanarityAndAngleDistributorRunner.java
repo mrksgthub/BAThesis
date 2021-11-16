@@ -15,11 +15,11 @@ import java.util.Hashtable;
 public class PlanarityAndAngleDistributorRunner {
 
 
-    SPQTree tree;
-    SPQNode root;
-    double time = Integer.MAX_VALUE;
-    FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
-    Hashtable<Vertex, ArrayList<Vertex>> embedding;
+    private SPQTree tree;
+    private SPQNode root;
+    private double time = Integer.MAX_VALUE;
+    private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
+    private Hashtable<Vertex, ArrayList<Vertex>> embedding;
 
     public PlanarityAndAngleDistributorRunner(SPQTree tree, SPQNode root) {
         this.tree = tree;
@@ -72,7 +72,7 @@ public class PlanarityAndAngleDistributorRunner {
           //  Embedder embedder = new Embedder(embedding);
            // embedder.run(root);
 
-            tree.generateAdjecencyListMaP(tree.getRoot());
+
             embedding = tree.getVertexToAdjecencyListMap();
             treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
             treeVertexFaceGenerator.generateFaces();

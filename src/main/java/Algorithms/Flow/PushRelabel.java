@@ -5,16 +5,16 @@ import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.ArrayDeque;
 
-public class PushRelabel extends MaxFlowImp {
+class PushRelabel extends MaxFlowImp {
 // https://iq.opengenus.org/push-relabel-algorithm/
 // https://github.com/phishman3579/java-algorithms-implementation/blob/master/src/com/jwetherell/algorithms/graph/PushRelabel.java
 // https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm
 
 
-    int[] excessFlow;
-    int[] heights;
-    Vertex[] vertices;
-    int[] nextNeighbour;
+    private int[] excessFlow;
+    private int[] heights;
+    private Vertex[] vertices;
+    private int[] nextNeighbour;
     private ArrayDeque<Integer> queue;
 
 
@@ -95,7 +95,7 @@ public class PushRelabel extends MaxFlowImp {
     }
 
 
-    public boolean push(Edge edge) {
+    private boolean push(Edge edge) {
 
         if (excessFlow[edge.u] > 0 && heights[edge.u] > heights[edge.v]) {
             double f = Math.min(edge.capacity - edge.flow, excessFlow[edge.u]);
@@ -115,7 +115,7 @@ public class PushRelabel extends MaxFlowImp {
     }
 
 
-    public void relabel(int vertexIndex) {
+    private void relabel(int vertexIndex) {
 
         double min = Integer.MAX_VALUE;
         for (Edge edge : outgoingEdgeLists[vertexIndex]
@@ -130,7 +130,7 @@ public class PushRelabel extends MaxFlowImp {
         }
     }
 
-    public void discharge(int vertexIndex) {
+    private void discharge(int vertexIndex) {
 
         int edgeIndex;
         while (excessFlow[vertexIndex] > 0) {
@@ -166,7 +166,7 @@ public class PushRelabel extends MaxFlowImp {
         int flowIn = 0;
         int flowOut = 0;
 
-        public Vertex(int i) {
+        Vertex(int i) {
             id = i;
         }
 

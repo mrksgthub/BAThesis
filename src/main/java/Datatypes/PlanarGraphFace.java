@@ -4,34 +4,20 @@ import java.util.*;
 
 public class PlanarGraphFace<V, E> extends Vertex {
 
-    static int faceCounter = 0;
-    public HashMap<TupleEdge<V,V>, Integer> edgeToIndexMap;
-    Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
-    Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
-    Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
-    List<TupleEdge<V, V>> edgeList = new ArrayList<>();
-    FaceType type = FaceType.INTERNAL;
-    int faceIndex;
+    private static int faceCounter = 0;
+    private Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
+    private Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
+    private Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
+    private List<TupleEdge<V, V>> edgeList = new ArrayList<>();
+    private FaceType type = FaceType.INTERNAL;
 
 
     public Map<Integer, ArrayList<TupleEdge<V, V>>> getSidesMap() {
         return sidesMap;
     }
 
-    public PlanarGraphFace() {
-        super(Integer.toString(new Random().nextInt(500)));
-        faceIndex = faceCounter++;
-        sidesMap.put(0, new ArrayList<>());
-        sidesMap.put(1, new ArrayList<>());
-        sidesMap.put(2, new ArrayList<>());
-        sidesMap.put(3, new ArrayList<>());
-
-
-    }
-
     public PlanarGraphFace(String name) {
         super(name);
-        faceIndex = faceCounter++;
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());
         sidesMap.put(2, new ArrayList<>());
@@ -42,7 +28,6 @@ public class PlanarGraphFace<V, E> extends Vertex {
 
     public PlanarGraphFace(String name, Vertex parent) {
         super(name, parent);
-        faceIndex = faceCounter++;
     }
 
     public FaceType getType() {

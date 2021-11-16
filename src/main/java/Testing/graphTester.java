@@ -147,7 +147,7 @@ public class graphTester {
     /*
     https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
      */
-    public static void listFilesForFolder(final File folder, List<String> listOfFiles) {
+    private static void listFilesForFolder(final File folder, List<String> listOfFiles) {
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolder(fileEntry, listOfFiles);

@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 
-public class Playground {
+class Playground {
 
 
-    public static <V, E> void replaceVertex(Graph<V, E> graph, V vertex, V replace) {
+    static <V, E> void replaceVertex(Graph<V, E> graph, V vertex, V replace) {
         graph.addVertex(replace);
 
 
@@ -43,7 +43,7 @@ public class Playground {
     //                     dann noch 2 stMergeP und stMergeS, bei der jeweils replaceVertex genutzt wird um start und endkoten entsprechend zu verbinden und dann einen neuen Graphen zu erzeigen
 
     @Test
-    public void nodeMerge() {
+    void nodeMerge() {
 
 
         Supplier<String> vSupplier = new Supplier<String>() {
@@ -94,31 +94,31 @@ https://stackoverflow.com/questions/8766741/changing-contents-of-vertex-with-jgr
     }
 
     @Test
-    public void graphPMerge() {
+    void graphPMerge() {
 
 
     }
 
     @Test
-    public void graphSMerge() {
+    void graphSMerge() {
 
     }
 
     @Test
-    public void addVerticesToEdge() {
-
-    }
-
-
-    @Test
-    public void mergeVertices() {
-
+    void addVerticesToEdge() {
 
     }
 
 
     @Test
-    public void hashmapArrayTest() {
+    void mergeVertices() {
+
+
+    }
+
+
+    @Test
+    void hashmapArrayTest() {
 
 
         int[] array = new int[3000000];

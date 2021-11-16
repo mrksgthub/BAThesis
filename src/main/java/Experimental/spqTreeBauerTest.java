@@ -1,3 +1,5 @@
+package Experimental;
+
 import Datatypes.*;
 import Datatypes.Vertex;
 import Helperclasses.GraphHelper;
@@ -13,7 +15,7 @@ import org.jgrapht.traverse.DepthFirstIterator;
 
 import java.util.*;
 
-public class spqTreeBauerTest {
+class spqTreeBauerTest {
 
 
     public static void main(String[] args) {
@@ -79,46 +81,6 @@ public class spqTreeBauerTest {
         }
 
 
-
-
-
-
-/*        DirectedMultigraph<Datatypes.SPQNode, SPQEdge> spqTree = new DirectedMultigraph<>(SPQEdge.class);
-        DirectedMultigraph<Graph<Datatypes.TreeVertex, SPQEdge>, SPQEdge> graphTree = new DirectedMultigraph<>(SPQEdge.class);
-        BiconnectivityInspector<Datatypes.TreeVertex, SPQEdge> biconnectivityInspector = new BiconnectivityInspector<>(graphSPQNodeEdges);
-        biconnectivityInspector.getCutpoints();
-
-
-        Set<Graph<Datatypes.TreeVertex, SPQEdge>> blocks = biconnectivityInspector.getBlocks();
-
-        ArrayDeque<Graph<Datatypes.TreeVertex, SPQEdge>> spqQueue = new ArrayDeque<>();
-        spqQueue.offer(graphSPQNodeEdges);
-        int counter = 0;
-
-        while (!spqQueue.isEmpty()) {
-
-            Graph<Datatypes.TreeVertex, SPQEdge> tempGraph = spqQueue.poll();
-            BiconnectivityInspector<Datatypes.TreeVertex, SPQEdge> biconnectivityInspector2 = new BiconnectivityInspector<>(tempGraph);
-            Set<Graph<Datatypes.TreeVertex, SPQEdge>> blocks2 = biconnectivityInspector2.getBlocks();
-
-            if (blocks2.size() > 1) {
-                //  spqTree.addVertex(new Datatypes.SPQSNode());
-                graphTree.addVertex(tempGraph);
-                for (Graph<Datatypes.TreeVertex, SPQEdge> graph3 : blocks2
-                ) {
-                    graphTree.addVertex(graph3);
-                    graphTree.addEdge(tempGraph, graph3);
-                }
-
-                spqQueue.addAll(blocks2);
-            } else {
-                spqTree.addVertex(new Datatypes.SPQPNode("v" + counter++));
-
-            }
-
-        }*/
-
-
         ConnectivityInspector<Vertex, SPQEdge> connectivityInspector = new ConnectivityInspector<>(graphSPQNodeEdges);
         ArrayDeque<Vertex> arrayDeque = new ArrayDeque<>(graph.vertexSet());
         connectivityInspector.connectedSets();
@@ -129,7 +91,7 @@ public class spqTreeBauerTest {
 
         SPQNode rootNode = null;
 
-
+        // Valdes Tarjan 82 DAG -> SPQ-Baum
         while (!arrayDeque.isEmpty()) {
 
             Vertex vertex = arrayDeque.pop();
@@ -218,6 +180,7 @@ public class spqTreeBauerTest {
         GraphHelper.printTODOTSPQNode(SPQTree);
 
 
+        // Kontraktion des SPQ-Baums in einen SPQ*-Baum
         for (SPQNode spqNode : SPQTree.vertexSet()) {
             if (SPQTree.inDegreeOf(spqNode) == 0) {
                 rootNode = spqNode;
@@ -384,9 +347,9 @@ public class spqTreeBauerTest {
 class SPQDepthiterator<V, E> extends DepthFirstIterator<V, E> {
 
 
-    V backVertex;
-    E backEdge;
-    V previous;
+    private V backVertex;
+    private E backEdge;
+    private V previous;
     ArrayDeque<V> stack;
     private ArrayDeque<V> queue;
 

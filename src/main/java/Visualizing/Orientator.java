@@ -14,7 +14,7 @@ public class Orientator<E> {
 
     List<PlanarGraphFace<Vertex, DefaultEdge>> orientatedInnerFaces = new ArrayList<>();
     PlanarGraphFace<Vertex, DefaultEdge> orientatedOuterFace;
-    HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap;
+    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap;
 
 
     public Orientator(List<PlanarGraphFace<Vertex, DefaultEdge>> rectangularInnerFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {

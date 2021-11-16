@@ -24,7 +24,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.*;
 
-public class basicMainClass {
+class basicMainClass {
 
 
     public static void main(String[] args) throws Exception {
@@ -66,8 +66,9 @@ public class basicMainClass {
 
 
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-        Embedder embedder = new Embedder(embedding);
-        embedder.run(root);
+        /*Embedder embedder = new Embedder(embedding);
+        embedder.run(root);*/
+        embedding = tree.getVertexToAdjecencyListMap();
 
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces();

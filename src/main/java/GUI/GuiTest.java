@@ -21,15 +21,15 @@ import java.util.concurrent.ExecutionException;
 
 
 
-public class GuiTest extends JFrame {
+class GuiTest extends JFrame {
 
 
-    static SwingWorker worker;
+    private static SwingWorker worker;
     private static SPQTree tree;
     private static SPQNode root;
 
-    int ops;
-    int chanceOfP;
+    private int ops;
+    private int chanceOfP;
     private JButton drawGraphButton;
     private JButton generateGraphButton;
     private JButton interrupts;
@@ -406,7 +406,7 @@ public class GuiTest extends JFrame {
     }
 
 
-    public void updateText(String text) {
+    private void updateText(String text) {
         status.setText(text);
         status.paintImmediately(status.getVisibleRect());
     }

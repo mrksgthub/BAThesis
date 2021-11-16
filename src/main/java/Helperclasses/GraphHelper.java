@@ -114,19 +114,6 @@ public class GraphHelper<V extends Vertex, E> {
     }
 
 
-    public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, boolean newEdge) {
-
-        if (newEdge) {
-            return new TupleEdge<>(edge.getRight(), edge.getLeft(), edge.getWinkel()*-1);
-        } else {
-            return new TupleEdge<>(edge.getRight(), edge.getLeft());
-        }
-
-    }
-
-
-
-
     /**
      * Replaces testEdge=(v1, v2) with a series of Edges of length i the first vertex in this series is going to be v1, the last is v2.
      *
@@ -198,7 +185,7 @@ public class GraphHelper<V extends Vertex, E> {
     }
 
 
-    public static void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+    private static void dfsRun(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
 
@@ -217,7 +204,7 @@ public class GraphHelper<V extends Vertex, E> {
         }
     }
 
-    public static void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
+    private static void dfsRun2(SPQNode root, HashMap<SPQNode, Boolean> map, DefaultDirectedGraph<SPQNode, DefaultEdge> graph) {
 
         map.computeIfAbsent(root, k -> false);
 

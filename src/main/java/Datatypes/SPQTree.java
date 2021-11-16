@@ -10,9 +10,9 @@ import java.util.Set;
 
 public class SPQTree {
 
-    SPQNode root;
-    Set<SPQNode> visited = new LinkedHashSet<>();
-    DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
+    private SPQNode root;
+    private Set<SPQNode> visited = new LinkedHashSet<>();
+    private DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
     private  Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjecencyListMap = new Hashtable<>();
 
     public SPQTree(SPQNode root) {
@@ -65,7 +65,7 @@ public class SPQTree {
     }
 
 
-    public void compactTree(SPQNode root) {
+    private void compactTree(SPQNode root) {
 
         root.getMergedChildren().addAll(root.getChildren()); // mergedChildren sind die Kinder im SPQ*Baum
 
@@ -79,7 +79,7 @@ public class SPQTree {
 
     }
 
-    public void generateQStarNodes(SPQNode root) {
+    private void generateQStarNodes(SPQNode root) {
 
         for (SPQNode node : root.getMergedChildren()
         ) {
@@ -104,7 +104,7 @@ public class SPQTree {
     }
 
 
-    public boolean computeNofRoot() { // Änderungen in neuer v4 aus Paper eingefügt
+    private boolean computeNofRoot() { // Änderungen in neuer v4 aus Paper eingefügt
 
         int spirality = 99999;
 
@@ -215,15 +215,15 @@ public class SPQTree {
     }
 
 
+    public void transformToValidSPQStarTree() {
 
+        this.compactTree(this.getRoot());
+        this.setStartAndSinkNodesOrBuildConstructedGraph(this.getRoot(), this.getVisited());
+        this.generateQStarNodes(this.getRoot());
+        this.determineInnerOuterNodesAndAdjVertices(this.getRoot());
+        this.generateAdjecencyListMaP(this.getRoot());
 
-
-
-
-
-
-
-
+    }
 }
 
 

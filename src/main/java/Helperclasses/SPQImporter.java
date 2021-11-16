@@ -12,67 +12,19 @@ public class SPQImporter {
 
 
     private final String fileName;
-    HashMap<String, SPQNode> nameToNode = new HashMap<>();
-    HashMap<SPQNode, List<SPQNode>> nodeToAdjList = new HashMap<>();
-    HashMap<Vertex, Boolean> treeMap = new HashMap<>();
-    HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
-    SPQPNode root;
+    private HashMap<String, SPQNode> nameToNode = new HashMap<>();
+    private HashMap<SPQNode, List<SPQNode>> nodeToAdjList = new HashMap<>();
+    private HashMap<Vertex, Boolean> treeMap = new HashMap<>();
+    private HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
+    private SPQPNode root;
     SPQTree tree;
 
     public SPQImporter(String s) {
         this.fileName = s;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public HashMap<String, SPQNode> getNameToNode() {
-        return nameToNode;
-    }
-
-    public void setNameToNode(HashMap<String, SPQNode> nameToNode) {
-        this.nameToNode = nameToNode;
-    }
-
-    public HashMap<SPQNode, List<SPQNode>> getNodeToAdjList() {
-        return nodeToAdjList;
-    }
-
-    public void setNodeToAdjList(HashMap<SPQNode, List<SPQNode>> nodeToAdjList) {
-        this.nodeToAdjList = nodeToAdjList;
-    }
-
-    public HashMap<Vertex, Boolean> getTreeMap() {
-        return treeMap;
-    }
-
-    public void setTreeMap(HashMap<Vertex, Boolean> treeMap) {
-        this.treeMap = treeMap;
-    }
-
-    public HashMap<String, Vertex> getNameToTreeVertex() {
-        return nameToTreeVertex;
-    }
-
-    public void setNameToTreeVertex(HashMap<String, Vertex> nameToTreeVertex) {
-        this.nameToTreeVertex = nameToTreeVertex;
-    }
-
-    public SPQPNode getRoot() {
-        return root;
-    }
-
-    public void setRoot(SPQPNode root) {
-        this.root = root;
-    }
-
     public SPQTree getTree() {
         return tree;
-    }
-
-    public void setTree(SPQTree tree) {
-        this.tree = tree;
     }
 
     public SPQNode run() {
@@ -119,6 +71,7 @@ public class SPQImporter {
             tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
             tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
             tree.generateAdjecencyListMaP(tree.getRoot());
+
          //   root.computeAdjecentVertices();
 
 

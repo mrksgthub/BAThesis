@@ -1,9 +1,8 @@
 package Visualizing;
 
 import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
 import Datatypes.TupleEdge;
-import Helperclasses.GraphHelper;
+import Datatypes.Vertex;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jgrapht.graph.DefaultEdge;
 
@@ -11,57 +10,29 @@ import java.util.*;
 
 public class Rectangulator<E> {
 
-    List<PlanarGraphFace<Vertex, E>> planarGraphFaces;
-
-    HashMap<PlanarGraphFace<Vertex, E>, PlanarGraphFace<Vertex, E>> rectangularFaceMap = new HashMap<>();
-    HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> originaledgeToFaceMap = new HashMap<>(2048);
     PlanarGraphFace<Vertex, DefaultEdge> outerFace = new PlanarGraphFace<>("externalFace");
-    int counter = 100;
-    List<TupleEdge<Vertex, Vertex>> startingEdges = new ArrayList<>();
-    List<PlanarGraphFace<Vertex, E>> rectuangularInnerFaces = new ArrayList<PlanarGraphFace<Vertex, E>>();
+    private List<PlanarGraphFace<Vertex, E>> planarGraphFaces;
+    private HashMap<PlanarGraphFace<Vertex, E>, PlanarGraphFace<Vertex, E>> rectangularFaceMap = new HashMap<>();
+    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> originaledgeToFaceMap = new HashMap<>(2048);
+    private int counter = 100;
+    private List<TupleEdge<Vertex, Vertex>> startingEdges = new ArrayList<>();
+    private List<PlanarGraphFace<Vertex, E>> rectuangularInnerFaces = new ArrayList<PlanarGraphFace<Vertex, E>>();
 
-
-    public List<PlanarGraphFace<Vertex, E>> getRectuangularInnerFaces() {
-        return rectuangularInnerFaces;
-    }
 
     public Rectangulator(List<PlanarGraphFace<Vertex, E>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
     }
 
+    public List<PlanarGraphFace<Vertex, E>> getRectuangularInnerFaces() {
+        return rectuangularInnerFaces;
+    }
 
     public PlanarGraphFace<Vertex, DefaultEdge> getOuterFace() {
         return outerFace;
     }
 
-    public int getCounter() {
-        return counter;
-    }
-
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
-
-    public List<PlanarGraphFace<Vertex, E>> getPlanarGraphFaces() {
-        return planarGraphFaces;
-    }
-
-    public HashMap<PlanarGraphFace<Vertex, E>, PlanarGraphFace<Vertex, E>> getRectangularFaceMap() {
-        return rectangularFaceMap;
-    }
-
-    public HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> getOriginaledgeToFaceMap() {
-        return originaledgeToFaceMap;
-    }
-
     public void setOriginaledgeToFaceMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> originaledgeToFaceMap) {
         this.originaledgeToFaceMap = originaledgeToFaceMap;
-    }
-
-    public TupleEdge<Vertex, Vertex> next(TupleEdge<Vertex, Vertex> edge) {
-
-
-        return edge;
     }
 
 
@@ -80,7 +51,7 @@ public class Rectangulator<E> {
                 }
             }
             if (count == 4) {
-                if (face.getType() == PlanarGraphFace.FaceType.EXTERNAL) {
+                if (face.getType() == PlanarGraphFace.FaceType.EXTERNAL) { // Das äußere Face ist schon rechteckig und kann gleich als äußere Facette festgelegt werden.
                     outerFace = (PlanarGraphFace<Vertex, DefaultEdge>) face;
                     continue;
                 } else {
@@ -98,7 +69,6 @@ public class Rectangulator<E> {
             Map<Vertex, TupleEdge<Vertex, Vertex>> vertexToFront = new HashMap<>();
             Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> externalFronts = new HashMap<>();
 
-            //computeNexts(face.edgeList, nexts, prevs);
             computeNexts2(face.getEdgeList(), nexts, prevs);
 
             Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep = new HashMap<>();
@@ -109,83 +79,31 @@ public class Rectangulator<E> {
 
                 computeFronts(orthogonalRep, fronts, face.getEdgeList(), vertexToFront);
 
-                Set<TupleEdge<Vertex, Vertex>> frontSet = new HashSet<>(fronts.values());
-                List<TupleEdge<Vertex, Vertex>> frontList = new ArrayList<>(frontSet);
-                for (TupleEdge<Vertex, Vertex> edge : frontList
-                ) {
-                    projectEdge2(edge, nexts, fronts, newOrthogonalRep);
-                }
+                projectFronts(nexts, fronts, newOrthogonalRep);
 
 
-            } else {
+            } else { // Es handelt sich um die äußere Facette
 
                 if (face.getType() == PlanarGraphFace.FaceType.EXTERNAL_PROCESSED) { // die ursprüngliche Äußere Facette wurde bearbeitet und ist nicht rechteckig, dann wird der rechteckige Rahmen um diese gezogen
 
-                    // new outer Rectangle
-                    Vertex v1 = new Vertex("outer1", true);
-                    Vertex v2 = new Vertex("outer2", true);
-                    Vertex v3 = new Vertex("outer3", true);
-                    Vertex v4 = new Vertex("outer4", true);
-                    TupleEdge<Vertex, Vertex> edge1 = new TupleEdge<>(v1, v2, 1);
-                    TupleEdge<Vertex, Vertex> edge2 = new TupleEdge<>(v2, v3, 1);
-                    TupleEdge<Vertex, Vertex> edge3 = new TupleEdge<>(v3, v4, 1);
-                    TupleEdge<Vertex, Vertex> edge4 = new TupleEdge<>(v4, v1, 1);
-                    TupleEdge[] outerRectangle = new TupleEdge[]{edge1, edge2, edge3, edge4};
-                    nexts.put(edge1, edge2);
-                    nexts.put(edge2, edge3);
-                    nexts.put(edge3, edge4);
-                    nexts.put(edge4, edge1);
-                    face.getEdgeOrientationMap().put(edge1, 0);
-                    face.getEdgeOrientationMap().put(edge2, 1);
-                    face.getEdgeOrientationMap().put(edge3, 2);
-                    face.getEdgeOrientationMap().put(edge4, 3);
-
-                    outerFace.getEdgeOrientationMap().put(GraphHelper.reverseEdge(edge1, false), 0);
-                    outerFace.getEdgeOrientationMap().put(GraphHelper.reverseEdge(edge2, false), 1);
-                    outerFace.getEdgeOrientationMap().put(GraphHelper.reverseEdge(edge3, false), 2);
-                    outerFace.getEdgeOrientationMap().put(GraphHelper.reverseEdge(edge4, false), 3);
-                    outerFace.getEdgeList().add(GraphHelper.reverseEdge(edge1, true));
-                    outerFace.getEdgeList().add(GraphHelper.reverseEdge(edge4, true));
-                    outerFace.getEdgeList().add(GraphHelper.reverseEdge(edge3, true));
-                    outerFace.getEdgeList().add(GraphHelper.reverseEdge(edge2, true));
-                    outerFace.getOrthogonalRep().put(GraphHelper.reverseEdge(edge1, false), -1);
-                    outerFace.getOrthogonalRep().put(GraphHelper.reverseEdge(edge2, false), -1);
-                    outerFace.getOrthogonalRep().put(GraphHelper.reverseEdge(edge3, false), -1);
-                    outerFace.getOrthogonalRep().put(GraphHelper.reverseEdge(edge4, false), -1);
-
-                    for (TupleEdge<Vertex, Vertex> edge :
-                            outerFace.getEdgeList()) {
-                        originaledgeToFaceMap.put(edge, outerFace);
-
-                    }
-                  //  outerFace.computeEdgeToIndexMap();
-
-                    newOrthogonalRep.put(edge1, 1);
-                    newOrthogonalRep.put(edge2, 1);
-                    newOrthogonalRep.put(edge3, 1);
-                    newOrthogonalRep.put(edge4, 1);
-                    face.setOrientationsOuterFacette();
-            //        face.computeEdgeToIndexMap();
+                    TupleEdge[] outerRectangle = addOuterRectangleToOriginalOuterFace(face, nexts, newOrthogonalRep);
 
                     computeExternalFront(orthogonalRep, fronts, externalFronts, nexts, face.getEdgeOrientationMap(), outerRectangle, face.getEdgeList());
-
-                    Set<TupleEdge<Vertex, Vertex>> frontSet = new LinkedHashSet<>(fronts.values());
-
 
                     Set<TupleEdge<Vertex, Vertex>> externalFrontSet = new LinkedHashSet<>(externalFronts.values());
                     List<TupleEdge<Vertex, Vertex>> edgeList = new ArrayList<>(externalFrontSet);
 
-                    // Um den Prozess zu vereinfachen wird eine
-                    if (fronts.keySet().size() == 0) {
+                    // Um den Prozess zu vereinfachen wird nur eine externe Front, welche eine Dummykante mit der äußeren Facette bilden soll ausgewählt, dann wird diese Kante hinzugefügt und dann kann man den Rest wie eine innere Facette behandeln
+                    if (fronts.keySet().size() == 0) { // fronts soll 0 sein, da wir das Externe Face schon einmal processed haben. So, dass die Kanten, deren Front eine andere Kante der äußeren Facette ist.
 
-                        TupleEdge<Vertex, Vertex> edge = edgeList.get(0);
+                        TupleEdge<Vertex, Vertex> edge = edgeList.get(0); // die Kante, welche mit dem äußeren Rechteck verbunden werden soll
                         projectExternalEdge(edge, nexts, externalFronts, newOrthogonalRep, face.getEdgeOrientationMap(), face.getSidesMap());
-                        for (int i = 1; i < edgeList.size() - 1; i++) {
+                        for (int i = 1; i < edgeList.size() - 1; i++) { // die anderen Kanten der
                             projectEdge2(edgeList.get(i), nexts, externalFronts, newOrthogonalRep);
 
                         }
                     }
-                } else {
+                } else { // process die äu0ere Front
 
                     System.out.println("Find Fronts:");
                     StopWatch stopWatch = new StopWatch();
@@ -193,6 +111,7 @@ public class Rectangulator<E> {
 
 
                     stopWatch.start();
+                    // Debug Code:
           /*          for (Datatypes.TupleEdge<Datatypes.TreeVertex, Datatypes.TreeVertex> edge : face.edgeList
                     ) {
                         if (orthogonalRep.get(edge) == -1) {
@@ -212,22 +131,25 @@ public class Rectangulator<E> {
                     System.out.println(" StopWatch findFronts2: " + stopWatch.getTime());
 
 
-                    Set<TupleEdge<Vertex, Vertex>> frontSet = new LinkedHashSet<>(fronts.values());
+                    projectFronts(nexts, fronts, newOrthogonalRep);
+             /*       Set<TupleEdge<Vertex, Vertex>> frontSet = new LinkedHashSet<>(fronts.values());
                     List<TupleEdge<Vertex, Vertex>> frontList = new ArrayList<>(frontSet);
                     for (TupleEdge<Vertex, Vertex> edge : frontList
                     ) {
 
-                        //   projectEdgeExternalFace(edge, nexts, fronts, newOrthogonalRep, face, vertexToFront, externalFronts);
                         projectEdge2(edge, nexts, fronts, newOrthogonalRep);
                     }
-
+*/
                 }
 
                 face.setType(PlanarGraphFace.FaceType.EXTERNAL_PROCESSED);
             }
 
+            // Nachdem die Dummykanten und Knoten hinzugefügt wurden bestimmen wir die neuen Facetten, in dem wir die Kanten in nexts Ablaufen. Wir machen dies so lange noch Kanten nicht besucht wurden. Am Ende
+
 
             HashMap<TupleEdge<Vertex, Vertex>, Boolean> visitedMap = new HashMap<>();
+
             boolean processed = false;
             for (TupleEdge<Vertex, Vertex> pair :
                     nexts.keySet()
@@ -288,15 +210,15 @@ public class Rectangulator<E> {
                         }
                         rectangularFaceMap.remove(faceObj);
                     }
-             //       faceObj.computeEdgeToIndexMap();
+                    //       faceObj.computeEdgeToIndexMap();
                     for (TupleEdge<Vertex, Vertex> edge : faceObj.getEdgeList()
                     ) {
                         originaledgeToFaceMap.put(new TupleEdge<>(edge.getLeft(), edge.getRight()), (PlanarGraphFace<Vertex, DefaultEdge>) faceObj);
                     }
                 }
             }
-
-            //
+// TODO Testen, ob das entfernen irgendeinen Einfluss hatte
+ /*           //
             if (startingEdges.size() == 0 && face.getName().equals("0") && !processed) {
                 dequeStack.push(face);
             }
@@ -304,7 +226,7 @@ public class Rectangulator<E> {
             // Original external face was rectangular to begin with
             if (startingEdges.size() == 0 && !face.getName().equals("0")) {
                 rectangularFaceMap.put(face, face);
-            }
+            }*/
 
 
             startingEdges = new ArrayList<>();
@@ -315,6 +237,71 @@ public class Rectangulator<E> {
         }
 
         rectuangularInnerFaces.addAll(rectangularFaceMap.keySet());
+    }
+
+    private void projectFronts(Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> fronts, Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep) {
+        Set<TupleEdge<Vertex, Vertex>> frontSet = new HashSet<>(fronts.values());
+        List<TupleEdge<Vertex, Vertex>> frontList = new ArrayList<>(frontSet);
+        for (TupleEdge<Vertex, Vertex> edge : frontList
+        ) {
+            projectEdge2(edge, nexts, fronts, newOrthogonalRep);
+        }
+    }
+
+
+    /**
+     * Fügt das äußere Rechteck zur prozessierten äu0eren Facette hinzu
+     *
+     * @param face - die äu0ere Facette
+     * @param nexts - die nexts()-Funktion aus dem Buch
+     * @param newOrthogonalRep - die modifizierte OrthogonalRep, welche genutzt wird um die rechteckigen Facetten zu bilden.
+     * @return
+     */
+    private TupleEdge[] addOuterRectangleToOriginalOuterFace(PlanarGraphFace<Vertex, E> face, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep) {
+        // neues  outer Rectangle
+        Vertex v1 = new Vertex("outer1", true);
+        Vertex v2 = new Vertex("outer2", true);
+        Vertex v3 = new Vertex("outer3", true);
+        Vertex v4 = new Vertex("outer4", true);
+        TupleEdge<Vertex, Vertex> edge1 = new TupleEdge<>(v1, v2, 1);
+        TupleEdge<Vertex, Vertex> edge2 = new TupleEdge<>(v2, v3, 1);
+        TupleEdge<Vertex, Vertex> edge3 = new TupleEdge<>(v3, v4, 1);
+        TupleEdge<Vertex, Vertex> edge4 = new TupleEdge<>(v4, v1, 1);
+        TupleEdge[] outerRectangle = new TupleEdge[]{edge1, edge2, edge3, edge4};
+        nexts.put(edge1, edge2);
+        nexts.put(edge2, edge3);
+        nexts.put(edge3, edge4);
+        nexts.put(edge4, edge1);
+        face.getEdgeOrientationMap().put(edge1, 0);
+        face.getEdgeOrientationMap().put(edge2, 1);
+        face.getEdgeOrientationMap().put(edge3, 2);
+        face.getEdgeOrientationMap().put(edge4, 3);
+
+        outerFace.getEdgeOrientationMap().put(TupleEdge.reverseEdge(edge1, false), 0);
+        outerFace.getEdgeOrientationMap().put(TupleEdge.reverseEdge(edge2, false), 1);
+        outerFace.getEdgeOrientationMap().put(TupleEdge.reverseEdge(edge3, false), 2);
+        outerFace.getEdgeOrientationMap().put(TupleEdge.reverseEdge(edge4, false), 3);
+        outerFace.getEdgeList().add(TupleEdge.reverseEdge(edge1, true));
+        outerFace.getEdgeList().add(TupleEdge.reverseEdge(edge4, true));
+        outerFace.getEdgeList().add(TupleEdge.reverseEdge(edge3, true));
+        outerFace.getEdgeList().add(TupleEdge.reverseEdge(edge2, true));
+        outerFace.getOrthogonalRep().put(TupleEdge.reverseEdge(edge1, false), -1);
+        outerFace.getOrthogonalRep().put(TupleEdge.reverseEdge(edge2, false), -1);
+        outerFace.getOrthogonalRep().put(TupleEdge.reverseEdge(edge3, false), -1);
+        outerFace.getOrthogonalRep().put(TupleEdge.reverseEdge(edge4, false), -1);
+
+        for (TupleEdge<Vertex, Vertex> edge :
+                outerFace.getEdgeList()) {
+            originaledgeToFaceMap.put(edge, outerFace);
+
+        }
+
+        newOrthogonalRep.put(edge1, 1);
+        newOrthogonalRep.put(edge2, 1);
+        newOrthogonalRep.put(edge3, 1);
+        newOrthogonalRep.put(edge4, 1);
+        face.setOrientationsOuterFacette();
+        return outerRectangle;
     }
 
 
@@ -351,11 +338,11 @@ public class Rectangulator<E> {
                 replacerEdge.add(new TupleEdge<>(restOfOldFront.getRight(), restOfOldFront.getLeft()));
 
                 newOrthogonalRep.put(possibleEdge, 0);
-          //      possibleEdge.setWinkel(0);
+                //      possibleEdge.setWinkel(0);
                 newOrthogonalRep.put(projectedEdge, 1);
-         //       projectedEdge.setWinkel(1);
+                //       projectedEdge.setWinkel(1);
                 newOrthogonalRep.put(restOfOldFront, newOrthogonalRep.get(front));
-          //      restOfOldFront.setWinkel(newOrthogonalRep.get(front));
+                //      restOfOldFront.setWinkel(newOrthogonalRep.get(front));
 
                 // Falls die Kante, welche eine Front hat geteilt wird, daher muss die Frontsmap geupdated werden, da sonst die front nicht getroffen wird
                 if (externalFronts.get(front) != null) {
@@ -376,9 +363,9 @@ public class Rectangulator<E> {
                 nexts.put(possibleEdge, projectedEdge);
                 nexts.put(projectedEdge, restOfOldFront);
                 newOrthogonalRep.put(projectedEdgeReverse, 1);
-             //   projectedEdgeReverse.setWinkel(1);
+                //   projectedEdgeReverse.setWinkel(1);
                 newOrthogonalRep.put(new TupleEdge<>(front.getLeft(), front.getRight()), 1);
-            //    front.setWinkel(1);
+                //    front.setWinkel(1);
 
                 nexts.put(restOfOldFront, edgeThatfollowsOldFront);
                 newFront.add(new TupleEdge<>(restOfOldFront.getLeft(), restOfOldFront.getRight()));
@@ -413,7 +400,7 @@ public class Rectangulator<E> {
         newFront.add(new TupleEdge<>(front.getLeft(), front.getRight()));
         //TODO orthogonalRep der Front im Benachbarten Vertex updaten
         replacerEdge.add(new TupleEdge<>((front.getRight()), front.getLeft()));
-        TupleEdge<Vertex, Vertex> originalFrontReverse = GraphHelper.reverseEdge(originalFront, false);
+        TupleEdge<Vertex, Vertex> originalFrontReverse = TupleEdge.reverseEdge(originalFront, false);
         PlanarGraphFace<Vertex, DefaultEdge> neighbouringFace = originaledgeToFaceMap.get(originalFrontReverse);
         originaledgeToFaceMap.remove(originalFrontReverse);
         assert (neighbouringFace != null);
@@ -504,8 +491,6 @@ public class Rectangulator<E> {
         for (int i = 0; i < edgeList.size() * 2; i++) { // TODO hier noch fixen, dass nächste Kante nicht immer geholt werden muss
 
             TupleEdge<Vertex, Vertex> edge = edgeList.get(i % edgeList.size());
-            TupleEdge<Vertex, Vertex> startEdge;
-            TupleEdge<Vertex, Vertex> front;
 
             if (edge.getWinkel() == -1) {
                 edgeStack.push(edge);
@@ -525,8 +510,6 @@ public class Rectangulator<E> {
             }
 
 
-
-
             // Falls wir ein Links-Rechts-Rechtsknick Muster Finden, dann haben wir ein mögliches Rechteck gefunden. Damit haben wir die Front für das oberste Element des Frontstacks gefunden und können dann die Beiden Kanten mit rechtem Winkel herauslöschen.
             // Damit hat man ein Rechteck entfernt und in der neuen Restfacette hat pop = frontStack.pop(pop), dann einen Rechtsknick anstelle eines Linksknick
             while (buf.length() >= 3 && buf.subSequence(buf.length() - 3, buf.length()).equals("011") && !frontStack.isEmpty()) {
@@ -537,11 +520,11 @@ public class Rectangulator<E> {
                 buf.replace(buf.length() - 3, buf.length(), "1");
                 edgeStack.pop();
                 edgeStack.pop();
-          //      System.out.println("test");
+                //      System.out.println("test");
 
             }
 
-            if (i == edgeList.size()-1 && end) {
+            if (i == edgeList.size() - 1 && end) {
                 break;
             }
 
@@ -550,7 +533,6 @@ public class Rectangulator<E> {
 
         StringBuilder buf3 = new StringBuilder();
         Deque<TupleEdge<Vertex, Vertex>> newEdgeStack = new ArrayDeque<>();
-        Object[] toArray = edgeStack.toArray();
 
 
         /*         while (!frontStack.isEmpty()) {*/
@@ -564,11 +546,9 @@ public class Rectangulator<E> {
             }
         }
         j = 0;
-      /*  boolean isOver = false;*/
-        int size = 0;
+        /*  boolean isOver = false;*/
         while (!frontStack.isEmpty() && j != str.length()) {
-           /* isOver = true;*/
-            size = frontStack.size();
+            /* isOver = true;*/
             TupleEdge<Vertex, Vertex> edge = edgeStack.pollLast();
             buf3.append(str.charAt(j++));
             newEdgeStack.push(edge);
@@ -586,10 +566,9 @@ public class Rectangulator<E> {
                 buf3.replace(buf3.length() - 3, buf3.length(), "1");
                 newEdgeStack.pop();
                 newEdgeStack.pop();
-        //        System.out.println("test");
-              /*  isOver = false;*/
+                //        System.out.println("test");
+                /*  isOver = false;*/
             }
-
 
 
             if (j == str.length()) {
@@ -606,14 +585,9 @@ public class Rectangulator<E> {
                 }
 
 
-
-
-
-
             }
 
         }
-
 
 
         for (TupleEdge<Vertex, Vertex> edge : fronts.keySet()) {
@@ -644,8 +618,6 @@ public class Rectangulator<E> {
         for (int i = 0; i < edgeList.size(); i++) { // TODO hier noch fixen, dass nächste Kante nicht immer geholt werden muss
 
             TupleEdge<Vertex, Vertex> edge = edgeList.get(i % edgeList.size());
-            TupleEdge<Vertex, Vertex> startEdge;
-            TupleEdge<Vertex, Vertex> front;
 
             if (edge.getWinkel() == -1) {
                 edgeStack.offer(edge);
@@ -667,7 +639,7 @@ public class Rectangulator<E> {
 
         }
 
-     //   System.out.println("test");
+        //   System.out.println("test");
     }
 
 
@@ -772,7 +744,7 @@ public class Rectangulator<E> {
         newFront.add(new TupleEdge<>(front2.getLeft(), front2.getRight()));
         //TODO orthogonalRep der Front im Benachbarten Vertex updaten
         replacerEdge.add(new TupleEdge<>(front2.getRight(), (front2.getLeft())));
-        TupleEdge<Vertex, Vertex> originalFrontReverse = GraphHelper.reverseEdge(originalFront, false);
+        TupleEdge<Vertex, Vertex> originalFrontReverse = TupleEdge.reverseEdge(originalFront, false);
         PlanarGraphFace<Vertex, DefaultEdge> neighbouringFace = originaledgeToFaceMap.get(originalFrontReverse);
         originaledgeToFaceMap.remove(originalFrontReverse);
         assert (neighbouringFace != null);
@@ -798,7 +770,7 @@ public class Rectangulator<E> {
     }
 
 
-    public void computeNexts2
+    private void computeNexts2
             (List<TupleEdge<Vertex, Vertex>> edgeList, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> prevs) {
 
 

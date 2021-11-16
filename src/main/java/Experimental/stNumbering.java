@@ -1,3 +1,5 @@
+package Experimental;
+
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Helperclasses.GraphHelper;
@@ -11,21 +13,21 @@ import org.jgrapht.util.DoublyLinkedList;
 
 import java.util.*;
 
-public class stNumbering {
+class stNumbering {
 
 
-    static boolean[] visited;
-    static int[] childOf;
+    private static boolean[] visited;
+    private static int[] childOf;
     static int[] incomingEdge;
     static int[] OrientationOfIncomingEdge;
     static int[] listPositionOfVertex;
     static Edge[] nextDependentEdge;
-    static int[] dfs;
-    static int i = 0;
-    static ArrayList<DefaultEdge> Edges = new ArrayList<>();
-    static int[] edgeInt;
-    static int[] dfiArray;
-    static Datatypes.Vertex[] vertices;
+    private static int[] dfs;
+    private static int i = 0;
+    private static ArrayList<DefaultEdge> Edges = new ArrayList<>();
+    private static int[] edgeInt;
+    private static int[] dfiArray;
+    private static Datatypes.Vertex[] vertices;
     private static DirectedMultigraph<Datatypes.Vertex, DefaultEdge> graph;
     private static AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
     DoublyLinkedList<Datatypes.Vertex> L;
@@ -86,7 +88,7 @@ public class stNumbering {
     }
 
 
-    public void dfs(Datatypes.Vertex root) {
+    private void dfs(Datatypes.Vertex root) {
         visited[root.getId()] = true;
 
         for (Datatypes.Vertex v : Graphs.neighborListOf(graph3, root)
@@ -113,14 +115,7 @@ public class stNumbering {
 }
 
 class Vertex {
-    Datatypes.Vertex v;
-    int id;
-    int orientation;
 
-    public Vertex(Datatypes.Vertex v) {
-        this.v = v;
-        id = v.getId();
-    }
 }
 
 class Edge {
@@ -131,12 +126,12 @@ class Edge {
 
 class DFTransversal {
 
-    AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
-    DirectedMultigraph<Datatypes.Vertex, DefaultEdge> dfsTree = new DirectedMultigraph<Datatypes.Vertex, DefaultEdge>(DefaultEdge.class);
-    boolean[] dfsVisited;
-    Datatypes.Vertex[] childOf;
-    List<Stack<Datatypes.Vertex>> stackList = new LinkedList<>();
-    HashMap<DefaultEdge, Boolean> edgesVisited = new HashMap<>();
+    private AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
+    private DirectedMultigraph<Datatypes.Vertex, DefaultEdge> dfsTree = new DirectedMultigraph<Datatypes.Vertex, DefaultEdge>(DefaultEdge.class);
+    private boolean[] dfsVisited;
+    private Datatypes.Vertex[] childOf;
+    private List<Stack<Datatypes.Vertex>> stackList = new LinkedList<>();
+    private HashMap<DefaultEdge, Boolean> edgesVisited = new HashMap<>();
 
 
     public DFTransversal(AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3) {
@@ -157,7 +152,7 @@ class DFTransversal {
 
     }
 
-    public void dfs(Datatypes.Vertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
+    private void dfs(Datatypes.Vertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
 
         int v;
 

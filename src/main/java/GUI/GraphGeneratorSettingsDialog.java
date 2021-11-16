@@ -3,11 +3,11 @@ package GUI;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class GraphGeneratorSettingsDialog extends JDialog {
+class GraphGeneratorSettingsDialog extends JDialog {
     int ops = -1;
     int chanceOfP = -1;
-    int maxDeg = -1;
-    int einfachheit = -1;
+    private int maxDeg = -1;
+    private int einfachheit = -1;
     boolean validSettings = false;
     private JPanel contentPane;
     private JButton buttonOK;

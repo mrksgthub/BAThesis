@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-public class TamassiaMaxFlowTest {
+class TamassiaMaxFlowTest {
 
 
 /*
@@ -30,12 +30,12 @@ public class TamassiaMaxFlowTest {
 
         SPQNode root = tree.getRoot();
 
-        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
+        Hashtable<Experimental.Vertex, ArrayList<Experimental.Vertex>> embedding = new Hashtable<>();
         Embedder embedder = new Embedder(embedding);
         embedder.run(root);
 
 
-        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<Experimental.Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
         treeVertexFaceGenerator.generateFaces2();
 
 
@@ -58,10 +58,10 @@ public class TamassiaMaxFlowTest {
         }
 
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
+        for (PlanarGraphFace<Experimental.Vertex, DefaultEdge> face : test.getTreeVertexFaceGenerator().getPlanarGraphFaces()
         ) {
             int sum = 0;
-            for (MutablePair<Vertex, Vertex> edge : face.getOrthogonalRep().keySet()
+            for (MutablePair<Experimental.Vertex, Experimental.Vertex> edge : face.getOrthogonalRep().keySet()
             ) {
                 sum += face.getOrthogonalRep().get(edge);
             }

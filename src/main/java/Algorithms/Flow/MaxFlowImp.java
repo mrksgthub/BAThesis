@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MaxFlowImp {
+class MaxFlowImp {
 
 
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph;
     int n;
-    HashMap<Vertex, Integer> treeVertexIntergerHashMap = new HashMap<>();
-    Vertex[] treeVertexArr;
+    private HashMap<Vertex, Integer> treeVertexIntergerHashMap = new HashMap<>();
+    private Vertex[] treeVertexArr;
     ArrayList<Edge>[] outgoingEdgeLists;
     boolean[] visited;
     int source = 0;
@@ -31,7 +31,7 @@ public class MaxFlowImp {
      *
      * @param networkGraph
      */
-    public MaxFlowImp(DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph) {
+    MaxFlowImp(DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph) {
         this.networkGraph = networkGraph;
         n = networkGraph.vertexSet().size();
         sink = n - 1;
@@ -82,7 +82,7 @@ public class MaxFlowImp {
         double capacity;
         Double flow = 0.0;
 
-        public Edge(int u, int v) {
+        Edge(int u, int v) {
             this.u = u;
             this.v = v;
             source = treeVertexArr[u];
@@ -96,7 +96,7 @@ public class MaxFlowImp {
 
         }
 
-        public Edge(int u, int v, Edge edge) {
+        Edge(int u, int v, Edge edge) {
             this.u = u;
             this.v = v;
             source = treeVertexArr[u];

@@ -7,7 +7,7 @@ import org.jgrapht.graph.DirectedWeightedMultigraph;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class EdmondsKarp extends MaxFlowImp {
+class EdmondsKarp extends MaxFlowImp {
 // https://github.com/williamfiset/Algorithms/blob/2eed08cd0de39ce73d445e83e6aa1476741edc51/src/main/java/com/williamfiset/algorithms/graphtheory/networkflow/examples/EdmondsKarpExample.java#L154
 //    https://en.wikibooks.org/wiki/Algorithm_Implementation/Graphs/Maximum_flow/Edmonds-Karp
 // Wikipedia
@@ -56,7 +56,7 @@ public class EdmondsKarp extends MaxFlowImp {
     }
 
 
-    public int bfs() {
+    private int bfs() {
 
 
         visited[source] = true;

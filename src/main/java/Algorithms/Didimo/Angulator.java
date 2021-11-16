@@ -71,7 +71,7 @@ public class Angulator {
     }
 
 
-    public void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
+    private void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
         for (SPQNode node :
                 root.getMergedChildren()) {

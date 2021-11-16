@@ -14,20 +14,20 @@ import java.util.*;
 public class FaceGenerator<V extends Vertex, E> implements Serializable {
 
     private List<TupleEdge<V, V>> pairList;
-    Map<Vertex, Integer> supplyMap = new HashMap<>();
-    Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
-    Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    List<List<V>> listOfFaces2 = new ArrayList<>();
-    Hashtable<Vertex, ArrayList<Vertex>> embedding;
-    Map<E, Integer> visitsMap = new HashMap<>();
-    Map<TupleEdge<V, V>, Integer> visitsMap2 = new HashMap<>();
-    List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
-    HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
-    HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
-    HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<>();
-    DirectedMultigraph<V, E> graph;
-    V startvertex;
-    V sinkVertex;
+    private Map<Vertex, Integer> supplyMap = new HashMap<>();
+    private Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
+    private Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
+    private List<List<V>> listOfFaces2 = new ArrayList<>();
+    private Hashtable<Vertex, ArrayList<Vertex>> embedding;
+    private Map<E, Integer> visitsMap = new HashMap<>();
+    private Map<TupleEdge<V, V>, Integer> visitsMap2 = new HashMap<>();
+    private List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
+    private HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
+    private HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
+    private HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<>();
+    private DirectedMultigraph<V, E> graph;
+    private V startvertex;
+    private V sinkVertex;
     private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
 
     public FaceGenerator(DirectedMultigraph<V, E> graph, V startvertex, V sinkVertex, Hashtable<Vertex, ArrayList<Vertex>> embedding) {

@@ -3,7 +3,7 @@ package Datatypes;
 import java.util.HashMap;
 
 public class SPQQNode extends SPQNode {
-    NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.Q;
+    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.Q;
 
     public SPQQNode(String q) {
         super(q);
@@ -39,11 +39,6 @@ public class SPQQNode extends SPQNode {
     @Override
     public NodeTypesEnum.NODETYPE getNodeType() {
         return nodeType;
-    }
-
-    @Override
-    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
-        this.nodeType = nodeType;
     }
 
 

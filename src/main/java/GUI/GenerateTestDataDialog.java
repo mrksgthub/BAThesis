@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 
-public class GenerateTestDataDialog extends JDialog {
+class GenerateTestDataDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;

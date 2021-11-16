@@ -3,7 +3,6 @@ package Visualizing;
 import Datatypes.PlanarGraphFace;
 import Datatypes.TupleEdge;
 import Datatypes.Vertex;
-import Helperclasses.GraphHelper;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
@@ -17,13 +16,13 @@ import java.util.Map;
 
 public class VerticalEdgeFlow implements Runnable {
 
-    HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
-    Map<Vertex, Integer> supplyMap = new HashMap<>();
-    Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
-    Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
+    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> edgeToFAceMap = new HashMap<>();
+    private Map<Vertex, Integer> supplyMap = new HashMap<>();
+    private Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
+    private Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
     Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap = new HashMap<>();
-    List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList;
-    PlanarGraphFace<Vertex, DefaultEdge> outerFace;
+    private List<PlanarGraphFace<Vertex, DefaultEdge>> rectangleList;
+    private PlanarGraphFace<Vertex, DefaultEdge> outerFace;
     private Thread t;
     private String threadName = "vertical";
     private DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph;
@@ -71,13 +70,13 @@ public class VerticalEdgeFlow implements Runnable {
         supplyMap.put(outerFace, 0);
         for (TupleEdge<Vertex, Vertex> edge :
                 this.outerFace.getSidesMap().get(1)) {
-            PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
+            PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(TupleEdge.reverseEdge(edge, false));
             networkGraph.addVertex(neighbour);
 
             DefaultWeightedEdge e = networkGraph.addEdge(this.outerFace, neighbour);
 
             edgeToArcMap.put(edge, e);
-            edgeToArcMap.put(GraphHelper.reverseEdge(edge, false), e);
+            edgeToArcMap.put(TupleEdge.reverseEdge(edge, false), e);
 
             networkGraph.setEdgeWeight(e, 1);
             upperMap.put(e, Integer.MAX_VALUE);
@@ -92,12 +91,12 @@ public class VerticalEdgeFlow implements Runnable {
 
             for (TupleEdge<Vertex, Vertex> edge :
                     rectangleList.get(j).getSidesMap().get(3)) {
-                PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(GraphHelper.reverseEdge(edge, false));
+                PlanarGraphFace<Vertex, DefaultEdge> neighbour = edgeToFAceMap.get(TupleEdge.reverseEdge(edge, false));
                 networkGraph.addVertex(neighbour);
 
                 DefaultWeightedEdge e = networkGraph.addEdge(face, neighbour);
                 edgeToArcMap.put(edge, e);
-                edgeToArcMap.put(GraphHelper.reverseEdge(edge, false), e);
+                edgeToArcMap.put(TupleEdge.reverseEdge(edge, false), e);
 
                 networkGraph.setEdgeWeight(e, 1);
                 upperMap.put(e, Integer.MAX_VALUE);
@@ -110,7 +109,7 @@ public class VerticalEdgeFlow implements Runnable {
         return networkGraph;
     }
 
-    public void generateCapacities() {
+    private void generateCapacities() {
 
 
         MinimumCostFlowProblem<Vertex,

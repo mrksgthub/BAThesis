@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SPQSNode extends SPQNode {
 
-    NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.S;
+    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.S;
 
     public SPQSNode() {
         super();
@@ -27,21 +27,6 @@ public class SPQSNode extends SPQNode {
     @Override
     public NodeTypesEnum.NODETYPE getNodeType() {
         return nodeType;
-    }
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
-        this.nodeType = nodeType;
     }
 
 

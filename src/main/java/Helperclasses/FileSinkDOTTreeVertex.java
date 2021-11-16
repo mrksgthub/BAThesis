@@ -9,7 +9,7 @@ import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class FileSinkDOTTreeVertex extends FileSinkDOT {
+class FileSinkDOTTreeVertex extends FileSinkDOT {
 
 
     @Override
