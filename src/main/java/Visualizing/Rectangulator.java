@@ -80,6 +80,17 @@ public class Rectangulator<E> {
         rectuangularInnerFaces.addAll(rectangularFaceMap.keySet());
     }
 
+    /**
+     * Bestimme die Fronten der Facette
+     *
+     * @param face
+     * @param orthogonalRep
+     * @param nexts
+     * @param fronts
+     * @param vertexToFront
+     * @param externalFronts
+     * @param newOrthogonalRep
+     */
     private void determineFronts(PlanarGraphFace<Vertex, E> face, Map<TupleEdge<Vertex, Vertex>, Integer> orthogonalRep, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> fronts, Map<Vertex, TupleEdge<Vertex, Vertex>> vertexToFront, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> externalFronts, Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep) {
         if (face.getType() == PlanarGraphFace.FaceType.INTERNAL) {
 
