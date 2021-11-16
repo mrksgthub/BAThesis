@@ -71,7 +71,6 @@ public class Rectangulator<E> {
             computeNexts2(face.getEdgeList(), nexts, prevs);
             newOrthogonalRep.putAll(face.getOrthogonalRep());
 
-
             determineFronts(face, orthogonalRep, nexts, fronts, vertexToFront, externalFronts, newOrthogonalRep);
 
             buildRectangularFacesFromFace(dequeStack, face, nexts, newOrthogonalRep);
