@@ -47,7 +47,7 @@ public class GraphDrawer implements Runnable {
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(planarGraphFaces);
 
         rectangulator.setOriginaledgeToFaceMap(adjFaces2);
-        rectangulator.initialize();
+        rectangulator.run();
        // rectangulator.outerFace.setOrientationsOuterFacette();
 
 

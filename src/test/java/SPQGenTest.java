@@ -1,11 +1,5 @@
-import Algorithms.Embedder;
-import Algorithms.FaceGenerator;
-import Algorithms.Flow.TamassiaRepresentation;
 import Datatypes.*;
 import Datatypes.Vertex;
-import GraphGenerators.SPQGenerator;
-import Helperclasses.SPQExporter;
-import Helperclasses.SPQImporter;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
@@ -400,13 +394,15 @@ class SPQGenTest {
 
     }
 
+/*
 
     SPQPNode addPNode(SPQNode parentNode, int counter) {
-        SPQPNode node = new SPQPNode("P" + counter);
+        SPQPNode node = new SPQPNode("P" + counter, true);
         node.setParent(parentNode);
         parentNode.getChildren().add(node);
         return node;
     }
+*/
 
     SPQSNode addSNode(SPQNode parentNode, int counter) {
         SPQSNode node = new SPQSNode("S" + counter);

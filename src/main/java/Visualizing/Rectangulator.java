@@ -36,7 +36,7 @@ public class Rectangulator<E> {
     }
 
 
-    public void initialize() {
+    public void run() {
         Deque<PlanarGraphFace<Vertex, E>> dequeStack = new ArrayDeque<>(planarGraphFaces);
         PlanarGraphFace<Vertex, E> face;
 
@@ -171,7 +171,7 @@ public class Rectangulator<E> {
 
         HashMap<TupleEdge<Vertex, Vertex>, Boolean> visitedMap = new HashMap<>();
 
-        boolean processed = false;
+   //     boolean processed = false;
         for (TupleEdge<Vertex, Vertex> pair :
                 nexts.keySet()
         ) {
@@ -181,7 +181,7 @@ public class Rectangulator<E> {
             //  visitedMap.keySet()
                 startingEdges
         ) {
-            processed = true;
+         //  processed = true;
             if (!visitedMap.get(pair)) {
                 PlanarGraphFace<Vertex, E> faceObj = new PlanarGraphFace<>(Integer.toString(counter++));
 
@@ -239,15 +239,15 @@ public class Rectangulator<E> {
             }
         }
 // TODO Testen, ob das entfernen irgendeinen Einfluss hatte
- /*           //
-            if (startingEdges.size() == 0 && face.getName().equals("0") && !processed) {
+           //
+            if (startingEdges.size() == 0 && face.getType() == PlanarGraphFace.FaceType.EXTERNAL_PROCESSED && startingEdges.size() == 0) {
                 dequeStack.push(face);
             }
 
             // Original external face was rectangular to begin with
             if (startingEdges.size() == 0 && !face.getName().equals("0")) {
                 rectangularFaceMap.put(face, face);
-            }*/
+            }
 
 
         startingEdges = new ArrayList<>();
@@ -341,6 +341,8 @@ public class Rectangulator<E> {
 
             if (front == externalFronts.get(possibleEdge)) {
                 //
+            /*    possibleEdge = externalFronts.keySet().iterator().next();
+                front = externalFronts.values().iterator().next();*/
 
                 Vertex newVertex = new Vertex(front.getLeft().getName() + possibleEdge.getRight().getName() + " R", true);
                 // die extendede Edge im neuen Rectangle

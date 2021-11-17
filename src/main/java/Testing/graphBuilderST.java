@@ -20,20 +20,24 @@ import java.util.Hashtable;
 
 public class graphBuilderST {
 
-    private int chanceOfP;
+    private final int chanceOfP;
     private final int chanceOfPIncr;
-    private int minOps;
-    private int opsIncrement;
-    private String filePathString;
+    private final int minOps;
+    private final int opsIncrement;
+    private final int maxDegree ;
+    private final int chainLength ;
+    private final String filePathString;
 
 
 
-    public graphBuilderST(int minOps, int opsIncrement, int chanceOfP, int chanceOfPIncr, String filePathString) {
+    public graphBuilderST(int minOps, int opsIncrement, int chanceOfP, int chanceOfPIncr, int maxDegree, int chainLength, String filePathString) {
 
         this.minOps = minOps;
         this.opsIncrement = opsIncrement;
         this.chanceOfP = chanceOfP;
         this.chanceOfPIncr = chanceOfPIncr;
+        this.maxDegree = maxDegree;
+        this.chainLength = chainLength;
         this.filePathString = filePathString;
     }
 
@@ -118,7 +122,7 @@ public class graphBuilderST {
 
         for (int j = 0; j < 6; j++) {
 
-            CHANCE_OF_P += 5;
+            CHANCE_OF_P += opsIncrement;
             int OPS = minOps;
 
             for (int i = 0; i < 6; i++) {
@@ -126,7 +130,7 @@ public class graphBuilderST {
 
                 OPS += opsIncrement;
 
-                SPQGenerator spqGenerator = new SPQGenerator(OPS, CHANCE_OF_P);
+                SPQGenerator spqGenerator = new SPQGenerator(OPS, CHANCE_OF_P, maxDegree, chainLength);
                 spqGenerator.run();
 
                 tree = spqGenerator.getTree();

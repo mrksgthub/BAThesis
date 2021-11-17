@@ -47,6 +47,8 @@ class GuiTest extends JFrame {
     private JLabel timeLabel;
     private JButton runTestButton;
     private JButton generateTestDataButton;
+    private JLabel maxDegLabel;
+    private JLabel chainLenthLabel;
     private Boolean hasValidGraph;
 
 
@@ -115,6 +117,9 @@ class GuiTest extends JFrame {
                 if (dialog1.validSettings) {
                     opsField.setText("Ops: " + dialog1.ops);
                     ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
+                    maxDegLabel.setText("Max Deg: " + dialog1.getMaxDeg());
+                    chainLenthLabel.setText("Kettenlänge: " + dialog1.getEinfachheit());
+
                     ops = dialog1.ops;
                     chanceOfP = dialog1.chanceOfP;
                     SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP, dialog1.getMaxDeg(), dialog1.getEinfachheit());
@@ -124,7 +129,6 @@ class GuiTest extends JFrame {
                         protected Object doInBackground() throws Exception {
                             interrupts.setEnabled(true);
                             hasValidGraph = false;
-                            Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
                             spqGenerator.setCounter(0);;
                             while (!hasValidGraph && !isCancelled()) {
@@ -305,7 +309,7 @@ class GuiTest extends JFrame {
                     @Override
                     protected Object doInBackground() throws Exception {
                         updateText("Running tests");
-                        graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getMinOps(), dialog1.getOpsIncrement(), dialog1.getChanceOfP(), dialog1.getChanceOfPIncr(), dialog1.getFilePath());
+                        graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getMinOps(), dialog1.getOpsIncrement(), dialog1.getChanceOfP(), dialog1.getChanceOfPIncr(), dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getFilePath());
                         graphBuilderST.run();
                         return null;
                     }

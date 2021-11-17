@@ -39,7 +39,7 @@ class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(1000, 40);
+        SPQGenerator spqGenerator = new SPQGenerator(100, 40);
         spqGenerator.run();
 
 
@@ -142,7 +142,7 @@ class basicMainClass {
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
         rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
-        rectangulator.initialize();
+        rectangulator.run();
        // rectangulator.getOuterFace().setOrientationsOuterFacette();
 
 

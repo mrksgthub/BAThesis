@@ -14,6 +14,13 @@ class GenerateTestDataDialog extends JDialog {
     private JTextField opsIncrementField;
     private JTextField chanceOfPField;
     private JLabel graphFolderLabel;
+    private JTextField maxDegreeText;
+
+    private JTextField chainLengthText;
+    private JLabel maxDegreeLabel;
+    private JLabel chainLengthLabel;
+
+
     private int chanceOfPIncr;
     private int minOps;
     private int opsIncrement;
@@ -21,7 +28,16 @@ class GenerateTestDataDialog extends JDialog {
     private boolean validSettings;
     private File[] graphFolder;
     private String filePath;
+    private int maxDegree;
+    private int chainLength;
 
+    public int getMaxDegree() {
+        return maxDegree;
+    }
+
+    public int getChainLength() {
+        return chainLength;
+    }
 
     public int getChanceOfPIncr() {
         return chanceOfPIncr;
@@ -171,6 +187,27 @@ class GenerateTestDataDialog extends JDialog {
         }
 
 
+        try {
+            maxDegree = Integer.parseInt(maxDegreeText.getText());
+            if (maxDegree > 1 && maxDegree < 5) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 2-4 möglich");
+            e.printStackTrace();
+            maxDegree = -1;
+        }
+
+        try {
+            chainLength = Integer.parseInt(chainLengthText.getText());
+            if (chainLength < 1) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 1+ möglich");
+            e.printStackTrace();
+            chainLength = -1;
+        }
 
 
 
@@ -178,7 +215,8 @@ class GenerateTestDataDialog extends JDialog {
 
 
 
-        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 &&   opsIncrement   >= 0 )  {
+
+        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 &&   opsIncrement   >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0)  {
             validSettings = true;
             dispose();
 

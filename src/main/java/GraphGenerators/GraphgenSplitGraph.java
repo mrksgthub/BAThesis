@@ -94,19 +94,25 @@ public class GraphgenSplitGraph {
 
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < 1 * operations; i++) {
+        for (int i = 0; i <  operations; i++) {
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP && degreeOfedgeSource < 4 && degreeOfedgeSink < 4) {
-                randomnewPNode(edge);
+            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
+                if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg) {
+                    randomnewPNode(edge);
+                } else {
+                    i--;
+                }
+
             } else {
                 randomnewSNode(edge);
             }
         }
 
-        int counter = 0;
+        // Debug Code:
+/*        int counter = 0;
         for (int i = 0; i < 0.0 * operations; i++) {
 
             edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
@@ -120,7 +126,7 @@ public class GraphgenSplitGraph {
                 counter++;
             }
 
-        }
+        }*/
 
 
         // Start- und Endknoten in die Q-Nodes einfügen
@@ -206,7 +212,7 @@ public class GraphgenSplitGraph {
 
         // TODO Sinnvoll?
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < -1) {
+        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < 50) {
 
             arr1 = randomnewSNode(edge);
         } else {
