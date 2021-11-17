@@ -310,7 +310,7 @@ class spqTreeBauerTest {
         SPQTree.addVertex(sourceSink);
         SPQTree.addEdge(node, sourceSink);
 
-        SPQNode pRoot = new SPQNode("Proot");
+        SPQNode pRoot = new SPQPNode("Proot", true);
         SPQTree.addVertex(pRoot);
         SPQTree.addEdge(pRoot, rootNode);
         SPQTree.addEdge(pRoot, node);

@@ -40,8 +40,10 @@ public class SPQImporter {
                 proceessLine(line);
             }
 
+            nameToNode.get("Proot").setRoot();
             tree = new SPQTree(nameToNode.get("Proot"));
             root = (SPQPNode) nameToNode.get("Proot");
+
             if (tree.getRoot() == null) {
                 try {
                     throw new Exception("AHHH");
@@ -114,9 +116,9 @@ public class SPQImporter {
                             // Qnode
                             nameToNode.put(line.substring(0, line.length() - 1).trim(), qNode);
                         }
-                        case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim()));
+                        case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim(), false));
                         case 'S' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQSNode(line.substring(0, line.length() - 1).trim()));
-                        default -> System.out.println("bug");
+                        default -> System.out.println("");
                     }
 
                 }

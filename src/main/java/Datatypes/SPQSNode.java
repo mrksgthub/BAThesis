@@ -5,29 +5,22 @@ import java.util.List;
 
 public class SPQSNode extends SPQNode {
 
-    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.S;
-
-    public SPQSNode() {
-        super();
-    }
-
 
     public SPQSNode(String s) {
         super(s);
+        nodeType = NodeTypesEnum.NODETYPE.S;
     }
 
     public SPQSNode(Vertex edgeSource, Vertex edgeTarget) {
 
         super("S" + edgeSource.getName() + edgeTarget.getName()+ id++);
+        nodeType = NodeTypesEnum.NODETYPE.S;
         this.startVertex = edgeSource;
         this.sinkVertex = edgeTarget;
     }
 
 
-    @Override
-    public NodeTypesEnum.NODETYPE getNodeType() {
-        return nodeType;
-    }
+
 
 
     @Override

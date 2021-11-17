@@ -3,14 +3,16 @@ package Datatypes;
 import java.util.HashMap;
 
 public class SPQQNode extends SPQNode {
-    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.Q;
+
 
     public SPQQNode(String q) {
         super(q);
+        nodeType = NodeTypesEnum.NODETYPE.Q;
     }
 
     public SPQQNode(Vertex source, Vertex sink, boolean b) {
         super("Q"+source.getName()+sink.getName()+ id++);
+        nodeType = NodeTypesEnum.NODETYPE.Q;
 
         if (!b) {
             super.setName(source.getName() + sink.getName());
@@ -36,10 +38,7 @@ public class SPQQNode extends SPQNode {
     }
 
 
-    @Override
-    public NodeTypesEnum.NODETYPE getNodeType() {
-        return nodeType;
-    }
+
 
 
     @Override

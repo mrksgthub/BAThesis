@@ -4,32 +4,35 @@ import java.util.HashMap;
 
 public class SPQPNode extends SPQNode {
 
-    private NodeTypesEnum.NODETYPE nodeType = NodeTypesEnum.NODETYPE.P;
+
     private int inDegreeCounterStart;
     private int inDegreeCounterSink;
     private int outDegreeCounterStart;
     private int outDegreeCounterSink;
-    private boolean isRoot = false;
+
     private double kul;
     private double kur;
     private double kvl;
     private double kvr;
+    private int alphaul;
+    private int alphavl;
+    private int alphaur;
+    private int alphavr;
 
-
-    public SPQPNode(String name) {
+    public SPQPNode(String name, boolean isRoot) {
         super(name);
+        nodeType = NodeTypesEnum.NODETYPE.P;
+
     }
 
     public SPQPNode(Vertex edgeSource, Vertex edgeTarget) {
         super("P" + edgeSource.getName() + edgeTarget.getName() + id++);
+        nodeType = NodeTypesEnum.NODETYPE.P;
         this.startVertex = edgeSource;
         this.sinkVertex = edgeTarget;
     }
 
-    @Override
-    public NodeTypesEnum.NODETYPE getNodeType() {
-        return nodeType;
-    }
+
 
     public void setNodeType(NodeTypesEnum.NODETYPE nodeType) {
         this.nodeType = nodeType;
@@ -220,14 +223,6 @@ public class SPQPNode extends SPQNode {
             }
         }
     }
-
-
-
-
-
-
-
-
 
 
     // Backup
@@ -565,14 +560,5 @@ public class SPQPNode extends SPQNode {
 
 
 
-    public boolean isRoot() {
-        return this.isRoot;
-    }
 
-    @Override
-    public void setRoot() {
-        super.setRoot();
-        isRoot = true;
-
-    }
 }

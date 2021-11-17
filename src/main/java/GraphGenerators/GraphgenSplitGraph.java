@@ -34,7 +34,7 @@ public class GraphgenSplitGraph {
     private GraphgenSplitGraph(int operations) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.operations = operations;
-        root = new SPQPNode("Proot");
+        root = new SPQPNode("Proot", true);
         root.setRoot();
         root.setNodeType(NodeTypesEnum.NODETYPE.P);
         Vertex vertex = new Vertex("vsource");
@@ -153,7 +153,7 @@ public class GraphgenSplitGraph {
         edges.add(edge1);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newPnode = new SPQPNode("P" + ++counter, true);
 
         SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
         edgeSPQNodeHashMap.put(edge1, newQnode1);
@@ -200,7 +200,7 @@ public class GraphgenSplitGraph {
         edges.add(edge1);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newPnode = new SPQPNode("P" + ++counter, true);
 
         SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
         edgeSPQNodeHashMap.put(edge1, newQnode1);

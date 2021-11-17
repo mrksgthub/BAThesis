@@ -39,7 +39,7 @@ class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(100, 40);
+        SPQGenerator spqGenerator = new SPQGenerator(50, 40);
         spqGenerator.run();
 
 

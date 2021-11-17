@@ -77,7 +77,7 @@ public class Angulator {
                 root.getMergedChildren()) {
             winkelHinzufuegen(node, hashmap);
         }
-        if (root.getMergedChildren().size() > 1 && !root.isIsroot()) { // IsRoot IS WICHTIG!!
+        if (root.getMergedChildren().size() > 1) { // IsRoot IS WICHTIG!!
             root.computeOrthogonalRepresentation(hashmap);
         }
 

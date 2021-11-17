@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class SPQNode {
+public abstract class SPQNode {
 
 
     private List<SPQNode> children = new ArrayList<>();
@@ -12,27 +12,18 @@ public class SPQNode {
 
     List<Vertex> startNodes = new ArrayList<>();
     List<Vertex> sinkNodes = new ArrayList<>();
-
     double spirality = 999999;
-    int alphaul;
-    int alphavl;
-    int alphaur;
-    int alphavr;
     private SPQNode parent;
-    private boolean isroot = false;
+    boolean isroot = false;
     private String name;
     int counter = 0;
-    private NodeTypesEnum.NODETYPE nodeType;
+    NodeTypesEnum.NODETYPE nodeType;
     Vertex startVertex;
     Vertex sinkVertex;
     double repIntervalLowerBound = 999;
     double repIntervalUpperBound = -990;
-    private boolean isRoot = false;
+     boolean isRoot = false;
     static int id = 0;
-
-    SPQNode() {
-
-    }
 
     public SPQNode(int nodes) {
     }
@@ -125,42 +116,12 @@ public class SPQNode {
         return this.isRoot;
     }
 
-    void setRoot() {
+    public void setRoot() {
         isRoot = true;
 
     }
 
- /*   public void compactTree() {
 
-        this.mergedChildren.addAll(children);
-
-        for (SPQNode spQNode : children
-        ) {
-            spQNode.compactTree();
-        }
-        if (this.getParent() != null && this.getNodeType() == this.getParent().getNodeType() && !this.getParent().isRoot()) {
-            mergeNodeWithParent(this, this.getParent());
-        }
-
-
-    }
-
-    public void generateQstarNodes() {
-
-
-        for (SPQNode spQNode : mergedChildren
-        ) {
-            spQNode.generateQstarNodes();
-        }
-
-        if ((this.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
-            mergeQNodes();
-        }
-        if ((this.getNodeType() == NodeTypesEnum.NODETYPE.P) || this.getNodeType() == NodeTypesEnum.NODETYPE.PROOT) {
-            fixQNode();
-        }
-
-    }*/
 
 
     public void generateQstarChildren() {
@@ -169,31 +130,6 @@ public class SPQNode {
 
 
 
-
-
-
-
-
-
-/*    public void computeAdjecentVertices() {
-
-        addToAdjecencyListsSinkAndSource();
-
-
-        for (SPQNode spQNode : mergedChildren
-        ) {
-            spQNode.computeAdjecentVertices();
-        }
-
-        if (mergedChildren.size() > 0) {
-            for (SPQNode nodes :
-                    mergedChildren) {
-
-                addToSourceAndSinkLists(nodes);
-            }
-        }
-
-    }*/
 
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
@@ -225,24 +161,6 @@ public class SPQNode {
         }
     }
 
-/*    public boolean computeRepresentability(Boolean check) {
-
-        boolean temp;
-        for (SPQNode root : getMergedChildren()
-        ) {
-            temp = root.computeRepresentability(check);
-            if (!temp) {
-                check = temp;
-            }
-        }
-
-        if (this.mergedChildren.size() != 0 && !this.isRoot) {
-            if (!calculateRepresentabilityInterval()) {
-                check = false;
-            }
-        }
-        return check;
-    }*/
 
 
     public void computeOrthogonalRepresentation(HashMap<TupleEdge<Vertex, Vertex>, Integer> hashMap) {
@@ -250,16 +168,6 @@ public class SPQNode {
     }
 
 
-/*    public void determineParents(SPQNode node, HashMap<String, ArrayList<SPQNode>> map) {
-
-
-        for (SPQNode root : node.mergedChildren
-        ) {
-            map.put(root.getName(), new ArrayList<>());
-            map.get(root.getName()).add(node);
-            determineParents(root, map);
-        }
-    }*/
 
 
     public void setSpiralityOfChildren() {
