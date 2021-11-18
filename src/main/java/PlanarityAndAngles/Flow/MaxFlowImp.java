@@ -1,4 +1,4 @@
-package Algorithms.Flow;
+package PlanarityAndAngles.Flow;
 
 import Datatypes.Vertex;
 import org.jgrapht.Graphs;

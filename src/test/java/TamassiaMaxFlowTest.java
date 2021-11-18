@@ -1,19 +1,3 @@
-import Algorithms.Embedder;
-import Algorithms.FaceGenerator;
-import Algorithms.Flow.MaxFlow;
-import Datatypes.PlanarGraphFace;
-import Datatypes.SPQNode;
-import Datatypes.SPQTree;
-import Datatypes.Vertex;
-import Helperclasses.SPQImporter;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.Hashtable;
-
 class TamassiaMaxFlowTest {
 
 

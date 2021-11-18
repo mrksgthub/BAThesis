@@ -1,4 +1,4 @@
-package Algorithms;
+package PlanarityAndAngles;
 
 import Datatypes.PlanarGraphFace;
 import Datatypes.TupleEdge;
@@ -13,21 +13,17 @@ import java.util.*;
 
 public class FaceGenerator<V extends Vertex, E> implements Serializable {
 
-    private List<TupleEdge<V, V>> pairList;
-    private Map<Vertex, Integer> supplyMap = new HashMap<>();
-    private Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
-    private Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    private List<List<V>> listOfFaces2 = new ArrayList<>();
-    private Hashtable<Vertex, ArrayList<Vertex>> embedding;
-    private Map<E, Integer> visitsMap = new HashMap<>();
-    private Map<TupleEdge<V, V>, Integer> visitsMap2 = new HashMap<>();
-    private List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
-    private HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
-    private HashMap<E, ArrayList<PlanarGraphFace<V, E>>> adjFaces = new HashMap<>();
-    private HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<>();
-    private DirectedMultigraph<V, E> graph;
-    private V startvertex;
-    private V sinkVertex;
+    private final List<TupleEdge<V, V>> pairList;
+    private final Map<Vertex, Integer> supplyMap = new HashMap<>();
+    private final Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
+    private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
+    private final List<List<V>> listOfFaces2 = new ArrayList<>();
+    private  Hashtable<Vertex, ArrayList<Vertex>> embedding;
+    private final List<PlanarGraphFace<V, E>> planarGraphFaces = new ArrayList<>();
+    private final HashMap<PlanarGraphFace<V, E>, ArrayList<V>> adjVertices = new HashMap<>();
+    private final HashMap<TupleEdge<V, V>, PlanarGraphFace<V, E>> adjFaces2 = new HashMap<>();
+    private final V startvertex;
+    private final V sinkVertex;
     private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
 
     public FaceGenerator(DirectedMultigraph<V, E> graph, V startvertex, V sinkVertex, Hashtable<Vertex, ArrayList<Vertex>> embedding) {
@@ -38,30 +34,11 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
         pairList = new ArrayList<>();
         for (E edge : graph.edgeSet()
         ) {
-            visitsMap.put(edge, 0);
-         /*   pairIntegerMap.put(new TupleEdge<>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)), 0);
-            pairIntegerMap.put(new TupleEdge<>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)), 0);*/
-
             pairList.add(new TupleEdge<>(graph.getEdgeSource(edge), graph.getEdgeTarget(edge)));
             pairList.add(new TupleEdge<>(graph.getEdgeTarget(edge), graph.getEdgeSource(edge)));
 
-            adjFaces.put(edge, new ArrayList<>());
         }
 
-        this.graph = graph;
-
-    }
-
-    public List<List<V>> getListOfFaces2() {
-        return listOfFaces2;
-    }
-
-    public Hashtable<Vertex, ArrayList<Vertex>> getEmbedding() {
-        return embedding;
-    }
-
-    public void setEmbedding(Hashtable<Vertex, ArrayList<Vertex>> embedding) {
-        this.embedding = embedding;
     }
 
     public List<PlanarGraphFace<V, E>> getPlanarGraphFaces() {
@@ -72,26 +49,9 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
         return adjFaces2;
     }
 
-    public DirectedMultigraph<V, E> getGraph() {
-        return graph;
-    }
-
-    public void setGraph(DirectedMultigraph<V, E> graph) {
-        this.graph = graph;
-    }
-
-    public V getStartvertex() {
-        return startvertex;
-    }
-
-    public V getSinkVertex() {
-        return sinkVertex;
-    }
-
     public DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> getNetworkGraph() {
         return networkGraph;
     }
-
 
     public void generateFaces() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
 
@@ -154,7 +114,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                     tupleVisitedMap.put(vvPair, true);
                     edgeList.add(vvPair);
                     face.add(nextVertex);
-                    visitsMap2.merge(vvPair, 1, Integer::sum);
+               //     visitsMap.merge(vvPair, 1, Integer::sum);
 
                 }
                 listOfFaces2.add(face);

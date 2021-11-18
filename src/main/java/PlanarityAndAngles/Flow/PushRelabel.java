@@ -1,4 +1,4 @@
-package Algorithms.Flow;
+package PlanarityAndAngles.Flow;
 
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;

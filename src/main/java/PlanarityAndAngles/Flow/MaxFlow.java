@@ -1,6 +1,6 @@
-package Algorithms.Flow;
+package PlanarityAndAngles.Flow;
 
-import Algorithms.FaceGenerator;
+import PlanarityAndAngles.FaceGenerator;
 import Datatypes.*;
 import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
@@ -194,18 +194,18 @@ public class MaxFlow {
 
 
 
-    private void generateFlowGraph2(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
+/*    private void generateFlowGraph2(SPQTree tree, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
 
 
-   /*     ArrayList<Vertex> vertexList = new ArrayList<>();
+   *//*     ArrayList<Vertex> vertexList = new ArrayList<>();
         for (TupleEdge<Vertex, Vertex> edge: treeVertexFaceGenerator.getPlanarGraphFaces().get(0).getEdgeList()
              ) {
             vertexList.add(edge.getLeft());
         }
 
-        */
+        *//*
 
 
 
@@ -286,7 +286,7 @@ public class MaxFlow {
             }
 
         }
-    }
+    }*/
 
 
 

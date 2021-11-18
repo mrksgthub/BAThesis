@@ -85,45 +85,10 @@ public class GraphDrawer implements Runnable {
         Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectuangularInnerFaces(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
-        // Graphstream
-        Graph graph = new SingleGraph("Graph");
-        for (Vertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
-
-            if (!vertex.isDummy()) {
-                graph.addNode(vertex.getName());
-                Node node = graph.getNode(vertex.getName());
-                Pair<Integer, Integer> coords = coordinator.getEdgeToCoordMap().get(vertex);
-                node.setAttribute("xy", coords.a, coords.b);
-            }
-        }
-
-
-        for (Vertex treeVertex : vertexToAdjListMap.keySet()) {
-
-            ArrayList<Vertex> list = vertexToAdjListMap.get(treeVertex);
-
-            for (Vertex vertex1 : list) {
-
-                if (graph.getEdge(vertex1.getName() + " " + treeVertex.getName()) == null)
-                    graph.addEdge(treeVertex.getName() + " " + vertex1.getName(), treeVertex.getName(), vertex1.getName());
-
-            }
-
-
-        }
-
-
-        for (Node node : graph) {
-            node.setAttribute("ui.label", node.getId());
-        }
-        String styleSheet =
-                "node { text-alignment: at-right; text-color: #222; } node#B { text-alignment: at-left; } node#C { text-alignment: under; }";
-
-        graph.setAttribute("ui.stylesheet", styleSheet);
-        // https://stackoverflow.com/questions/37530756/dont-close-swing-main-app-when-closing-graphstream
-        Viewer viewer = graph.display(false);
-        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+        GraphStreamOutput output = new GraphStreamOutput(vertexToAdjListMap, coordinator.getEdgeToCoordMap());
+        output.run();
     }
+
 
 
 }

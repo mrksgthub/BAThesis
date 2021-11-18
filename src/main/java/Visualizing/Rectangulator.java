@@ -244,10 +244,13 @@ public class Rectangulator<E> {
                 dequeStack.push(face);
             }
 
-            // Original external face was rectangular to begin with
-            if (startingEdges.size() == 0 && !face.getName().equals("0")) {
+            // Original inner face was rectangular to begin with
+            if (startingEdges.size() == 0 && face.getType() != PlanarGraphFace.FaceType.EXTERNAL_PROCESSED) {
                 rectangularFaceMap.put(face, face);
             }
+ /*       if (startingEdges.size() == 0 && !face.getName().equals("0")) {
+            rectangularFaceMap.put(face, face);
+        }*/
 
 
         startingEdges = new ArrayList<>();

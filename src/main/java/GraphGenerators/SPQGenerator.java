@@ -1,7 +1,7 @@
 package GraphGenerators;
 
-import Algorithms.FaceGenerator;
-import Algorithms.Flow.MaxFlow;
+import PlanarityAndAngles.FaceGenerator;
+import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;

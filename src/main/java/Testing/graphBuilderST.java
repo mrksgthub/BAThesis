@@ -1,7 +1,6 @@
 package Testing;
 
-import Algorithms.Embedder;
-import Algorithms.FaceGenerator;
+import PlanarityAndAngles.FaceGenerator;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;
@@ -81,9 +80,9 @@ public class graphBuilderST {
                 root = tree.getRoot();
 
 
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding);
-                embedder.run(root);
+                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
+          /*      Embedder embedder = new Embedder(embedding);
+                embedder.run(root);*/
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces();
@@ -110,28 +109,17 @@ public class graphBuilderST {
     }
 
 
-    public void run() {
+    public void run(int CHANCE_OF_P, int OPS) {
 
 
       //   runs = 30;
         SPQTree tree;
         SPQNode root;
 
-        int CHANCE_OF_P = chanceOfP;
-
-
-        for (int j = 0; j < 6; j++) {
-
-            CHANCE_OF_P += opsIncrement;
-            int OPS = minOps;
-
-            for (int i = 0; i < 6; i++) {
-
-
-                OPS += opsIncrement;
 
                 SPQGenerator spqGenerator = new SPQGenerator(OPS, CHANCE_OF_P, maxDegree, chainLength);
-                spqGenerator.run();
+                spqGenerator.generateGraph(OPS, CHANCE_OF_P);
+
 
                 tree = spqGenerator.getTree();
                 root = spqGenerator.getRoot();
@@ -178,8 +166,8 @@ public class graphBuilderST {
 
             }
 
-        }
-    }
+
+
 
 
 

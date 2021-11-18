@@ -24,10 +24,6 @@ public class SPQExporter {
         this.tree = tree;
 
     }
-    public SPQExporter() {
-
-
-    }
 
     private void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)

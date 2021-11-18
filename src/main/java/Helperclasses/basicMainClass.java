@@ -1,9 +1,9 @@
 package Helperclasses;
 
-import Algorithms.*;
-import Algorithms.Didimo.Angulator;
-import Algorithms.Didimo.DidimoRepresentability;
-import Algorithms.Flow.MaxFlow;
+import PlanarityAndAngles.*;
+import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Didimo.DidimoRepresentability;
+import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;
@@ -39,7 +39,7 @@ class basicMainClass {
         SPQTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(50, 40);
+        SPQGenerator spqGenerator = new SPQGenerator(5, 40);
         spqGenerator.run();
 
 

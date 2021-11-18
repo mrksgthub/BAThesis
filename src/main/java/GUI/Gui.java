@@ -5,7 +5,7 @@ class Gui {
 
     public static void main(String[] args) {
 
-        GuiTest guiTest = new GuiTest();
+        SPQGUI guiTest = new SPQGUI();
         guiTest.run();
 
     }

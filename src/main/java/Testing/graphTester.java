@@ -1,10 +1,9 @@
 package Testing;
 
-import Algorithms.Didimo.Angulator;
-import Algorithms.Didimo.DidimoRepresentability;
-import Algorithms.Embedder;
-import Algorithms.FaceGenerator;
-import Algorithms.Flow.MaxFlow;
+import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Didimo.DidimoRepresentability;
+import PlanarityAndAngles.FaceGenerator;
+import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;
@@ -69,10 +68,10 @@ public class graphTester {
                 root = tree.getRoot();
 
 
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding);
+                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
+               /* Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
-
+*/
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces();
 
@@ -182,9 +181,8 @@ public class graphTester {
                 root = tree.getRoot();
 
 
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding);
-                embedder.run(root);
+                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
+
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
                 treeVertexFaceGenerator.generateFaces();

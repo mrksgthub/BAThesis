@@ -1,4 +1,4 @@
-package Algorithms.Didimo;
+package PlanarityAndAngles.Didimo;
 
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;

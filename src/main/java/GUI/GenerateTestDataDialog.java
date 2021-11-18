@@ -189,7 +189,7 @@ class GenerateTestDataDialog extends JDialog {
 
         try {
             maxDegree = Integer.parseInt(maxDegreeText.getText());
-            if (maxDegree > 1 && maxDegree < 5) {
+            if (maxDegree < 2 || maxDegree > 4) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {

@@ -1,8 +1,8 @@
-package Algorithms;
+package PlanarityAndAngles;
 
-import Algorithms.Didimo.Angulator;
-import Algorithms.Didimo.DidimoRepresentability;
-import Algorithms.Flow.MaxFlow;
+import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Didimo.DidimoRepresentability;
+import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
 import Datatypes.Vertex;

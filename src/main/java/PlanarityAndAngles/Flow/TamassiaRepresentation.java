@@ -1,6 +1,6 @@
-package Algorithms.Flow;
+package PlanarityAndAngles.Flow;
 
-import Algorithms.FaceGenerator;
+import PlanarityAndAngles.FaceGenerator;
 import Datatypes.*;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;

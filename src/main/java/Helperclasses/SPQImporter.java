@@ -12,10 +12,8 @@ public class SPQImporter {
 
 
     private final String fileName;
-    private HashMap<String, SPQNode> nameToNode = new HashMap<>();
-    private HashMap<SPQNode, List<SPQNode>> nodeToAdjList = new HashMap<>();
-    private HashMap<Vertex, Boolean> treeMap = new HashMap<>();
-    private HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
+    private final HashMap<String, SPQNode> nameToNode = new HashMap<>();
+    private final HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
     private SPQPNode root;
     SPQTree tree;
 
@@ -91,7 +89,7 @@ public class SPQImporter {
     private void proceessLine(String line) {
 
         try {
-            if (line.contains("-> ")) {
+            if (line.contains("-> ")) { // Die -> Zeilen stehen immer nach der Liste der Knoten des SPQ*-Baums. Danach werden die Kinder zugewiesen.
                 int i = line.indexOf(" -");
 
                 String s1 = line.substring(0, i).trim();

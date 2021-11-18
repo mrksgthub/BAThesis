@@ -1,9 +1,8 @@
 package Helperclasses;
 
-import Algorithms.FaceGenerator;
+import PlanarityAndAngles.FaceGenerator;
 import Datatypes.SPQNode;
 import Datatypes.Vertex;
-import Datatypes.TupleEdge;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.*;

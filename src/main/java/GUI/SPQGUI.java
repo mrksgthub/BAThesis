@@ -1,9 +1,8 @@
 package GUI;
 
-import Algorithms.PlanarityAndAngleDistributorRunner;
+import PlanarityAndAngles.PlanarityAndAngleDistributorRunner;
 import Datatypes.SPQNode;
 import Datatypes.SPQTree;
-import Datatypes.Vertex;
 import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
@@ -15,13 +14,11 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.concurrent.ExecutionException;
 
 
 
-class GuiTest extends JFrame {
+class SPQGUI extends JFrame {
 
 
     private static SwingWorker worker;
@@ -52,7 +49,7 @@ class GuiTest extends JFrame {
     private Boolean hasValidGraph;
 
 
-    public GuiTest() {
+    public SPQGUI() {
 
        /* button2.addActionListener(new ActionListener() {
             @Override
@@ -304,13 +301,37 @@ class GuiTest extends JFrame {
                 dialog1.pack();
                 dialog1.setVisible(true);
 
-                SwingWorker worker = new SwingWorker() {
+                 worker = new SwingWorker() {
 
                     @Override
                     protected Object doInBackground() throws Exception {
+                        interrupts.setEnabled(true);
                         updateText("Running tests");
                         graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getMinOps(), dialog1.getOpsIncrement(), dialog1.getChanceOfP(), dialog1.getChanceOfPIncr(), dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getFilePath());
-                        graphBuilderST.run();
+
+                        int ops = dialog1.getMinOps();
+                        int chanceOfP = dialog1.getChanceOfP();
+
+                        for (int j = 0; j < 6; j++) {
+                            if (isCancelled()) {
+                                break;
+                            }
+                            for (int i = 0; i < 6; i++) {
+                                if (isCancelled()) {
+                                    break;
+                                }
+                                graphBuilderST.run(chanceOfP, ops);
+
+                            }
+
+                            ops += dialog1.getOpsIncrement();
+                            chanceOfP += dialog1.getChanceOfPIncr();
+
+
+
+                        }
+
+
                         return null;
                     }
 
@@ -319,6 +340,7 @@ class GuiTest extends JFrame {
                         super.done();
                         System.out.println("In Done");
                         updateText("Finished generating graphs");
+                        interrupts.setEnabled(false);
                         try {
                             get();
                         } catch (ExecutionException e) { // https://stackoverflow.com/questions/6523623/graceful-exception-handling-in-swing-worker
@@ -402,7 +424,7 @@ class GuiTest extends JFrame {
         System.setProperty("org.graphstream.ui", "swing");
 
         JFrame frame = new JFrame("Test");
-        frame.setContentPane(new GuiTest().panel1);
+        frame.setContentPane(new SPQGUI().panel1);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
@@ -420,7 +442,7 @@ class GuiTest extends JFrame {
         System.setProperty("org.graphstream.ui", "swing");
 
         JFrame frame = new JFrame("Test");
-        frame.setContentPane(new GuiTest().panel1);
+        frame.setContentPane(new SPQGUI().panel1);
         // frame.setJMenuBar(menuBar);
         //  menuBar.setLayout(new FlowLayout(FlowLayout.LEADING));
         //   menuBar.add(filesMenu);
