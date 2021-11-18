@@ -1,7 +1,6 @@
 package GraphGenerators;
 
 import Datatypes.*;
-import Helperclasses.GraphHelper;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.util.SupplierUtil;
@@ -9,16 +8,17 @@ import org.jgrapht.util.SupplierUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 public class GraphgenSplitGraph {
 
 
     private SPQPNode root;
 
-    private DirectedMultigraph<Vertex, DefaultEdge> multigraph = new DirectedMultigraph<>(Vertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
-    private int operations;
-    private List<DefaultEdge> edges = new ArrayList<>();
-    private HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
+    private final DirectedMultigraph<Vertex, DefaultEdge> multigraph = new DirectedMultigraph<>(Vertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
+    private final int operations;
+    private final List<DefaultEdge> edges = new ArrayList<>();
+    private final HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
     private int counter = 0;
     private double chanceOfP = 50;
     private int maxDeg = 4;
@@ -72,34 +72,35 @@ public class GraphgenSplitGraph {
         this.einfachheit = einfachheit;
     }
 
+    private int getRandomNumberUsingNextInt(int min, int max) {
+        Random random = new Random();
+        return random.nextInt(max - min) + min;
+    }
+
     public SPQPNode getRoot() {
         return root;
     }
 
-    public void setRoot(SPQPNode root) {
-        this.root = root;
-    }
 
     public void generateGraph() {
 
 
-        DefaultEdge edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+        DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+        if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
             newInitialPNode(edge);
         } else {
             randomnewSNode(edge);
         }
 
-
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
 
         for (int i = 0; i <  operations; i++) {
-            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
+            edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
+            if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
                 if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg) {
                     randomnewPNode(edge);
                 } else {
@@ -212,7 +213,7 @@ public class GraphgenSplitGraph {
 
         // TODO Sinnvoll?
 
-        if (GraphHelper.getRandomNumberUsingNextInt(0, 99) < 50) {
+        if (getRandomNumberUsingNextInt(0, 99) < 50) {
 
             arr1 = randomnewSNode(edge);
         } else {
@@ -223,18 +224,15 @@ public class GraphgenSplitGraph {
         for (int i = 0; i <einfachheit; i++) {
 
 
-            if (GraphHelper.getRandomNumberUsingNextInt(0, 99) > 50) {
+            if (getRandomNumberUsingNextInt(0, 99) > 50) {
 
-                DefaultEdge tempEdge1 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+                DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
                 arr1 = randomnewSNode(tempEdge1);
 
             } else {
-                DefaultEdge tempEdge2 = arr1[GraphHelper.getRandomNumberUsingNextInt(0, 1)];
+                DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
                 arr1 = randomnewSNode(tempEdge2);
-
             }
-
-
         }
 
 
@@ -263,14 +261,6 @@ public class GraphgenSplitGraph {
 
     }
 
-
-    public SPQPNode getNode() {
-        return root;
-    }
-
-    public void setNode(SPQPNode node) {
-        this.root = node;
-    }
 
     public DirectedMultigraph<Vertex, DefaultEdge> getMultigraph() {
         return multigraph;

@@ -222,12 +222,6 @@ public class GraphHelper<V extends Vertex, E> {
     }
 
 
-    public static int getRandomNumberUsingNextInt(int min, int max) {
-        Random random = new Random();
-        return random.nextInt(max - min) + min;
-    }
-
-
     public static void writeFaceGeneatorToFile(FaceGenerator<Vertex, DefaultEdge> faceGeneator, String filepath) throws IOException {
 
 
@@ -327,12 +321,6 @@ public class GraphHelper<V extends Vertex, E> {
         Graphs.addOutgoingEdges(spqTree, prevChild, vs);
         spqTree.removeVertex(child);
 
-
-
-
-
-
-
     }
 
     public static void mergeVerticeWithParent(DirectedMultigraph<SPQNode, DefaultEdge> spqTree, SPQNode parent, SPQNode child) {
@@ -341,12 +329,6 @@ public class GraphHelper<V extends Vertex, E> {
         List<SPQNode> vs = Graphs.predecessorListOf(spqTree, child);
         spqTree.addEdge(vs.get(0), child);
         spqTree.removeVertex(parent);
-
-
-
-
-
-
 
     }
 }

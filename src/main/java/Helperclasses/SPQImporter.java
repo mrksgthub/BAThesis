@@ -14,8 +14,7 @@ public class SPQImporter {
     private final String fileName;
     private final HashMap<String, SPQNode> nameToNode = new HashMap<>();
     private final HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
-    private SPQPNode root;
-    SPQTree tree;
+    private SPQTree tree;
 
     public SPQImporter(String s) {
         this.fileName = s;
@@ -40,7 +39,7 @@ public class SPQImporter {
 
             nameToNode.get("Proot").setRoot();
             tree = new SPQTree(nameToNode.get("Proot"));
-            root = (SPQPNode) nameToNode.get("Proot");
+            SPQPNode root = (SPQPNode) nameToNode.get("Proot");
 
             if (tree.getRoot() == null) {
                 try {
