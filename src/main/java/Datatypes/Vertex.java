@@ -20,31 +20,20 @@ public class Vertex implements Serializable {
 
     private static int counter = 0;
 
-    private int depth;
-    private Vertex parent;
     private boolean dummy = false;
-    private String name;
-    ArrayList<Vertex> adjecentVertices = new ArrayList<>();
+    private final String name;
+    ArrayList<Vertex> adjacentVertices = new ArrayList<>();
     private int id;
 
     public Vertex(String name) {
 
         this.name = name;
-        this.depth = 0;
         id = counter++;
     }
 
     public Vertex(String name, boolean dummy) {
         this.name = name;
-        this.depth = 0;
         this.dummy = dummy;
-        id = counter++;
-    }
-
-    Vertex(String name, Vertex parent) {
-        this.name = name;
-        this.parent = parent;
-        this.depth = 0;
         id = counter++;
     }
 
@@ -84,8 +73,8 @@ public class Vertex implements Serializable {
     }
 
 
-    public ArrayList<Vertex> getAdjecentVertices() {
-        return adjecentVertices;
+    public ArrayList<Vertex> getAdjacentVertices() {
+        return adjacentVertices;
     }
 
 

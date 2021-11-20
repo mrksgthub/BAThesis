@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-public class GraphgenSplitGraph {
+class GraphgenSplitGraph {
 
 
     private SPQPNode root;
@@ -24,19 +24,13 @@ public class GraphgenSplitGraph {
     private int maxDeg = 4;
     private int einfachheit = 1;
 
-    public GraphgenSplitGraph(int operations, double chanceOfP) {
-
-        this(operations);
-        this.chanceOfP = chanceOfP;
-    }
-
 
     private GraphgenSplitGraph(int operations) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.operations = operations;
         root = new SPQPNode("Proot", true);
-        root.setRoot();
-        root.setNodeType(NodeTypesEnum.NODETYPE.P);
+        root.setToRoot();
+
         Vertex vertex = new Vertex("vsource");
         Vertex vertex2 = new Vertex("vsink");
         multigraph.addVertex(vertex);
@@ -45,16 +39,16 @@ public class GraphgenSplitGraph {
         multigraph.addEdge(vertex, vertex2);
 
 
-        SPQQNode qLeft = new SPQQNode("Q" + ++counter);
-        root.getChildren().add(qLeft);
+        SPQQNode qLeft = new SPQQNode("Q" + ++counter, vertex, vertex2);
+        root.getSpqChildren().add(qLeft);
         qLeft.setParent(root);
         qLeft.setStartVertex(vertex);
         qLeft.setSinkVertex(vertex2);
 
-        SPQNode qRight = new SPQQNode("Q" + ++counter);
+        SPQNode qRight = new SPQQNode("Q" + ++counter, vertex, vertex2);
         qRight.setStartVertex(vertex);
         qRight.setSinkVertex(vertex2);
-        root.getChildren().add(qRight);
+        root.getSpqChildren().add(qRight);
         qRight.setParent(root);
 
         edges.add(multigraph.getEdge(vertex, vertex2));
@@ -112,23 +106,6 @@ public class GraphgenSplitGraph {
             }
         }
 
-        // Debug Code:
-/*        int counter = 0;
-        for (int i = 0; i < 0.0 * operations; i++) {
-
-            edge = edges.get(GraphHelper.getRandomNumberUsingNextInt(0, edges.size()));
-
-            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
-            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg && (degreeOfedgeSource > 2 || degreeOfedgeSink > 2)) {
-                randomnewSNode(edge);
-            } else {
-                i++;
-                counter++;
-            }
-
-        }*/
-
 
         // Start- und Endknoten in die Q-Nodes einfügen
         for (DefaultEdge edge1 :
@@ -136,8 +113,8 @@ public class GraphgenSplitGraph {
             //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
             //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
 
-            edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
-            edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
+          //  edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
+           // edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
         }
 
 
@@ -156,7 +133,7 @@ public class GraphgenSplitGraph {
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
         SPQNode newPnode = new SPQPNode("P" + ++counter, true);
 
-        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter, multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.put(edge1, newQnode1);
 
         nodeUmhaengen(oldQNode, newPnode);
@@ -175,13 +152,15 @@ public class GraphgenSplitGraph {
         Vertex vertex = multigraph.addVertex();
         DefaultEdge edge1 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
         DefaultEdge edge2 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
+
         multigraph.removeEdge(edge);
         edges.remove(edge);
         edges.add(edge1);
         edges.add(edge2);
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        oldQNode.setSinkVertex(vertex); // Der alte Q-Knoten bleibt drinn, bekommt aber eine neue Senke (vertex)
         SPQNode newSnode = new SPQSNode("S" + ++counter);
-        SPQNode newQnode = new SPQQNode("Q" + ++counter);
+        SPQNode newQnode = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.remove(edge);
         edgeSPQNodeHashMap.put(edge2, oldQNode);
         edgeSPQNodeHashMap.put(edge1, newQnode);
@@ -203,7 +182,7 @@ public class GraphgenSplitGraph {
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
         SPQNode newPnode = new SPQPNode("P" + ++counter, true);
 
-        SPQNode newQnode1 = new SPQQNode("Q" + ++counter);
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.put(edge1, newQnode1);
 
         nodeUmhaengen(oldQNode, newPnode);
@@ -241,19 +220,19 @@ public class GraphgenSplitGraph {
 
     private <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
         node.setParent(parent);
-        parent.getChildren().add(node);
+        parent.getSpqChildren().add(node);
 
     }
 
     public <T extends SPQNode> void addNodeAsLeftChild(T node, T parent) {
         node.setParent(parent);
-        parent.getChildren().add(0, node);
+        parent.getSpqChildren().add(0, node);
     }
 
 
     private <T extends SPQNode> void nodeUmhaengen(T node, T newnode) {
         //Abhängen
-        node.getParent().getChildren().set(node.getParent().getChildren().indexOf(node), newnode);
+        node.getParent().getSpqChildren().set(node.getParent().getSpqChildren().indexOf(node), newnode);
         //neuer Knoten als Parent festlegen
 
         newnode.setParent(node.getParent());

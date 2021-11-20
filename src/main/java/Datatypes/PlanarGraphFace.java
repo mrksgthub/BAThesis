@@ -2,7 +2,7 @@ package Datatypes;
 
 import java.util.*;
 
-public class PlanarGraphFace<V, E> extends Vertex {
+public class PlanarGraphFace<V> extends Vertex {
 
     private static int faceCounter = 0;
     private Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
@@ -24,10 +24,6 @@ public class PlanarGraphFace<V, E> extends Vertex {
         sidesMap.put(3, new ArrayList<>());
 
 
-    }
-
-    public PlanarGraphFace(String name, Vertex parent) {
-        super(name, parent);
     }
 
     public FaceType getType() {
@@ -53,6 +49,23 @@ public class PlanarGraphFace<V, E> extends Vertex {
     public Map<TupleEdge<V, V>, Integer> getOrthogonalRep() {
         return orthogonalRep;
     }
+
+    public int getEdgeAngle(TupleEdge<V,V> edge) throws Exception {
+
+        if (orthogonalRep.containsKey(edge)) {
+            return orthogonalRep.get(edge);
+        } else {
+            throw new Exception("Angle not Set");
+        }
+
+    }
+    public void setEdgeAngle(TupleEdge<V,V> pair, int angle)  {
+
+        orthogonalRep.put(pair, angle);
+        pair.setWinkel(angle);
+
+    }
+
 
 
     /**

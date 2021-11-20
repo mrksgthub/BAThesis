@@ -4,7 +4,7 @@ import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Datatypes.Vertex;
 import GUI.GraphDrawOptions;
 import org.jgrapht.graph.DefaultEdge;
@@ -15,22 +15,22 @@ import java.util.Hashtable;
 public class PlanarityAndAngleDistributorRunner {
 
 
-    private SPQTree tree;
+    private SPQStarTree tree;
     private SPQNode root;
     private double time = Integer.MAX_VALUE;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
     private Hashtable<Vertex, ArrayList<Vertex>> embedding;
 
-    public PlanarityAndAngleDistributorRunner(SPQTree tree, SPQNode root) {
+    public PlanarityAndAngleDistributorRunner(SPQStarTree tree, SPQNode root) {
         this.tree = tree;
         this.root = root;
     }
 
-    public SPQTree getTree() {
+    public SPQStarTree getTree() {
         return tree;
     }
 
-    public void setTree(SPQTree tree) {
+    public void setTree(SPQStarTree tree) {
         this.tree = tree;
     }
 
@@ -74,18 +74,19 @@ public class PlanarityAndAngleDistributorRunner {
 
 
             embedding = tree.getVertexToAdjecencyListMap();
-            treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+            treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
 
 
             long startTime3 = System.currentTimeMillis();
             if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
 
-                DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-                didimoRepresentability.run();
+                DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+               boolean isValid = didimoRepresentability.run(tree);
 
-               // root.getMergedChildren().get(0).computeSpirality();
-                tree.computeSpirality(root.getMergedChildren().get(0));
+                if (!isValid) {
+                    throw new RuntimeException("inValidGraph");
+                }
 
                 Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 try {

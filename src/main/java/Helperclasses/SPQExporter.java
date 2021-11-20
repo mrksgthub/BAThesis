@@ -1,7 +1,7 @@
 package Helperclasses;
 
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -17,10 +17,10 @@ import java.util.HashMap;
 
 public class SPQExporter {
 
-    private SPQTree tree;
+    private SPQStarTree tree;
 
 
-    public SPQExporter(SPQTree tree) {
+    public SPQExporter(SPQStarTree tree) {
         this.tree = tree;
 
     }
@@ -32,7 +32,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getMergedChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqStarChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();
@@ -47,7 +47,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getMergedChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqStarChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();
@@ -87,7 +87,7 @@ public class SPQExporter {
             map.put(root, true);
 
             for (SPQNode node :
-                    root.getChildren()) {
+                    root.getSpqChildren()) {
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun(node, map, graph);
@@ -106,7 +106,7 @@ public class SPQExporter {
             map.put(root, true);
 
             for (SPQNode node :
-                    root.getMergedChildren()) {
+                    root.getSpqStarChildren()) {
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun2(node, map, graph);
@@ -129,11 +129,11 @@ public class SPQExporter {
 
     }
 
-    public SPQTree getTree() {
+    public SPQStarTree getTree() {
         return tree;
     }
 
-    public void setTree(SPQTree tree) {
+    public void setTree(SPQStarTree tree) {
         this.tree = tree;
     }
 }

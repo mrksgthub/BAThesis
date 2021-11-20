@@ -1,33 +1,28 @@
 package GraphGenerators;
 
+import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.FaceGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Datatypes.Vertex;
 import Helperclasses.SPQExporter;
 import org.jgrapht.graph.DefaultEdge;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.ListIterator;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
 public class SPQGenerator implements Callable, Runnable {
 
     private SPQNode root;
-    private SPQTree tree;
+    private SPQStarTree tree;
     private int size;
     private int chanceOfP;
     private int maxDeg =4;
     private int einfachheit = 1;
     private int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
-    private long elapsedTime2;
-    private GraphgenSplitGraph graphgenSplitGraph;
-    private volatile boolean shutdown = false;
+    private final boolean shutdown = false;
 
     public SPQGenerator(int size, int chanceOfP) {
         this.size = size;
@@ -63,48 +58,12 @@ public class SPQGenerator implements Callable, Runnable {
         this.size = size;
     }
 
-    public void setChanceOfP(int chanceOfP) {
-        this.chanceOfP = chanceOfP;
-    }
-
-    public BlockingQueue<SPQGenerator> getBlockingQueue() {
-        return blockingQueue;
-    }
-
-    public void setBlockingQueue(BlockingQueue<SPQGenerator> blockingQueue) {
-        this.blockingQueue = blockingQueue;
-    }
-
-    public long getElapsedTime2() {
-        return elapsedTime2;
-    }
-
-    public void setElapsedTime2(long elapsedTime2) {
-        this.elapsedTime2 = elapsedTime2;
-    }
-
-    public boolean isShutdown() {
-        return shutdown;
-    }
-
-    public void setShutdown(boolean shutdown) {
-        this.shutdown = shutdown;
-    }
-
     public int getCounter() {
         return counter;
     }
 
     public void setCounter(int counter) {
         this.counter = counter;
-    }
-
-    public GraphgenSplitGraph getGraphgenSplitGraph() {
-        return graphgenSplitGraph;
-    }
-
-    public void shutdown() {
-        shutdown = true;
     }
 
 
@@ -119,7 +78,7 @@ public class SPQGenerator implements Callable, Runnable {
 
         counter = 0;
         while (!check && !shutdown) {
-            check = generateGraph(size, chanceOfP);
+            check = generateGraph(size, chanceOfP, maxDeg, einfachheit);
 
 
         }
@@ -128,39 +87,25 @@ public class SPQGenerator implements Callable, Runnable {
 
     }
 
-    public Boolean generateGraph(int size, int chanceOfP) {
-        Hashtable<Vertex, ArrayList<Vertex>> embedding;
+    public Boolean generateGraph(int size, int chanceOfP, int maxDeg, int einfachheit) {
         Boolean check;
         counter++;
         check = true;
 
-        graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP, maxDeg, einfachheit);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP, maxDeg, einfachheit);
         graphgenSplitGraph.generateGraph();
 
 
         root = graphgenSplitGraph.getRoot();
-        //    root.compactTree();
         System.out.println("SPQ-Trees");
 
-        tree = new SPQTree(root);
-
-/*
-        tree.compactTree(tree.getRoot());
-        tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-        tree.generateQStarNodes(tree.getRoot());
-        tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
-        tree.generateAdjecencyListMaP(tree.getRoot());
-*/
-
-        tree.transformToValidSPQStarTree();
-
-        // normale repräsentation
-        //   root.generateQstarNodes();
-        // root.computeAdjecentVertices();
+        tree = new SPQStarTree(root);
 
 
-        /*embedding = erstelleHashtablefuerFacegenerator(tree);*/
-        embedding = tree.getVertexToAdjecencyListMap();
+
+        tree.addValidSPQStarTreeRepresentation();
+
+
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
             int i = tree.getConstructedGraph().degreeOf(vertex);
@@ -173,20 +118,12 @@ public class SPQGenerator implements Callable, Runnable {
         // Zeit:
         long startTime = System.currentTimeMillis();
 
-/*        check = root.computeRepresentability(check);
-        if (check) {
-            check = (tree.computeNofRoot()) ? check : false;
-            if (!check) {
-                System.out.println("Didimo rejected at source Node");
-            }
-        }*/
-
-        check = tree.computeRepresentability();
 
 
-        if (!check) {
-            // continue;
-        }
+        DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+        check = didimoRepresentability.run(tree);
+
+
 
         // Zeit:
         long stopTime = System.currentTimeMillis();
@@ -200,7 +137,7 @@ public class SPQGenerator implements Callable, Runnable {
 
         try {
             //    Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
-            FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+            FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces(); // counterclockwise = inner, clockwise = outerFacette
             // Zeit2:
             long startTime2 = System.currentTimeMillis();
@@ -238,34 +175,6 @@ public class SPQGenerator implements Callable, Runnable {
     }
 
 
-    public Hashtable<Vertex, ArrayList<Vertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
-        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-
-        for (Vertex vertex :
-                tree.getConstructedGraph().vertexSet()) {
-
-            ArrayList<Vertex> arrList = new ArrayList<>();
-
-            Set<DefaultEdge> tempIn = tree.getConstructedGraph().incomingEdgesOf(vertex);
-            Set<DefaultEdge> tempOut = tree.getConstructedGraph().outgoingEdgesOf(vertex);
-
-
-            ArrayList<DefaultEdge> inEdgesList = new ArrayList<>(tempIn);
-            ListIterator<DefaultEdge> tempInListIterator = inEdgesList.listIterator(inEdgesList.size());
-            ListIterator<DefaultEdge> tempOutListIterator = new ArrayList<>(tempOut).listIterator();
-
-            while (tempInListIterator.hasPrevious()) {
-                arrList.add(tree.getConstructedGraph().getEdgeSource(tempInListIterator.previous()));
-            }
-            while (tempOutListIterator.hasNext()) {
-                arrList.add(tree.getConstructedGraph().getEdgeTarget(tempOutListIterator.next()));
-            }
-
-            embedding.put(vertex, arrList);
-        }
-        return embedding;
-    }
-
     public SPQNode getRoot() {
         return root;
     }
@@ -274,11 +183,11 @@ public class SPQGenerator implements Callable, Runnable {
         this.root = root;
     }
 
-    public SPQTree getTree() {
+    public SPQStarTree getTree() {
         return tree;
     }
 
-    public void setTree(SPQTree tree) {
+    public void setTree(SPQStarTree tree) {
         this.tree = tree;
     }
 

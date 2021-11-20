@@ -3,7 +3,6 @@ package Visualizing;
 import Datatypes.PlanarGraphFace;
 import Datatypes.Vertex;
 import Datatypes.TupleEdge;
-import org.jgrapht.graph.DefaultEdge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,12 +11,12 @@ import java.util.List;
 public class Orientator<E> {
 
 
-    List<PlanarGraphFace<Vertex, DefaultEdge>> orientatedInnerFaces = new ArrayList<>();
-    PlanarGraphFace<Vertex, DefaultEdge> orientatedOuterFace;
-    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, E>> edgeFaceNeighbourMap;
+    List<PlanarGraphFace<Vertex>> orientatedInnerFaces = new ArrayList<>();
+    PlanarGraphFace<Vertex> orientatedOuterFace;
+    private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> edgeFaceNeighbourMap;
 
 
-    public Orientator(List<PlanarGraphFace<Vertex, DefaultEdge>> rectangularInnerFaceMap, PlanarGraphFace<Vertex, DefaultEdge> outerFace) {
+    public Orientator(List<PlanarGraphFace<Vertex>> rectangularInnerFaceMap, PlanarGraphFace<Vertex> outerFace) {
 
       //  originalFaceList.addAll(rectangularInnerFaceMap.keySet());
 
@@ -27,7 +26,7 @@ public class Orientator<E> {
     }
 
 
-    public List<PlanarGraphFace<Vertex, DefaultEdge>> getOrientatedInnerFaces() {
+    public List<PlanarGraphFace<Vertex>> getOrientatedInnerFaces() {
         return orientatedInnerFaces;
     }
 
@@ -35,8 +34,8 @@ public class Orientator<E> {
 
 
         orientatedOuterFace.setOrientationsOuterFacette();
-        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(orientatedInnerFaces);
-        List<PlanarGraphFace<Vertex, E>> discoveredFaces = new ArrayList<>();
+        List<PlanarGraphFace<Vertex>> undiscoveredFaces = new ArrayList<>(orientatedInnerFaces);
+        List<PlanarGraphFace<Vertex>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();
         HashMap<PlanarGraphFace, Boolean> visitedMap = new HashMap<>();
 
@@ -45,26 +44,26 @@ public class Orientator<E> {
 
         for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
         ) {
-            edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex, E>) orientatedOuterFace);
+            edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex>) orientatedOuterFace);
         }
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : orientatedInnerFaces
+        for (PlanarGraphFace<Vertex> face : orientatedInnerFaces
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {
-                edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex, E>) face);
+                edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex>) face);
             }
 
         }
 
 
-        PlanarGraphFace<Vertex, DefaultEdge> currentFace;
+        PlanarGraphFace<Vertex> currentFace;
 
         // äußere Facette
         for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
         ) {
             TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
-            PlanarGraphFace<Vertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
+            PlanarGraphFace<Vertex> face = edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
                 visitedMap.putIfAbsent(face, true);
@@ -76,12 +75,12 @@ public class Orientator<E> {
         // innere Facetten
         while (discoveredFaces.size() > 0) {
 
-            PlanarGraphFace<Vertex, E> currFace = discoveredFaces.get(0);
+            PlanarGraphFace<Vertex> currFace = discoveredFaces.get(0);
             discoveredFaces.remove(0);
             for (TupleEdge<Vertex, Vertex> edge : currFace.getEdgeList()
             ) {
                 TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
-                PlanarGraphFace<Vertex, E> face = edgeFaceNeighbourMap.get(reverseEdge);
+                PlanarGraphFace<Vertex> face = edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
                     visitedMap.putIfAbsent(face, true);

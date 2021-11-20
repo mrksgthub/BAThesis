@@ -17,15 +17,21 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
         TupleEdge.idCounter = idCounter;
     }
 
-    public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, boolean newEdge) {
+    public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, int i) {
 
-        if (newEdge) {
-            return new TupleEdge<>(edge.getRight(), edge.getLeft(), edge.getWinkel()*-1);
-        } else {
-            return new TupleEdge<>(edge.getRight(), edge.getLeft());
-        }
+            return new TupleEdge<>(edge.getRight(), edge.getLeft(), i);
+
 
     }
+
+    public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge) {
+
+            return new TupleEdge<>(edge.getRight(), edge.getLeft());
+
+
+    }
+
+
 
     public int getId() {
         return id;

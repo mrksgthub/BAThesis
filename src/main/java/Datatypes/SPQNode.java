@@ -1,54 +1,47 @@
 package Datatypes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 public abstract class SPQNode {
 
 
-    private List<SPQNode> children = new ArrayList<>();
-    List<SPQNode> mergedChildren = new ArrayList<>();
-
+    static int id = 0;
+    private final List<SPQNode> spqChildren = new ArrayList<>();
+    List<SPQNode> spqStarChildren = new ArrayList<>();
     List<Vertex> startNodes = new ArrayList<>();
     List<Vertex> sinkNodes = new ArrayList<>();
     double spirality = 999999;
-    private SPQNode parent;
-    boolean isroot = false;
-    private String name;
     int counter = 0;
     NodeTypesEnum.NODETYPE nodeType;
     Vertex startVertex;
     Vertex sinkVertex;
     double repIntervalLowerBound = 999;
     double repIntervalUpperBound = -990;
-     boolean isRoot = false;
-    static int id = 0;
+    boolean isRoot = false;
+    private SPQNode parent;
+    private String name;
 
-    public SPQNode(int nodes) {
-    }
 
-    public SPQNode(int nodes, String name) {
+    SPQNode(String name) {
         this.name = name;
     }
 
-    public SPQNode(String name) {
-        this.name = name;
+    public List<SPQNode> getSpqStarChildren() {
+        return spqStarChildren;
     }
 
-    public List<SPQNode> getMergedChildren() {
-        return mergedChildren;
-    }
-
-    void setMergedChildren(List<SPQNode> mergedChildren) {
-        this.mergedChildren = mergedChildren;
+    void setSpqStarChildren(List<SPQNode> spqStarChildren) {
+        this.spqStarChildren = spqStarChildren;
     }
 
     public NodeTypesEnum.NODETYPE getNodeType() {
         return nodeType;
     }
 
-    public double getSpirality() {
+    double getSpirality() {
         return spirality;
     }
 
@@ -94,8 +87,8 @@ public abstract class SPQNode {
         this.name = name;
     }
 
-    public List<SPQNode> getChildren() {
-        return children;
+    public List<SPQNode> getSpqChildren() {
+        return spqChildren;
     }
 
 
@@ -107,69 +100,75 @@ public abstract class SPQNode {
         this.parent = parent;
     }
 
-    public boolean isIsroot() {
-        return isroot;
-    }
-
 
     public boolean isRoot() {
         return this.isRoot;
     }
 
-    public void setRoot() {
+    public void setToRoot() {
         isRoot = true;
 
     }
-
-
 
 
     public void generateQstarChildren() {
 
     }
 
-
-
-
+    /**
+     * Bestimmt die Quelle und Senke des Knotens, basierend auf seinen Kindsknoten
+     *
+     * @param nodes
+     */
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
-            if (this.getStartVertex() == nodes.getStartVertex()) {
-                startNodes.addAll(nodes.startNodes);
-            }
-            if (this.getSinkVertex() == nodes.getSinkVertex()) {
-                sinkNodes.addAll(nodes.sinkNodes);
-            }
+        if (this.getStartVertex() == nodes.getStartVertex()) {
+            startNodes.addAll(nodes.startNodes);
+        }
+        if (this.getSinkVertex() == nodes.getSinkVertex()) {
+            sinkNodes.addAll(nodes.sinkNodes);
+        }
     }
 
     public void addToAdjecencyListsSinkAndSource() {
-        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && mergedChildren.size() == 0) {
-            startVertex.adjecentVertices.add(sinkVertex);
-            sinkVertex.adjecentVertices.add(0, startVertex);
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqStarChildren.size() == 0) {
+            startVertex.adjacentVertices.add(sinkVertex);
+            sinkVertex.adjacentVertices.add(0, startVertex);
         }
     }
 
 
     void mergeNodeWithParent(SPQNode node, SPQNode parent) {
 
-        int pos = parent.mergedChildren.indexOf(node);
-        parent.mergedChildren.remove(node);
+        int pos = parent.spqStarChildren.indexOf(node);
+        parent.spqStarChildren.remove(node);
 
-        for (SPQNode spQNode : node.mergedChildren
+        for (SPQNode spQNode : node.spqStarChildren
         ) {
-            parent.mergedChildren.add(pos++, spQNode);
+            parent.spqStarChildren.add(pos++, spQNode);
             spQNode.setParent(parent);
         }
     }
 
 
+    /**
+     * Berechnet die Winkel aus der Spiralität nach Didimo et al. 2020 und füght sie in hashMap ein. (Wird nur in Q* und P-Knoten gemacht)
+     *
+     * @param angleMap bildet Vertex -> Winkel ab.
+     */
+    public void computeAngles(HashMap<TupleEdge<Vertex, Vertex>, Integer> angleMap) {
 
-    public void computeOrthogonalRepresentation(HashMap<TupleEdge<Vertex, Vertex>, Integer> hashMap) {
-        // System.out.println("Test");
     }
 
 
-
-
     public void setSpiralityOfChildren() {
+    }
+
+    public List<Vertex> getStartNodes() {
+        return startNodes;
+    }
+
+    public List<Vertex> getSinkNodes() {
+        return sinkNodes;
     }
 }

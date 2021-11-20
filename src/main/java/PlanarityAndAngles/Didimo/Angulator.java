@@ -1,7 +1,6 @@
 package PlanarityAndAngles.Didimo;
 
 import Datatypes.*;
-import org.jgrapht.graph.DefaultEdge;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +10,10 @@ public class Angulator {
 
 
 
-    private final SPQTree tree;
-    private final List<PlanarGraphFace<Vertex, DefaultEdge>> listOfFaces;
+    private final SPQStarTree tree;
+    private final List<PlanarGraphFace<Vertex>> listOfFaces;
 
-    public Angulator(SPQTree tree, List<PlanarGraphFace<Vertex, DefaultEdge>> listOfFaces) {
+    public Angulator(SPQStarTree tree, List<PlanarGraphFace<Vertex>> listOfFaces) {
         this.tree = tree;
         this.listOfFaces = listOfFaces;
 
@@ -31,6 +30,8 @@ public class Angulator {
         // initialize
         HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
         long startTime = System.currentTimeMillis();
+
+        computeSpirality(tree.getRoot().getSpqStarChildren().get(0));
         // Rekrusives bestimmen der Winkel: https://arxiv.org/abs/2008.03784 Abschnitt 4 Construction Algorithm:
         winkelHinzufuegen(tree.getRoot(), pairIntegerMap);
 
@@ -45,11 +46,12 @@ public class Angulator {
       //  }
 
         // Füge Winkel zu den Faces hinzu
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : listOfFaces
+        for (PlanarGraphFace<Vertex> face : listOfFaces
         ) {
             for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
                 pairIntegerMap.putIfAbsent(pair, 0);
-                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
+            //    face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
+                face.setEdgeAngle(pair, pairIntegerMap.get(pair));
             }
         }
 
@@ -74,95 +76,24 @@ public class Angulator {
     private void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
         for (SPQNode node :
-                root.getMergedChildren()) {
+                root.getSpqStarChildren()) {
             winkelHinzufuegen(node, hashmap);
         }
-        if (root.getMergedChildren().size() > 1) { // IsRoot IS WICHTIG!!
-            root.computeOrthogonalRepresentation(hashmap);
+        if (root.getSpqStarChildren().size() > 1) { // IsRoot IS WICHTIG!!
+            root.computeAngles(hashmap);
         }
 
     }
 
+    public void computeSpirality(SPQNode root) {
 
-    /**
-     * Wie run(), aber mit einem Test, um zu sehen, ob man auch einen gültigen Graphen erstellt hat.
-     *
-     * @throws Exception
-     */
-    public void runDebug() throws Exception {
+        root.setSpiralityOfChildren();
 
-        //    this.treeVertexFaceGenerator = new Algorithms.FaceGenerator<>(tree.constructedGraph, tree.getRoot().getStartVertex(), tree.getRoot().getSinkVertex(), embedding);
-        //    treeVertexFaceGenerator.generateFaces2(); // counterclockwise = inner, clockwise = outerFacette
-
-        //    DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
-        //    treeVertexFaceGenerator.generateCapacities();
-
-
-        HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>();
-
-  /*      for (TupleEdge<Vertex, Vertex> pair :
-                treeVertexFaceGenerator.getAdjFaces2().keySet()) {
-            pairIntegerMap.put(pair, 0);
-        }*/
-
-        winkelHinzufuegen(tree.getRoot(), pairIntegerMap);
-
-        List<PlanarGraphFace<Vertex, DefaultEdge>> test = new ArrayList<>();
-        HashMap<Vertex, Integer> anglesMap = new HashMap<>();
-
-
-
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : listOfFaces
+        for (SPQNode node : root.getSpqStarChildren()
         ) {
-            int edgeCount = 0;
-            for (TupleEdge<Vertex, Vertex> pair :
-                    face.getOrthogonalRep().keySet()) {
-                pairIntegerMap.put(pair, 0);
-                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
-                edgeCount += pairIntegerMap.get(pair);
-
-                int angle = pairIntegerMap.get(pair);
-
-                if (angle == -1) {
-                    angle = 3;
-                }
-                if (angle == 0) {
-                    angle = 2;
-                }
-                if (angle == 1) {
-                    angle = 1;
-                }
-
-                if( anglesMap.putIfAbsent(pair.getRight(), angle) != null){
-
-                    anglesMap.put(pair.getRight(), anglesMap.get(pair.getRight()) + angle);
-                }
-            }
-
-
-            if (Math.abs(edgeCount) != 4) {
-                //    assert(Math.abs(edgeCount) == 4);
-                test.add(face);
-                if (Math.abs(edgeCount) != 4) {
-                    System.out.println("Fehler");
-
-                }
-            }
-
-        }
-
-
-        for (Vertex vertex: anglesMap.keySet()
-        ) {
-            Integer integer = anglesMap.get(vertex);
-            if (integer == 4) {
-            } else {
-                System.out.println(("FehlerWinkel"));
-            }
-
+            computeSpirality(node);
         }
 
     }
-
 
 }

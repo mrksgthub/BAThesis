@@ -1,12 +1,12 @@
 package Testing;
 
-import PlanarityAndAngles.FaceGenerator;
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Datatypes.Vertex;
 import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
+import PlanarityAndAngles.FaceGenerator;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -23,10 +23,9 @@ public class graphBuilderST {
     private final int chanceOfPIncr;
     private final int minOps;
     private final int opsIncrement;
-    private final int maxDegree ;
-    private final int chainLength ;
+    private final int maxDegree;
+    private final int chainLength;
     private final String filePathString;
-
 
 
     public graphBuilderST(int minOps, int opsIncrement, int chanceOfP, int chanceOfPIncr, int maxDegree, int chainLength, String filePathString) {
@@ -44,7 +43,7 @@ public class graphBuilderST {
 
 
         int runs = 30;
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
         int CHANCE_OF_P = 0;
@@ -84,7 +83,7 @@ public class graphBuilderST {
           /*      Embedder embedder = new Embedder(embedding);
                 embedder.run(root);*/
 
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
 
@@ -109,80 +108,49 @@ public class graphBuilderST {
     }
 
 
-    public void run(int CHANCE_OF_P, int OPS) {
+    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int einfachheit) {
 
 
-      //   runs = 30;
-        SPQTree tree;
+        //   runs = 30;
+        SPQStarTree tree;
         SPQNode root;
 
 
-                SPQGenerator spqGenerator = new SPQGenerator(OPS, CHANCE_OF_P, maxDegree, chainLength);
-                spqGenerator.generateGraph(OPS, CHANCE_OF_P);
+        SPQGenerator spqGenerator = new SPQGenerator();
+        boolean valid = spqGenerator.generateGraph(OPS, CHANCE_OF_P, maxDeg, einfachheit);
 
 
-                tree = spqGenerator.getTree();
-                root = spqGenerator.getRoot();
-
-             /*   SPQExporter spqExporter = new SPQExporter(tree);
-                spqExporter.run(root);
-                spqExporter.run(root, "C:/a.txt");
+        if (valid) {
+            tree = spqGenerator.getTree();
+            root = spqGenerator.getRoot();
 
 
-                SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-                spqImporter.run();*/
-
-                DirectedMultigraph<Vertex, DefaultEdge> graph = tree.getConstructedGraph();
-/*
-                tree = spqImporter.getTree();
-                root = tree.getRoot();*/
+            DirectedMultigraph<Vertex, DefaultEdge> graph = tree.getConstructedGraph();
+            FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+            treeVertexFaceGenerator.generateFaces();
 
 
-         /*       Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-                Embedder embedder = new Embedder(embedding);
-                embedder.run(root);*/
-
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), tree.getVertexToAdjecencyListMap());
-                treeVertexFaceGenerator.generateFaces();
+            System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
 
-                System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
+            int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
+            int nodes = graph.vertexSet().size();
 
 
-                int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
-                int nodes = graph.vertexSet().size();
+            SPQExporter spqExporter = new SPQExporter(tree);
+            //  spqExporter.run(root);
+            File filePath = new File(filePathString,
+                    nodes + "N" + faces + "F.dot");
+
+            spqExporter.run(root, filePath.toString());
+            return true;
+        } else {
+            return false;
+        }
+        //   Files.copy(Paths.get("C:/a.txt"), Paths.get("C:/" + nodes + "N" + faces + "F.txt"));
 
 
-                    SPQExporter spqExporter = new SPQExporter(tree);
-                  //  spqExporter.run(root);
-                File filePath = new File(filePathString,
-                        nodes + "N" + faces + "F.dot");
-
-                    spqExporter.run(root, filePath.toString());
-
-                 //   Files.copy(Paths.get("C:/a.txt"), Paths.get("C:/" + nodes + "N" + faces + "F.txt"));
-
-
-
-            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 }

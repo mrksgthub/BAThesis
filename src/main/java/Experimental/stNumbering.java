@@ -1,7 +1,7 @@
 package Experimental;
 
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Helperclasses.GraphHelper;
 import Helperclasses.SPQImporter;
 import org.jgrapht.Graphs;
@@ -47,7 +47,7 @@ class stNumbering {
 
          */
 
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
         SPQImporter spqImporter = new SPQImporter("C:/a.txt");

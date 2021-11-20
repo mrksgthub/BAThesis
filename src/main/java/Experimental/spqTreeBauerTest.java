@@ -20,7 +20,7 @@ class spqTreeBauerTest {
 
     public static void main(String[] args) {
 
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
         SPQImporter spqImporter = new SPQImporter("C:/a.txt");

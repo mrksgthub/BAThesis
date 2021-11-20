@@ -3,11 +3,11 @@ package Helperclasses;
 import PlanarityAndAngles.*;
 import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
-import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Datatypes.Vertex;
 import GraphGenerators.SPQGenerator;
+import PlanarityAndAngles.Flow.MaxFlow;
 import Visualizing.*;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
@@ -19,7 +19,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.*;
@@ -36,10 +35,10 @@ class basicMainClass {
         List<Callable<Object>> callableList = new ArrayList<>();
         assert (false);
 
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(50, 40);
+        SPQGenerator spqGenerator = new SPQGenerator(150, 30);
         spqGenerator.run();
 
 
@@ -66,11 +65,10 @@ class basicMainClass {
 
 
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-        /*Embedder embedder = new Embedder(embedding);
-        embedder.run(root);*/
+
         embedding = tree.getVertexToAdjecencyListMap();
 
-        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
         treeVertexFaceGenerator.generateFaces();
 
 
@@ -80,8 +78,7 @@ class basicMainClass {
         GraphHelper.writeTODOTTreeVertex(tree.getConstructedGraph(), "C:/a-constructedGraph.dot");
 
 
-        HashMap parentsList = new HashMap<>();
-      //  root.determineParents(root, parentsList);
+
 
 
         ConnectivityInspector inspector = new ConnectivityInspector<>(tree.getConstructedGraph());
@@ -91,13 +88,13 @@ class basicMainClass {
         long startTime = System.currentTimeMillis();
 
 
-        DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-        didimoRepresentability.run();
+        DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+        didimoRepresentability.run(tree);
 
 
        // root.getMergedChildren().get(0).computeSpirality();
 
-        tree.computeSpirality(root.getMergedChildren().get(0));
+       // tree.computeSpirality(root.getSpqStarChildren().get(0));
 
 
         Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
@@ -118,14 +115,16 @@ class basicMainClass {
 
         startTime = System.currentTimeMillis();
 
-        //  Algorithms.Flow.TamassiaRepresentation tamassiaRepresentation = new Algorithms.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-        //   tamassiaRepresentation.run();
+        //  PlanarityAndAngles.Flow.TamassiaRepresentation tamassiaRepresentation = new PlanarityAndAngles.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
+        //  tamassiaRepresentation.run(treeVertexFaceGenerator.getPlanarGraphFaces());
+
+
         long startTime2 = System.currentTimeMillis();
         MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
-       // test.run3();
+        test.run3();
 
 
         stopTime = System.currentTimeMillis();
@@ -141,12 +140,12 @@ class basicMainClass {
         System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
-        rectangulator.setOriginaledgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
+        rectangulator.setOriginalEdgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.run();
        // rectangulator.getOuterFace().setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectuangularInnerFaces(), rectangulator.getOuterFace());
+        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         orientator.run();
 
         System.out.println("Nach Visualizing.Orientator");
@@ -176,7 +175,7 @@ class basicMainClass {
 
         System.out.println("Nach den FlowNetworks");
 
-        Coordinator coordinator = new Coordinator(rectangulator.getOuterFace(), rectangulator.getRectuangularInnerFaces(), verticalFlow.getEdgeToArcMap(), horizontalFlow.getEdgeToArcMap(), verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        Coordinator coordinator = new Coordinator(rectangulator.getOuterFace(), rectangulator.getRectangularInnerFaces(), verticalFlow.getEdgeToArcMap(), horizontalFlow.getEdgeToArcMap(), verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
 
@@ -194,19 +193,22 @@ class basicMainClass {
         }
 
 
-        for (Vertex treeVertex : embedding.keySet()) {
+   /*     for (Vertex treeVertex : embedding.keySet()) {*/
+            for (Vertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
 
-            ArrayList<Vertex> list = embedding.get(treeVertex);
+                if (!vertex.isDummy()) {
+                    ArrayList<Vertex> list =vertex.getAdjacentVertices();
 
-            for (Vertex vertex1 : list) {
+                    for (Vertex vertex1 : list) {
 
-                if (graph.getEdge(vertex1.getName() + " " + treeVertex.getName()) == null)
-                    graph.addEdge(treeVertex.getName() + " " + vertex1.getName(), treeVertex.getName(), vertex1.getName());
+                        if (graph.getEdge(vertex1.getName() + " " + vertex.getName()) == null)
+                            graph.addEdge(vertex.getName() + " " + vertex1.getName(), vertex.getName(), vertex1.getName());
+
+                    }
+                }
+
 
             }
-
-
-        }
 
         for (Node node : graph) {
             node.setAttribute("ui.label", node.getId());

@@ -5,7 +5,6 @@ import Datatypes.Vertex;
 import Datatypes.TupleEdge;
 import org.antlr.v4.runtime.misc.Pair;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ import java.util.Map;
 public class Coordinator {
 
 
-    private final PlanarGraphFace<Vertex, DefaultEdge> outerFace;
-    private final List<PlanarGraphFace<Vertex, DefaultEdge>> rectangularFaceMap;
+    private final PlanarGraphFace<Vertex> outerFace;
+    private final List<PlanarGraphFace<Vertex>> rectangularFaceMap;
     private final Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> horzontalEdgeToArcMap;
     private final Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> verticalEdgeToArcMap;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> horizontalMinCostFlow;
@@ -42,7 +41,7 @@ public class Coordinator {
      * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges
      * @param costFlow - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
      */
-    public Coordinator(PlanarGraphFace<Vertex, DefaultEdge> outerFace, List<PlanarGraphFace<Vertex, DefaultEdge>> innerFaceList, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
+    public Coordinator(PlanarGraphFace<Vertex> outerFace, List<PlanarGraphFace<Vertex>> innerFaceList, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
 
         this.outerFace = outerFace;
         this.rectangularFaceMap = innerFaceList;
@@ -69,10 +68,10 @@ public class Coordinator {
      */
     public void run() {
 
-        List<PlanarGraphFace<Vertex, DefaultEdge>> undiscoveredFaces = new ArrayList<>(rectangularFaceMap);
-        List<PlanarGraphFace<Vertex, DefaultEdge>> discoveredFaces = new ArrayList<>();
+        List<PlanarGraphFace<Vertex>> undiscoveredFaces = new ArrayList<>(rectangularFaceMap);
+        List<PlanarGraphFace<Vertex>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();
-        HashMap<PlanarGraphFace<Vertex, DefaultEdge>, Boolean> visitedMap = new HashMap<>();
+        HashMap<PlanarGraphFace<Vertex>, Boolean> visitedMap = new HashMap<>();
         visitedMap.put(outerFace, true);
 
 
@@ -82,7 +81,7 @@ public class Coordinator {
             edgeFaceNeighbourMap.put(edge, outerFace);
         }
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : rectangularFaceMap
+        for (PlanarGraphFace<Vertex> face : rectangularFaceMap
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {
@@ -105,7 +104,7 @@ public class Coordinator {
             edgeToCoordMap.put(edge.getRight(), new Pair<>(length, yCoord));
 
             TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
-            PlanarGraphFace<Vertex, DefaultEdge> face = (PlanarGraphFace<Vertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
+            PlanarGraphFace<Vertex> face = (PlanarGraphFace<Vertex>) edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
                 visitedMap.putIfAbsent(face, true);
@@ -147,7 +146,7 @@ public class Coordinator {
         Pair<Integer, Integer> newCoordinates;
         while (discoveredFaces.size() > 0) {
 
-            PlanarGraphFace<Vertex, DefaultEdge> currFace = discoveredFaces.get(0);
+            PlanarGraphFace<Vertex> currFace = discoveredFaces.get(0);
             discoveredFaces.remove(0);
 
             list = currFace.getSidesMap().get(1);
@@ -188,7 +187,7 @@ public class Coordinator {
 
 
                 TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
-                PlanarGraphFace<Vertex, DefaultEdge> face = (PlanarGraphFace<Vertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
+                PlanarGraphFace<Vertex> face = (PlanarGraphFace<Vertex>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
                     visitedMap.putIfAbsent(face, true);
@@ -238,7 +237,7 @@ public class Coordinator {
 
 
                 TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(list.get(i).getRight(), list.get(i).getLeft());
-                PlanarGraphFace<Vertex, DefaultEdge> face = (PlanarGraphFace<Vertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
+                PlanarGraphFace<Vertex> face = (PlanarGraphFace<Vertex>) edgeFaceNeighbourMap.get(reverseEdge);
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
                     visitedMap.putIfAbsent(face, true);

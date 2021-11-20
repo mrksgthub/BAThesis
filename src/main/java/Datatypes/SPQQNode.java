@@ -24,17 +24,24 @@ public class SPQQNode extends SPQNode {
         sinkVertex = sink;
     }
 
+    public SPQQNode(String q, Vertex edgeSource, Vertex edgeTarget) {
+        super(q);
+        nodeType = NodeTypesEnum.NODETYPE.Q;
+        startVertex = edgeSource;
+        sinkVertex = edgeTarget;
+    }
+
 
     @Override
     public void addToSourceAndSinkLists(SPQNode nodes) {
-        if ((nodes.getNodeType() == NodeTypesEnum.NODETYPE.Q) && nodes.mergedChildren.size() == 0) {
+
             if (this.getStartVertex() == nodes.getStartVertex()) {
                 startNodes.add(nodes.getSinkVertex());
             }
             if (this.getSinkVertex() == nodes.getSinkVertex()) {
                 sinkNodes.add(nodes.getStartVertex());
             }
-        }
+
     }
 
 
@@ -43,7 +50,7 @@ public class SPQQNode extends SPQNode {
 
     @Override
     public boolean calculateRepresentabilityInterval() {
-        int l = mergedChildren.size();
+        int l = spqStarChildren.size();
         if (l == 0) {
             l = 1;
         }
@@ -54,18 +61,18 @@ public class SPQQNode extends SPQNode {
     }
 
     @Override
-    public void computeOrthogonalRepresentation(HashMap<TupleEdge<Vertex, Vertex>, Integer> hashMap) {
+    public void computeAngles(HashMap<TupleEdge<Vertex, Vertex>, Integer> angleMap) {
 
 
         if (spirality >= 0) {
             for (int i = 0; i < spirality; i++) {
-                hashMap.put(new TupleEdge<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex(),1), 1);
-                hashMap.put(new TupleEdge<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqStarChildren.get(i).getStartVertex(), spqStarChildren.get(i).getSinkVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqStarChildren.get(i + 1).getSinkVertex(), spqStarChildren.get(i + 1).getStartVertex(),-1), -1);
             }
         } else {
             for (int i = 0; i < -spirality; i++) {
-                hashMap.put(new TupleEdge<>(mergedChildren.get(i).getStartVertex(), mergedChildren.get(i).getSinkVertex(),-1), -1);
-                hashMap.put(new TupleEdge<>(mergedChildren.get(i + 1).getSinkVertex(), mergedChildren.get(i + 1).getStartVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqStarChildren.get(i).getStartVertex(), spqStarChildren.get(i).getSinkVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqStarChildren.get(i + 1).getSinkVertex(), spqStarChildren.get(i + 1).getStartVertex(),1), 1);
             }
         }
 

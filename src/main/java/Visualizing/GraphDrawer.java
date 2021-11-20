@@ -3,11 +3,6 @@ package Visualizing;
 import Datatypes.PlanarGraphFace;
 import Datatypes.TupleEdge;
 import Datatypes.Vertex;
-import org.antlr.v4.runtime.misc.Pair;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
-import org.graphstream.ui.view.Viewer;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
@@ -20,13 +15,13 @@ import java.util.concurrent.*;
 
 public class GraphDrawer implements Runnable {
 
-    private final List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
+    private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
     private final Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
     double time = Integer.MAX_VALUE;
-    private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2;
+    private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> adjFaces2;
 
 
-    public GraphDrawer(List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex, DefaultEdge>> adjFaces2) {
+    public GraphDrawer(List<PlanarGraphFace<Vertex>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> adjFaces2) {
         this.planarGraphFaces = planarGraphFaces;
         this.vertexToAdjListMap = embedding;
         this.adjFaces2 = adjFaces2;
@@ -46,12 +41,16 @@ public class GraphDrawer implements Runnable {
 
         Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(planarGraphFaces);
 
-        rectangulator.setOriginaledgeToFaceMap(adjFaces2);
-        rectangulator.run();
-       // rectangulator.outerFace.setOrientationsOuterFacette();
+        rectangulator.setOriginalEdgeToFaceMap(adjFaces2);
+        try {
+            rectangulator.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // rectangulator.outerFace.setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectuangularInnerFaces(), rectangulator.outerFace);
+        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularInnerFaces(), rectangulator.outerFace);
         orientator.run();
 
         System.out.println("Nach Visualizing.Orientator");
@@ -82,7 +81,7 @@ public class GraphDrawer implements Runnable {
         System.out.println("Nach den FlowNetworks");
 
         // Lege Koordinaten fest
-        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectuangularInnerFaces(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
+        Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularInnerFaces(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());
         coordinator.run();
 
         GraphStreamOutput output = new GraphStreamOutput(vertexToAdjListMap, coordinator.getEdgeToCoordMap());

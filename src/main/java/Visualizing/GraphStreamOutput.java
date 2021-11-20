@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
-public class GraphStreamOutput {
+class GraphStreamOutput {
 
 
     private Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
@@ -37,8 +37,23 @@ public class GraphStreamOutput {
             }
         }
 
+        for (Vertex vertex : edgeToCoordMap.keySet()) {
 
-        for (Vertex treeVertex : vertexToAdjListMap.keySet()) {
+            if (!vertex.isDummy()) {
+                ArrayList<Vertex> list =vertex.getAdjacentVertices();
+
+                for (Vertex vertex1 : list) {
+
+                    if (graph.getEdge(vertex1.getName() + " " + vertex.getName()) == null)
+                        graph.addEdge(vertex.getName() + " " + vertex1.getName(), vertex.getName(), vertex1.getName());
+
+                }
+            }
+
+
+        }
+
+    /*    for (Vertex treeVertex : vertexToAdjListMap.keySet()) {
 
             ArrayList<Vertex> list = vertexToAdjListMap.get(treeVertex);
 
@@ -50,7 +65,7 @@ public class GraphStreamOutput {
             }
 
 
-        }
+        }*/
 
 
         for (Node node : graph) {

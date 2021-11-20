@@ -324,7 +324,7 @@ class SPQGenTest {
 
     }*/
 
-    Hashtable<Vertex, ArrayList<Vertex>> erstelleHashtablefuerFacegenerator(SPQTree tree) {
+    Hashtable<Vertex, ArrayList<Vertex>> erstelleHashtablefuerFacegenerator(SPQStarTree tree) {
         Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
 
         for (Vertex vertex :
@@ -372,29 +372,7 @@ class SPQGenTest {
 */
 
 
-    void checkSpiralitiesWithinBounds(SPQTree tree) {
-        for (SPQNode node :
-                tree.getVisited()) {
-            if (node.getMergedChildren().size() > 0 && !node.getName().equals("Proot")) {
-                assert (node.getRepIntervalLowerBound() <= node.getSpirality() && node.getSpirality() <= node.getRepIntervalUpperBound());
-            }
-        }
-    }
-
-
-    void winkelHinzufügen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
-
-        for (SPQNode node :
-                root.getMergedChildren()) {
-            winkelHinzufügen(node, hashmap);
-        }
-        if (root.getMergedChildren().size() > 1 && !root.isRoot()) {
-            root.computeOrthogonalRepresentation(hashmap);
-        }
-
-    }
-
-/*
+    /*
 
     SPQPNode addPNode(SPQNode parentNode, int counter) {
         SPQPNode node = new SPQPNode("P" + counter, true);
@@ -407,7 +385,7 @@ class SPQGenTest {
     SPQSNode addSNode(SPQNode parentNode, int counter) {
         SPQSNode node = new SPQSNode("S" + counter);
         node.setParent(parentNode);
-        parentNode.getChildren().add(node);
+        parentNode.getSpqChildren().add(node);
         return node;
     }
 
@@ -415,7 +393,7 @@ class SPQGenTest {
     SPQQNode addQNode(SPQNode parentNode, int counter, Vertex start, Vertex sink) {
         SPQQNode node = new SPQQNode("Q" + counter++);
         node.setParent(parentNode);
-        parentNode.getChildren().add(node);
+        parentNode.getSpqChildren().add(node);
         node.setStartVertex(start);
         node.setSinkVertex(sink);
         return node;
@@ -440,7 +418,7 @@ class SPQGenTest {
             addQNode(node, counter++, vertexList.get(nodes[i]), vertexList.get(nodes[i + 1]));
         }
         node.setParent(parentNode);
-        parentNode.getChildren().add(node);
+        parentNode.getSpqChildren().add(node);
         return counter;
     }
 
@@ -448,10 +426,10 @@ class SPQGenTest {
     HashMap<SPQNode, ArrayList<Double>> getIntervals(SPQNode root, HashMap<SPQNode, ArrayList<Double>> intervalsMap) {
 
         for (SPQNode node :
-                root.getMergedChildren()) {
+                root.getSpqStarChildren()) {
             getIntervals(node, intervalsMap);
         }
-        if (root.getMergedChildren().size() > 1 && root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
+        if (root.getSpqStarChildren().size() > 1 && root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
             ArrayList<Double> array = new ArrayList<>();
             array.add(root.getRepIntervalLowerBound());
             array.add(root.getRepIntervalUpperBound());

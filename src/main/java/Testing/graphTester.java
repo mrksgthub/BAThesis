@@ -5,7 +5,7 @@ import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.FaceGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
 import Datatypes.SPQNode;
-import Datatypes.SPQTree;
+import Datatypes.SPQStarTree;
 import Datatypes.Vertex;
 import Helperclasses.GraphValidifier;
 import Helperclasses.SPQImporter;
@@ -41,7 +41,7 @@ public class graphTester {
     public static void main(String[] args) {
 
 
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
         final File folder = new File("C:\\Graphs");
@@ -72,7 +72,7 @@ public class graphTester {
                /* Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 */
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
@@ -84,12 +84,12 @@ public class graphTester {
                 long startTime = System.currentTimeMillis();
 
 
-                DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-                didimoRepresentability.run();
+                DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+                didimoRepresentability.run(tree);
 
 
            //     root.getMergedChildren().get(0).computeSpirality();
-                tree.computeSpirality(root.getMergedChildren().get(0));
+            //    tree.computeSpirality(root.getSpqStarChildren().get(0));
                 Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 angulator.run();
 
@@ -159,7 +159,7 @@ public class graphTester {
 
     public void run() {
 
-        SPQTree tree;
+        SPQStarTree tree;
         SPQNode root;
 
         try (
@@ -184,7 +184,7 @@ public class graphTester {
                 Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
 
 
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex(), embedding);
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
                 try {
@@ -208,12 +208,12 @@ public class graphTester {
 
 
                 try {
-                    DidimoRepresentability didimoRepresentability = new DidimoRepresentability(tree, root);
-                    didimoRepresentability.run();
+                    DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+                    didimoRepresentability.run(tree);
 
                    // root.getMergedChildren().get(0).computeSpirality();
 
-                    tree.computeSpirality(root.getMergedChildren().get(0));
+
                     Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                     angulator.run();
 

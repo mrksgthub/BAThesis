@@ -13,9 +13,9 @@ public class GraphValidifier {
 
 
     private DirectedMultigraph<Vertex, DefaultEdge> constructedGraph;
-    private List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
+    private List<PlanarGraphFace<Vertex>> planarGraphFaces;
 
-    public GraphValidifier(DirectedMultigraph<Vertex, DefaultEdge> constructedGraph, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
+    public GraphValidifier(DirectedMultigraph<Vertex, DefaultEdge> constructedGraph, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.constructedGraph = constructedGraph;
         this.planarGraphFaces = planarGraphFaces;
     }

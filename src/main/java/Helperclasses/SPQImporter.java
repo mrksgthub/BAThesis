@@ -5,7 +5,6 @@ import Datatypes.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Scanner;
 
 public class SPQImporter {
@@ -14,13 +13,13 @@ public class SPQImporter {
     private final String fileName;
     private final HashMap<String, SPQNode> nameToNode = new HashMap<>();
     private final HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
-    private SPQTree tree;
+    private SPQStarTree tree;
 
     public SPQImporter(String s) {
         this.fileName = s;
     }
 
-    public SPQTree getTree() {
+    public SPQStarTree getTree() {
         return tree;
     }
 
@@ -37,8 +36,8 @@ public class SPQImporter {
                 proceessLine(line);
             }
 
-            nameToNode.get("Proot").setRoot();
-            tree = new SPQTree(nameToNode.get("Proot"));
+            nameToNode.get("Proot").setToRoot();
+            tree = new SPQStarTree(nameToNode.get("Proot"));
             SPQPNode root = (SPQPNode) nameToNode.get("Proot");
 
             if (tree.getRoot() == null) {
@@ -64,12 +63,13 @@ public class SPQImporter {
 
             // Damit die nächst ID die der nächste unbenutzte Integer ist.
             Vertex.setCounter( nameToTreeVertex.values().size());
-            root.setRoot();
+            root.setToRoot();
 
             // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
-            tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-            tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());
-            tree.generateAdjecencyListMaP(tree.getRoot());
+     /*       tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
+            tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());*/
+            tree.initializeSPQNodes(tree.getRoot());
+        //    tree.generateAdjecencyListMaP(tree.getRoot());
 
          //   root.computeAdjecentVertices();
 
@@ -94,7 +94,7 @@ public class SPQImporter {
                 String s1 = line.substring(0, i).trim();
                 String s2 = line.substring(i + 3, line.length() - 1).trim();
 
-                nameToNode.get(s1).getMergedChildren().add(nameToNode.get(s2));
+                nameToNode.get(s1).getSpqStarChildren().add(nameToNode.get(s2));
 
             } else {
 

@@ -8,7 +8,6 @@ import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,13 @@ public class MaxFlow {
     private Map<DefaultWeightedEdge, Double> flowMap2;
     private Vertex solverSource;
     private Vertex solverSink;
-    private final SPQTree tree;
+    private final SPQStarTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
-    private List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces;
+    private List<PlanarGraphFace<Vertex>> planarGraphFaces;
     private int counter;
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
-    public MaxFlow(SPQTree tree, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
+    public MaxFlow(SPQStarTree tree, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.tree = tree;
         this.planarGraphFaces = planarGraphFaces;
     }
@@ -35,7 +34,7 @@ public class MaxFlow {
         return treeVertexFaceGenerator;
     }
 
-    public void setTreeVertexFaceGenerator( List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
+    public void setTreeVertexFaceGenerator( List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.planarGraphFaces = planarGraphFaces;
     }
 
@@ -112,7 +111,7 @@ public class MaxFlow {
      * @param planarGraphFaces
      * @param simple
      */
-    private void generateFlowGraph(SPQTree tree, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
+    private void generateFlowGraph(SPQStarTree tree, List<PlanarGraphFace<Vertex>> planarGraphFaces, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
 
@@ -315,18 +314,17 @@ public class MaxFlow {
 
 
 
-    private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<Vertex, DefaultEdge>> planarGraphFaces) {
+    private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
 
         // Erstelle Map um die Kante (y,z) zu beommen, welche in Facette x auf Knoten z endet.
-        HashMap<PlanarGraphFace<Vertex, DefaultEdge>, HashMap<Vertex, TupleEdge<Vertex, Vertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
+        HashMap<PlanarGraphFace<Vertex>, HashMap<Vertex, TupleEdge<Vertex, Vertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
 
 
-        for (PlanarGraphFace<Vertex, DefaultEdge> face : planarGraphFaces
+        for (PlanarGraphFace<Vertex> face : planarGraphFaces
         ) {
             HashMap<Vertex, TupleEdge<Vertex, Vertex>> pairVectorMap = new HashMap<>();
             map.put(face, pairVectorMap);
 
-            Map<TupleEdge<Vertex, Vertex>, Integer> s1 = face.getOrthogonalRep();
             for (TupleEdge<Vertex, Vertex> pair :
                     face.getOrthogonalRep().keySet()) {
 
@@ -346,20 +344,20 @@ public class MaxFlow {
 
                 TupleEdge<Vertex, Vertex> pair = m1.get(graph.getEdgeSource(edge));
 
-                PlanarGraphFace<Vertex, DefaultEdge> tempFace;
+                PlanarGraphFace<Vertex> tempFace;
                 Double aDouble = flowMap.get(edge);
                 if (aDouble == 0.0) {
-                    tempFace = (PlanarGraphFace<Vertex, DefaultEdge>) graph.getEdgeTarget(edge);
-                    tempFace.getOrthogonalRep().put(pair, 1);
-                    pair.setWinkel(1);
+                    tempFace = (PlanarGraphFace<Vertex>) graph.getEdgeTarget(edge);
+                    tempFace.setEdgeAngle(pair, 1);
+                //   pair.setWinkel(1);
                 } else if (aDouble == 1.0) {
-                    tempFace = (PlanarGraphFace<Vertex, DefaultEdge>) graph.getEdgeTarget(edge);
-                    tempFace.getOrthogonalRep().put(pair, 0);
-                    pair.setWinkel(0);
+                    tempFace = (PlanarGraphFace<Vertex>) graph.getEdgeTarget(edge);
+                    tempFace.setEdgeAngle(pair, 0);
+                 // pair.setWinkel(0);
                 } else if (aDouble == 2.0) {
-                    tempFace = (PlanarGraphFace<Vertex, DefaultEdge>) graph.getEdgeTarget(edge);
-                    tempFace.getOrthogonalRep().put(pair, -1);
-                    pair.setWinkel(-1);
+                    tempFace = (PlanarGraphFace<Vertex>) graph.getEdgeTarget(edge);
+                    tempFace.setEdgeAngle(pair, -1);
+                 //   pair.setWinkel(-1);
                 }
 
                 //   System.out.println("test");
