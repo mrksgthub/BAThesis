@@ -66,14 +66,8 @@ public class SPQImporter {
             root.setToRoot();
 
             // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
-     /*       tree.setStartAndSinkNodesOrBuildConstructedGraph(tree.getRoot(), tree.getVisited());
-            tree.determineInnerOuterNodesAndAdjVertices(tree.getRoot());*/
+
             tree.initializeSPQNodes(tree.getRoot());
-        //    tree.generateAdjecencyListMaP(tree.getRoot());
-
-         //   root.computeAdjecentVertices();
-
-
 
             System.out.println("Graph Imported");
 

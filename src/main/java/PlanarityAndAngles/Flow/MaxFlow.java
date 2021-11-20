@@ -6,13 +6,14 @@ import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MaxFlow {
+public  class  MaxFlow {
 
 
     private Map<DefaultWeightedEdge, Double> flowMap;
@@ -21,13 +22,13 @@ public class MaxFlow {
     private Vertex solverSink;
     private final SPQStarTree tree;
     private FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
-    private List<PlanarGraphFace<Vertex>> planarGraphFaces;
+    private List<PlanarGraphFace<Vertex>> listOfFaces;
     private int counter;
-    private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+    private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> flowNetwork = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
     public MaxFlow(SPQStarTree tree, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.tree = tree;
-        this.planarGraphFaces = planarGraphFaces;
+        this.listOfFaces = planarGraphFaces;
     }
 
     public FaceGenerator<Vertex, DefaultEdge> getTreeVertexFaceGenerator() {
@@ -35,20 +36,21 @@ public class MaxFlow {
     }
 
     public void setTreeVertexFaceGenerator( List<PlanarGraphFace<Vertex>> planarGraphFaces) {
-        this.planarGraphFaces = planarGraphFaces;
+        this.listOfFaces = planarGraphFaces;
     }
 
-    public void run() {
+    public void runJGraptHImplementation() {
 
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
 
-        generateFlowGraph(tree, planarGraphFaces, simple);
+        generateFlowGraph(tree.getConstructedGraph(), listOfFaces, flowNetwork);
+
 
 
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
-        MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(simple);
+        MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
 
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
@@ -58,24 +60,24 @@ public class MaxFlow {
         }
 
 
-        setOrthogonalRep(flowMap, planarGraphFaces);
+        setOrthogonalRep(flowMap, listOfFaces);
 
     }
 
 
-    public void run2() {
+    public void runEdmondsKarp() {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, planarGraphFaces, simple);
+        generateFlowGraph(tree.getConstructedGraph(), listOfFaces, flowNetwork);
 
-        EdmondsKarp edmondsKarp = new EdmondsKarp(simple);
+        EdmondsKarp edmondsKarp = new EdmondsKarp(flowNetwork);
 
-        edmondsKarp.initialize();
+        edmondsKarp.run();
 
 
         flowMap2 = edmondsKarp.maxFlow;
-        setOrthogonalRep(edmondsKarp.maxFlow, planarGraphFaces);
+        setOrthogonalRep(edmondsKarp.maxFlow, listOfFaces);
 
     }
 
@@ -83,20 +85,22 @@ public class MaxFlow {
     /**
      * Erstellt Flussnetzwerk, führt Push-Relabel Maxflow Algorithmus aus und legt dann Winkel in den orthogonalen
      * Repräsentationen der Faces fest.
+     * @param listOfFaces
+     * @param constructedGraph
      */
-    public void run3() {
+    public void runPushRelabel(List<PlanarGraphFace<Vertex>> listOfFaces, DirectedMultigraph<Vertex, DefaultEdge> constructedGraph) {
 
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
-        generateFlowGraph(tree, planarGraphFaces, simple);
+        generateFlowGraph(constructedGraph, listOfFaces, flowNetwork);
 
-        PushRelabel pushRelabel = new PushRelabel(simple);
+        PushRelabel pushRelabel = new PushRelabel(flowNetwork);
 
-        pushRelabel.initialize();
+        pushRelabel.run();
 
 
         flowMap2 = pushRelabel.maxFlow;
-        setOrthogonalRep(pushRelabel.maxFlow, planarGraphFaces);
+        setOrthogonalRep(pushRelabel.maxFlow, this.listOfFaces);
 
     }
 
@@ -105,22 +109,21 @@ public class MaxFlow {
      * Erstellt ein für den Tamassia-Algorithmus zugeschnittenes Flussnetzwerk (Garg Tamassia 96).
      * Um die benötigten lower bounds zu gewährleisten müssen die capacities und Kanten angepasst werden.
      *
-     *
-     *
-     * @param tree
-     * @param planarGraphFaces
+     * @param constructedGraph
+     * @param listOfFaces
      * @param simple
+     *
      */
-    private void generateFlowGraph(SPQStarTree tree, List<PlanarGraphFace<Vertex>> planarGraphFaces, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
+    private void generateFlowGraph(DirectedMultigraph<Vertex, DefaultEdge> constructedGraph, List<PlanarGraphFace<Vertex>> listOfFaces, DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> simple) {
         simple.addVertex(solverSource);
         simple.addVertex(solverSink);
 
         // solverSource to Vertex
         int neighbors;
         counter = 0;
-        for (Vertex vertex : tree.getConstructedGraph().vertexSet()
+        for (Vertex vertex : constructedGraph.vertexSet()
         ) {
-            neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+            neighbors = constructedGraph.outDegreeOf(vertex) + constructedGraph.inDegreeOf(vertex);
             simple.addVertex(vertex);
             DefaultWeightedEdge e1 = simple.addEdge(solverSource, vertex);
             simple.setEdgeWeight(e1, 4 - neighbors);
@@ -131,7 +134,7 @@ public class MaxFlow {
         int neighborOfFace;
 
         // OuterFace
-        List<TupleEdge<Vertex,Vertex>> edgeList = planarGraphFaces.get(0).getEdgeList();
+        List<TupleEdge<Vertex,Vertex>> edgeList = listOfFaces.get(0).getEdgeList();
 /*        for (TupleEdge<Vertex, Vertex> edge: treeVertexFaceGenerator.getPlanarGraphFaces().get(0).getEdgeList()
         ) {
             vertexList2.add(edge.getLeft());
@@ -146,7 +149,7 @@ public class MaxFlow {
 
 
         // Face zu Sink
-        Vertex face = planarGraphFaces.get(0);
+        Vertex face = listOfFaces.get(0);
         simple.addVertex(face);
         DefaultWeightedEdge edge = simple.addEdge(face, solverSink);
         simple.setEdgeWeight(edge, neighborOfFace);
@@ -154,16 +157,16 @@ public class MaxFlow {
         // Vertex zu Face
         for (int j = 0; j < edgeList.size() ; j++) {
             Vertex vertex = edgeList.get(j).getLeft();
-            neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+            neighbors = constructedGraph.outDegreeOf(vertex) + constructedGraph.inDegreeOf(vertex);
             edge = simple.addEdge(vertex, face);
             simple.setEdgeWeight(edge, 4 - neighbors);
         }
 
 
         // Inner Faces:
-        for (int i = 1; i < planarGraphFaces.size(); i++) {
+        for (int i = 1; i < listOfFaces.size(); i++) {
 
-            edgeList = planarGraphFaces.get(i).getEdgeList();
+            edgeList = listOfFaces.get(i).getEdgeList();
 
             neighborOfFace = 2 * (edgeList.size()) - 4 - (edgeList.size());
 
@@ -173,7 +176,7 @@ public class MaxFlow {
 
 
             // Face zu Sink
-            face = planarGraphFaces.get(i);
+            face = listOfFaces.get(i);
             simple.addVertex(face);
             edge = simple.addEdge(face, solverSink);
             simple.setEdgeWeight(edge, neighborOfFace);
@@ -183,7 +186,7 @@ public class MaxFlow {
             // Vertex zu Face
             for (int j = 0; j < edgeList.size() ; j++) {
                 Vertex vertex = edgeList.get(j).getLeft();
-                neighbors = tree.getConstructedGraph().outDegreeOf(vertex) + tree.getConstructedGraph().inDegreeOf(vertex);
+                neighbors = constructedGraph.outDegreeOf(vertex) + constructedGraph.inDegreeOf(vertex);
                 edge = simple.addEdge(vertex, face);
                 simple.setEdgeWeight(edge, 4 - neighbors);
             }
@@ -314,13 +317,13 @@ public class MaxFlow {
 
 
 
-    private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
+    private void setOrthogonalRep(Map<DefaultWeightedEdge, Double> flowMap, List<PlanarGraphFace<Vertex>> listOfFaces) {
 
         // Erstelle Map um die Kante (y,z) zu beommen, welche in Facette x auf Knoten z endet.
         HashMap<PlanarGraphFace<Vertex>, HashMap<Vertex, TupleEdge<Vertex, Vertex>>> map = new HashMap<>(); // Facette -> Map (Vertex x -> Kante (y,x) in Facette
 
 
-        for (PlanarGraphFace<Vertex> face : planarGraphFaces
+        for (PlanarGraphFace<Vertex> face : listOfFaces
         ) {
             HashMap<Vertex, TupleEdge<Vertex, Vertex>> pairVectorMap = new HashMap<>();
             map.put(face, pairVectorMap);
@@ -337,8 +340,8 @@ public class MaxFlow {
         for (DefaultWeightedEdge edge : flowMap.keySet()
         ) {
 
-            if (simple.getEdgeSource(edge) != solverSink && simple.getEdgeSource(edge) != solverSource && simple.getEdgeTarget(edge) != solverSink && simple.getEdgeTarget(edge) != solverSource) {
-                DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> graph = simple;
+            if (flowNetwork.getEdgeSource(edge) != solverSink && flowNetwork.getEdgeSource(edge) != solverSource && flowNetwork.getEdgeTarget(edge) != solverSink && flowNetwork.getEdgeTarget(edge) != solverSource) {
+                DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> graph = flowNetwork;
 
                 HashMap<Vertex, TupleEdge<Vertex, Vertex>> m1 = map.get(graph.getEdgeTarget(edge));
 

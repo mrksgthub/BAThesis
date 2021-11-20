@@ -19,7 +19,7 @@ class EdmondsKarp extends MaxFlowImp {
 
     }
 
-    public void initialize() {
+    public void run() {
 
 
         int maxflow = 0;

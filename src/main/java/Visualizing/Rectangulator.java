@@ -611,9 +611,9 @@ public class Rectangulator<E> {
 
 
         //TODO Hier könnte man die Stacks so anpassen, dass alle Kanten auf die stacks gelegt werden (also auch die mit 180° Winkeln), aber beim Stringbuilder werden sie ignoriert. Findet man ein 011 im STrink dann peeked und poopwed man so lange bis die 0 gefunden wird und baut so das Rectangular face.
-        for (TupleEdge<Vertex, Vertex> edge : edgeList) {
+  /*      for (TupleEdge<Vertex, Vertex> edge : edgeList) {
             edge.setWinkel(orthogonalRep.get(edge));
-        }
+        }*/
         boolean end = false;
         int endPos = -2; // Der Initiale Wert. Ist -2, weil dieser Wert niemals beim durchlauf erreicht werden kann.
 

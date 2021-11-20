@@ -101,12 +101,10 @@ public class SPQStarTree {
     }
 
 
-    public void addValidSPQStarTreeRepresentation() {
+    public void addValidSPQStarTreeRepresentation(SPQNode root) {
 
-        this.compactTree(this.getRoot());
-        this.generateQStarNodes(this.getRoot());
-
-        initializeSPQNodes(this.getRoot());
+        compactTree(root);
+        generateQStarNodes(root);
         //  this.generateAdjecencyListMaP(this.getRoot());
 
     }

@@ -9,11 +9,11 @@ public class DidimoRepresentability {
     public DidimoRepresentability() {
     }
 
-    public boolean run(SPQStarTree tree) {
+    public boolean run(SPQNode root) {
         Boolean check = true;
-        check = computeRepresentabilityIntervals(tree.getRoot(), check);
+        check = computeRepresentabilityIntervals(root, check);
         if (check) {
-            check = (computeNofRoot(tree.getRoot())) ? check : false;
+            check = (computeNofRoot(root)) ? check : false;
             if (!check) {
                 System.out.println("Didimo rejected at source Node");
             }

@@ -85,13 +85,13 @@ public class graphTester {
 
 
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-                didimoRepresentability.run(tree);
+                didimoRepresentability.run(tree.getRoot());
 
 
            //     root.getMergedChildren().get(0).computeSpirality();
             //    tree.computeSpirality(root.getSpqStarChildren().get(0));
-                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                angulator.run();
+                Angulator angulator = new Angulator();
+                angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
 
 
                 long stopTime = System.currentTimeMillis();
@@ -120,7 +120,7 @@ public class graphTester {
 
 
                 MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.run3();
+                test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
                 long tamassiaPushTime = elapsedTime;
@@ -209,13 +209,13 @@ public class graphTester {
 
                 try {
                     DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-                    didimoRepresentability.run(tree);
+                    didimoRepresentability.run(tree.getRoot());
 
                    // root.getMergedChildren().get(0).computeSpirality();
 
 
-                    Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                    angulator.run();
+                    Angulator angulator = new Angulator();
+                    angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
 
                     stopTime = System.currentTimeMillis();
                     elapsedTime = stopTime - startTime;
@@ -249,7 +249,7 @@ public class graphTester {
                 try {
                     startTime = System.currentTimeMillis();
                     MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                    test.run3();
+                    test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
                     stopTime = System.currentTimeMillis();
                     elapsedTime = stopTime - startTime;
                     tamassiaPushTime = elapsedTime;

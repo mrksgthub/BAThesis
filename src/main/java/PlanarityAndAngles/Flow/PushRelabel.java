@@ -1,5 +1,6 @@
 package PlanarityAndAngles.Flow;
 
+import Datatypes.Vertex;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
@@ -45,7 +46,7 @@ class PushRelabel extends MaxFlowImp {
     }
 
 
-    public void initialize() {
+    public void run() {
         // initialisiere Arrays
         heights = new int[n];
         heights[source] = n;

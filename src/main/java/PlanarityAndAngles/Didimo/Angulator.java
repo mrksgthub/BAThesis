@@ -9,13 +9,8 @@ import java.util.List;
 public class Angulator {
 
 
+    public Angulator() {
 
-    private final SPQStarTree tree;
-    private final List<PlanarGraphFace<Vertex>> listOfFaces;
-
-    public Angulator(SPQStarTree tree, List<PlanarGraphFace<Vertex>> listOfFaces) {
-        this.tree = tree;
-        this.listOfFaces = listOfFaces;
 
     }
 
@@ -25,15 +20,15 @@ public class Angulator {
      * hinzu.
      *
      */
-    public void run()  {
+    public void run(SPQNode root, List<PlanarGraphFace<Vertex>> listOfFaces)  {
 
         // initialize
         HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
         long startTime = System.currentTimeMillis();
 
-        computeSpirality(tree.getRoot().getSpqStarChildren().get(0));
+        computeSpirality(root.getSpqStarChildren().get(0));
         // Rekrusives bestimmen der Winkel: https://arxiv.org/abs/2008.03784 Abschnitt 4 Construction Algorithm:
-        winkelHinzufuegen(tree.getRoot(), pairIntegerMap);
+        winkelHinzufuegen(root, pairIntegerMap);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;

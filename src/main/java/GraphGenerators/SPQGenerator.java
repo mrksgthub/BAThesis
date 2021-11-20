@@ -87,12 +87,12 @@ public class SPQGenerator implements Callable, Runnable {
 
     }
 
-    public Boolean generateGraph(int size, int chanceOfP, int maxDeg, int einfachheit) {
+    public Boolean generateGraph(int ops, int chanceOfP, int maxDeg, int einfachheit) {
         Boolean check;
         counter++;
         check = true;
 
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(size, chanceOfP, maxDeg, einfachheit);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(ops, chanceOfP, maxDeg, einfachheit);
         graphgenSplitGraph.generateGraph();
 
 
@@ -103,7 +103,8 @@ public class SPQGenerator implements Callable, Runnable {
 
 
 
-        tree.addValidSPQStarTreeRepresentation();
+        tree.addValidSPQStarTreeRepresentation(root);
+        tree.initializeSPQNodes(root);
 
 
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
@@ -121,7 +122,7 @@ public class SPQGenerator implements Callable, Runnable {
 
 
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-        check = didimoRepresentability.run(tree);
+        check = didimoRepresentability.run(tree.getRoot());
 
 
 
@@ -144,7 +145,7 @@ public class SPQGenerator implements Callable, Runnable {
             //   DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
             //   treeVertexFaceGenerator.generateCapacities();
             MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-            test.run3();
+            test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
 
             // Zeit2:
             long stopTime2 = System.currentTimeMillis();

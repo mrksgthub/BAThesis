@@ -82,22 +82,22 @@ public class PlanarityAndAngleDistributorRunner {
             if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
 
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-               boolean isValid = didimoRepresentability.run(tree);
+               boolean isValid = didimoRepresentability.run(tree.getRoot());
 
                 if (!isValid) {
                     throw new RuntimeException("inValidGraph");
                 }
 
-                Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
+                Angulator angulator = new Angulator();
                 try {
-                    angulator.run();
+                    angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
                 MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.run3();
+                test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
             }
             long stopTime3 = System.currentTimeMillis();
             time = stopTime3 - startTime3;

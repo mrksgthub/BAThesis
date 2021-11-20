@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TamassiaRepresentation {
+public class MinFlow {
 
     private final SPQNode root;
     private final SPQStarTree tree;
@@ -24,7 +24,7 @@ public class TamassiaRepresentation {
     private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
 
 
-    public TamassiaRepresentation(SPQStarTree tree, SPQNode root, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
+    public MinFlow(SPQStarTree tree, SPQNode root, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
         this.tree = tree;
         this.root = root;
         this.treeVertexFaceGenerator = treeVertexFaceGenerator;

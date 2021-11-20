@@ -89,7 +89,7 @@ class basicMainClass {
 
 
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-        didimoRepresentability.run(tree);
+        didimoRepresentability.run(tree.getRoot());
 
 
        // root.getMergedChildren().get(0).computeSpirality();
@@ -97,10 +97,10 @@ class basicMainClass {
        // tree.computeSpirality(root.getSpqStarChildren().get(0));
 
 
-        Angulator angulator = new Angulator(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
+        Angulator angulator = new Angulator();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-             angulator.run();
+             angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
@@ -124,7 +124,7 @@ class basicMainClass {
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
-        test.run3();
+        test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
 
 
         stopTime = System.currentTimeMillis();

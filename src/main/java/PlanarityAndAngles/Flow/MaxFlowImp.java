@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-class MaxFlowImp {
+abstract class  MaxFlowImp {
 
 
     private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph;
@@ -71,6 +71,7 @@ class MaxFlowImp {
 
     }
 
+    public abstract void run();
 
     class Edge {
         DefaultWeightedEdge edge;
