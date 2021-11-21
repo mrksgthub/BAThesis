@@ -161,7 +161,7 @@ public class SPQGenerator implements Callable, Runnable {
         // tamassiaValid = false;
         if (tamassiaValid != check) {
             try {
-                SPQExporter spqExporter = new SPQExporter(tree);
+                SPQExporter spqExporter = new SPQExporter();
                 //      spqExporter.run(root);
                 spqExporter.run(root, "C:/bug.txt");
 

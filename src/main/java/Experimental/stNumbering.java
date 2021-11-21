@@ -50,8 +50,8 @@ class stNumbering {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-        spqImporter.run();
+        SPQImporter spqImporter = new SPQImporter();
+        spqImporter.run("C:/a.txt");
 
 
         tree = spqImporter.getTree();

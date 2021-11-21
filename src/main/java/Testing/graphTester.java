@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -60,16 +61,15 @@ public class graphTester {
             ) {
 
                 System.out.println(fileName);
-                SPQImporter spqImporter = new SPQImporter(fileName);
-                spqImporter.run();
+                SPQImporter spqImporter = new SPQImporter();
+                spqImporter.run(fileName);
 
 
                 tree = spqImporter.getTree();
                 root = tree.getRoot();
 
 
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
-               /* Embedder embedder = new Embedder(embedding);
+                /* Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 */
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
@@ -163,7 +163,11 @@ public class graphTester {
         SPQNode root;
 
         try (
-                BufferedWriter writer = Files.newBufferedWriter(dataFile.toPath());
+                /*BufferedWriter writer = Files.newBufferedWriter(dataFile.toPath());*/
+                BufferedWriter writer = Files.newBufferedWriter(
+                        dataFile.toPath(),
+                        StandardOpenOption.APPEND,
+                        StandardOpenOption.CREATE);
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"));
@@ -173,15 +177,12 @@ public class graphTester {
             ) {
 
                 System.out.println(fileName);
-                SPQImporter spqImporter = new SPQImporter(fileName.toString());
-                spqImporter.run();
+                SPQImporter spqImporter = new SPQImporter();
+                spqImporter.run(fileName.toString());
 
 
                 tree = spqImporter.getTree();
                 root = tree.getRoot();
-
-
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
 
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());

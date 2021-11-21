@@ -1,8 +1,8 @@
 package Visualizing;
 
 import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
 import Datatypes.TupleEdge;
+import Datatypes.Vertex;
 import org.antlr.v4.runtime.misc.Pair;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;
@@ -13,9 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *  Zuständig für die Zuweisung von x- und y-Koordinaten an die Knoten des Graphen.
- *
- *
+ * Zuständig für die Zuweisung von x- und y-Koordinaten an die Knoten des Graphen.
  */
 public class Coordinator {
 
@@ -31,15 +29,12 @@ public class Coordinator {
 
 
     /**
-     *
-     *
-     *
-     *  @param outerFace
+     * @param outerFace
      * @param innerFaceList
-     * @param edgeToArcMap - horizontal Edge to Arc Map
-     * @param edgeToArcMap1 - vertical Edge to Arc Map
+     * @param edgeToArcMap    - horizontal Edge to Arc Map
+     * @param edgeToArcMap1   - vertical Edge to Arc Map
      * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges
-     * @param costFlow - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
+     * @param costFlow        - - erzeugt von jgrapht MinimumCostFlowAlgorithm für die horizontal orientieren Kanten
      */
     public Coordinator(PlanarGraphFace<Vertex> outerFace, List<PlanarGraphFace<Vertex>> innerFaceList, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap, Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> edgeToArcMap1, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> costFlow) {
 
@@ -55,10 +50,6 @@ public class Coordinator {
 
     public Map<Vertex, Pair<Integer, Integer>> getEdgeToCoordMap() {
         return edgeToCoordMap;
-    }
-
-    public void setEdgeToCoordMap(Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap) {
-        this.edgeToCoordMap = edgeToCoordMap;
     }
 
 
@@ -89,7 +80,6 @@ public class Coordinator {
             }
 
         }
-
 
 
         edgeToCoordMap.put(outerFace.getSidesMap().get(0).get(0).getLeft(), new Pair<>(0, 0)); // bestimme den Knoten mit der (0,0) Koordinate
@@ -137,12 +127,14 @@ public class Coordinator {
         xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;
         for (int i = 0; i < list.size(); i++) {
             length += verticalMinCostFlow.getFlowMap().get(verticalEdgeToArcMap.get(list.get(i)));
-            assert i != list.size() - 1 || (edgeToCoordMap.get(list.get(list.size() - 1).getRight()).b == length);
             edgeToCoordMap.put(list.get(i).getRight(), new Pair<>(xCoord, length));
+
+            assert i != list.size() - 1 || (edgeToCoordMap.get(list.get(list.size() - 1).getRight()).b == length);
         }
 
 
-        // Bestimme die Koordinaten der Knoten der inneren Facetten
+        // Bestimme die Koordinaten der Knoten der inneren Facetten. Dabei müssen wir die Tupel mit der Orientierung 1
+        // nicht beachten (da diese in der benachbarten Facette von den Tupel mit der Orientierung 3 betrachtet werden).
         Pair<Integer, Integer> newCoordinates;
         while (discoveredFaces.size() > 0) {
 
@@ -152,7 +144,10 @@ public class Coordinator {
             list = currFace.getSidesMap().get(1);
 
 
-            Pair<Integer, Integer> startVertex = edgeToCoordMap.get(list.get(0).getLeft());
+            Pair<Integer, Integer> startVertex = edgeToCoordMap.get(list.get(0).getLeft()); /* wir benötigen, dass der
+            Knoten "links unten" (wenn wir davon ausgehen, dass "0" die Knoten sind, die links unten sind) feste
+            Koordinaten hat.
+            */
             if (startVertex == null) {
                 discoveredFaces.add(currFace);
                 continue;
@@ -160,6 +155,7 @@ public class Coordinator {
 
             length = startVertex.b;
             xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;
+            // Wir legen die Koordinaten der Knoten, die die Orientierung 0 haben fest.
             for (TupleEdge<Vertex, Vertex> edge : list) {
                 length += verticalMinCostFlow.getFlowMap().get(verticalEdgeToArcMap.get(edge));
 
@@ -172,7 +168,7 @@ public class Coordinator {
 
             }
 
-
+            // Wir legen die Koordinaten der Knoten, die die Orientierung 2 haben fest.
             list = currFace.getSidesMap().get(2);
             length = edgeToCoordMap.get(list.get(0).getLeft()).a;
             yCoord = edgeToCoordMap.get(list.get(0).getLeft()).b;
@@ -196,34 +192,23 @@ public class Coordinator {
 
             }
 
-
+            // Wir legen die Koordinaten der Knoten, die die Orientierung 3 haben fest.
             list = currFace.getSidesMap().get(3);
             length = edgeToCoordMap.get(list.get(0).getLeft()).b;
             xCoord = edgeToCoordMap.get(list.get(0).getLeft()).a;
             for (int i = 0; i < list.size(); i++) {
                 length -= verticalMinCostFlow.getFlowMap().get(verticalEdgeToArcMap.get(list.get(i)));
-
-
                 newCoordinates = new Pair<>(xCoord, length);
                 assert edgeToCoordMap.get(list.get(i).getRight()) == null || (edgeToCoordMap.get(list.get(i).getRight()).equals(newCoordinates));
 
                 assert (length > -1);
                 edgeToCoordMap.put(list.get(i).getRight(), newCoordinates);
 
-/* Debug Code:
-                MutablePair<Datatypes.TreeVertex, Datatypes.TreeVertex> reverseEdge = new Tuple<>(list.get(i).getRight(), list.get(i).getLeft());
-                Datatypes.PlanarGraphFace<Datatypes.TreeVertex, DefaultEdge> face = (Datatypes.PlanarGraphFace<Datatypes.TreeVertex, DefaultEdge>) edgeFaceNeighbourMap.get(reverseEdge);
-                assert (face != null);
-                if (visitedMap.get(face) == null) {
-                    visitedMap.putIfAbsent(face, true);
-                    discoveredFaces.add(face);
-                }
-*/
-
             }
 
+// TODO vielleicht wieder unkommentieren.
 
-            list = currFace.getSidesMap().get(0);
+/*            list = currFace.getSidesMap().get(0);
             length = edgeToCoordMap.get(list.get(0).getLeft()).a;
             yCoord = edgeToCoordMap.get(list.get(0).getLeft()).b;
             for (int i = 0; i < list.size(); i++) {
@@ -243,10 +228,7 @@ public class Coordinator {
                     visitedMap.putIfAbsent(face, true);
                     discoveredFaces.add(face);
                 }
-
-            }
-
-
+            }*/
         }
 
 

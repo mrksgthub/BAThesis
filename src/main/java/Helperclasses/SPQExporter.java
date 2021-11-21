@@ -1,7 +1,6 @@
 package Helperclasses;
 
 import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -17,13 +16,6 @@ import java.util.HashMap;
 
 public class SPQExporter {
 
-    private SPQStarTree tree;
-
-
-    public SPQExporter(SPQStarTree tree) {
-        this.tree = tree;
-
-    }
 
     private void printTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest) {
         //Create the exporter (without ID provider)
@@ -32,7 +24,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getSpqStarChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();
@@ -47,7 +39,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getSpqStarChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();
@@ -106,7 +98,7 @@ public class SPQExporter {
             map.put(root, true);
 
             for (SPQNode node :
-                    root.getSpqStarChildren()) {
+                    root.getSpqChildren()) {
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun2(node, map, graph);
@@ -115,6 +107,11 @@ public class SPQExporter {
     }
 
 
+    /**
+     * Debug run Methode
+     *
+     * @param root
+     */
     public void run(SPQNode root) {
 
         printTODOTSPQNode(treeToDOT(root, 2));
@@ -129,11 +126,4 @@ public class SPQExporter {
 
     }
 
-    public SPQStarTree getTree() {
-        return tree;
-    }
-
-    public void setTree(SPQStarTree tree) {
-        this.tree = tree;
-    }
 }

@@ -1,7 +1,6 @@
 package Datatypes;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,8 +8,7 @@ public abstract class SPQNode {
 
 
     static int id = 0;
-    private final List<SPQNode> spqChildren = new ArrayList<>();
-    List<SPQNode> spqStarChildren = new ArrayList<>();
+    List<SPQNode> spqChildren = new ArrayList<>();
     List<Vertex> startNodes = new ArrayList<>();
     List<Vertex> sinkNodes = new ArrayList<>();
     double spirality = 999999;
@@ -29,12 +27,12 @@ public abstract class SPQNode {
         this.name = name;
     }
 
-    public List<SPQNode> getSpqStarChildren() {
-        return spqStarChildren;
+    public List<SPQNode> getSpqChildren() {
+        return spqChildren;
     }
 
-    void setSpqStarChildren(List<SPQNode> spqStarChildren) {
-        this.spqStarChildren = spqStarChildren;
+    void setSpqChildren(List<SPQNode> spqStarChildren) {
+        this.spqChildren = spqStarChildren;
     }
 
     public NodeTypesEnum.NODETYPE getNodeType() {
@@ -87,9 +85,7 @@ public abstract class SPQNode {
         this.name = name;
     }
 
-    public List<SPQNode> getSpqChildren() {
-        return spqChildren;
-    }
+
 
 
     public SPQNode getParent() {
@@ -131,7 +127,7 @@ public abstract class SPQNode {
     }
 
     public void addToAdjecencyListsSinkAndSource() {
-        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqStarChildren.size() == 0) {
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqChildren.size() == 0) {
             startVertex.adjacentVertices.add(sinkVertex);
             sinkVertex.adjacentVertices.add(0, startVertex);
         }
@@ -140,15 +136,17 @@ public abstract class SPQNode {
 
     void mergeNodeWithParent(SPQNode node, SPQNode parent) {
 
-        int pos = parent.spqStarChildren.indexOf(node);
-        parent.spqStarChildren.remove(node);
+        int pos = parent.spqChildren.indexOf(node);
+        parent.spqChildren.remove(node);
 
-        for (SPQNode spQNode : node.spqStarChildren
+        for (SPQNode spQNode : node.spqChildren
         ) {
-            parent.spqStarChildren.add(pos++, spQNode);
+            parent.spqChildren.add(pos++, spQNode);
             spQNode.setParent(parent);
         }
     }
+
+
 
 
     /**

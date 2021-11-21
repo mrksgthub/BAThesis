@@ -19,7 +19,7 @@ public class SPQPNode extends SPQNode {
     private int alphaur;
     private int alphavr;
 
-    public SPQPNode(String name, boolean isRoot) {
+    public SPQPNode(String name) {
         super(name);
         nodeType = NodeTypesEnum.NODETYPE.P;
 
@@ -36,15 +36,15 @@ public class SPQPNode extends SPQNode {
     @Override
     public void generateQstarChildren() {
         for (SPQNode node :
-                spqStarChildren) {
+                spqChildren) {
 
-            if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.spqStarChildren.size() == 0) {
+            if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.spqChildren.size() == 0) {
                 SPQNode newQ = new SPQQNode("Qstar" + node.getName());
                 newQ.setParent(this);
                 newQ.setStartVertex(node.getStartVertex());
                 newQ.setSinkVertex(node.getSinkVertex());
-                newQ.spqStarChildren.add(node);
-                this.spqStarChildren.set(this.spqStarChildren.indexOf(node), newQ);
+                newQ.spqChildren.add(node);
+                this.spqChildren.set(this.spqChildren.indexOf(node), newQ);
             }
         }
     }
@@ -55,15 +55,15 @@ public class SPQPNode extends SPQNode {
     public boolean calculateRepresentabilityInterval() {
 
 
-        if (spqStarChildren.size() == 3) {
+        if (spqChildren.size() == 3) {
 
             // Lemma 6
-            double mL = spqStarChildren.get(0).getRepIntervalLowerBound();
-            double mC = spqStarChildren.get(1).getRepIntervalLowerBound();
-            double mR = spqStarChildren.get(2).getRepIntervalLowerBound();
-            double ML = spqStarChildren.get(0).getRepIntervalUpperBound();
-            double MC = spqStarChildren.get(1).getRepIntervalUpperBound();
-            double MR = spqStarChildren.get(2).getRepIntervalUpperBound();
+            double mL = spqChildren.get(0).getRepIntervalLowerBound();
+            double mC = spqChildren.get(1).getRepIntervalLowerBound();
+            double mR = spqChildren.get(2).getRepIntervalLowerBound();
+            double ML = spqChildren.get(0).getRepIntervalUpperBound();
+            double MC = spqChildren.get(1).getRepIntervalUpperBound();
+            double MR = spqChildren.get(2).getRepIntervalUpperBound();
 
             if (mL - 2 <= MR + 2 && mL - 2 <= MC && mR + 2 <= ML - 2 && mR + 2 <= MC && mC <= ML - 2 && mC <= MR + 2) {
                 repIntervalLowerBound = Math.max(mL - 2, mC);
@@ -79,10 +79,10 @@ public class SPQPNode extends SPQNode {
             }
 
 
-        } else if (spqStarChildren.size() == 2) {
+        } else if (spqChildren.size() == 2) {
 
-            SPQNode leftSNode = spqStarChildren.get(0);
-            SPQNode rightSNode = spqStarChildren.get(1);
+            SPQNode leftSNode = spqChildren.get(0);
+            SPQNode rightSNode = spqChildren.get(1);
 
 
             double mL = leftSNode.getRepIntervalLowerBound();
@@ -131,21 +131,21 @@ public class SPQPNode extends SPQNode {
                 MR = rightSNode.getRepIntervalUpperBound();
 
                 // Was tun falls erstes oder zweites child eine Q node ist
-                if ((spqStarChildren.get(0).startNodes.size() == 2) && (spqStarChildren.get(0).sinkNodes.size() == 2)) { //I3ll
+                if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3ll
 
                     pdU = 0;
                     pdV = 0;
-                } else if ((spqStarChildren.get(1).startNodes.size() == 2) && (spqStarChildren.get(1).sinkNodes.size() == 2)) //I3rr
+                } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) //I3rr
                 { // FIxbar indem man Q2 zu nem Qstar macht
 
                     pdU = 1;
                     pdV = 1;
-                } else if ((spqStarChildren.get(1).startNodes.size() == 2) && (spqStarChildren.get(0).sinkNodes.size() == 2)) { //I3lr
+                } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3lr
 
                     pdU = 0;
                     pdV = 1;
 
-                } else if ((spqStarChildren.get(0).startNodes.size() == 2) && (spqStarChildren.get(1).sinkNodes.size() == 2)) { //I3rl
+                } else if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) { //I3rl
 
                     pdU = 1;
                     pdV = 0;
@@ -176,13 +176,13 @@ public class SPQPNode extends SPQNode {
                 if (inDegreeCounterStart == 3) {
 
                     //TODO wurde geändert
-                    pd = (spqStarChildren.get(0).startNodes.size() == 2) ? 0 : 1;
+                    pd = (spqChildren.get(0).startNodes.size() == 2) ? 0 : 1;
 
 
                     //        System.out.println("I_3dOab reverse" + this.getName());
 
                 } else { // check Sink
-                    pd = (spqStarChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
+                    pd = (spqChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
                     //       System.out.println("NI_3dOab normal" + " " + this.getName());
 
                 }
@@ -215,16 +215,16 @@ public class SPQPNode extends SPQNode {
     public void computeAngles(HashMap<TupleEdge<Vertex, Vertex>, Integer> angleMap) {
 
         // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
-        Vertex vertex1 = spqStarChildren.get(0).startNodes.get(0);
+        Vertex vertex1 = spqChildren.get(0).startNodes.get(0);
         if (startNodes.size() == 3 && !this.isRoot) {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
             // Winkel um die Quelle festlegen.
             // Beispiel3-4-10  Außen
-            Vertex nextVertexStarRight = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqStarChildren.get(spqStarChildren.size() - 1).startNodes.get(spqStarChildren.get(spqStarChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
+            Vertex nextVertexStarRight = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(nextVertexStarRight, startVertex, 1)), 1);
 
             //Beispiel 9-4-10
-            Vertex nextVertexMiddle = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqStarChildren.get(spqStarChildren.size() - 1).startNodes.get(spqStarChildren.get(spqStarChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
+            Vertex nextVertexMiddle = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(startNodes.get(1), startVertex, 1)), 1);
 
             // Beispiel3-4-10  Außen
@@ -239,7 +239,7 @@ public class SPQPNode extends SPQNode {
             angleMap.put(new TupleEdge<>(vertex1, startVertex, alphaul), alphaul);
 
             // Beispiel 5-6-7 Außen
-            Vertex vertex2 = spqStarChildren.get(1).startNodes.get(0);
+            Vertex vertex2 = spqChildren.get(1).startNodes.get(0);
             Vertex nextVertexStarRight = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(vertex2) + 1), startVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(nextVertexStarRight, startVertex, alphaur)), alphaur);
 
@@ -271,12 +271,12 @@ public class SPQPNode extends SPQNode {
 
         } else if (sinkNodes.size() == 2 && sinkVertex.adjacentVertices.size() > 2 && !this.isRoot) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
-            Vertex nextVertexSinkLeft = sinkVertex.adjacentVertices.get(Math.floorMod((sinkVertex.adjacentVertices.indexOf(spqStarChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjacentVertices.size()));
+            Vertex nextVertexSinkLeft = sinkVertex.adjacentVertices.get(Math.floorMod((sinkVertex.adjacentVertices.indexOf(spqChildren.get(0).sinkNodes.get(0)) + 1), sinkVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(nextVertexSinkLeft, sinkVertex, alphavl)), alphavl);
 
             // rechter Winkel an Sink Vertex (Außen)
-            Vertex nextVertexSinkRight = sinkVertex.adjacentVertices.get(Math.floorMod((sinkVertex.adjacentVertices.indexOf(spqStarChildren.get(1).sinkNodes.get(0)) - 1), sinkVertex.adjacentVertices.size()));
-            angleMap.put((new TupleEdge<>((spqStarChildren.get(1).sinkNodes.get(0)), sinkVertex, alphavr)), alphavr);
+            Vertex nextVertexSinkRight = sinkVertex.adjacentVertices.get(Math.floorMod((sinkVertex.adjacentVertices.indexOf(spqChildren.get(1).sinkNodes.get(0)) - 1), sinkVertex.adjacentVertices.size()));
+            angleMap.put((new TupleEdge<>((spqChildren.get(1).sinkNodes.get(0)), sinkVertex, alphavr)), alphavr);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 9-11-10 an Knoten 11)
             angleMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex, (alphavr + alphavl == 2 && (sinkVertex.adjacentVertices.size() == 3)) ? 0 : 1)), (alphavr + alphavl == 2 && (sinkVertex.adjacentVertices.size() == 3)) ? 0 : 1);
@@ -298,12 +298,12 @@ public class SPQPNode extends SPQNode {
     @Override
     public void setSpiralityOfChildren() {
 
-        if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getSpqStarChildren().size() == 3) {
-            this.getSpqStarChildren().get(0).setSpiralityOfChildren(this.spirality + 2);
-            this.getSpqStarChildren().get(1).setSpiralityOfChildren(this.spirality);
-            this.getSpqStarChildren().get(2).setSpiralityOfChildren(this.spirality - 2);
+        if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getSpqChildren().size() == 3) {
+            this.getSpqChildren().get(0).setSpiralityOfChildren(this.spirality + 2);
+            this.getSpqChildren().get(1).setSpiralityOfChildren(this.spirality);
+            this.getSpqChildren().get(2).setSpiralityOfChildren(this.spirality - 2);
 
-        } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getSpqStarChildren().size() == 2) {
+        } else if (this.getNodeType() == NodeTypesEnum.NODETYPE.P && this.getSpqChildren().size() == 2) {
             int alphaul = 9999;
             int alphaur = 9999;
 
@@ -311,12 +311,12 @@ public class SPQPNode extends SPQNode {
             int alphavr = 9999;
 
             // äquivalent zu outdeg(w)
-            kul = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqStarChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
-            kur = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqStarChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
+            kul = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
+            kur = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
 
 
-            kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqStarChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
-            kvr = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqStarChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
+            kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
+            kvr = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
 
             int[] arrU;
             if (startVertex.adjacentVertices.size() == 4) {
@@ -342,8 +342,8 @@ public class SPQPNode extends SPQNode {
                     alphaul = arrU[i];
                     alphavl = arrV[j];
                     double temp = this.spirality + kul * arrU[i] + kvl * arrV[j];
-                    if (this.getSpqStarChildren().get(0).getRepIntervalLowerBound() <= temp && temp <= this.getSpqStarChildren().get(0).getRepIntervalUpperBound()) {
-                        this.getSpqStarChildren().get(0).setSpiralityOfChildren(this.spirality + kul * alphaul + kvl * alphavl);
+                    if (this.getSpqChildren().get(0).getRepIntervalLowerBound() <= temp && temp <= this.getSpqChildren().get(0).getRepIntervalUpperBound()) {
+                        this.getSpqChildren().get(0).setSpiralityOfChildren(this.spirality + kul * alphaul + kvl * alphavl);
                         break outerloop;
                     }
                 }
@@ -356,16 +356,16 @@ public class SPQPNode extends SPQNode {
                     alphaur = arrU[i];
                     alphavr = arrV[j];
                     double temp = this.spirality - kur * arrU[i] - kvr * arrV[j];
-                    if (this.getSpqStarChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getSpqStarChildren().get(1).getRepIntervalUpperBound() && alphaul + alphaur > 0 && alphavl + alphavr > 0) {
-                        this.getSpqStarChildren().get(1).setSpiralityOfChildren(this.spirality - kur * alphaur - kvr * alphavr);
+                    if (this.getSpqChildren().get(1).getRepIntervalLowerBound() <= temp && temp <= this.getSpqChildren().get(1).getRepIntervalUpperBound() && alphaul + alphaur > 0 && alphavl + alphavr > 0) {
+                        this.getSpqChildren().get(1).setSpiralityOfChildren(this.spirality - kur * alphaur - kvr * alphavr);
                         break outerloop2;
                     }
                 }
             }
 
 
-            assert (this.getSpqStarChildren().get(1).getRepIntervalLowerBound() <= this.getSpqStarChildren().get(1).getSpirality() && this.getSpqStarChildren().get(1).getSpirality() <= this.getSpqStarChildren().get(1).getRepIntervalUpperBound());
-            assert (this.getSpqStarChildren().get(0).getRepIntervalLowerBound() <= this.getSpqStarChildren().get(0).getSpirality() && this.getSpqStarChildren().get(0).getSpirality() <= this.getSpqStarChildren().get(0).getRepIntervalUpperBound());
+            assert (this.getSpqChildren().get(1).getRepIntervalLowerBound() <= this.getSpqChildren().get(1).getSpirality() && this.getSpqChildren().get(1).getSpirality() <= this.getSpqChildren().get(1).getRepIntervalUpperBound());
+            assert (this.getSpqChildren().get(0).getRepIntervalLowerBound() <= this.getSpqChildren().get(0).getSpirality() && this.getSpqChildren().get(0).getSpirality() <= this.getSpqChildren().get(0).getRepIntervalUpperBound());
 
 
             // System.out.println("Test");

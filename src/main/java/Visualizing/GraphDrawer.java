@@ -30,7 +30,6 @@ public class GraphDrawer implements Runnable {
     @Override
     public void run() {
 
-
         ExecutorService executorService =
                 new ThreadPoolExecutor(3, 3, 0L, TimeUnit.MILLISECONDS,
                         new LinkedBlockingQueue<Runnable>());

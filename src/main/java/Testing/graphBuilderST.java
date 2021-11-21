@@ -19,23 +19,11 @@ import java.util.Hashtable;
 
 public class graphBuilderST {
 
-    private final int chanceOfP;
-    private final int chanceOfPIncr;
-    private final int minOps;
-    private final int opsIncrement;
-    private final int maxDegree;
-    private final int chainLength;
     private final String filePathString;
 
 
-    public graphBuilderST(int minOps, int opsIncrement, int chanceOfP, int chanceOfPIncr, int maxDegree, int chainLength, String filePathString) {
+    public graphBuilderST(String filePathString) {
 
-        this.minOps = minOps;
-        this.opsIncrement = opsIncrement;
-        this.chanceOfP = chanceOfP;
-        this.chanceOfPIncr = chanceOfPIncr;
-        this.maxDegree = maxDegree;
-        this.chainLength = chainLength;
         this.filePathString = filePathString;
     }
 
@@ -65,13 +53,13 @@ public class graphBuilderST {
                 tree = spqGenerator.getTree();
                 root = spqGenerator.getRoot();
 
-                SPQExporter spqExporter = new SPQExporter(tree);
-                spqExporter.run(root);
+                SPQExporter spqExporter = new SPQExporter();
+            //    spqExporter.run(root);
                 spqExporter.run(root, "C:/a.txt");
 
 
-                SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-                spqImporter.run();
+                SPQImporter spqImporter = new SPQImporter();
+                spqImporter.run("C:/a.txt");
 
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
 
@@ -79,8 +67,7 @@ public class graphBuilderST {
                 root = tree.getRoot();
 
 
-                Hashtable<Vertex, ArrayList<Vertex>> embedding = tree.getVertexToAdjecencyListMap();
-          /*      Embedder embedder = new Embedder(embedding);
+                /*      Embedder embedder = new Embedder(embedding);
                 embedder.run(root);*/
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
@@ -124,21 +111,16 @@ public class graphBuilderST {
             tree = spqGenerator.getTree();
             root = spqGenerator.getRoot();
 
-
             DirectedMultigraph<Vertex, DefaultEdge> graph = tree.getConstructedGraph();
             FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
 
-
             System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
-
 
             int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
             int nodes = graph.vertexSet().size();
 
-
-            SPQExporter spqExporter = new SPQExporter(tree);
-            //  spqExporter.run(root);
+            SPQExporter spqExporter = new SPQExporter();
             File filePath = new File(filePathString,
                     nodes + "N" + faces + "F.dot");
 
@@ -147,7 +129,7 @@ public class graphBuilderST {
         } else {
             return false;
         }
-        //   Files.copy(Paths.get("C:/a.txt"), Paths.get("C:/" + nodes + "N" + faces + "F.txt"));
+
 
 
     }

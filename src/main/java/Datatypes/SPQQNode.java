@@ -45,12 +45,9 @@ public class SPQQNode extends SPQNode {
     }
 
 
-
-
-
     @Override
     public boolean calculateRepresentabilityInterval() {
-        int l = spqStarChildren.size();
+        int l = spqChildren.size();
         if (l == 0) {
             l = 1;
         }
@@ -63,21 +60,18 @@ public class SPQQNode extends SPQNode {
     @Override
     public void computeAngles(HashMap<TupleEdge<Vertex, Vertex>, Integer> angleMap) {
 
-
         if (spirality >= 0) {
             for (int i = 0; i < spirality; i++) {
-                angleMap.put(new TupleEdge<>(spqStarChildren.get(i).getStartVertex(), spqStarChildren.get(i).getSinkVertex(),1), 1);
-                angleMap.put(new TupleEdge<>(spqStarChildren.get(i + 1).getSinkVertex(), spqStarChildren.get(i + 1).getStartVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i).getStartVertex(), spqChildren.get(i).getSinkVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getStartVertex(),-1), -1);
             }
         } else {
             for (int i = 0; i < -spirality; i++) {
-                angleMap.put(new TupleEdge<>(spqStarChildren.get(i).getStartVertex(), spqStarChildren.get(i).getSinkVertex(),-1), -1);
-                angleMap.put(new TupleEdge<>(spqStarChildren.get(i + 1).getSinkVertex(), spqStarChildren.get(i + 1).getStartVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i).getStartVertex(), spqChildren.get(i).getSinkVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getStartVertex(),1), 1);
             }
         }
 
-
-        //  System.out.println("Test");
     }
 
 

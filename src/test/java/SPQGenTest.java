@@ -426,10 +426,10 @@ class SPQGenTest {
     HashMap<SPQNode, ArrayList<Double>> getIntervals(SPQNode root, HashMap<SPQNode, ArrayList<Double>> intervalsMap) {
 
         for (SPQNode node :
-                root.getSpqStarChildren()) {
+                root.getSpqChildren()) {
             getIntervals(node, intervalsMap);
         }
-        if (root.getSpqStarChildren().size() > 1 && root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
+        if (root.getSpqChildren().size() > 1 && root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
             ArrayList<Double> array = new ArrayList<>();
             array.add(root.getRepIntervalLowerBound());
             array.add(root.getRepIntervalUpperBound());

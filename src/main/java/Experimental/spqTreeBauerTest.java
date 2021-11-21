@@ -23,8 +23,8 @@ class spqTreeBauerTest {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQImporter spqImporter = new SPQImporter("C:/a.txt");
-        spqImporter.run();
+        SPQImporter spqImporter = new SPQImporter();
+        spqImporter.run("C:/a.txt");
 
 
         tree = spqImporter.getTree();
@@ -310,7 +310,7 @@ class spqTreeBauerTest {
         SPQTree.addVertex(sourceSink);
         SPQTree.addEdge(node, sourceSink);
 
-        SPQNode pRoot = new SPQPNode("Proot", true);
+        SPQNode pRoot = new SPQPNode("Proot");
         SPQTree.addVertex(pRoot);
         SPQTree.addEdge(pRoot, rootNode);
         SPQTree.addEdge(pRoot, node);
@@ -321,8 +321,8 @@ class spqTreeBauerTest {
 
 
 
-        SPQImporter spqImporter2 = new SPQImporter("C:/testGraph.txt");
-        spqImporter2.run();
+        SPQImporter spqImporter2 = new SPQImporter();
+        spqImporter2.run("C:/testGraph.txt");
 
 
 

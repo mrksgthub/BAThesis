@@ -13,16 +13,11 @@ import java.util.*;
 public class FaceGenerator<V extends Vertex, E> implements Serializable {
 
     private final List<TupleEdge<V, V>> pairList;
-    private final Map<Vertex, Integer> supplyMap = new HashMap<>();
-    private final Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
-    private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    private final List<List<V>> listOfFaces2 = new ArrayList<>();
     private final List<PlanarGraphFace<V>> planarGraphFaces = new ArrayList<>();
     private final HashMap<PlanarGraphFace<V>, ArrayList<V>> adjVertices = new HashMap<>();
     private final HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> adjFaces2 = new HashMap<>();
     private final V startvertex;
     private final V sinkVertex;
-    private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
 
     public FaceGenerator(DirectedMultigraph<V, E> graph, V startvertex, V sinkVertex) {
 
@@ -44,10 +39,6 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
 
     public HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> getAdjFaces2() {
         return adjFaces2;
-    }
-
-    public DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> getNetworkGraph() {
-        return networkGraph;
     }
 
     public void generateFaces() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
@@ -117,7 +108,6 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                     //     visitsMap.merge(vvPair, 1, Integer::sum);
 
                 }
-                listOfFaces2.add(face);
             }
 
         }

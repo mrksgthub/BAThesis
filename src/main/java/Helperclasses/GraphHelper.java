@@ -213,7 +213,7 @@ public class GraphHelper<V extends Vertex, E> {
             map.put(root, true);
 
             for (SPQNode node :
-                    root.getSpqStarChildren()) {
+                    root.getSpqChildren()) {
                 graph.addVertex(node);
                 graph.addEdge(root, node);
                 dfsRun2(node, map, graph);

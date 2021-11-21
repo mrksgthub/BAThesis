@@ -38,14 +38,14 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(150, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(15, 90);
         spqGenerator.run();
 
 
         tree = spqGenerator.getTree();
         root = spqGenerator.getRoot();
 
-        SPQExporter spqExporter = new SPQExporter(tree);
+        SPQExporter spqExporter = new SPQExporter();
         //      spqExporter.run(root);
         spqExporter.run(root, "C:/a.dot");
 
@@ -53,20 +53,16 @@ class basicMainClass {
        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\10002N9F.txt");
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\163386N20963F.txt");
       //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\GraphInvalid\\10002N9F.txt");
-        SPQImporter spqImporter = new SPQImporter("C:/a.dot");
+        SPQImporter spqImporter = new SPQImporter();
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/bug - Kopie.txt");
       //   Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/b.txt");
       //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/testGraph.txt");
-        spqImporter.run();
+        spqImporter.run("C:/a.dot");
 
 
         tree = spqImporter.getTree();
         root = tree.getRoot();
 
-
-        Hashtable<Vertex, ArrayList<Vertex>> embedding = new Hashtable<>();
-
-        embedding = tree.getVertexToAdjecencyListMap();
 
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
         treeVertexFaceGenerator.generateFaces();

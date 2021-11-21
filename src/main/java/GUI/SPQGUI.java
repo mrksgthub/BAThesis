@@ -241,8 +241,8 @@ class SPQGUI extends JFrame {
                     SwingWorker worker1 = new SwingWorker() {
                         @Override
                         protected Object doInBackground() throws Exception {
-                            SPQImporter spqImporter = new SPQImporter(file.getAbsolutePath());
-                            spqImporter.run();
+                            SPQImporter spqImporter = new SPQImporter();
+                            spqImporter.run(file.getAbsolutePath());
                             tree = spqImporter.getTree();
                             root = tree.getRoot();
                             ChanceOfP.setText("Vertices: " + tree.getConstructedGraph().vertexSet().size());
@@ -279,7 +279,7 @@ class SPQGUI extends JFrame {
                     SwingWorker worker1 = new SwingWorker() {
                         @Override
                         protected String doInBackground() throws Exception {
-                            SPQExporter exporter = new SPQExporter(tree);
+                            SPQExporter exporter = new SPQExporter();
                             exporter.run(root, file.getAbsolutePath());
 
                             return "Test";
@@ -308,7 +308,7 @@ class SPQGUI extends JFrame {
                         interrupts.setEnabled(true);
                         generateTestDataButton.setEnabled(false);
                         updateText("Running tests");
-                        graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getMinOps(), dialog1.getOpsIncrement(), dialog1.getChanceOfP(), dialog1.getChanceOfPIncr(), dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getFilePath());
+                        graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getFilePath());
 
                         int ops = dialog1.getMinOps();
                         int chanceOfP = dialog1.getChanceOfP();

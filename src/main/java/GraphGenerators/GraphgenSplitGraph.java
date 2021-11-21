@@ -28,7 +28,7 @@ class GraphgenSplitGraph {
     private GraphgenSplitGraph(int operations) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.operations = operations;
-        root = new SPQPNode("Proot", true);
+        root = new SPQPNode("Proot");
         root.setToRoot();
 
         Vertex vertex = new Vertex("vsource");
@@ -95,8 +95,15 @@ class GraphgenSplitGraph {
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
             if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
-                if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg) {
-                    randomnewPNode(edge);
+                if (degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
+                 //   randomnewPNode(edge, einfachheit);
+
+                    DefaultEdge[] arr1 = randomnewSNode(edge);
+                    arr1 = randomnewSNode(arr1[1]);
+                    arr1 = randomnewSNode(arr1[1]);
+
+                    randomnewMaxDegPNode(arr1[0], einfachheit);
+                    i += einfachheit + 1;
                 } else {
                     i--;
                 }
@@ -104,17 +111,6 @@ class GraphgenSplitGraph {
             } else {
                 randomnewSNode(edge);
             }
-        }
-
-
-        // Start- und Endknoten in die Q-Nodes einfügen
-        for (DefaultEdge edge1 :
-                edgeSPQNodeHashMap.keySet()) {
-            //      edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName() + edge1.toString().replaceAll("\\s", "").replaceAll(":", "_").replaceAll("\\(", " ").replaceAll("\\)", "").trim());
-            //    edgeSPQNodeHashMap.get((edge1)).setName(edgeSPQNodeHashMap.get(edge1).getName()+edge1.toString());
-
-          //  edgeSPQNodeHashMap.get(edge1).setStartVertex(multigraph.getEdgeSource(edge1));
-           // edgeSPQNodeHashMap.get(edge1).setSinkVertex(multigraph.getEdgeTarget(edge1));
         }
 
 
@@ -131,7 +127,7 @@ class GraphgenSplitGraph {
         edges.add(edge1);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newPnode = new SPQPNode("P" + ++counter, true);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
 
         SPQNode newQnode1 = new SPQQNode("Q" + ++counter, multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.put(edge1, newQnode1);
@@ -172,7 +168,7 @@ class GraphgenSplitGraph {
     }
 
 
-    private void randomnewPNode(DefaultEdge edge) {
+    private void randomnewPNode(DefaultEdge edge, int einfachheit) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
 
@@ -180,7 +176,7 @@ class GraphgenSplitGraph {
         edges.add(edge1);
 
         SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        SPQNode newPnode = new SPQPNode("P" + ++counter, true);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
 
         SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.put(edge1, newQnode1);
@@ -202,12 +198,43 @@ class GraphgenSplitGraph {
 
         for (int i = 0; i <einfachheit; i++) {
 
-
             if (getRandomNumberUsingNextInt(0, 99) > 50) {
-
                 DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
                 arr1 = randomnewSNode(tempEdge1);
+            } else {
+                DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge2);
+            }
+        }
+    }
 
+
+    private void randomnewMaxDegPNode(DefaultEdge edge, int einfachheit) {
+
+        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
+
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
+
+        DefaultEdge[] arr1;
+
+        // TODO Sinnvoll?
+
+            arr1 = randomnewSNode(edge1);
+
+        for (int i = 0; i <einfachheit; i++) {
+
+            if (getRandomNumberUsingNextInt(0, 99) > 50) {
+                DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge1);
             } else {
                 DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
                 arr1 = randomnewSNode(tempEdge2);
@@ -215,7 +242,37 @@ class GraphgenSplitGraph {
         }
 
 
+        DefaultEdge edge2 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        SPQNode oldQNode2 = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode2 = new SPQPNode("P" + ++counter);
+        SPQNode newQnode12 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge2), multigraph.getEdgeTarget(edge2));
+        edgeSPQNodeHashMap.put(edge2, newQnode12);
+
+        nodeUmhaengen(oldQNode2, newPnode2);
+        addNodeAsLeftChild(newQnode12, newPnode2);
+
+        arr1 = randomnewSNode(edge2);
+        randomnewSNode(arr1[1]);
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     private <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {

@@ -1,19 +1,17 @@
 package Datatypes;
 
+import Helperclasses.DFSIterator;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SPQStarTree {
 
     private SPQNode root;
     private Set<SPQNode> visited = new LinkedHashSet<>();
     private DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
-    private  Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjecencyListMap = new Hashtable<>();
+    private Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjecencyListMap = new Hashtable<>();
 
     public SPQStarTree(SPQNode root) {
         this.root = root;
@@ -23,10 +21,6 @@ public class SPQStarTree {
 
     public DirectedMultigraph<Vertex, DefaultEdge> getConstructedGraph() {
         return constructedGraph;
-    }
-
-    public Set<SPQNode> getVisited() {
-        return visited;
     }
 
     public SPQNode getRoot() {
@@ -41,17 +35,149 @@ public class SPQStarTree {
         return vertexToAdjecencyListMap;
     }
 
-    public void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root, Set<SPQNode> visited) {
-        visited.add(root);
 
 
-        for (SPQNode node : root.getSpqStarChildren()
-        ) {
-            setStartAndSinkNodesOrBuildConstructedGraph(node, visited);
+    public void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root) {
+
+        Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+        while (!stack.isEmpty()) {
+            SPQNode node = stack.pop();
+            if (node.getNodeType() != NodeTypesEnum.NODETYPE.Q || node.getSpqChildren().size() > 0) {
+                node.setStartVertex(node.getSpqChildren().get(0).getStartVertex());
+                node.setSinkVertex(node.getSpqChildren().get(node.getSpqChildren().size() - 1).getSinkVertex());
+
+            } else {
+                constructedGraph.addVertex(node.getStartVertex());
+                constructedGraph.addVertex(node.getSinkVertex());
+                constructedGraph.addEdge(node.getStartVertex(), node.getSinkVertex());
+            }
         }
-        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q || root.getSpqStarChildren().size() > 0) {
-            root.setStartVertex(root.getSpqStarChildren().get(0).getStartVertex());
-            root.setSinkVertex(root.getSpqStarChildren().get(root.getSpqStarChildren().size() - 1).getSinkVertex());
+
+    }
+
+
+
+
+    private void compactTree(SPQNode root) {
+
+        Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+        while (!stack.isEmpty()) {
+            SPQNode node = stack.pop();
+            if (node.getParent() != null && node.getNodeType() == node.getParent().getNodeType() && !node.getParent().isRoot()) {
+                node.mergeNodeWithParent(node, node.getParent());
+            }
+        }
+    }
+
+
+
+
+    private void generateQStarNodes(SPQNode root) {
+
+        Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+        while (!stack.isEmpty()) {
+            SPQNode node = stack.pop();
+            node.generateQstarChildren();
+        }
+
+    }
+
+    public void addValidSPQStarTreeRepresentation(SPQNode root) {
+        compactTree(root);
+        generateQStarNodes(root);
+    }
+
+    public void initializeSPQNodes(SPQNode root) {
+        setStartAndSinkNodesOrBuildConstructedGraph(root);
+        calculateAdjaecencyListsOfSinkAndSource(root);
+        determineInnerOuterAdjecentsOfSinkAndSource(root);
+    }
+
+
+    public void determineInnerOuterNodesAndAdjVertices(SPQNode root) {
+        calculateAdjaecencyListsOfSinkAndSource(root);
+        determineInnerOuterAdjecentsOfSinkAndSource(root);
+    }
+
+
+    public void calculateAdjaecencyListsOfSinkAndSource(SPQNode root) {
+
+        Deque<SPQNode> stack = DFSIterator.buildPreOrderStack(root);
+        while (!stack.isEmpty()) {
+            SPQNode node = stack.pop();
+            node.addToAdjecencyListsSinkAndSource();
+        }
+    }
+
+    public void determineInnerOuterAdjecentsOfSinkAndSource(SPQNode root) {
+
+        Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+        while (!stack.isEmpty()) {
+            SPQNode node = stack.pop();
+            if (node.getSpqChildren().size() > 0) {
+                for (SPQNode nodes :
+                        node.getSpqChildren()) {
+                    node.addToSourceAndSinkLists(nodes); //innere adjazente Knoten
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    public void determineInnerOuterNodesAndAdjVertices2(SPQNode root) {
+
+        root.addToAdjecencyListsSinkAndSource(); // AdjLists der Knoten des SP-Graphen
+        for (SPQNode node : root.getSpqChildren()
+        ) {
+            determineInnerOuterNodesAndAdjVertices(node);
+        }
+        if (root.getSpqChildren().size() > 0) {
+            for (SPQNode nodes :
+                    root.getSpqChildren()) {
+                root.addToSourceAndSinkLists(nodes); //innere adjazente Knoten
+            }
+        }
+    }
+
+    private void compactTree2(SPQNode root) {
+
+        root.getSpqChildren().addAll(root.getSpqChildren()); // mergedChildren sind die Kinder im SPQ*Baum
+
+        for (SPQNode node : root.getSpqChildren()
+        ) {
+            compactTree(node);
+        }
+
+        if (root.getParent() != null && root.getNodeType() == root.getParent().getNodeType() && !root.getParent().isRoot()) {
+            root.mergeNodeWithParent(root, root.getParent());
+        }
+    }
+
+    private void generateQStarNodes2(SPQNode root) {
+
+        for (SPQNode node : root.getSpqChildren()
+        ) {
+            generateQStarNodes(node);
+        }
+        root.generateQstarChildren();
+    }
+
+    public void setStartAndSinkNodesOrBuildConstructedGraph2(SPQNode root) {
+
+
+        for (SPQNode node : root.getSpqChildren()
+        ) {
+            setStartAndSinkNodesOrBuildConstructedGraph(node);
+        }
+        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q || root.getSpqChildren().size() > 0) {
+            root.setStartVertex(root.getSpqChildren().get(0).getStartVertex());
+            root.setSinkVertex(root.getSpqChildren().get(root.getSpqChildren().size() - 1).getSinkVertex());
 
         } else {
             constructedGraph.addVertex(root.getStartVertex());
@@ -61,58 +187,6 @@ public class SPQStarTree {
 
     }
 
-
-    private void compactTree(SPQNode root) {
-
-        root.getSpqStarChildren().addAll(root.getSpqChildren()); // mergedChildren sind die Kinder im SPQ*Baum
-
-        for (SPQNode node : root.getSpqChildren()
-        ) {
-            compactTree(node);
-        }
-        if (root.getParent() != null && root.getNodeType() == root.getParent().getNodeType() && !root.getParent().isRoot()) {
-            root.mergeNodeWithParent(root, root.getParent());
-        }
-
-    }
-
-    private void generateQStarNodes(SPQNode root) {
-
-        for (SPQNode node : root.getSpqStarChildren()
-        ) {
-            generateQStarNodes(node);
-        }
-        root.generateQstarChildren();
-    }
-
-    public void determineInnerOuterNodesAndAdjVertices(SPQNode root) {
-
-        root.addToAdjecencyListsSinkAndSource(); // AdjLists
-        for (SPQNode node : root.getSpqStarChildren()
-        ) {
-            determineInnerOuterNodesAndAdjVertices(node);
-        }
-        if (root.getSpqStarChildren().size() > 0) {
-            for (SPQNode nodes :
-                    root.getSpqStarChildren()) {
-                root.addToSourceAndSinkLists(nodes); //innere adjazente Knoten
-            }
-        }
-    }
-
-
-    public void addValidSPQStarTreeRepresentation(SPQNode root) {
-
-        compactTree(root);
-        generateQStarNodes(root);
-        //  this.generateAdjecencyListMaP(this.getRoot());
-
-    }
-
-    public void initializeSPQNodes(SPQNode root) {
-        this.setStartAndSinkNodesOrBuildConstructedGraph(root, this.getVisited());
-        this.determineInnerOuterNodesAndAdjVertices(root);
-    }
 }
 
 

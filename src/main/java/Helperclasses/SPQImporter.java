@@ -10,23 +10,23 @@ import java.util.Scanner;
 public class SPQImporter {
 
 
-    private final String fileName;
+
     private final HashMap<String, SPQNode> nameToNode = new HashMap<>();
     private final HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
     private SPQStarTree tree;
 
-    public SPQImporter(String s) {
-        this.fileName = s;
+    public SPQImporter() {
+
     }
 
     public SPQStarTree getTree() {
         return tree;
     }
 
-    public SPQNode run() {
+    public void run(String filePathString) {
 
 
-        File file = new File(fileName);
+        File file = new File(filePathString);
         try {
             Scanner scanner = new Scanner(file);
             String line = "test";
@@ -69,6 +69,12 @@ public class SPQImporter {
 
             tree.initializeSPQNodes(tree.getRoot());
 
+/*
+            Deque<SPQNode> stack = DFSIterator.buildPreOrderStack(tree.getRoot());
+            Deque<SPQNode> stack2 = DFSIterator.buildPostOrderStack(tree.getRoot());*/
+
+
+
             System.out.println("Graph Imported");
 
         } catch (FileNotFoundException e) {
@@ -76,7 +82,7 @@ public class SPQImporter {
         }
 
 
-        return tree.getRoot();
+
     }
 
     private void proceessLine(String line) {
@@ -88,7 +94,7 @@ public class SPQImporter {
                 String s1 = line.substring(0, i).trim();
                 String s2 = line.substring(i + 3, line.length() - 1).trim();
 
-                nameToNode.get(s1).getSpqStarChildren().add(nameToNode.get(s2));
+                nameToNode.get(s1).getSpqChildren().add(nameToNode.get(s2));
 
             } else {
 
@@ -107,7 +113,7 @@ public class SPQImporter {
                             // Qnode
                             nameToNode.put(line.substring(0, line.length() - 1).trim(), qNode);
                         }
-                        case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim(), false));
+                        case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim()));
                         case 'S' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQSNode(line.substring(0, line.length() - 1).trim()));
                         default -> System.out.println("");
                     }

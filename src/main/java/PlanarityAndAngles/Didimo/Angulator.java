@@ -2,7 +2,6 @@ package PlanarityAndAngles.Didimo;
 
 import Datatypes.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -26,7 +25,7 @@ public class Angulator {
         HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
         long startTime = System.currentTimeMillis();
 
-        computeSpirality(root.getSpqStarChildren().get(0));
+        computeSpirality(root.getSpqChildren().get(0));
         // Rekrusives bestimmen der Winkel: https://arxiv.org/abs/2008.03784 Abschnitt 4 Construction Algorithm:
         winkelHinzufuegen(root, pairIntegerMap);
 
@@ -71,10 +70,10 @@ public class Angulator {
     private void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
         for (SPQNode node :
-                root.getSpqStarChildren()) {
+                root.getSpqChildren()) {
             winkelHinzufuegen(node, hashmap);
         }
-        if (root.getSpqStarChildren().size() > 1) { // IsRoot IS WICHTIG!!
+        if (root.getSpqChildren().size() > 1) { // IsRoot IS WICHTIG!!
             root.computeAngles(hashmap);
         }
 
@@ -84,7 +83,7 @@ public class Angulator {
 
         root.setSpiralityOfChildren();
 
-        for (SPQNode node : root.getSpqStarChildren()
+        for (SPQNode node : root.getSpqChildren()
         ) {
             computeSpirality(node);
         }

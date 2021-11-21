@@ -29,7 +29,7 @@ public class SPQSNode extends SPQNode {
         List<SPQNode> replacementmergedChildren = new ArrayList<>();
 
 
-        List<SPQNode> mergedChildren = this.getSpqStarChildren();
+        List<SPQNode> mergedChildren = this.getSpqChildren();
 
         for (int i = 0; i < mergedChildren.size(); i++) {
 
@@ -39,9 +39,9 @@ public class SPQSNode extends SPQNode {
             if (mergedChildren.get(i).getNodeType() != NodeTypesEnum.NODETYPE.Q) {
                 if (qNodes.size() > 0) {
                     SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
-                    newQ.setSpqStarChildren(qNodes);
-                    newQ.setSinkVertex(newQ.getSpqStarChildren().get(newQ.getSpqStarChildren().size() - 1).getSinkVertex());
-                    newQ.setStartVertex(newQ.getSpqStarChildren().get(0).getStartVertex());
+                    newQ.setSpqChildren(qNodes);
+                    newQ.setSinkVertex(newQ.getSpqChildren().get(newQ.getSpqChildren().size() - 1).getSinkVertex());
+                    newQ.setStartVertex(newQ.getSpqChildren().get(0).getStartVertex());
                     replacementmergedChildren.add(newQ);
 
                     qNodes = new ArrayList<>();
@@ -51,17 +51,17 @@ public class SPQSNode extends SPQNode {
         }
         if (qNodes.size() > 0) {
             SPQQNode newQ = new SPQQNode("Qstar" + counter++ + this.getName());
-            newQ.setSpqStarChildren(qNodes);
-            newQ.setSinkVertex(newQ.getSpqStarChildren().get(newQ.getSpqStarChildren().size() - 1).getSinkVertex());
-            newQ.setStartVertex(newQ.getSpqStarChildren().get(0).getStartVertex());
+            newQ.setSpqChildren(qNodes);
+            newQ.setSinkVertex(newQ.getSpqChildren().get(newQ.getSpqChildren().size() - 1).getSinkVertex());
+            newQ.setStartVertex(newQ.getSpqChildren().get(0).getStartVertex());
             replacementmergedChildren.add(newQ);
 
-            this.setSpqStarChildren(replacementmergedChildren);
-            if (getSpqStarChildren().size() == 1) {
-                this.getParent().getSpqStarChildren().set(this.getParent().getSpqStarChildren().indexOf(this), newQ);
+            this.setSpqChildren(replacementmergedChildren);
+            if (getSpqChildren().size() == 1) {
+                this.getParent().getSpqChildren().set(this.getParent().getSpqChildren().indexOf(this), newQ);
             }
         } else if (replacementmergedChildren.size() > 1) {
-            this.setSpqStarChildren(replacementmergedChildren);
+            this.setSpqChildren(replacementmergedChildren);
 
         }
     }
@@ -74,7 +74,7 @@ public class SPQSNode extends SPQNode {
         repIntervalLowerBound = 0;
         repIntervalUpperBound = 0;
 
-        for (SPQNode node : spqStarChildren
+        for (SPQNode node : spqChildren
         ) {
             repIntervalLowerBound += node.getRepIntervalLowerBound();
             repIntervalUpperBound += node.getRepIntervalUpperBound();
@@ -90,7 +90,7 @@ public class SPQSNode extends SPQNode {
 
             double delta = 0;
             for (SPQNode node :
-                    spqStarChildren) {
+                    spqChildren) {
                 node.setSpiralityOfChildren(node.getRepIntervalUpperBound());
                 delta += (node.getRepIntervalUpperBound());
             }
@@ -98,7 +98,7 @@ public class SPQSNode extends SPQNode {
 
             while (delta != 0) {
                 for (SPQNode node :
-                        spqStarChildren) {
+                        spqChildren) {
                     double temp = Math.min(delta, node.getRepIntervalUpperBound() - node.getRepIntervalLowerBound());
                     node.setSpiralityOfChildren(node.getSpirality() - temp);
                     delta -= temp;
