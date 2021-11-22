@@ -1,7 +1,7 @@
 package GUI;
 
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
 import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;

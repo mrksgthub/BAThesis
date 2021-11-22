@@ -1,4 +1,4 @@
-package Datatypes;
+package Datastructures;
 
 public class NodeTypesEnum {
 

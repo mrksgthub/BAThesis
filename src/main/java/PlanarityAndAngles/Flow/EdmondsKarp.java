@@ -1,6 +1,6 @@
 package PlanarityAndAngles.Flow;
 
-import Datatypes.Vertex;
+import Datastructures.Vertex;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 

@@ -1,8 +1,8 @@
 package Testing;
 
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
-import Datatypes.Vertex;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
+import Datastructures.Vertex;
 import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
@@ -14,8 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class graphBuilderST {
 

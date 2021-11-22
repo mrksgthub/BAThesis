@@ -1,8 +1,8 @@
 package Visualizing;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.TupleEdge;
-import Datatypes.Vertex;
+import Datastructures.PlanarGraphFace;
+import Datastructures.TupleEdge;
+import Datastructures.Vertex;
 import org.antlr.v4.runtime.misc.Pair;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
 import org.jgrapht.graph.DefaultWeightedEdge;

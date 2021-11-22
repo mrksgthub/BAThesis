@@ -1,7 +1,7 @@
 package PlanarityAndAngles.Flow;
 
 import PlanarityAndAngles.FaceGenerator;
-import Datatypes.*;
+import Datastructures.*;
 import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;

@@ -1,6 +1,6 @@
 package Helperclasses;
 
-import Datatypes.*;
+import Datastructures.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;

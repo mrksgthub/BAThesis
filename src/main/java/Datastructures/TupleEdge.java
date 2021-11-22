@@ -1,4 +1,4 @@
-package Datatypes;
+package Datastructures;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 

@@ -1,6 +1,6 @@
 package Helperclasses;
 
-import Datatypes.SPQNode;
+import Datastructures.SPQNode;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

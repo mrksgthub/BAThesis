@@ -1,8 +1,8 @@
 package Visualizing;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
-import Datatypes.TupleEdge;
+import Datastructures.PlanarGraphFace;
+import Datastructures.Vertex;
+import Datastructures.TupleEdge;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;

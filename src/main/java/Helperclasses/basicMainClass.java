@@ -3,9 +3,9 @@ package Helperclasses;
 import PlanarityAndAngles.*;
 import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
-import Datatypes.Vertex;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
+import Datastructures.Vertex;
 import GraphGenerators.SPQGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
 import Visualizing.*;
@@ -19,7 +19,6 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -38,7 +37,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(15, 90);
+        SPQGenerator spqGenerator = new SPQGenerator(3, 30);
         spqGenerator.run();
 
 

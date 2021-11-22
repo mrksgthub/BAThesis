@@ -1,6 +1,6 @@
 package PlanarityAndAngles.Didimo;
 
-import Datatypes.*;
+import Datastructures.*;
 
 import java.util.HashMap;
 import java.util.List;

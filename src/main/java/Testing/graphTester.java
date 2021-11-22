@@ -4,9 +4,9 @@ import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.FaceGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
-import Datatypes.Vertex;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
+import Datastructures.Vertex;
 import Helperclasses.GraphValidifier;
 import Helperclasses.SPQImporter;
 import org.apache.commons.csv.CSVFormat;
@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 

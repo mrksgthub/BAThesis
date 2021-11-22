@@ -1,8 +1,8 @@
 package Helperclasses;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
-import Datatypes.TupleEdge;
+import Datastructures.PlanarGraphFace;
+import Datastructures.Vertex;
+import Datastructures.TupleEdge;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 

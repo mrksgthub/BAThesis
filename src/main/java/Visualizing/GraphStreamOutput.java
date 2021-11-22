@@ -1,6 +1,6 @@
 package Visualizing;
 
-import Datatypes.Vertex;
+import Datastructures.Vertex;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;

@@ -1,8 +1,8 @@
 package Visualizing;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.Vertex;
-import Datatypes.TupleEdge;
+import Datastructures.PlanarGraphFace;
+import Datastructures.Vertex;
+import Datastructures.TupleEdge;
 
 import java.util.ArrayList;
 import java.util.HashMap;

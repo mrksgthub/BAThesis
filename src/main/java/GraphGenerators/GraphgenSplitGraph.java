@@ -1,6 +1,6 @@
 package GraphGenerators;
 
-import Datatypes.*;
+import Datastructures.*;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 import org.jgrapht.util.SupplierUtil;
@@ -96,13 +96,10 @@ class GraphgenSplitGraph {
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
             if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
                 if (degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
-                 //   randomnewPNode(edge, einfachheit);
+                    randomnewPNode(edge, einfachheit);
 
-                    DefaultEdge[] arr1 = randomnewSNode(edge);
-                    arr1 = randomnewSNode(arr1[1]);
-                    arr1 = randomnewSNode(arr1[1]);
+              //      newMaxDegreePNode(edge);
 
-                    randomnewMaxDegPNode(arr1[0], einfachheit);
                     i += einfachheit + 1;
                 } else {
                     i--;
@@ -118,6 +115,13 @@ class GraphgenSplitGraph {
         //    Helperclasses.GraphHelper.printTODOTSPQNode(Helperclasses.GraphHelper.treeToDOT(root, 1));
 
         counter = counter + 1 - 1;
+    }
+
+    private void newMaxDegreePNode(DefaultEdge edge) {
+        DefaultEdge[] arr1 = randomnewSNode(edge);
+        arr1 = randomnewSNode(arr1[1]);
+        arr1 = randomnewSNode(arr1[1]);
+        randomnewMaxDegPNode(arr1[0]);
     }
 
 
@@ -182,34 +186,41 @@ class GraphgenSplitGraph {
         edgeSPQNodeHashMap.put(edge1, newQnode1);
 
         nodeUmhaengen(oldQNode, newPnode);
-        addNodeAsRightChild(newQnode1, newPnode);
+        if (getRandomNumberUsingNextInt(0, 1) == 0) { // TODO Checken of es Fehler verursacht
+            addNodeAsRightChild(newQnode1, newPnode);
+        } else {
+            addNodeAsLeftChild(newQnode1, newPnode);
+        }
 
-        DefaultEdge[] arr1 = new DefaultEdge[2];
+
+        DefaultEdge[] arr1;
 
         // TODO Sinnvoll?
 
         if (getRandomNumberUsingNextInt(0, 99) < 50) {
 
             arr1 = randomnewSNode(edge);
+            edge = arr1[0];
         } else {
             arr1 = randomnewSNode(edge1);
+            edge1 = arr1[0];
         }
 
 
         for (int i = 0; i <einfachheit; i++) {
 
             if (getRandomNumberUsingNextInt(0, 99) > 50) {
-                DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
-                arr1 = randomnewSNode(tempEdge1);
+                arr1 = randomnewSNode(edge1);
+                edge1 = arr1[0];
             } else {
-                DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
-                arr1 = randomnewSNode(tempEdge2);
+                arr1 = randomnewSNode(edge);
+                edge = arr1[0];
             }
         }
     }
 
 
-    private void randomnewMaxDegPNode(DefaultEdge edge, int einfachheit) {
+    private void randomnewMaxDegPNode(DefaultEdge edge) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
 
@@ -230,7 +241,7 @@ class GraphgenSplitGraph {
 
             arr1 = randomnewSNode(edge1);
 
-        for (int i = 0; i <einfachheit; i++) {
+        for (int i = 0; i <1; i++) {
 
             if (getRandomNumberUsingNextInt(0, 99) > 50) {
                 DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];

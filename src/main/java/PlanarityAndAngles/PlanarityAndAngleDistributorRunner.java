@@ -3,9 +3,9 @@ package PlanarityAndAngles;
 import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.Flow.MaxFlow;
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
-import Datatypes.Vertex;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
+import Datastructures.Vertex;
 import GUI.GraphDrawOptions;
 import org.jgrapht.graph.DefaultEdge;
 

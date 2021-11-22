@@ -1,6 +1,6 @@
 package PlanarityAndAngles.Didimo;
 
-import Datatypes.SPQNode;
+import Datastructures.SPQNode;
 
 public class DidimoRepresentability {
 

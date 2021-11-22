@@ -1,7 +1,7 @@
 package Experimental;
 
-import Datatypes.SPQNode;
-import Datatypes.SPQStarTree;
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
 import Helperclasses.GraphHelper;
 import Helperclasses.SPQImporter;
 import org.jgrapht.Graphs;
@@ -27,10 +27,10 @@ class stNumbering {
     private static ArrayList<DefaultEdge> Edges = new ArrayList<>();
     private static int[] edgeInt;
     private static int[] dfiArray;
-    private static Datatypes.Vertex[] vertices;
-    private static DirectedMultigraph<Datatypes.Vertex, DefaultEdge> graph;
-    private static AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
-    DoublyLinkedList<Datatypes.Vertex> L;
+    private static Datastructures.Vertex[] vertices;
+    private static DirectedMultigraph<Datastructures.Vertex, DefaultEdge> graph;
+    private static AsUndirectedGraph<Datastructures.Vertex, DefaultEdge> graph3;
+    DoublyLinkedList<Datastructures.Vertex> L;
 
     public static void main(String[] args) {
 
@@ -72,10 +72,10 @@ class stNumbering {
         edgeInt = new int[graph3.vertexSet().size()];
         Edges.addAll(graph3.edgeSet());
         dfiArray = new int[graph3.vertexSet().size()];
-        vertices = new Datatypes.Vertex[graph3.vertexSet().size()];
+        vertices = new Datastructures.Vertex[graph3.vertexSet().size()];
 
         int i = 0;
-        for (Datatypes.Vertex v : graph3.vertexSet()
+        for (Datastructures.Vertex v : graph3.vertexSet()
         ) {
             vertices[v.getId()] = v;
         }
@@ -88,10 +88,10 @@ class stNumbering {
     }
 
 
-    private void dfs(Datatypes.Vertex root) {
+    private void dfs(Datastructures.Vertex root) {
         visited[root.getId()] = true;
 
-        for (Datatypes.Vertex v : Graphs.neighborListOf(graph3, root)
+        for (Datastructures.Vertex v : Graphs.neighborListOf(graph3, root)
         ) {
 
             if (visited[v.getId()]) {
@@ -105,7 +105,7 @@ class stNumbering {
     }
 
 
-    public void dfs2(Datatypes.Vertex v) {
+    public void dfs2(Datastructures.Vertex v) {
         dfs[v.getId()] = ++i;
 
 
@@ -126,23 +126,23 @@ class Edge {
 
 class DFTransversal {
 
-    private AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3;
-    private DirectedMultigraph<Datatypes.Vertex, DefaultEdge> dfsTree = new DirectedMultigraph<Datatypes.Vertex, DefaultEdge>(DefaultEdge.class);
+    private AsUndirectedGraph<Datastructures.Vertex, DefaultEdge> graph3;
+    private DirectedMultigraph<Datastructures.Vertex, DefaultEdge> dfsTree = new DirectedMultigraph<Datastructures.Vertex, DefaultEdge>(DefaultEdge.class);
     private boolean[] dfsVisited;
-    private Datatypes.Vertex[] childOf;
-    private List<Stack<Datatypes.Vertex>> stackList = new LinkedList<>();
+    private Datastructures.Vertex[] childOf;
+    private List<Stack<Datastructures.Vertex>> stackList = new LinkedList<>();
     private HashMap<DefaultEdge, Boolean> edgesVisited = new HashMap<>();
 
 
-    public DFTransversal(AsUndirectedGraph<Datatypes.Vertex, DefaultEdge> graph3) {
+    public DFTransversal(AsUndirectedGraph<Datastructures.Vertex, DefaultEdge> graph3) {
         this.graph3 = graph3;
         dfsVisited = new boolean[graph3.vertexSet().size() * 3];
-        childOf = new Datatypes.Vertex[graph3.vertexSet().size() * 3];
+        childOf = new Datastructures.Vertex[graph3.vertexSet().size() * 3];
 
         // Arrays.fill(childOf, -1);
     }
 
-    public void run(Datatypes.Vertex vertex) {
+    public void run(Datastructures.Vertex vertex) {
 
         dfs(vertex);
 
@@ -152,13 +152,13 @@ class DFTransversal {
 
     }
 
-    private void dfs(Datatypes.Vertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
+    private void dfs(Datastructures.Vertex vertex) { // https://www.techiedelight.com/depth-first-search/ für die Implementation des itarativen DFS algorithmus
 
         int v;
 
         // create a stack used to do iterative DFS
-        Stack<Datatypes.Vertex> stack = new Stack<>();
-        Deque<Datatypes.Vertex> ear = new ArrayDeque<>();
+        Stack<Datastructures.Vertex> stack = new Stack<>();
+        Deque<Datastructures.Vertex> ear = new ArrayDeque<>();
 
         // push the source node into the stack
         stack.push(vertex);
@@ -191,9 +191,9 @@ class DFTransversal {
             }
 
             // do for every edge `v —> u`
-            List<Datatypes.Vertex> adj = Graphs.neighborListOf(graph3, vertex);
+            List<Datastructures.Vertex> adj = Graphs.neighborListOf(graph3, vertex);
             for (int i = adj.size() - 1; i >= 0; i--) {
-                Datatypes.Vertex u = adj.get(i);
+                Datastructures.Vertex u = adj.get(i);
                 if (!dfsVisited[u.getId()]) {
                     stack.push(u);
                     childOf[u.getId()] = vertex;
@@ -206,9 +206,9 @@ class DFTransversal {
 
         while (!ear.isEmpty()) {
 
-            Datatypes.Vertex vertex1 = ear.pop();
+            Datastructures.Vertex vertex1 = ear.pop();
 
-            List<Datatypes.Vertex> adj = Graphs.neighborListOf(graph3, vertex1);
+            List<Datastructures.Vertex> adj = Graphs.neighborListOf(graph3, vertex1);
             for (int i = adj.size() - 1; i >= 0; i--) {
                 if (adj.get(i) == childOf[vertex1.getId()] || childOf[adj.get(i).getId()] == vertex1 || edgesVisited.containsKey(graph3.getEdge(adj.get(i), vertex1))        ) {
                     continue;
@@ -217,11 +217,11 @@ class DFTransversal {
 
 
                 //backedge found
-                Stack<Datatypes.Vertex> newEar = new Stack<>();
+                Stack<Datastructures.Vertex> newEar = new Stack<>();
                 newEar.push(vertex1);
                 visited[vertex1.getId()] = true;
 
-                Datatypes.Vertex vertex2 = adj.get(i);
+                Datastructures.Vertex vertex2 = adj.get(i);
 
 
                 edgesVisited.putIfAbsent(graph3.getEdge(vertex1, vertex2), true);

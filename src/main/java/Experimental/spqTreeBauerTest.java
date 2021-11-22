@@ -1,7 +1,7 @@
 package Experimental;
 
-import Datatypes.*;
-import Datatypes.Vertex;
+import Datastructures.*;
+import Datastructures.Vertex;
 import Helperclasses.GraphHelper;
 import Helperclasses.SPQImporter;
 import org.jgrapht.Graph;

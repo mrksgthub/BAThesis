@@ -1,6 +1,6 @@
 package Helperclasses;
 
-import Datatypes.SPQNode;
+import Datastructures.SPQNode;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.graph.DefaultEdge;

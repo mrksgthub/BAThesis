@@ -1,8 +1,8 @@
 package Visualizing;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.TupleEdge;
-import Datatypes.Vertex;
+import Datastructures.PlanarGraphFace;
+import Datastructures.TupleEdge;
+import Datastructures.Vertex;
 import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;

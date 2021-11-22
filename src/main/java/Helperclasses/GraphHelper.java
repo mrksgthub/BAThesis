@@ -1,8 +1,8 @@
 package Helperclasses;
 
 import PlanarityAndAngles.FaceGenerator;
-import Datatypes.SPQNode;
-import Datatypes.Vertex;
+import Datastructures.SPQNode;
+import Datastructures.Vertex;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.*;

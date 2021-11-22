@@ -1,10 +1,8 @@
 package PlanarityAndAngles;
 
-import Datatypes.PlanarGraphFace;
-import Datatypes.TupleEdge;
-import Datatypes.Vertex;
-import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-import org.jgrapht.graph.DefaultWeightedEdge;
+import Datastructures.PlanarGraphFace;
+import Datastructures.TupleEdge;
+import Datastructures.Vertex;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package Datatypes;
+package Datastructures;
 
 import Helperclasses.DFSIterator;
 import org.jgrapht.graph.DefaultEdge;

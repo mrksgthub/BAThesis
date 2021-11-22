@@ -1,7 +1,7 @@
 package PlanarityAndAngles.Flow;
 
 import PlanarityAndAngles.FaceGenerator;
-import Datatypes.*;
+import Datastructures.*;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
