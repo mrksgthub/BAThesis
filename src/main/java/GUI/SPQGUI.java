@@ -8,7 +8,7 @@ import Helperclasses.SPQImporter;
 import PlanarityAndAngles.PlanarityAndAngleDistributorRunner;
 import Testing.graphBuilderST;
 import Testing.graphTester;
-import Visualizing.GraphDrawer;
+import Visualizer.GraphDrawer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

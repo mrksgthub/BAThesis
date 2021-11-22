@@ -1,4 +1,4 @@
-package Visualizing;
+package Visualizer;
 
 import Datastructures.PlanarGraphFace;
 import Datastructures.Vertex;

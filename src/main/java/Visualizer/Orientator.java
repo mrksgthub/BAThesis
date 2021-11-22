@@ -1,4 +1,4 @@
-package Visualizing;
+package Visualizer;
 
 import Datastructures.PlanarGraphFace;
 import Datastructures.Vertex;
@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Orientator<E> {
+public class Orientator {
 
 
-    List<PlanarGraphFace<Vertex>> orientatedInnerFaces = new ArrayList<>();
+    List<PlanarGraphFace<Vertex>> orientatedInnerFaces;
     PlanarGraphFace<Vertex> orientatedOuterFace;
     private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> edgeFaceNeighbourMap;
 
@@ -20,8 +20,7 @@ public class Orientator<E> {
 
       //  originalFaceList.addAll(rectangularInnerFaceMap.keySet());
 
-        orientatedInnerFaces = rectangularInnerFaceMap;
-        this.orientatedOuterFace = outerFace;
+
 
     }
 
@@ -30,44 +29,48 @@ public class Orientator<E> {
         return orientatedInnerFaces;
     }
 
-    public void run() {
+    /**
+     * Legt die Orientierung der Kannten in PlanarGraphFace<Vertex> Objekten fest. In sidesMap und edgeOrientationMap
+     *
+     * @param rectangularOuterFace - die rechteckige äußere Facette.
+     * @param rectangularInnerFaces - die rechteckige inneren Facetten.
+     */
+    public void run(PlanarGraphFace<Vertex> rectangularOuterFace, List<PlanarGraphFace<Vertex>> rectangularInnerFaces) {
 
 
-        orientatedOuterFace.setOrientationsOuterFacette();
-        List<PlanarGraphFace<Vertex>> undiscoveredFaces = new ArrayList<>(orientatedInnerFaces);
+        rectangularOuterFace.setOrientationsOuterFacette();
+        List<PlanarGraphFace<Vertex>> undiscoveredFaces = new ArrayList<>(rectangularInnerFaces);
         List<PlanarGraphFace<Vertex>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();
-        HashMap<PlanarGraphFace, Boolean> visitedMap = new HashMap<>();
+        HashMap<PlanarGraphFace<Vertex>, Boolean> visitedMap = new HashMap<>();
 
 
-        visitedMap.put(orientatedOuterFace, true);
+        visitedMap.put(rectangularOuterFace, true);
 
-        for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
+        for (TupleEdge<Vertex, Vertex> edge : rectangularOuterFace.getEdgeList()
         ) {
-            edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex>) orientatedOuterFace);
+            edgeFaceNeighbourMap.put(edge,  rectangularOuterFace);
         }
 
-        for (PlanarGraphFace<Vertex> face : orientatedInnerFaces
+        for (PlanarGraphFace<Vertex> face : rectangularInnerFaces
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {
-                edgeFaceNeighbourMap.put(edge, (PlanarGraphFace<Vertex>) face);
+                edgeFaceNeighbourMap.put(edge,  face);
             }
-
         }
-
 
         PlanarGraphFace<Vertex> currentFace;
 
         // äußere Facette
-        for (TupleEdge<Vertex, Vertex> edge : orientatedOuterFace.getEdgeList()
+        for (TupleEdge<Vertex, Vertex> edge : rectangularOuterFace.getEdgeList()
         ) {
             TupleEdge<Vertex, Vertex> reverseEdge = new TupleEdge<>(edge.getRight(), edge.getLeft());
             PlanarGraphFace<Vertex> face = edgeFaceNeighbourMap.get(reverseEdge);
             assert (face != null);
             if (visitedMap.get(face) == null) {
                 visitedMap.putIfAbsent(face, true);
-                face.setOrientations(reverseEdge, (orientatedOuterFace.getEdgeOrientationMap().get(edge)));
+                face.setOrientationsInnerFace(reverseEdge, (rectangularOuterFace.getEdgeOrientationMap().get(edge)));
                 discoveredFaces.add(face);
             }
         }
@@ -84,7 +87,7 @@ public class Orientator<E> {
                 assert (face != null);
                 if (visitedMap.get(face) == null) {
                     visitedMap.putIfAbsent(face, true);
-                    face.setOrientations(reverseEdge, ((currFace.getEdgeOrientationMap().get(edge) + 2) % 4));
+                    face.setOrientationsInnerFace(reverseEdge, ((currFace.getEdgeOrientationMap().get(edge) + 2) % 4));
                     discoveredFaces.add(face);
                 }
             }

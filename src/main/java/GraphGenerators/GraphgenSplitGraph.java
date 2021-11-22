@@ -96,9 +96,9 @@ class GraphgenSplitGraph {
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
             if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
                 if (degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
-                    randomnewPNode(edge, einfachheit);
+                   // randomnewPNode(edge, einfachheit);
 
-              //      newMaxDegreePNode(edge);
+                   newMaxDegreePNode(edge);
 
                     i += einfachheit + 1;
                 } else {

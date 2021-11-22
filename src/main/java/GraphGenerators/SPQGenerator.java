@@ -106,7 +106,7 @@ public class SPQGenerator implements Callable, Runnable {
         tree.addValidSPQStarTreeRepresentation(root);
         tree.initializeSPQNodes(root);
 
-
+        System.out.println("SPQ-Trees Done");
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
             int i = tree.getConstructedGraph().degreeOf(vertex);
@@ -118,8 +118,6 @@ public class SPQGenerator implements Callable, Runnable {
 
         // Zeit:
         long startTime = System.currentTimeMillis();
-
-
 
         DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
         check = didimoRepresentability.run(tree.getRoot());

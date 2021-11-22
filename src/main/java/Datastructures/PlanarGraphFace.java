@@ -4,10 +4,9 @@ import java.util.*;
 
 public class PlanarGraphFace<V> extends Vertex {
 
-    private static int faceCounter = 0;
-    private Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
-    private Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
-    private Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
+    private final Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
+    private final Map<TupleEdge<V, V>, Integer> edgeOrientationMap = new LinkedHashMap<>();
+    private final Map<Integer, ArrayList<TupleEdge<V, V>>> sidesMap = new LinkedHashMap<>();
     private List<TupleEdge<V, V>> edgeList = new ArrayList<>();
     private FaceType type = FaceType.INTERNAL;
 
@@ -124,7 +123,7 @@ public class PlanarGraphFace<V> extends Vertex {
      * @param edge - edge in der Facette
      * @param orientation - festgelegte Orientierung der edge in der Facette
      */
-    public void setOrientations(TupleEdge<V, V> edge, int orientation) {
+    public void setOrientationsInnerFace(TupleEdge<V, V> edge, int orientation) {
 
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());

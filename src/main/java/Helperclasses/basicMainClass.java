@@ -8,7 +8,7 @@ import Datastructures.SPQStarTree;
 import Datastructures.Vertex;
 import GraphGenerators.SPQGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
-import Visualizing.*;
+import Visualizer.*;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -37,7 +37,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(3, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(60000, 90);
         spqGenerator.run();
 
 
@@ -95,7 +95,7 @@ class basicMainClass {
         Angulator angulator = new Angulator();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-             angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+    //         angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
@@ -119,7 +119,8 @@ class basicMainClass {
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
-        test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+      //  test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+        test.runJGraptHImplementation();
 
 
         stopTime = System.currentTimeMillis();
@@ -140,19 +141,19 @@ class basicMainClass {
        // rectangulator.getOuterFace().setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
-        orientator.run();
+        Orientator orientator = new Orientator(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
+        orientator.run(rectangulator.getOuterFace(), rectangulator.getRectangularInnerFaces());
 
         System.out.println("Nach Visualizing.Orientator");
 
 
-        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.getOrientatedInnerFaces(), rectangulator.getOuterFace());
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
          DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraph = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 
 
-        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.getOrientatedInnerFaces(), rectangulator.getOuterFace());
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();

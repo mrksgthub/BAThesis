@@ -1,4 +1,4 @@
-package Visualizing;
+package Visualizer;
 
 import Datastructures.PlanarGraphFace;
 import Datastructures.TupleEdge;
@@ -49,19 +49,19 @@ public class GraphDrawer implements Runnable {
         // rectangulator.outerFace.setOrientationsOuterFacette();
 
 
-        Orientator<DefaultEdge> orientator = new Orientator<>(rectangulator.getRectangularInnerFaces(), rectangulator.outerFace);
-        orientator.run();
+        Orientator orientator = new Orientator(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
+        orientator.run(rectangulator.getOuterFace(), rectangulator.getRectangularInnerFaces());
 
         System.out.println("Nach Visualizing.Orientator");
 
 
-        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(orientator.orientatedInnerFaces, orientator.orientatedOuterFace);
+        VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
         // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
         // verticalFlow.generateCapacities();
 
 
-        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(orientator.orientatedInnerFaces, orientator.orientatedOuterFace);
+        HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();

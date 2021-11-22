@@ -1,4 +1,4 @@
-package Visualizing;
+package Visualizer;
 
 import Datastructures.Vertex;
 import org.antlr.v4.runtime.misc.Pair;
