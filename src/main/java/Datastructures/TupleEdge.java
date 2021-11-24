@@ -9,14 +9,6 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
     private int winkel = -10;
     private int counter = -20;
 
-    public static int getIdCounter() {
-        return idCounter;
-    }
-
-    public static void setIdCounter(int idCounter) {
-        TupleEdge.idCounter = idCounter;
-    }
-
     public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, int i) {
 
             return new TupleEdge<>(edge.getRight(), edge.getLeft(), i);

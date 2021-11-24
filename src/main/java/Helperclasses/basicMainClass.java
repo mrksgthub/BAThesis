@@ -19,6 +19,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -37,7 +38,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(60000, 90);
+        SPQGenerator spqGenerator = new SPQGenerator(1000, 20);
         spqGenerator.run();
 
 
@@ -56,11 +57,18 @@ class basicMainClass {
         // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/bug - Kopie.txt");
       //   Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/b.txt");
       //  Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:/testGraph.txt");
-        spqImporter.run("C:/a.dot");
+        spqImporter.runFromFile("C:/a.dot");
 
 
         tree = spqImporter.getTree();
         root = tree.getRoot();
+
+        Deque<SPQNode> s = DFSIterator.buildPostOrderStack(root);
+        int notQnodeCount = 0;
+        while (!s.isEmpty()) {
+            notQnodeCount += (s.pop().getSpqChildren().size() != 0) ? 1 : 0;
+        }
+
 
 
         FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
@@ -95,7 +103,7 @@ class basicMainClass {
         Angulator angulator = new Angulator();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-    //         angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+        angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
@@ -135,7 +143,7 @@ class basicMainClass {
 
         System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
-        Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(treeVertexFaceGenerator.getPlanarGraphFaces());
+        Rectangulator rectangulator = new Rectangulator(treeVertexFaceGenerator.getPlanarGraphFaces());
         rectangulator.setOriginalEdgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
         rectangulator.run();
        // rectangulator.getOuterFace().setOrientationsOuterFacette();

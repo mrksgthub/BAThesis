@@ -57,7 +57,7 @@ public class graphBuilderST {
 
 
                 SPQImporter spqImporter = new SPQImporter();
-                spqImporter.run("C:/a.txt");
+                spqImporter.runFromFile("C:/a.txt");
 
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
 

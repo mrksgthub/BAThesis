@@ -82,7 +82,9 @@ class GraphgenSplitGraph {
         DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
         if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
-            newInitialPNode(edge);
+            //newInitialPNode(edge);
+            newInitialPNodeGuaranteed(edge);
+            System.out.println("PNODEATSTART");
         } else {
             randomnewSNode(edge);
         }
@@ -96,9 +98,19 @@ class GraphgenSplitGraph {
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
             if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
                 if (degreeOfedgeSource < 3 && degreeOfedgeSink < 3) {
-                   // randomnewPNode(edge, einfachheit);
 
-                   newMaxDegreePNode(edge);
+                    if (getRandomNumberUsingNextInt(0, 100) < 50 ) {
+                        DefaultEdge[] arr1 = randomnewSNode(edge);
+                        arr1 = randomnewSNode(arr1[1]);
+                        arr1 = randomnewSNode(arr1[1]);
+                        newDeg3PNode(arr1[0]);
+                        i =i + 5;
+                    } else {
+                        //     int a = multigraph.vertexSet().size();
+                          newMaxDegreePNode(edge);
+                        //    int b = multigraph.vertexSet().size()-a;
+                        i =i + 7;
+                    }
 
                     i += einfachheit + 1;
                 } else {
@@ -116,6 +128,52 @@ class GraphgenSplitGraph {
 
         counter = counter + 1 - 1;
     }
+
+    public void generateGraph2() {
+
+
+        DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
+
+        if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+         //   newInitialPNode(edge);
+           newInitialPNodeGuaranteed(edge);
+        } else {
+            randomnewSNode(edge);
+        }
+
+        // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
+
+        for (int i = 0; i <  operations; i++) {
+            edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
+
+            int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
+            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
+            if (getRandomNumberUsingNextInt(0, 99) < chanceOfP ) {
+                if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg) {
+               //     int a = multigraph.vertexSet().size();
+                    randomnewPNode(edge, einfachheit);
+               //    int b = multigraph.vertexSet().size()-a;
+
+                    i += einfachheit + 2;
+                } else {
+                    i--;
+                }
+
+            } else {
+                randomnewSNode(edge);
+            }
+        }
+
+
+        //  System.out.println("test");
+        //    Helperclasses.GraphHelper.printTODOTSPQNode(Helperclasses.GraphHelper.treeToDOT(root, 1));
+
+        counter = counter + 1 - 1;
+    }
+
+
+
+
 
     private void newMaxDegreePNode(DefaultEdge edge) {
         DefaultEdge[] arr1 = randomnewSNode(edge);
@@ -142,34 +200,39 @@ class GraphgenSplitGraph {
 
         randomnewSNode(edge);
 
-        randomnewSNode(edge1);
-
+        DefaultEdge[] arr1 =  randomnewSNode(edge1);
+        randomnewSNode(arr1[0]);
 
     }
 
-    private DefaultEdge[] randomnewSNode(DefaultEdge edge) {
 
-        Vertex vertex = multigraph.addVertex();
-        DefaultEdge edge1 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
-        DefaultEdge edge2 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
+    private void newInitialPNodeGuaranteed(DefaultEdge edge) {
 
-        multigraph.removeEdge(edge);
-        edges.remove(edge);
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
         edges.add(edge1);
-        edges.add(edge2);
-        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
-        oldQNode.setSinkVertex(vertex); // Der alte Q-Knoten bleibt drinn, bekommt aber eine neue Senke (vertex)
-        SPQNode newSnode = new SPQSNode("S" + ++counter);
-        SPQNode newQnode = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
-        edgeSPQNodeHashMap.remove(edge);
-        edgeSPQNodeHashMap.put(edge2, oldQNode);
-        edgeSPQNodeHashMap.put(edge1, newQnode);
-        nodeUmhaengen(oldQNode, newSnode);
-        addNodeAsRightChild(newQnode, newSnode);
 
-        DefaultEdge[] arr = {edge1, edge2};
-        return arr;
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter, multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
+
+
+        edge = randomnewSNode(edge)[0];
+        edge = randomnewSNode(edge)[0];
+        edge = randomnewSNode(edge)[0];
+        edge = randomnewSNode(edge)[0];
+
+        edge1 = randomnewSNode(edge1)[0];
+        edge1 = randomnewSNode(edge1)[0];
+        edge1 = randomnewSNode(edge1)[0];
+        edge1 = randomnewSNode(edge1)[0];
+
     }
+
 
 
     private void randomnewPNode(DefaultEdge edge, int einfachheit) {
@@ -184,19 +247,19 @@ class GraphgenSplitGraph {
 
         SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
         edgeSPQNodeHashMap.put(edge1, newQnode1);
-
         nodeUmhaengen(oldQNode, newPnode);
-        if (getRandomNumberUsingNextInt(0, 1) == 0) { // TODO Checken of es Fehler verursacht
+        // Links oder rechts
+        if (getRandomNumberUsingNextInt(0, 1) == 0) {
             addNodeAsRightChild(newQnode1, newPnode);
         } else {
             addNodeAsLeftChild(newQnode1, newPnode);
         }
 
-
         DefaultEdge[] arr1;
 
         // TODO Sinnvoll?
-
+        // mind 1 wetere Kante, um zu sicherzustellen, dass wir keine Mehrfachkante erhalten und um die Wahrscheinlichkeit
+        // eines rektilinearen Graphn zu erhöhen
         if (getRandomNumberUsingNextInt(0, 99) < 50) {
 
             arr1 = randomnewSNode(edge);
@@ -209,20 +272,65 @@ class GraphgenSplitGraph {
 
         for (int i = 0; i <einfachheit; i++) {
 
-            if (getRandomNumberUsingNextInt(0, 99) > 50) {
-                arr1 = randomnewSNode(edge1);
-                edge1 = arr1[0];
-            } else {
+            if (getRandomNumberUsingNextInt(0, 99) < 50) {
                 arr1 = randomnewSNode(edge);
                 edge = arr1[0];
+            } else {
+                arr1 = randomnewSNode(edge1);
+                edge1 = arr1[0];
             }
         }
     }
 
-
-    private void randomnewMaxDegPNode(DefaultEdge edge) {
+    /**
+     * Q-Knoten wird durch einen P-Knoten mit Q-P-Q* ersetzt
+     * Q* ist 3 Kanten lang und das rechte Kind.
+     *
+     * @param edge
+     */
+    private void newDeg3PNode(DefaultEdge edge) {
 
         //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
+
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        boolean wasOldQLeft = oldQNode.getParent().getSpqChildren().get(0) == oldQNode;
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+        nodeUmhaengen(oldQNode, newPnode);
+
+        // Links oder rechts
+        if (wasOldQLeft) {
+            addNodeAsLeftChild(newQnode1, newPnode);
+        } else {
+            addNodeAsRightChild(newQnode1, newPnode);
+        }
+
+        DefaultEdge[] arr1;
+        if (getRandomNumberUsingNextInt(0, 99) < 0) {
+
+            arr1 = randomnewSNode(edge);
+            edge = arr1[0];
+        } else {
+            arr1 = randomnewSNode(edge1);
+            edge1 = arr1[0];
+        }
+
+        for (int i = 0; i <1; i++) {
+
+            if (getRandomNumberUsingNextInt(0, 99) < 0) {
+                arr1 = randomnewSNode(edge);
+                edge = arr1[0];
+            } else {
+                arr1 = randomnewSNode(edge1);
+                edge1 = arr1[0];
+            }
+        }
+    }
+
+    private void randomnewMaxDegPNode(DefaultEdge edge) {
 
         DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
         edges.add(edge1);
@@ -236,8 +344,6 @@ class GraphgenSplitGraph {
         addNodeAsRightChild(newQnode1, newPnode);
 
         DefaultEdge[] arr1;
-
-        // TODO Sinnvoll?
 
             arr1 = randomnewSNode(edge1);
 
@@ -269,7 +375,29 @@ class GraphgenSplitGraph {
 
 
 
+    private DefaultEdge[] randomnewSNode(DefaultEdge edge) {
 
+        Vertex vertex = multigraph.addVertex();
+        DefaultEdge edge1 = multigraph.addEdge(vertex, multigraph.getEdgeTarget(edge));
+        DefaultEdge edge2 = multigraph.addEdge(multigraph.getEdgeSource(edge), vertex);
+
+        multigraph.removeEdge(edge);
+        edges.remove(edge);
+        edges.add(edge1);
+        edges.add(edge2);
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        oldQNode.setSinkVertex(vertex); // Der alte Q-Knoten bleibt drinn, bekommt aber eine neue Senke (vertex)
+        SPQNode newSnode = new SPQSNode("S" + ++counter);
+        SPQNode newQnode = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.remove(edge);
+        edgeSPQNodeHashMap.put(edge2, oldQNode);
+        edgeSPQNodeHashMap.put(edge1, newQnode);
+        nodeUmhaengen(oldQNode, newSnode);
+        addNodeAsRightChild(newQnode, newSnode);
+
+        DefaultEdge[] arr = {edge1, edge2};
+        return arr;
+    }
 
 
 
@@ -311,6 +439,52 @@ class GraphgenSplitGraph {
 
     public DirectedMultigraph<Vertex, DefaultEdge> getMultigraph() {
         return multigraph;
+    }
+
+
+    private void randomnewPNode2(DefaultEdge edge, int einfachheit) {
+
+        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
+
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter , multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
+
+        DefaultEdge[] arr1 = new DefaultEdge[2];
+
+        // TODO Sinnvoll?
+
+        if (getRandomNumberUsingNextInt(0, 99) < 50) {
+
+            arr1 = randomnewSNode(edge);
+        } else {
+            arr1 = randomnewSNode(edge1);
+        }
+
+
+        for (int i = 0; i <einfachheit; i++) {
+
+
+            if (getRandomNumberUsingNextInt(0, 99) > 50) {
+
+                DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge1);
+
+            } else {
+                DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
+                arr1 = randomnewSNode(tempEdge2);
+            }
+        }
+
+
     }
 
 

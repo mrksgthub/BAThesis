@@ -5,7 +5,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
       </element>
-      <element id="module-output" name="untitled" />
+      <element id="module-output" name="SPQVisualiser" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jheaps/jheaps/0.14/jheaps-0.14.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/graphstream/gs-ui-swing/2.0/gs-ui-swing-2.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/graphstream/pherd/1.0/pherd-1.0.jar" path-in-jar="/" />

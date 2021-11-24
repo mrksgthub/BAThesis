@@ -1,5 +1,6 @@
 package PlanarityAndAngles.Flow;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
@@ -13,7 +14,6 @@ class PushRelabel extends MaxFlowImp {
 
     private int[] excessFlow;
     private int[] heights;
-    private Vertex[] vertices;
     private int[] nextNeighbour;
     private ArrayDeque<Integer> queue;
 
@@ -21,10 +21,6 @@ class PushRelabel extends MaxFlowImp {
     public PushRelabel(DirectedWeightedMultigraph<Datastructures.Vertex, DefaultWeightedEdge> networkGraph) {
         super(networkGraph);
 
-        vertices = new Vertex[n];
-        for (int i = 0; i < vertices.length; i++) {
-            vertices[i] = new Vertex(i);
-        }
 
 
     }
@@ -102,12 +98,11 @@ class PushRelabel extends MaxFlowImp {
             edge.flow += f;
             edge.reverse.flow -= f;
 
-            if (excessFlow[edge.v] == 0 && edge.v != source && edge.v != sink) queue.add(edge.v);
 
+            if (excessFlow[edge.v] == 0 && edge.v != source && edge.v != sink) queue.add(edge.v);
             excessFlow[edge.u] -= f;
             excessFlow[edge.v] += f;
-            vertices[edge.u].excessFlow -= f;
-            vertices[edge.v].excessFlow += f;
+
             return true;
         }
         return false;
@@ -120,7 +115,6 @@ class PushRelabel extends MaxFlowImp {
         double min = Integer.MAX_VALUE;
         for (Edge edge : outgoingEdgeLists[vertexIndex]
         ) {
-
             // excessFlow[vertexIndex] > 0 && heights[vertexIndex] <= heights[edge.v] && was removed
             if (edge.capacity - edge.flow > 0) {
                 min = Math.min(min, heights[edge.v]);
@@ -136,7 +130,7 @@ class PushRelabel extends MaxFlowImp {
         while (excessFlow[vertexIndex] > 0) {
 
             edgeIndex = nextNeighbour[vertexIndex];
-            int size = outgoingEdgeLists[vertexIndex].size();
+            int size = outgoingEdgeLists[vertexIndex].size(); // hat man alle Kanten in der AdjList durchgemacht, dann relabel
             if (edgeIndex < size) {
                 Edge edge = outgoingEdgeLists[vertexIndex].get(edgeIndex);
 
@@ -146,34 +140,11 @@ class PushRelabel extends MaxFlowImp {
                     nextNeighbour[vertexIndex]++;
                 }
             } else {
-
                 relabel(vertexIndex);
                 nextNeighbour[vertexIndex] = 0;
             }
-
-
         }
-
-
     }
-
-
-    class Vertex {
-
-        int id;
-        int excessFlow = 0;
-        int height = -1;
-        int flowIn = 0;
-        int flowOut = 0;
-
-        Vertex(int i) {
-            id = i;
-        }
-
-
-    }
-
-
 }
 
 

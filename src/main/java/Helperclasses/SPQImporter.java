@@ -2,18 +2,19 @@ package Helperclasses;
 
 import Datastructures.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.List;
 
 public class SPQImporter {
 
 
-
-    private final HashMap<String, SPQNode> nameToNode = new HashMap<>();
-    private final HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
+    private HashMap<String, SPQNode> nameToNode = new HashMap<>();
+    private HashMap<String, Vertex> nameToTreeVertex = new HashMap<>();
     private SPQStarTree tree;
+    private SPQStarTree originalCopy;
+    private String[] stringArr;
 
     public SPQImporter() {
 
@@ -23,11 +24,11 @@ public class SPQImporter {
         return tree;
     }
 
-    public void run(String filePathString) {
+    public void runFromFile(String filePathString) {
 
 
         File file = new File(filePathString);
-        try {
+/*        try {
             Scanner scanner = new Scanner(file);
             String line = "test";
 
@@ -35,39 +36,81 @@ public class SPQImporter {
                 line = scanner.nextLine();
                 proceessLine(line);
             }
+*/
 
-            nameToNode.get("Proot").setToRoot();
-            tree = new SPQStarTree(nameToNode.get("Proot"));
-            SPQPNode root = (SPQPNode) nameToNode.get("Proot");
+        try {
+            readTextfileToArray(file);
 
-            if (tree.getRoot() == null) {
-                try {
-                    throw new Exception("AHHH");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            processTextArrayToTree();
 
+        } catch (
+                IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public  SPQStarTree  runFromArray() {
+
+
+        processTextArrayToTree();
+
+       return processTextArrayToTree();
+    }
+
+
+
+
+
+
+
+
+
+
+
+    private SPQStarTree processTextArrayToTree() {
+        nameToNode = new HashMap<>();
+        nameToTreeVertex = new HashMap<>();
+        for (String line : stringArr
+        ) {
+            proceessLine(line);
+        }
+
+
+        nameToNode.get("Proot").setToRoot();
+        tree = new SPQStarTree(nameToNode.get("Proot"));
+        SPQPNode root = (SPQPNode) nameToNode.get("Proot");
+
+        if (tree.getRoot() == null) {
+            try {
+                throw new Exception("AHHH");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // Stelle sicher, dass die Knoten die richtigen IDs haben
-            int i = 1;
-            for (Vertex v: nameToTreeVertex.values()
-                 ) {
-                if (v.getName().equals("vsource")) {
-                    v.setId(0);;
-                } else if ((v.getName().equals("vsink"))) {
-                    v.setId( nameToTreeVertex.values().size()-1);
-                } else {
-                    v.setId(i++);
-                }
+
+        }
+        // Stelle sicher, dass die Knoten die richtigen IDs haben
+        int i = 1;
+        for (Vertex v : nameToTreeVertex.values()
+        ) {
+            if (v.getName().equals("vsource")) {
+                v.setId(0);
+                ;
+            } else if ((v.getName().equals("vsink"))) {
+                v.setId(nameToTreeVertex.values().size() - 1);
+            } else {
+                v.setId(i++);
             }
+        }
 
-            // Damit die nächst ID die der nächste unbenutzte Integer ist.
-            Vertex.setCounter( nameToTreeVertex.values().size());
-            root.setToRoot();
+        // Damit die nächst ID die der nächste unbenutzte Integer ist.
+        Vertex.setCounter(nameToTreeVertex.values().size());
+        root.setToRoot();
 
-            // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
+        // Graph muss nach dem "fixen" der ids generiert werden, da sonst die internen Hashmaps nicht mehr stimmen.
 
-            tree.initializeSPQNodes(tree.getRoot());
+        tree.initializeSPQNodes(tree.getRoot());
+
 
 /*
             Deque<SPQNode> stack = DFSIterator.buildPreOrderStack(tree.getRoot());
@@ -75,15 +118,23 @@ public class SPQImporter {
 
 
 
-            System.out.println("Graph Imported");
+        System.out.println("Graph Imported");
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        return tree;
+    }
+
+    private void readTextfileToArray(File file) throws IOException {
+        BufferedReader in = new BufferedReader(new FileReader(file));
+        String str;
+
+        List<String> list = new ArrayList<String>();
+        while ((str = in.readLine()) != null) {
+            list.add(str);
         }
-
-
+        stringArr = list.toArray(new String[0]);
 
     }
+
 
     private void proceessLine(String line) {
 

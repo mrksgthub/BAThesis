@@ -3,7 +3,6 @@ package Visualizer;
 import Datastructures.PlanarGraphFace;
 import Datastructures.TupleEdge;
 import Datastructures.Vertex;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
@@ -38,7 +37,7 @@ public class GraphDrawer implements Runnable {
 
         System.out.println("Anzahl Faces:" + planarGraphFaces.size());
 
-        Rectangulator<DefaultEdge> rectangulator = new Rectangulator<>(planarGraphFaces);
+        Rectangulator rectangulator = new Rectangulator(planarGraphFaces);
 
         rectangulator.setOriginalEdgeToFaceMap(adjFaces2);
         try {

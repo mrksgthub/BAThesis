@@ -17,7 +17,7 @@ public  class  MaxFlow {
 
 
     private Map<DefaultWeightedEdge, Double> flowMap;
-    private Map<DefaultWeightedEdge, Double> flowMap2;
+    public Map<DefaultWeightedEdge, Double> flowMap2;
     private Vertex solverSource;
     private Vertex solverSink;
     private final SPQStarTree tree;
@@ -37,6 +37,10 @@ public  class  MaxFlow {
 
     public void setTreeVertexFaceGenerator( List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.listOfFaces = planarGraphFaces;
+    }
+
+    public Map<DefaultWeightedEdge, Double> getFlowMap() {
+        return flowMap;
     }
 
     public void runJGraptHImplementation() {
@@ -243,5 +247,7 @@ public  class  MaxFlow {
 
     }
 
-
+    public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> getFlowNetwork() {
+        return flowNetwork;
+    }
 }

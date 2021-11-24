@@ -24,7 +24,7 @@ class spqTreeBauerTest {
         SPQNode root;
 
         SPQImporter spqImporter = new SPQImporter();
-        spqImporter.run("C:/a.txt");
+        spqImporter.runFromFile("C:/a.txt");
 
 
         tree = spqImporter.getTree();
@@ -322,7 +322,7 @@ class spqTreeBauerTest {
 
 
         SPQImporter spqImporter2 = new SPQImporter();
-        spqImporter2.run("C:/testGraph.txt");
+        spqImporter2.runFromFile("C:/testGraph.txt");
 
 
 

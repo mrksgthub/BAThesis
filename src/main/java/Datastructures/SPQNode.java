@@ -114,7 +114,7 @@ public abstract class SPQNode {
     /**
      * Bestimmt die Quelle und Senke des Knotens, basierend auf seinen Kindsknoten
      *
-     * @param nodes
+     * @param nodes - Ein Kindsknoten des Baums
      */
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
@@ -126,6 +126,11 @@ public abstract class SPQNode {
         }
     }
 
+    /**
+     * Wird nur in den Blättern des Baums durchgeführt. Fügt die Senke (Quelle) in die Adjazenzliste der Quelle (Senke)
+     * ein.
+     *
+     */
     public void addToAdjecencyListsSinkAndSource() {
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqChildren.size() == 0) {
             startVertex.adjacentVertices.add(sinkVertex);
@@ -133,7 +138,11 @@ public abstract class SPQNode {
         }
     }
 
-
+    /**
+     *
+     * @param node Kindsknoten
+     * @param parent Der Elternknoten, mit dem node verschmelzen soll.
+     */
     void mergeNodeWithParent(SPQNode node, SPQNode parent) {
 
         int pos = parent.spqChildren.indexOf(node);
@@ -158,7 +167,9 @@ public abstract class SPQNode {
 
     }
 
-
+    /**
+     * Legt die Spiralität der Kinder nach Didimo et al. 2020 fest.
+     */
     public void setSpiralityOfChildren() {
     }
 

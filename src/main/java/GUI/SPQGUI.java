@@ -23,7 +23,7 @@ class SPQGUI extends JFrame {
     private static SwingWorker worker;
     private static SPQStarTree tree;
     private static SPQNode root;
-
+    private static String lastDir = null;
     private int ops;
     private int chanceOfP;
     private JButton drawGraphButton;
@@ -46,7 +46,6 @@ class SPQGUI extends JFrame {
     private JLabel maxDegLabel;
     private JLabel chainLenthLabel;
     private Boolean hasValidGraph;
-
 
     public SPQGUI() {
 
@@ -242,7 +241,7 @@ class SPQGUI extends JFrame {
                         @Override
                         protected Object doInBackground() throws Exception {
                             SPQImporter spqImporter = new SPQImporter();
-                            spqImporter.run(file.getAbsolutePath());
+                            spqImporter.runFromFile(file.getAbsolutePath());
                             tree = spqImporter.getTree();
                             root = tree.getRoot();
                             ChanceOfP.setText("Vertices: " + tree.getConstructedGraph().vertexSet().size());
@@ -312,19 +311,23 @@ class SPQGUI extends JFrame {
 
                         int ops = dialog1.getMinOps();
                         int chanceOfP = dialog1.getChanceOfP();
+                        int counter = 0;
 
-                        for (int j = 0; j < 6; j++) {
+                        for (int j = 0; j < 10; j++) {
                             if (isCancelled()) {
                                 break;
                             }
-                            for (int i = 0; i < 6; i++) {
-                                if (isCancelled()) {
+                            counter = 0;
+                            for (int i = 0; i < 10; i++) {
+                                if (isCancelled() || counter > 200) {
+                                    counter = 0;
                                     break;
                                 }
-                                chanceOfP = dialog1.getChanceOfP() +j*dialog1.getChanceOfPIncr();
+                                chanceOfP = dialog1.getChanceOfP() + j * dialog1.getChanceOfPIncr();
                                 ops = dialog1.getMinOps() + i * dialog1.getOpsIncrement();
                                 boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength());
                                 if (!isValid) {
+                                    counter++;
                                     i--;
                                 }
                             }
@@ -386,7 +389,7 @@ class SPQGUI extends JFrame {
                     @Override
                     protected void done() {
                         super.done();
-                        System.out.println("In Done");
+                        System.out.println("Test Done");
                         updateText("Finished testing graphs");
                         try {
                             get();
@@ -423,6 +426,29 @@ class SPQGUI extends JFrame {
 
     }
 
+    /**
+     * http://blog.sodhanalibrary.com/2015/03/jfilechooser-with-last-browsed-directory.html#.YZ2NWNDMIuU
+     *
+     * @return Ein JFileChooser, welches sich an das letzte Verzeichnis erinnert
+     */
+    public static JFileChooser getFileChooser() {
+        if (lastDir != null) {
+            JFileChooser fc = new JFileChooser(lastDir);
+            return fc;
+        } else {
+            JFileChooser fc = new JFileChooser();
+            return fc;
+        }
+    }
+
+    public static void setLastDir(File file) {
+        if (file.isDirectory()) {
+            lastDir = file.getAbsolutePath();
+        } else {
+            lastDir = file.getParent();
+        }
+
+    }
 
     private void updateText(String text) {
         status.setText(text);
@@ -435,11 +461,7 @@ class SPQGUI extends JFrame {
 
         JFrame frame = new JFrame("Test");
         frame.setContentPane(new SPQGUI().panel1);
-        // frame.setJMenuBar(menuBar);
-        //  menuBar.setLayout(new FlowLayout(FlowLayout.LEADING));
-        //   menuBar.add(filesMenu);
-        //  filesMenu.add(importButton);
-        //  filesMenu.add(exportButton);
+
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();

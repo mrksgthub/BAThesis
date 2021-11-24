@@ -7,7 +7,7 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;
 
-public class Rectangulator<E> {
+public class Rectangulator {
 
     private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
     private final HashMap<PlanarGraphFace<Vertex>, PlanarGraphFace<Vertex>> rectangularFaceMap = new HashMap<>();

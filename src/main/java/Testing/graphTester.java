@@ -1,16 +1,19 @@
 package Testing;
 
+import Datastructures.SPQNode;
+import Datastructures.SPQStarTree;
+import Datastructures.Vertex;
+import Helperclasses.DFSIterator;
+import Helperclasses.GraphValidifier;
+import Helperclasses.SPQImporter;
 import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.FaceGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
-import Datastructures.SPQNode;
-import Datastructures.SPQStarTree;
-import Datastructures.Vertex;
-import Helperclasses.GraphValidifier;
-import Helperclasses.SPQImporter;
+import PlanarityAndAngles.Flow.MinFlow;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
@@ -21,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 
@@ -30,6 +34,7 @@ public class graphTester {
 
     private File dataFile;
     private File[] files;
+    private int runs = 5;
 
 
     public graphTester(File dataFile, File[] files) {
@@ -61,7 +66,7 @@ public class graphTester {
 
                 System.out.println(fileName);
                 SPQImporter spqImporter = new SPQImporter();
-                spqImporter.run(fileName);
+                spqImporter.runFromFile(fileName);
 
 
                 tree = spqImporter.getTree();
@@ -80,25 +85,25 @@ public class graphTester {
 
 
                 System.out.println(fileName);
-                long startTime = System.currentTimeMillis();
+                long startTime = System.nanoTime();
 
 
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
                 didimoRepresentability.run(tree.getRoot());
 
 
-           //     root.getMergedChildren().get(0).computeSpirality();
-            //    tree.computeSpirality(root.getSpqStarChildren().get(0));
+                //     root.getMergedChildren().get(0).computeSpirality();
+                //    tree.computeSpirality(root.getSpqStarChildren().get(0));
                 Angulator angulator = new Angulator();
                 angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
 
 
-                long stopTime = System.currentTimeMillis();
+                long stopTime = System.nanoTime();
                 long elapsedTime = stopTime - startTime;
                 System.out.println("Didimo Zeit: " + elapsedTime);
                 long didimoTime = elapsedTime;
 
-                startTime = System.currentTimeMillis();
+                startTime = System.nanoTime();
 
 
                 // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
@@ -109,18 +114,18 @@ public class graphTester {
 
                 // Algorithms.Flow.MaxFlow test = new Algorithms.Flow.MaxFlow(tree, root, treeVertexFaceGenerator);
                 //   test.run();
-                stopTime = System.currentTimeMillis();
+                stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 long tamassiaMinFlowTime = elapsedTime;
                 System.out.println("Tamassia Zeit: " + elapsedTime);
 
 
-                startTime = System.currentTimeMillis();
+                startTime = System.nanoTime();
 
 
                 MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
-                stopTime = System.currentTimeMillis();
+                stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 long tamassiaPushTime = elapsedTime;
                 System.out.println("TamassiaPush Zeit: " + elapsedTime);
@@ -169,7 +174,7 @@ public class graphTester {
                         StandardOpenOption.CREATE);
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"));
+                        .withHeader("Graph", "Size", "Degree 3 Vertices", "FlownetworkKantenanzahl", "SPQ*Knoten", "DidimoMean", "DidimoStdev", "Tamassia", "TamassiaStdDev", "TamassiaPush", "TamassiaPushStdev"));
         ) {
 
             for (File fileName : files
@@ -177,7 +182,7 @@ public class graphTester {
 
                 System.out.println(fileName);
                 SPQImporter spqImporter = new SPQImporter();
-                spqImporter.run(fileName.toString());
+                spqImporter.runFromFile(fileName.toString());
 
 
                 tree = spqImporter.getTree();
@@ -198,77 +203,118 @@ public class graphTester {
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
                 int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
                 int nodes = graph.vertexSet().size();
-
-
                 System.out.println(fileName);
-                long startTime = System.currentTimeMillis();
+                long startTime = System.nanoTime();
                 long stopTime;
                 long elapsedTime;
-                long didimoTime;
+                double didimoTime;
+                double didimoStdev = 0;
+                double tamassiaMinFlowTime;
+                double tamassiaMinFlowStdDev = 0;
+                double tamassiaStdev;
+                double tamassiaPushTime = 0;
+                double tamassiaPushStdev = 0;
+                int flowNetWorkEdges = 0;
+                int degree3Vertices = 0;
+                int notQnodeCount = 0;
+                // TODO EINPFLEGEN
+                Deque<SPQNode> s = DFSIterator.buildPostOrderStack(root);
+
+                while (!s.isEmpty()) {
+                    notQnodeCount += (s.pop().getSpqChildren().size() != 0) ? 1 : 0;
+                }
+
+                for (Vertex v : tree.getConstructedGraph().vertexSet()
+                ) {
+                    if (v.getAdjacentVertices().size() == 3) {
+                        degree3Vertices++;
+                    }
+                }
+
 
 
                 try {
-                    DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-                    didimoRepresentability.run(tree.getRoot());
+                    DescriptiveStatistics statsDidimo = new DescriptiveStatistics();
 
-                   // root.getMergedChildren().get(0).computeSpirality();
+                    for (int i = 0; i < runs; i++) {
 
 
-                    Angulator angulator = new Angulator();
-                    angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+                        tree = spqImporter.runFromArray();
+                        startTime = System.nanoTime();
+                        DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
+                        didimoRepresentability.run(tree.getRoot());
 
-                    stopTime = System.currentTimeMillis();
-                    elapsedTime = stopTime - startTime;
-                    System.out.println("Didimo Zeit: " + elapsedTime);
-                    didimoTime = elapsedTime;
+                        // root.getMergedChildren().get(0).computeSpirality();
+
+                        Angulator angulator = new Angulator();
+                        angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+                        stopTime = System.nanoTime();
+                        elapsedTime = stopTime - startTime;
+                        statsDidimo.addValue(elapsedTime);
+                        System.out.println("Didimo Zeit: " + elapsedTime);
+                    }
+                    didimoTime = statsDidimo.getMean();
+                    didimoStdev = statsDidimo.getStandardDeviation();
+                    System.out.println("DidimoStdev" + didimoStdev);
 
                 } catch (Exception e) {
                     e.printStackTrace();
                     didimoTime = -1;
                 }
 
-                startTime = System.currentTimeMillis();
+                DescriptiveStatistics statsTamassiaMinFlow = new DescriptiveStatistics();
 
-                // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
+                for (int i = 0; i < runs; i++) {
+                    startTime = System.nanoTime();
 
-                // Algorithms.Flow.TamassiaRepresentation tamassiaRepresentation = new Algorithms.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-                //  tamassiaRepresentation.run();
+                    MinFlow tamassiaRepresentation = new MinFlow(tree, root, treeVertexFaceGenerator);
+                    tamassiaRepresentation.run(treeVertexFaceGenerator.getPlanarGraphFaces());
 
-
-                // Algorithms.Flow.MaxFlow test = new Algorithms.Flow.MaxFlow(tree, root, treeVertexFaceGenerator);
-                //   test.run();
-
-
-                stopTime = System.currentTimeMillis();
-                elapsedTime = stopTime - startTime;
-                long tamassiaMinFlowTime = elapsedTime;
-                System.out.println("Tamassia Zeit: " + elapsedTime);
-
-
-                long tamassiaPushTime = 0;
-                try {
-                    startTime = System.currentTimeMillis();
-                    MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                    test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
-                    stopTime = System.currentTimeMillis();
+                    stopTime = System.nanoTime();
                     elapsedTime = stopTime - startTime;
-                    tamassiaPushTime = elapsedTime;
-                    System.out.println("TamassiaPush Zeit: " + elapsedTime);
+                    statsTamassiaMinFlow.addValue(elapsedTime);
+                    System.out.println("Tamassia Zeit: " + elapsedTime);
+                }
+                tamassiaMinFlowTime = statsTamassiaMinFlow.getMean();
+                tamassiaMinFlowStdDev = statsTamassiaMinFlow.getStandardDeviation();
+                System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
+
+
+                try {
+                    DescriptiveStatistics statsTamassiaPush = new DescriptiveStatistics();
+
+                    for (int i = 0; i < runs; i++) {
+
+                        tree = spqImporter.runFromArray();
+                        startTime = System.nanoTime();
+                        MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
+                        test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+                        stopTime = System.nanoTime();
+                        elapsedTime = stopTime - startTime;
+                        // tamassiaPushTime= elapsedTime;
+                        statsTamassiaPush.addValue(elapsedTime);
+                        //flowNetWorkEdges = test.getFlowMap().keySet().size()-test.getFlowNetwork().vertexSet().size()-2;
+                        flowNetWorkEdges = test.flowMap2.keySet().size();
+                        System.out.println("TamassiaPush Zeit: " + elapsedTime);
+                    }
+                    tamassiaPushTime = statsTamassiaPush.getMean();
+                    tamassiaPushStdev = statsTamassiaPush.getStandardDeviation();
+                    System.out.println("TamassiaStdev" + tamassiaPushStdev);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                     tamassiaPushTime = -1;
                     System.out.println("Invalid Graph");
                 }
 
-                csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
+
+                csvPrinter.printRecord(nodes, faces, degree3Vertices, flowNetWorkEdges, notQnodeCount, didimoTime, didimoStdev, tamassiaMinFlowTime, tamassiaMinFlowStdDev, tamassiaPushTime, tamassiaPushStdev);
 
 
             }
             csvPrinter.flush();
 
 
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -142,8 +142,11 @@ public class SPQGenerator implements Callable, Runnable {
             long startTime2 = System.currentTimeMillis();
             //   DefaultDirectedWeightedGraph<Datatypes.TreeVertex, DefaultWeightedEdge> treeVertexDefaultEdgeDefaultDirectedWeightedGraph = treeVertexFaceGenerator.generateFlowNetworkLayout2();
             //   treeVertexFaceGenerator.generateCapacities();
+
+            System.out.println("Tamassia Start");
             MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-            test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+           test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+           // test.runJGraptHImplementation();
 
             // Zeit2:
             long stopTime2 = System.currentTimeMillis();

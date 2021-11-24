@@ -5,6 +5,10 @@ import java.awt.event.*;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.prefs.Preferences;
+
+import static GUI.SPQGUI.getFileChooser;
+import static GUI.SPQGUI.setLastDir;
 
 class graphTesterDialog extends JDialog {
     private JPanel contentPane;
@@ -55,12 +59,12 @@ class graphTesterDialog extends JDialog {
         sourceFolderButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                JFileChooser fc = new JFileChooser();
+                JFileChooser fc = getFileChooser();
                 fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 fc.setMultiSelectionEnabled(true);
                 int returnVal = fc.showOpenDialog(contentPane);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
+                    setLastDir(fc.getSelectedFile());
                     graphFolder = fc.getSelectedFiles();
 
                     if (graphFolder[0].isDirectory()) {
