@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class graphBuilderST {
+public class GraphBuilderST {
 
     private final String filePathString;
 
 
-    public graphBuilderST(String filePathString) {
+    public GraphBuilderST(String filePathString) {
 
         this.filePathString = filePathString;
     }

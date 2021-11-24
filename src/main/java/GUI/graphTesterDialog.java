@@ -5,7 +5,6 @@ import java.awt.event.*;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.prefs.Preferences;
 
 import static GUI.SPQGUI.getFileChooser;
 import static GUI.SPQGUI.setLastDir;
@@ -18,10 +17,15 @@ class graphTesterDialog extends JDialog {
     private JButton dataFolderButton;
     private JLabel sourceLabel;
     private JLabel dataLabel;
+    private JTextField maxSizeField;
+    private JCheckBox tamassiaMinCostErlaubenCheckBox;
+    private JTextField minSizeField;
     private File dataFile;
     private File graphFolder[];
     private File[] files;
-
+    private int maxSize;
+    private int minSize;
+    private boolean tamassiaMinCostAllowed;
 
     public graphTesterDialog() {
         setContentPane(contentPane);
@@ -110,9 +114,61 @@ class graphTesterDialog extends JDialog {
         System.exit(0);
     }
 
+    public int getMinSize() {
+        return minSize;
+    }
+
+    public boolean isTamassiaMinCostAllowed() {
+        return tamassiaMinCostAllowed;
+    }
+
+    public int getMaxSize() {
+        return maxSize;
+    }
+
     private void onOK() {
         // add your code here
-        if (files == null || dataFile == null) {
+
+
+
+        boolean isMinMaxValid = false;
+        try {
+            maxSize = Integer.parseInt(maxSizeField.getText());
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Integer erlaubt");
+            e.printStackTrace();
+        }
+        try {
+
+            minSize = Integer.parseInt(minSizeField.getText());
+
+
+
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Integer erlaubt");
+            e.printStackTrace();
+        }
+
+
+        if (minSize == -1) {
+            minSize = 0;
+        }
+        if ((maxSize == -1)) {
+            maxSize = Integer.MAX_VALUE;
+        }
+        if (minSize  <= maxSize) {
+            isMinMaxValid = true;
+        }
+
+
+
+
+        tamassiaMinCostAllowed = tamassiaMinCostErlaubenCheckBox.isSelected();
+
+
+        if (files == null || dataFile == null || !isMinMaxValid) {
             JOptionPane.showMessageDialog(contentPane, "Invalid inputs.", "Alert", JOptionPane.WARNING_MESSAGE);
         } else {
             dispose();

@@ -6,8 +6,8 @@ import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
 import PlanarityAndAngles.PlanarityAndAngleDistributorRunner;
-import Testing.graphBuilderST;
-import Testing.graphTester;
+import Testing.GraphBuilderST;
+import Testing.GraphTester;
 import Visualizer.GraphDrawer;
 
 import javax.swing.*;
@@ -307,7 +307,7 @@ class SPQGUI extends JFrame {
                         interrupts.setEnabled(true);
                         generateTestDataButton.setEnabled(false);
                         updateText("Running tests");
-                        graphBuilderST graphBuilderST = new graphBuilderST(dialog1.getFilePath());
+                        GraphBuilderST graphBuilderST = new GraphBuilderST(dialog1.getFilePath());
 
                         int ops = dialog1.getMinOps();
                         int chanceOfP = dialog1.getChanceOfP();
@@ -381,8 +381,8 @@ class SPQGUI extends JFrame {
                     @Override
                     protected Object doInBackground() throws Exception {
                         updateText("Running tests");
-                        graphTester graphTester = new graphTester(dialog1.getDataPath(), dialog1.getFiles());
-                        graphTester.run();
+                        GraphTester graphTester = new GraphTester(dialog1.getDataPath(), dialog1.getFiles());
+                        graphTester.run(dialog1.getMinSize(), dialog1.getMaxSize(), dialog1.isTamassiaMinCostAllowed());
                         return null;
                     }
 
