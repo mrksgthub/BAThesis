@@ -128,7 +128,7 @@ class SPQGUI extends JFrame {
                             spqGenerator.setCounter(0);
                             ;
                             while (!hasValidGraph && !isCancelled()) {
-                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit());
+                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit(), 0);
 
                             }
                             return null;
@@ -313,19 +313,19 @@ class SPQGUI extends JFrame {
                         int chanceOfP = dialog1.getChanceOfP();
                         int counter = 0;
 
-                        for (int j = 0; j < 10; j++) {
+                        for (int j = 0; j < dialog1.getNumOfChanceOfPIncrease(); j++) {
                             if (isCancelled()) {
                                 break;
                             }
                             counter = 0;
-                            for (int i = 0; i < 10; i++) {
-                                if (isCancelled() || counter > 200) {
+                            for (int i = 0; i < dialog1.getNumberOfOpsIncrease(); i++) {
+                                if (isCancelled() || counter > 1000) {
                                     counter = 0;
                                     break;
                                 }
                                 chanceOfP = dialog1.getChanceOfP() + j * dialog1.getChanceOfPIncr();
                                 ops = dialog1.getMinOps() + i * dialog1.getOpsIncrement();
-                                boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength());
+                                boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode());
                                 if (!isValid) {
                                     counter++;
                                     i--;

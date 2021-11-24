@@ -23,6 +23,7 @@ public class SPQGenerator implements Callable, Runnable {
     private int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
     private final boolean shutdown = false;
+    private int mode = 0;
 
     public SPQGenerator(int size, int chanceOfP) {
         this.size = size;
@@ -78,7 +79,7 @@ public class SPQGenerator implements Callable, Runnable {
 
         counter = 0;
         while (!check && !shutdown) {
-            check = generateGraph(size, chanceOfP, maxDeg, einfachheit);
+            check = generateGraph(size, chanceOfP, maxDeg, einfachheit, mode);
 
 
         }
@@ -87,12 +88,12 @@ public class SPQGenerator implements Callable, Runnable {
 
     }
 
-    public Boolean generateGraph(int ops, int chanceOfP, int maxDeg, int einfachheit) {
+    public Boolean generateGraph(int ops, int chanceOfP, int maxDeg, int einfachheit, int mode) {
         Boolean check;
         counter++;
         check = true;
 
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(ops, chanceOfP, maxDeg, einfachheit);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(ops, chanceOfP, maxDeg, einfachheit, mode);
         graphgenSplitGraph.generateGraph();
 
 

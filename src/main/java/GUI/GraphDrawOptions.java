@@ -87,4 +87,7 @@ public class GraphDrawOptions extends JDialog {
     {
         PUSH_RELABEL, DIDIMO  // Enumerationskonstanten
     }
+
+
+
 }

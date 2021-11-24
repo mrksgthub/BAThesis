@@ -19,6 +19,14 @@ class GenerateTestDataDialog extends JDialog {
     private JTextField chainLengthText;
     private JLabel maxDegreeLabel;
     private JLabel chainLengthLabel;
+    private JTextField NumChanceOfPIncreaseField;
+    private JTextField NumOpsIncreaseField;
+    private JRadioButton mixDeg3Deg4RadioButton;
+    private JRadioButton onlyDeg3RadioButton;
+    private JRadioButton onlyDeg4RadioButton;
+    private JRadioButton randomRadioButton;
+    
+    private JPanel randomButton;
 
 
     private int chanceOfPIncr;
@@ -30,42 +38,30 @@ class GenerateTestDataDialog extends JDialog {
     private String filePath;
     private int maxDegree;
     private int chainLength;
+    private int numberOfOpsIncrease;
+    private int numOfChanceOfPIncrease;
+    private ButtonGroup buttonGroup1;
 
-    public int getMaxDegree() {
-        return maxDegree;
+
+    public int getMode() {
+        return mode;
     }
 
-    public int getChainLength() {
-        return chainLength;
-    }
-
-    public int getChanceOfPIncr() {
-        return chanceOfPIncr;
-    }
-
-    public int getMinOps() {
-        return minOps;
-    }
-
-    public int getOpsIncrement() {
-        return opsIncrement;
-    }
-
-    public int getChanceOfP() {
-        return chanceOfP;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-
-
+    private int mode;
 
     public GenerateTestDataDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
+
+
+
+        randomRadioButton.setMnemonic(KeyEvent.VK_0);
+        mixDeg3Deg4RadioButton.setMnemonic(KeyEvent.VK_1);
+        onlyDeg3RadioButton.setMnemonic(KeyEvent.VK_2);
+        onlyDeg4RadioButton.setMnemonic(KeyEvent.VK_3);
+
 
 
         graphFolderButton.addActionListener(new ActionListener() {
@@ -103,11 +99,6 @@ class GenerateTestDataDialog extends JDialog {
         });
 
 
-
-
-
-
-
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -136,8 +127,77 @@ class GenerateTestDataDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
+    public static void main(String[] args) {
+        GenerateTestDataDialog dialog = new GenerateTestDataDialog();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
+    }
+
+    public int getNumberOfOpsIncrease() {
+        return numberOfOpsIncrease;
+    }
+
+    public int getNumOfChanceOfPIncrease() {
+        return numOfChanceOfPIncrease;
+    }
+
+    public int getMaxDegree() {
+        return maxDegree;
+    }
+
+    public int getChainLength() {
+        return chainLength;
+    }
+
+    public int getChanceOfPIncr() {
+        return chanceOfPIncr;
+    }
+
+    public int getMinOps() {
+        return minOps;
+    }
+
+    public int getOpsIncrement() {
+        return opsIncrement;
+    }
+
+    public int getChanceOfP() {
+        return chanceOfP;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
     private void onOK() {
         // add your code here
+
+
+        int selection = buttonGroup1.getSelection().getMnemonic();
+
+        switch (selection) {
+            case KeyEvent.VK_0 -> mode = 0;
+            case KeyEvent.VK_1 -> mode = 1;
+            case KeyEvent.VK_2 -> mode = 2;
+            case KeyEvent.VK_3 -> mode = 3;
+            default -> throw new IllegalStateException("Button doesn't exist");
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         try {
             minOps = Integer.parseInt(minimumOpsField.getText());
@@ -148,6 +208,30 @@ class GenerateTestDataDialog extends JDialog {
             JOptionPane.showMessageDialog(null, "Nur Werte von 0+" + Integer.MAX_VALUE + " möglich");
             e.printStackTrace();
             minOps = -1;
+        }
+
+
+        try {
+            numOfChanceOfPIncrease = Integer.parseInt(NumChanceOfPIncreaseField.getText());
+            if (numOfChanceOfPIncrease < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0+ möglich");
+            e.printStackTrace();
+            numOfChanceOfPIncrease = -1;
+        }
+
+
+        try {
+            numberOfOpsIncrease = Integer.parseInt(NumOpsIncreaseField.getText());
+            if (numberOfOpsIncrease < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0+ möglich");
+            e.printStackTrace();
+            numberOfOpsIncrease = -1;
         }
 
 
@@ -172,7 +256,6 @@ class GenerateTestDataDialog extends JDialog {
             e.printStackTrace();
             chanceOfP = -1;
         }
-
 
 
         try {
@@ -210,62 +293,19 @@ class GenerateTestDataDialog extends JDialog {
         }
 
 
-
-
-
-
-
-
-        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 &&   opsIncrement   >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0)  {
+        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0 && numOfChanceOfPIncrease > 0 && numberOfOpsIncrease > 0) {
             validSettings = true;
             dispose();
 
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        dispose();
+      //  dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        GenerateTestDataDialog dialog = new GenerateTestDataDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 }
 

@@ -2,6 +2,7 @@ package PlanarityAndAngles.Flow;
 
 import PlanarityAndAngles.FaceGenerator;
 import Datastructures.*;
+import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
 import org.jgrapht.alg.flow.PushRelabelMFImpl;
 import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
 import org.jgrapht.graph.DefaultEdge;
@@ -55,6 +56,31 @@ public  class  MaxFlow {
 
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
         MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
+
+        MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
+        flowMap = test33.getFlowMap();
+
+        if (maxFlowValue.getValue() != counter) {
+            throw new IllegalArgumentException("Blub");
+        }
+
+
+        setOrthogonalRep(flowMap, listOfFaces);
+
+    }
+
+    public void runJGraptHFordFulkerson() {
+
+
+        solverSource = new Vertex("solverSource");
+        solverSink = new Vertex("solverSink");
+
+        generateFlowGraph(listOfFaces, flowNetwork);
+
+
+
+         MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(flowNetwork);
+   //     MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
 
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
