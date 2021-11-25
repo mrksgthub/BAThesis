@@ -6,9 +6,11 @@ import java.awt.event.*;
 class GraphGeneratorSettingsDialog extends JDialog {
     int ops = -1;
     int chanceOfP = -1;
+    boolean validSettings = false;
+    ButtonGroup buttonGroup1;
+    private int mode;
     private int maxDeg = -1;
     private int einfachheit = -1;
-    boolean validSettings = false;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -16,27 +18,24 @@ class GraphGeneratorSettingsDialog extends JDialog {
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
+    private JPanel randomButton;
+    private JRadioButton mixDeg3Deg4RadioButton;
+    private JRadioButton onlyDeg3RadioButton;
+    private JRadioButton onlyDeg4RadioButton;
+    private JRadioButton randomRadioButton;
 
-    public int getOps() {
-        return ops;
-    }
-
-    public int getChanceOfP() {
-        return chanceOfP;
-    }
-
-    public int getMaxDeg() {
-        return maxDeg;
-    }
-
-    public int getEinfachheit() {
-        return einfachheit;
-    }
 
     public GraphGeneratorSettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+
+
+        randomRadioButton.setMnemonic(KeyEvent.VK_0);
+        mixDeg3Deg4RadioButton.setMnemonic(KeyEvent.VK_1);
+        onlyDeg3RadioButton.setMnemonic(KeyEvent.VK_2);
+        onlyDeg4RadioButton.setMnemonic(KeyEvent.VK_3);
+
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -73,8 +72,38 @@ class GraphGeneratorSettingsDialog extends JDialog {
         System.exit(0);
     }
 
+    public int getOps() {
+        return ops;
+    }
+
+    public int getChanceOfP() {
+        return chanceOfP;
+    }
+
+    public int getMaxDeg() {
+        return maxDeg;
+    }
+
+    public int getEinfachheit() {
+        return einfachheit;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
     private void onOK() {
         // add your code here
+
+        int selection = buttonGroup1.getSelection().getMnemonic();
+        switch (selection) {
+            case KeyEvent.VK_0 -> mode = 0;
+            case KeyEvent.VK_1 -> mode = 1;
+            case KeyEvent.VK_2 -> mode = 2;
+            case KeyEvent.VK_3 -> mode = 3;
+            default -> throw new IllegalStateException("Button doesn't exist");
+        }
+
 
         try {
             ops = Integer.parseInt(textField1.getText());
@@ -121,28 +150,11 @@ class GraphGeneratorSettingsDialog extends JDialog {
         }
 
 
-
-
-
-
-
-
-
-        if (chanceOfP >= 0 && ops >= 0   &&   (maxDeg >= 2 && maxDeg <= 4)   && (einfachheit >= 1)  ) {
+        if (chanceOfP >= 0 && ops >= 0 && (maxDeg >= 2 && maxDeg <= 4) && (einfachheit >= 1)) {
             validSettings = true;
             dispose();
 
         }
-
-
-
-
-
-
-
-
-
-
 
 
     }

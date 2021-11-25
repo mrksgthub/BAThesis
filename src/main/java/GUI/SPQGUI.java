@@ -110,14 +110,13 @@ class SPQGUI extends JFrame {
                 dialog1.setVisible(true);
 
                 if (dialog1.validSettings) {
-                    opsField.setText("Ops: " + dialog1.ops);
-                    ChanceOfP.setText("Chance of P: " + dialog1.chanceOfP);
+                    opsField.setText("Ops: " + dialog1.getOps());
+                    ChanceOfP.setText("Chance of P: " + dialog1.getChanceOfP());
                     maxDegLabel.setText("Max Deg: " + dialog1.getMaxDeg());
                     chainLenthLabel.setText("Kettenlänge: " + dialog1.getEinfachheit());
 
-                    ops = dialog1.ops;
-                    chanceOfP = dialog1.chanceOfP;
-                    SPQGenerator spqGenerator = new SPQGenerator(ops, chanceOfP, dialog1.getMaxDeg(), dialog1.getEinfachheit());
+
+                    SPQGenerator spqGenerator = new SPQGenerator(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit());
                     worker = new SwingWorker() {
 
                         @Override
@@ -128,7 +127,7 @@ class SPQGUI extends JFrame {
                             spqGenerator.setCounter(0);
                             ;
                             while (!hasValidGraph && !isCancelled()) {
-                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit(), 0);
+                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit(), dialog1.getMode());
 
                             }
                             return null;

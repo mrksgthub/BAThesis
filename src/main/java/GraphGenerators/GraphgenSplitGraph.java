@@ -332,7 +332,7 @@ class GraphgenSplitGraph {
             edge1 = arr1[0];
         }
 
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < einfachheit; i++) {
 
             if (getRandomNumberUsingNextInt(0, 99) < 0) {
                 arr1 = randomnewSNode(edge);
@@ -357,21 +357,6 @@ class GraphgenSplitGraph {
         nodeUmhaengen(oldQNode, newPnode);
         addNodeAsRightChild(newQnode1, newPnode);
 
-        DefaultEdge[] arr1;
-
-        arr1 = randomnewSNode(edge1);
-
-        for (int i = 0; i < 1; i++) {
-
-            if (getRandomNumberUsingNextInt(0, 99) > 50) {
-                DefaultEdge tempEdge1 = arr1[getRandomNumberUsingNextInt(0, 1)];
-                arr1 = randomnewSNode(tempEdge1);
-            } else {
-                DefaultEdge tempEdge2 = arr1[getRandomNumberUsingNextInt(0, 1)];
-                arr1 = randomnewSNode(tempEdge2);
-            }
-        }
-
 
         DefaultEdge edge2 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
         SPQNode oldQNode2 = edgeSPQNodeHashMap.get(edge);
@@ -382,8 +367,41 @@ class GraphgenSplitGraph {
         nodeUmhaengen(oldQNode2, newPnode2);
         addNodeAsLeftChild(newQnode12, newPnode2);
 
-        arr1 = randomnewSNode(edge2);
-        randomnewSNode(arr1[1]);
+
+
+
+
+
+
+
+
+        DefaultEdge[] arr1;
+
+        edge1 = randomnewSNode(edge1)[0];
+        // TODO hier letzte Veräanderung
+        for (int i = 0; i < einfachheit; i++) {
+
+            if (getRandomNumberUsingNextInt(0, 99) < 0) {
+                arr1 = randomnewSNode(edge);
+                edge = arr1[0];
+            } else {
+                arr1 = randomnewSNode(edge1);
+                edge1 = arr1[0];
+            }
+        }
+
+        edge2 = randomnewSNode(edge2)[0];
+        // TODO hier letzte Veräanderung
+        for (int i = 0; i < einfachheit; i++) {
+
+            if (getRandomNumberUsingNextInt(0, 99) < 0) {
+                arr1 = randomnewSNode(edge);
+                edge = arr1[0];
+            } else {
+                arr1 = randomnewSNode(edge2);
+                edge1 = arr1[0];
+            }
+        }
 
     }
 

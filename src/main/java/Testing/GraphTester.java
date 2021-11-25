@@ -272,6 +272,8 @@ public class GraphTester {
 
 
                 tree = spqImporter.runFromArray();
+                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                treeVertexFaceGenerator.generateFaces();
                 startTime = System.nanoTime();
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
                 didimoRepresentability.run(tree.getRoot());
@@ -296,9 +298,12 @@ public class GraphTester {
 
         if (tamassiaMinCostAllowed) {
             tree = spqImporter.runFromArray();
+
             DescriptiveStatistics statsTamassiaMinFlow = new DescriptiveStatistics();
 
             for (int i = 0; i < runs; i++) {
+                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                treeVertexFaceGenerator.generateFaces();
                 startTime = System.nanoTime();
 
                 MinFlow tamassiaRepresentation = new MinFlow(tree, root, treeVertexFaceGenerator);
@@ -325,6 +330,8 @@ public class GraphTester {
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
+                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                treeVertexFaceGenerator.generateFaces();
                 startTime = System.nanoTime();
                 MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
@@ -353,6 +360,8 @@ public class GraphTester {
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
+                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                treeVertexFaceGenerator.generateFaces();
                 startTime = System.nanoTime();
                 MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.runJGraptHFordFulkerson();
