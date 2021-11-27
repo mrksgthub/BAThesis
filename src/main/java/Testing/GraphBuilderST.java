@@ -14,10 +14,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class GraphBuilderST {
 
     private final String filePathString;
+    static int counter = 0;
 
 
     public GraphBuilderST(String filePathString) {
@@ -93,7 +96,7 @@ public class GraphBuilderST {
     }
 
 
-    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int einfachheit, int mode) {
+    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int einfachheit, int mode, boolean isInvalidAllowed) {
 
 
         //   runs = 30;
@@ -105,7 +108,7 @@ public class GraphBuilderST {
         boolean valid = spqGenerator.generateGraph(OPS, CHANCE_OF_P, maxDeg, einfachheit, mode);
 
 
-        if (valid) {
+        if (valid || isInvalidAllowed) {
             tree = spqGenerator.getTree();
             root = spqGenerator.getRoot();
 
@@ -118,9 +121,10 @@ public class GraphBuilderST {
             int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
             int nodes = graph.vertexSet().size();
 
+
             SPQExporter spqExporter = new SPQExporter();
             File filePath = new File(filePathString,
-                    nodes + "N" + faces + "F.dot");
+                    nodes + "N" + faces + "F"+ "D"+counter +".dot");
 
             spqExporter.run(root, filePath.toString());
             return true;

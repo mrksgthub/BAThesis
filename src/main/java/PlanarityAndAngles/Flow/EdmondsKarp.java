@@ -19,7 +19,7 @@ class EdmondsKarp extends MaxFlowImp {
 
     }
 
-    public void run() {
+    public boolean run() {
 
 
         int maxflow = 0;
@@ -53,6 +53,7 @@ class EdmondsKarp extends MaxFlowImp {
             count++;
         }
 
+        return false;
     }
 
 

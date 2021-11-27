@@ -5,15 +5,6 @@ import java.util.HashMap;
 public class SPQPNode extends SPQNode {
 
 
-    private int inDegreeCounterStart;
-    private int inDegreeCounterSink;
-    private int outDegreeCounterStart;
-    private int outDegreeCounterSink;
-
-    private double kul;
-    private double kur;
-    private double kvl;
-    private double kvr;
     private int alphaul;
     private int alphavl;
     private int alphaur;
@@ -37,7 +28,6 @@ public class SPQPNode extends SPQNode {
     public void generateQstarChildren() {
         for (SPQNode node :
                 spqChildren) {
-
             if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.spqChildren.size() == 0) {
                 SPQNode newQ = new SPQQNode("Qstar" + node.getName());
                 newQ.setParent(this);
@@ -90,13 +80,11 @@ public class SPQPNode extends SPQNode {
             double ML = leftSNode.getRepIntervalUpperBound();
             double MR = rightSNode.getRepIntervalUpperBound();
 
+            int inDegreeCounterStart = startNodes.size();
+            int inDegreeCounterSink = sinkNodes.size();
 
-            //TODO wurde geändert von dem auskommentierten zu diesem hier
-            inDegreeCounterStart = startNodes.size();
-            inDegreeCounterSink = sinkNodes.size();
-
-            outDegreeCounterStart = startVertex.adjacentVertices.size() - inDegreeCounterStart;
-            outDegreeCounterSink = sinkVertex.adjacentVertices.size() - inDegreeCounterSink;
+            int outDegreeCounterStart = startVertex.adjacentVertices.size() - inDegreeCounterStart;
+            int outDegreeCounterSink = sinkVertex.adjacentVertices.size() - inDegreeCounterSink;
 
 
             if (inDegreeCounterStart == 2 && inDegreeCounterSink == 2) { // I_2O_alphaBeta
@@ -132,12 +120,10 @@ public class SPQPNode extends SPQNode {
 
                 // Was tun falls erstes oder zweites child eine Q node ist
                 if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3ll
-
                     pdU = 0;
                     pdV = 0;
                 } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) //I3rr
-                { // FIxbar indem man Q2 zu nem Qstar macht
-
+                {
                     pdU = 1;
                     pdV = 1;
                 } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3lr
@@ -150,7 +136,6 @@ public class SPQPNode extends SPQNode {
                     pdU = 1;
                     pdV = 0;
 
-                    //    System.out.println("I_3rl reverse" + this.getName());
 
                 }
                 double lBound = mL - MR;
@@ -160,8 +145,6 @@ public class SPQPNode extends SPQNode {
 
                     repIntervalLowerBound = Math.max(mL - 1, mR + 2) - (pdU + pdV) / 2;
                     repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
-
-                    //     System.out.println("I3_dd" + " " + this.getName());
 
                 } else {
                     System.out.println("No rectalinear I3dd'" + " " + this.getName());
@@ -178,12 +161,8 @@ public class SPQPNode extends SPQNode {
                     //TODO wurde geändert
                     pd = (spqChildren.get(0).startNodes.size() == 2) ? 0 : 1;
 
-
-                    //        System.out.println("I_3dOab reverse" + this.getName());
-
                 } else { // check Sink
                     pd = (spqChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
-                    //       System.out.println("NI_3dOab normal" + " " + this.getName());
 
                 }
 
@@ -198,7 +177,6 @@ public class SPQPNode extends SPQNode {
                     System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
                     return false;
                 }
-
             }
 
 
@@ -311,12 +289,12 @@ public class SPQPNode extends SPQNode {
             int alphavr = 9999;
 
             // äquivalent zu outdeg(w)
-            kul = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
-            kur = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
+            double kul = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
+            double kur = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
 
 
-            kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
-            kvr = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
+            double kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
+            double kvr = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
 
             int[] arrU;
             if (startVertex.adjacentVertices.size() == 4) {

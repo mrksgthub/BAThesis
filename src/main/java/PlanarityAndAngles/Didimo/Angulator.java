@@ -1,9 +1,19 @@
 package PlanarityAndAngles.Didimo;
 
-import Datastructures.*;
+import Datastructures.PlanarGraphFace;
+import Datastructures.SPQNode;
+import Datastructures.TupleEdge;
+import Datastructures.Vertex;
+import Helperclasses.DFSIterator;
+import PlanarityAndAngles.Flow.MaxFlow;
+import PlanarityAndAngles.Flow.MinFlow;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.DirectedWeightedMultigraph;
 
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Angulator {
 
@@ -17,9 +27,8 @@ public class Angulator {
     /**
      * Wandelt die berechneten Spiralitäten in Winkel um und fügt diese den orthogonalen Repräsentationen der Facetten
      * hinzu.
-     *
      */
-    public void run(SPQNode root, List<PlanarGraphFace<Vertex>> listOfFaces)  {
+    public void runSpiralityAlg(SPQNode root, List<PlanarGraphFace<Vertex>> listOfFaces) {
 
         // initialize
         HashMap<TupleEdge<Vertex, Vertex>, Integer> pairIntegerMap = new HashMap<>(); // Diese Map wird alle Kanten und deren Winkel enthalten.
@@ -34,31 +43,15 @@ public class Angulator {
         System.out.println("Winkel Section  :" + elapsedTime);
 
         long startTime3 = System.currentTimeMillis();
-      //  for (TupleEdge<Vertex, Vertex> pair :
-        //        treeVertexFaceGenerator.getAdjFaces2().keySet()) {
-       //     pairIntegerMap.putIfAbsent(pair, 0);
-      //  }
 
         // Füge Winkel zu den Faces hinzu
         for (PlanarGraphFace<Vertex> face : listOfFaces
         ) {
             for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
                 pairIntegerMap.putIfAbsent(pair, 0);
-            //    face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
                 face.setEdgeAngle(pair, pairIntegerMap.get(pair));
             }
         }
-
-    /*    for (PlanarGraphFace<Vertex, DefaultEdge> face : treeVertexFaceGenerator.getPlanarGraphFaces()
-        ) {
-            for (TupleEdge<Vertex, Vertex> pair : face.getOrthogonalRep().keySet()) {
-                face.getOrthogonalRep().put(pair, pairIntegerMap.get(pair));
-            }
-        }*/
-
-
-
-
 
 
         long stopTime3 = System.currentTimeMillis();
@@ -69,25 +62,49 @@ public class Angulator {
 
     private void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
-        for (SPQNode node :
+    /*    for (SPQNode node :
                 root.getSpqChildren()) {
             winkelHinzufuegen(node, hashmap);
         }
         if (root.getSpqChildren().size() > 1) { // IsRoot IS WICHTIG!!
             root.computeAngles(hashmap);
+        }*/
+
+        Deque<SPQNode> s = DFSIterator.buildPostOrderStackPlanarityTest(root);
+
+        while (!s.isEmpty()) {
+
+            SPQNode node = s.pop();
+            if (node.getSpqChildren().size() > 1) {
+                node.computeAngles(hashmap);
+            }
         }
 
     }
 
-    public void computeSpirality(SPQNode root) {
+    private void computeSpirality(SPQNode root) {
 
-        root.setSpiralityOfChildren();
-
-        for (SPQNode node : root.getSpqChildren()
+    /*    for (SPQNode node : root.getSpqChildren()
         ) {
             computeSpirality(node);
+        }*/
+
+        Deque<SPQNode> s = DFSIterator.buildPreOrderStack(root);
+
+        while (!s.isEmpty()) {
+            s.pop().setSpiralityOfChildren();
         }
 
     }
+
+    public void runMaxFlowAngles(MaxFlow flowAlg) {
+        flowAlg.setOrthogonalRep();
+    }
+
+    public void runMinFlowAngles(MinFlow flowAlg) {
+        flowAlg.setOrthogonalRep();
+    }
+
+
 
 }

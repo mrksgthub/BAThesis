@@ -19,7 +19,7 @@ class GenerateTestDataDialog extends JDialog {
     private JTextField chainLengthText;
     private JLabel maxDegreeLabel;
     private JLabel chainLengthLabel;
-    private JTextField NumChanceOfPIncreaseField;
+    private JTextField NumChanceOfPIncrementsField;
     private JTextField NumOpsIncreaseField;
     private JRadioButton mixDeg3Deg4RadioButton;
     private JRadioButton onlyDeg3RadioButton;
@@ -27,6 +27,7 @@ class GenerateTestDataDialog extends JDialog {
     private JRadioButton randomRadioButton;
     
     private JPanel randomButton;
+    private JCheckBox allowInvalidGraphsCheckbox;
 
 
     private int chanceOfPIncr;
@@ -41,6 +42,12 @@ class GenerateTestDataDialog extends JDialog {
     private int numberOfOpsIncrease;
     private int numOfChanceOfPIncrease;
     private ButtonGroup buttonGroup1;
+
+    public boolean isAllowInvalidGraphs() {
+        return allowInvalidGraphs;
+    }
+
+    private boolean allowInvalidGraphs;
 
 
     public int getMode() {
@@ -184,21 +191,7 @@ class GenerateTestDataDialog extends JDialog {
             default -> throw new IllegalStateException("Button doesn't exist");
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
         try {
             minOps = Integer.parseInt(minimumOpsField.getText());
             if (minOps < 0) {
@@ -212,7 +205,7 @@ class GenerateTestDataDialog extends JDialog {
 
 
         try {
-            numOfChanceOfPIncrease = Integer.parseInt(NumChanceOfPIncreaseField.getText());
+            numOfChanceOfPIncrease = Integer.parseInt( NumChanceOfPIncrementsField.getText());
             if (numOfChanceOfPIncrease < 0) {
                 throw new NumberFormatException();
             }
@@ -247,24 +240,27 @@ class GenerateTestDataDialog extends JDialog {
         }
 
         try {
-            chanceOfP = Integer.parseInt(chanceOfPField.getText());
+
+            double v = Double.parseDouble(chanceOfPField.getText()) * 1000;
+            chanceOfP = (int) v;
             if (chanceOfP < 0) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nur Werte von 0+ möglich");
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0.0000+ möglich");
             e.printStackTrace();
             chanceOfP = -1;
         }
 
 
         try {
-            chanceOfPIncr = Integer.parseInt(chanceOfPIncrField.getText());
+            double v = Double.parseDouble(chanceOfPIncrField.getText()) * 1000;
+            chanceOfPIncr = (int) v;;
             if (chanceOfPIncr < 0) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nur Werte von 0+ möglich");
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0.0000+ möglich");
             e.printStackTrace();
             chanceOfPIncr = -1;
         }
@@ -292,6 +288,7 @@ class GenerateTestDataDialog extends JDialog {
             chainLength = -1;
         }
 
+        allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
         if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0 && numOfChanceOfPIncrease > 0 && numberOfOpsIncrease > 0) {
             validSettings = true;

@@ -133,9 +133,11 @@ public class SPQGenerator implements Callable, Runnable {
         System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
 
 
+
+
         boolean tamassiaValid = true;
 
-        try {
+    /*    try {*/
             //    Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
             FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces(); // counterclockwise = inner, clockwise = outerFacette
@@ -145,18 +147,18 @@ public class SPQGenerator implements Callable, Runnable {
             //   treeVertexFaceGenerator.generateCapacities();
 
             System.out.println("Tamassia Start");
-            MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-           test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+            MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
+            tamassiaValid = test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
            // test.runJGraptHImplementation();
 
             // Zeit2:
             long stopTime2 = System.currentTimeMillis();
             long elapsedTime2 = stopTime2 - startTime2;
             // logger.info("Tamassia Zeit: " + elapsedTime2);
-        } catch (Exception e) {
+  /*      } catch (Exception e) {
             tamassiaValid = false;
             System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
-        }
+        }*/
 
         assert (tamassiaValid == check);
         // assert(false);
@@ -174,6 +176,9 @@ public class SPQGenerator implements Callable, Runnable {
 
             }
         }
+
+
+
         return check;
     }
 

@@ -1,12 +1,12 @@
 package PlanarityAndAngles;
 
-import PlanarityAndAngles.Didimo.Angulator;
-import PlanarityAndAngles.Didimo.DidimoRepresentability;
-import PlanarityAndAngles.Flow.MaxFlow;
 import Datastructures.SPQNode;
 import Datastructures.SPQStarTree;
 import Datastructures.Vertex;
 import GUI.GraphDrawOptions;
+import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Didimo.DidimoRepresentability;
+import PlanarityAndAngles.Flow.MaxFlow;
 import org.jgrapht.graph.DefaultEdge;
 
 import java.util.ArrayList;
@@ -68,9 +68,9 @@ public class PlanarityAndAngleDistributorRunner {
 
     public void run(boolean wasAlgorithmnSelected, GraphDrawOptions.WinkelAlgorithmus algorithmm) {
         if (wasAlgorithmnSelected) {
-           // embedding = new Hashtable<>();
-          //  Embedder embedder = new Embedder(embedding);
-           // embedder.run(root);
+            // embedding = new Hashtable<>();
+            //  Embedder embedder = new Embedder(embedding);
+            // embedder.run(root);
 
 
             embedding = tree.getVertexToAdjecencyListMap();
@@ -82,7 +82,7 @@ public class PlanarityAndAngleDistributorRunner {
             if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
 
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-               boolean isValid = didimoRepresentability.run(tree.getRoot());
+                boolean isValid = didimoRepresentability.run(tree.getRoot());
 
                 if (!isValid) {
                     throw new RuntimeException("inValidGraph");
@@ -90,14 +90,21 @@ public class PlanarityAndAngleDistributorRunner {
 
                 Angulator angulator = new Angulator();
                 try {
-                    angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+                    angulator.runSpiralityAlg(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
-                MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
+                MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
+                test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
+                Angulator angulator = new Angulator();
+                try {
+                    angulator.runMaxFlowAngles(test);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
             }
             long stopTime3 = System.currentTimeMillis();
             time = stopTime3 - startTime3;

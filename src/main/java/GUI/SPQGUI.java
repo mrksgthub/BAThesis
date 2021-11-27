@@ -126,7 +126,7 @@ class SPQGUI extends JFrame {
 
                             spqGenerator.setCounter(0);
                             ;
-                            while (!hasValidGraph && !isCancelled()) {
+                            while ((!hasValidGraph || dialog1.isAllowInvalidGraphs()) && !isCancelled()) {
                                 hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit(), dialog1.getMode());
 
                             }
@@ -318,16 +318,22 @@ class SPQGUI extends JFrame {
                             }
                             counter = 0;
                             for (int i = 0; i < dialog1.getNumberOfOpsIncrease(); i++) {
-                                if (isCancelled() || counter > 1000) {
+                                if (isCancelled() || counter == 1000) { // hier stand || counter
                                     counter = 0;
                                     break;
                                 }
                                 chanceOfP = dialog1.getChanceOfP() + j * dialog1.getChanceOfPIncr();
                                 ops = dialog1.getMinOps() + i * dialog1.getOpsIncrement();
-                                boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode());
-                                if (!isValid) {
+                                boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
+
+                                if (!isValid && !dialog1.isAllowInvalidGraphs()) {
                                     counter++;
+                                    updateText("N: "+ops+ "P: "+ chanceOfP + "Versuche:  " + counter);
                                     i--;
+
+                                } else {
+
+                                    updateText("Latzer gültiger Graph N:"+ops+ "P: "+ chanceOfP);
                                 }
                             }
 

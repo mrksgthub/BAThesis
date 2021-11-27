@@ -26,6 +26,7 @@ class graphTesterDialog extends JDialog {
     private int maxSize;
     private int minSize;
     private boolean tamassiaMinCostAllowed;
+    private String graphData;
 
     public graphTesterDialog() {
         setContentPane(contentPane);
@@ -96,7 +97,8 @@ class graphTesterDialog extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fc = new JFileChooser();
-                fc.setSelectedFile(new File("graphData" + DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss").format(LocalDateTime.now()) + ".csv"));
+                graphData = (graphFolder == null)?"graphData" : graphFolder[0].getPath();
+                fc.setSelectedFile(new File(graphData + DateTimeFormatter.ofPattern("yyyy-MM-dd-HHmmss").format(LocalDateTime.now()) + ".csv"));
                 int returnVal = fc.showSaveDialog(contentPane);
                 if (returnVal == JFileChooser.APPROVE_OPTION) {
                     dataFile = fc.getSelectedFile();

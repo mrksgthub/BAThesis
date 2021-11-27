@@ -1,12 +1,10 @@
 package PlanarityAndAngles.Flow;
 
-import PlanarityAndAngles.FaceGenerator;
 import Datastructures.*;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
 import org.jgrapht.graph.DefaultDirectedWeightedGraph;
-import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
 
 import java.util.HashMap;
@@ -15,47 +13,43 @@ import java.util.Map;
 
 public class MinFlow {
 
-    private final SPQNode root;
-    private final SPQStarTree tree;
-    private final FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator;
+    private List<PlanarGraphFace<Vertex>> listOfFaces;
     private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
     private final Map<Vertex, Integer> supplyMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
+    private MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
 
 
-    public MinFlow(SPQStarTree tree, SPQNode root, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator) {
-        this.tree = tree;
-        this.root = root;
-        this.treeVertexFaceGenerator = treeVertexFaceGenerator;
+    public MinFlow(List<PlanarGraphFace<Vertex>> listOfFaces) {
+        this.listOfFaces = listOfFaces;
     }
 
-    public void run(List<PlanarGraphFace<Vertex>> planarGraphFaces) throws Exception {
+    public boolean run(List<PlanarGraphFace<Vertex>> planarGraphFaces) throws Exception {
 
         boolean tamassiaValid = true;
-        MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
         try {
-
            generateFlowNetworkLayout(planarGraphFaces);
             minimumCostFlow = generateCapacities();
-
-            setOrthogonalRep(minimumCostFlow, planarGraphFaces);
         } catch (Exception e) {
             tamassiaValid = false;
             System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
-            throw new Exception("IllegalGraph");
-        }
 
+            return false;
+        }
+        return true;
+
+       // setOrthogonalRep();
 
     }
 
-    private void setOrthogonalRep(MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
+    public void setOrthogonalRep() {
 
 
         // Erstelle Map um die Kante y zu beommen, welche in Facette x auf Knoten z endet.
         HashMap<PlanarGraphFace<Vertex>, HashMap<Vertex, TupleEdge<Vertex, Vertex>>> map = new HashMap<>();
 
-        for (PlanarGraphFace<Vertex> face : planarGraphFaces
+        for (PlanarGraphFace<Vertex> face : listOfFaces
         ) {
             HashMap<Vertex, TupleEdge<Vertex, Vertex>> pairVectorMap = new HashMap<>();
             map.put(face, pairVectorMap);

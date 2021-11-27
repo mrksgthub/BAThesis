@@ -14,7 +14,7 @@ class GraphgenSplitGraph {
 
 
     private final DirectedMultigraph<Vertex, DefaultEdge> multigraph = new DirectedMultigraph<>(Vertex.getvSupplier, SupplierUtil.createDefaultEdgeSupplier(), false);
-    private final int operations;
+    private final int numberOfNodes;
     private final List<DefaultEdge> edges = new ArrayList<>();
     private final HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
     private SPQPNode root;
@@ -25,9 +25,9 @@ class GraphgenSplitGraph {
     private int mode;
 
 
-    private GraphgenSplitGraph(int operations) {
+    private GraphgenSplitGraph(int numberOfNodes) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
-        this.operations = operations;
+        this.numberOfNodes = numberOfNodes;
         root = new SPQPNode("Proot");
         root.setToRoot();
 
@@ -59,8 +59,8 @@ class GraphgenSplitGraph {
 
     }
 
-    public GraphgenSplitGraph(int operations, int chanceOfP, int maxDeg, int einfachheit, int mode) {
-        this(operations);
+    public GraphgenSplitGraph(int numberOfNodes, int chanceOfP, int maxDeg, int einfachheit, int mode) {
+        this(numberOfNodes);
         this.chanceOfP = chanceOfP;
         this.maxDeg = maxDeg;
         this.einfachheit = einfachheit;
@@ -93,7 +93,7 @@ class GraphgenSplitGraph {
 
         DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
-        if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+        if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
             //newInitialPNode(edge);
             newInitialPNodeGuaranteed(edge);
         } else {
@@ -102,12 +102,12 @@ class GraphgenSplitGraph {
 
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < operations; i++) {
+        for (int i = 0; i < numberOfNodes; i++) {
             edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
          /*   int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));*/
-            if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+            if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
                 if (multigraph.degreeOf(multigraph.getEdgeSource(edge)) < 3 && multigraph.degreeOf(multigraph.getEdgeTarget(edge)) < 3) {
                     if (mode == 1) {
                         if (getRandomNumberUsingNextInt(0, 100) < 50) {
@@ -155,7 +155,7 @@ class GraphgenSplitGraph {
 
         DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
-        if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+        if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
             //   newInitialPNode(edge);
             newInitialPNodeGuaranteed(edge);
         } else {
@@ -164,12 +164,13 @@ class GraphgenSplitGraph {
 
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
 
-        for (int i = 0; i < operations; i++) {
+        for (int i = 0; i < numberOfNodes; i++) {
             edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
             int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));
-            if (getRandomNumberUsingNextInt(0, 99) < chanceOfP) {
+
+            if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
                 if (degreeOfedgeSource < maxDeg && degreeOfedgeSink < maxDeg) {
                     randomnewPNode(edge, einfachheit);
                     i += einfachheit + 2;
@@ -399,7 +400,7 @@ class GraphgenSplitGraph {
                 edge = arr1[0];
             } else {
                 arr1 = randomnewSNode(edge2);
-                edge1 = arr1[0];
+                edge2 = arr1[0];
             }
         }
 

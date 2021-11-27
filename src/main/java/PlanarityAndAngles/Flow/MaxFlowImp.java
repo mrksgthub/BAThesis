@@ -71,7 +71,7 @@ abstract class  MaxFlowImp {
 
     }
 
-    public abstract void run();
+    public abstract boolean run();
 
     class Edge {
         DefaultWeightedEdge edge;

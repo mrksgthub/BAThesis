@@ -1,6 +1,5 @@
 package PlanarityAndAngles.Flow;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
@@ -41,7 +40,7 @@ class PushRelabel extends MaxFlowImp {
     }
 
 
-    public void run() {
+    public boolean run() {
         // initialisiere Arrays
         heights = new int[n];
         heights[source] = n;
@@ -83,8 +82,14 @@ class PushRelabel extends MaxFlowImp {
         }
 
 
-        if (y != x || x != excessFlow[sink]) {
+   /*     if (y != x || x != excessFlow[sink]) {
             throw new RuntimeException("Ungültiges Netzwerk:" + x + y + excessFlow[sink]);
+        }*/
+
+        if (y != x || x != excessFlow[sink]) {
+            return false;
+        } else {
+            return true;
         }
 
 

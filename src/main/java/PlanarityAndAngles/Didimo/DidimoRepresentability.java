@@ -1,6 +1,9 @@
 package PlanarityAndAngles.Didimo;
 
 import Datastructures.SPQNode;
+import Helperclasses.DFSIterator;
+
+import java.util.Deque;
 
 public class DidimoRepresentability {
 
@@ -65,6 +68,27 @@ public class DidimoRepresentability {
 
     public Boolean computeRepresentabilityIntervals(SPQNode root, Boolean check) {
 
+
+       Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+
+        while (!stack.isEmpty()) {
+
+            SPQNode node = stack.pop();
+            if (node.getSpqChildren().size() != 0 && !node.isRoot()) {
+                if (!node.calculateRepresentabilityInterval()) {
+                    return false;
+                }
+            }
+
+        }
+        return true;
+
+    }
+
+
+
+    public Boolean computeRepresentabilityIntervals2(SPQNode root, Boolean check) {
+
         boolean temp;
         for (SPQNode node : root.getSpqChildren()
         ) {
@@ -81,9 +105,6 @@ public class DidimoRepresentability {
         }
         return check;
     }
-
-
-
 
 
 

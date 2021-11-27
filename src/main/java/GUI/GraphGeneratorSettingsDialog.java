@@ -23,7 +23,12 @@ class GraphGeneratorSettingsDialog extends JDialog {
     private JRadioButton onlyDeg3RadioButton;
     private JRadioButton onlyDeg4RadioButton;
     private JRadioButton randomRadioButton;
+    private JCheckBox allowInvalidGraphsCheckbox;
+    private boolean allowInvalidGraphs;
 
+    public boolean isAllowInvalidGraphs() {
+        return allowInvalidGraphs;
+    }
 
     public GraphGeneratorSettingsDialog() {
         setContentPane(contentPane);
@@ -117,12 +122,12 @@ class GraphGeneratorSettingsDialog extends JDialog {
         }
 
         try {
-            chanceOfP = Integer.parseInt(textField2.getText());
+            chanceOfP = (int) Double.parseDouble(textField2.getText())*100000;
             if (chanceOfP < 0) {
                 throw new NumberFormatException();
             }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nur Werte von 0-100 möglich");
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0,000-100,0 möglich");
             e.printStackTrace();
             chanceOfP = -1;
         }
@@ -148,6 +153,8 @@ class GraphGeneratorSettingsDialog extends JDialog {
             e.printStackTrace();
             einfachheit = -1;
         }
+
+        allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
 
         if (chanceOfP >= 0 && ops >= 0 && (maxDeg >= 2 && maxDeg <= 4) && (einfachheit >= 1)) {

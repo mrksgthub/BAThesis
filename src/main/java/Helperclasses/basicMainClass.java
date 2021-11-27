@@ -8,6 +8,7 @@ import Datastructures.SPQStarTree;
 import Datastructures.Vertex;
 import GraphGenerators.SPQGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
+import PlanarityAndAngles.Flow.MinFlow;
 import Visualizer.*;
 import org.antlr.v4.runtime.misc.Pair;
 import org.graphstream.graph.Graph;
@@ -38,7 +39,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(1000, 20);
+        SPQGenerator spqGenerator = new SPQGenerator(100, 30);
         spqGenerator.run();
 
 
@@ -103,7 +104,7 @@ class basicMainClass {
         Angulator angulator = new Angulator();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         long startTime3 = System.currentTimeMillis();
-        angulator.run(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
+        angulator.runSpiralityAlg(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime3 = System.currentTimeMillis();
         long elapsedTime3 = stopTime3 - startTime3;
 
@@ -123,12 +124,17 @@ class basicMainClass {
 
 
         long startTime2 = System.currentTimeMillis();
-        MaxFlow test = new MaxFlow(tree, treeVertexFaceGenerator.getPlanarGraphFaces());
+        MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
       //  test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
-        test.runJGraptHImplementation();
+       test.runJGraptHImplementation();
+        angulator.runMaxFlowAngles(test);
+
+        MinFlow tamassiaRepresentation = new MinFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
+    //    tamassiaRepresentation.run(treeVertexFaceGenerator.getPlanarGraphFaces());
+     //   angulator.runMinFlowAngles(tamassiaRepresentation);
 
 
         stopTime = System.currentTimeMillis();
