@@ -131,7 +131,7 @@ public class MaxFlow {
         simple.addVertex(solverSink);
 
         // solverSource to Vertex
-        int neighbors;
+        int adjecentVs;
         counter = 0;
 
         for (PlanarGraphFace<Vertex> face : listOfFaces
@@ -140,12 +140,12 @@ public class MaxFlow {
             for (TupleEdge<Vertex, Vertex> tuple : face.getEdgeList()
             ) {
                 if (!simple.containsVertex(tuple.getLeft())) {
-                    neighbors = tuple.getLeft().getAdjacentVertices().size();
+                    adjecentVs = tuple.getLeft().getAdjacentVertices().size();
 
                     simple.addVertex(tuple.getLeft());
                     DefaultWeightedEdge e1 = simple.addEdge(solverSource, tuple.getLeft());
-                    simple.setEdgeWeight(e1, 4 - neighbors);
-                    counter += 4 - neighbors;
+                    simple.setEdgeWeight(e1, 4 - adjecentVs);
+                    counter += 4 - adjecentVs;
                 }
             }
         }
@@ -172,9 +172,9 @@ public class MaxFlow {
         // Vertex zu Face
         for (int j = 0; j < edgeList.size(); j++) {
             Vertex vertex = edgeList.get(j).getLeft();
-            neighbors = vertex.getAdjacentVertices().size();
+            adjecentVs = vertex.getAdjacentVertices().size();
             edge = simple.addEdge(vertex, face);
-            simple.setEdgeWeight(edge, 4 - neighbors);
+            simple.setEdgeWeight(edge, 4 - adjecentVs);
         }
 
 
@@ -200,9 +200,9 @@ public class MaxFlow {
             // Vertex zu Face
             for (int j = 0; j < edgeList.size(); j++) {
                 Vertex vertex = edgeList.get(j).getLeft();
-                neighbors = vertex.getAdjacentVertices().size();
+                adjecentVs = vertex.getAdjacentVertices().size();
                 edge = simple.addEdge(vertex, face);
-                simple.setEdgeWeight(edge, 4 - neighbors);
+                simple.setEdgeWeight(edge, 4 - adjecentVs);
             }
 
         }
