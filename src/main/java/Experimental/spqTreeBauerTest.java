@@ -47,7 +47,7 @@ class spqTreeBauerTest {
             graphSPQNodeEdges.addVertex(vertex);
         }
         for (DefaultEdge edge : graph.edgeSet()) {
-            SPQQNode subNode = new SPQQNode(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), false);
+            SPQQNode subNode = new SPQQNode(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), true);
             SPQQNode node = new SPQQNode(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), true);
             graphSPQNodeEdges.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), new SPQEdge(node));
             SPQTree.addVertex(node);

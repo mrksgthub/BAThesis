@@ -86,7 +86,7 @@ abstract class  MaxFlowImp {
         Edge(int u, int v) {
             this.u = u;
             this.v = v;
-            source = treeVertexArr[u];
+           source = treeVertexArr[u];
             target = treeVertexArr[v];
             if (networkGraph.containsEdge(source, target)) {
                 edge = networkGraph.getEdge(source, target);

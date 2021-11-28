@@ -124,7 +124,7 @@ public class GraphBuilderST {
 
             SPQExporter spqExporter = new SPQExporter();
             File filePath = new File(filePathString,
-                    nodes + "N" + faces + "F"+ "D"+counter +".dot");
+                    nodes + "N" + faces + "F"+ "D"+counter++ +".dot");
 
             spqExporter.run(root, filePath.toString());
             return true;

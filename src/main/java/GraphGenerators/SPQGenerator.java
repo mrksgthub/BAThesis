@@ -148,8 +148,8 @@ public class SPQGenerator implements Callable, Runnable {
 
             System.out.println("Tamassia Start");
             MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-            tamassiaValid = test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
-           // test.runJGraptHImplementation();
+       //   tamassiaValid = test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
+            tamassiaValid = test.runJGraptHImplementation();
 
             // Zeit2:
             long stopTime2 = System.currentTimeMillis();

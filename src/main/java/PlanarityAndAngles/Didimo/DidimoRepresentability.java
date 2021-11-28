@@ -69,7 +69,7 @@ public class DidimoRepresentability {
     public Boolean computeRepresentabilityIntervals(SPQNode root, Boolean check) {
 
 
-       Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
+       Deque<SPQNode> stack = DFSIterator.buildPostOrderStackPlanarityTest(root);
 
         while (!stack.isEmpty()) {
 

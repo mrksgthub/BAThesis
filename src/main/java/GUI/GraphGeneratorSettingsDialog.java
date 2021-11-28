@@ -122,7 +122,7 @@ class GraphGeneratorSettingsDialog extends JDialog {
         }
 
         try {
-            chanceOfP = (int) Double.parseDouble(textField2.getText())*100000;
+            chanceOfP = (int) Double.parseDouble(textField2.getText())*1000;
             if (chanceOfP < 0) {
                 throw new NumberFormatException();
             }

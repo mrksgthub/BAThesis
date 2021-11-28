@@ -4,12 +4,26 @@ import java.util.HashMap;
 
 public class SPQQNode extends SPQNode {
 
-
-    public SPQQNode(String q) {
+    /**
+     * Für SPQImporter
+     *
+     * @param q
+     * @param b
+     */
+    public SPQQNode(String q, boolean b) {
         super(q);
         nodeType = NodeTypesEnum.NODETYPE.Q;
+        isQ = true;
     }
 
+
+    /**
+     * Für Experimental
+     *
+     * @param source
+     * @param sink
+     * @param b
+     */
     public SPQQNode(Vertex source, Vertex sink, boolean b) {
         super("Q"+source.getName()+sink.getName()+ id++);
         nodeType = NodeTypesEnum.NODETYPE.Q;
@@ -24,11 +38,19 @@ public class SPQQNode extends SPQNode {
         sinkVertex = sink;
     }
 
+    /**
+     * Für Graphgenerator
+     *
+     * @param q
+     * @param edgeSource
+     * @param edgeTarget
+     */
     public SPQQNode(String q, Vertex edgeSource, Vertex edgeTarget) {
         super(q);
         nodeType = NodeTypesEnum.NODETYPE.Q;
         startVertex = edgeSource;
         sinkVertex = edgeTarget;
+        isQ = false;
     }
 
 

@@ -106,7 +106,7 @@ public class DFSIterator {
             out.push(curr);
 
             // push the left and right child of the popped node into the stack
-            if (curr.getSpqChildren().size() != 0) {
+            if (!curr.isNotQNode()) {
 
 
                 for (SPQNode child : curr.getSpqChildren()

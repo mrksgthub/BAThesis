@@ -9,7 +9,7 @@ class PushRelabel extends MaxFlowImp {
 // https://iq.opengenus.org/push-relabel-algorithm/
 // https://github.com/phishman3579/java-algorithms-implementation/blob/master/src/com/jwetherell/algorithms/graph/PushRelabel.java
 // https://en.wikipedia.org/wiki/Push%E2%80%93relabel_maximum_flow_algorithm
-
+// TEST
 
     private int[] excessFlow;
     private int[] heights;
@@ -19,7 +19,6 @@ class PushRelabel extends MaxFlowImp {
 
     public PushRelabel(DirectedWeightedMultigraph<Datastructures.Vertex, DefaultWeightedEdge> networkGraph) {
         super(networkGraph);
-
 
 
     }
@@ -99,10 +98,9 @@ class PushRelabel extends MaxFlowImp {
     private boolean push(Edge edge) {
 
         if (excessFlow[edge.u] > 0 && heights[edge.u] > heights[edge.v]) {
-            double f = Math.min(edge.capacity - edge.flow, excessFlow[edge.u]);
+            int f = (int) (Math.min(edge.capacity - edge.flow, excessFlow[edge.u]));
             edge.flow += f;
             edge.reverse.flow -= f;
-
 
             if (excessFlow[edge.v] == 0 && edge.v != source && edge.v != sink) queue.add(edge.v);
             excessFlow[edge.u] -= f;

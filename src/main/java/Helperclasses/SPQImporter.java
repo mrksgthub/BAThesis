@@ -151,9 +151,9 @@ public class SPQImporter {
 
                 if (line.length() > 2) {
                     switch (line.charAt(2)) {
-                        case 'Q' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQQNode(line.substring(0, line.length() - 1).trim())); //QStarNodes
+                        case 'Q' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQQNode(line.substring(0, line.length() - 1).trim(), true)); //QStarNodes
                         case 'v' -> { // erzeuge die Treevertexes
-                            SPQQNode qNode = new SPQQNode(line.substring(0, line.length() - 1).trim());
+                            SPQQNode qNode = new SPQQNode(line.substring(0, line.length() - 1).trim(), false);
                             int i = line.lastIndexOf("v");
                             // Erzeuge Startvertex der QNode
                             nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), new Vertex(line.substring(0, i).trim()));

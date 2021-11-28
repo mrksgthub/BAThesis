@@ -29,7 +29,7 @@ public class SPQPNode extends SPQNode {
         for (SPQNode node :
                 spqChildren) {
             if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.spqChildren.size() == 0) {
-                SPQNode newQ = new SPQQNode("Qstar" + node.getName());
+                SPQNode newQ = new SPQQNode("Qstar" + node.getName(), false);
                 newQ.setParent(this);
                 newQ.setStartVertex(node.getStartVertex());
                 newQ.setSinkVertex(node.getSinkVertex());

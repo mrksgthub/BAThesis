@@ -27,20 +27,23 @@ public class MinFlow {
 
     public boolean run(List<PlanarGraphFace<Vertex>> planarGraphFaces) throws Exception {
 
-        boolean tamassiaValid = true;
+
+
+           generateFlowNetwork();
+        return runJGraphTMinCostFlowPlanarityTest();
+
+        // setOrthogonalRep();
+
+    }
+
+    public boolean runJGraphTMinCostFlowPlanarityTest() {
         try {
-           generateFlowNetworkLayout(planarGraphFaces);
             minimumCostFlow = generateCapacities();
         } catch (Exception e) {
-            tamassiaValid = false;
             System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
-
             return false;
         }
         return true;
-
-       // setOrthogonalRep();
-
     }
 
     public void setOrthogonalRep() {
@@ -103,13 +106,13 @@ public class MinFlow {
     }
 
 
-    private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout(List<PlanarGraphFace<Vertex>> planarGraphFaces) {
+    public DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> generateFlowNetwork() {
         networkGraph = new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
 
 
-        Vertex outerFace = planarGraphFaces.get(0);
-        List<TupleEdge<Vertex, Vertex>> vertexList = planarGraphFaces.get(0).getEdgeList();
-        networkGraph.addVertex(planarGraphFaces.get(0));
+        Vertex outerFace = listOfFaces.get(0);
+        List<TupleEdge<Vertex, Vertex>> vertexList = listOfFaces.get(0).getEdgeList();
+        networkGraph.addVertex(listOfFaces.get(0));
 
         supplyMap.put(outerFace, -1 * (2 * (vertexList.size()) + 4));
 
@@ -118,7 +121,7 @@ public class MinFlow {
             Vertex temp = vertexList.get(j).getLeft();
             networkGraph.addVertex(temp);
             supplyMap.put(temp, 4);
-            DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(0));
+            DefaultWeightedEdge e = networkGraph.addEdge(temp, listOfFaces.get(0));
             networkGraph.setEdgeWeight(e, 1);
             upperMap.put(e, 4);
             lowerMap.put(e, 1);
@@ -126,11 +129,11 @@ public class MinFlow {
         }
 
         // restliche Facetten
-        for (int i = 1; i < planarGraphFaces.size(); i++) {
+        for (int i = 1; i < listOfFaces.size(); i++) {
 
-            vertexList = planarGraphFaces.get(i).getEdgeList();
-            Vertex innerFace = planarGraphFaces.get(i);
-            networkGraph.addVertex(planarGraphFaces.get(i));
+            vertexList = listOfFaces.get(i).getEdgeList();
+            Vertex innerFace = listOfFaces.get(i);
+            networkGraph.addVertex(listOfFaces.get(i));
             supplyMap.put(innerFace, -1 * (2 * (vertexList.size()) - 4));
 
 
@@ -138,7 +141,7 @@ public class MinFlow {
                 Vertex temp = vertexList.get(j).getLeft();
                 networkGraph.addVertex(temp);
                 supplyMap.put(temp, 4);
-                DefaultWeightedEdge e = networkGraph.addEdge(temp, planarGraphFaces.get(i));
+                DefaultWeightedEdge e = networkGraph.addEdge(temp, listOfFaces.get(i));
                 networkGraph.setEdgeWeight(e, 1);
                 upperMap.put(e, 4);
                 lowerMap.put(e, 1);

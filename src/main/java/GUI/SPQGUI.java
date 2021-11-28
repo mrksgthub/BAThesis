@@ -312,18 +312,18 @@ class SPQGUI extends JFrame {
                         int chanceOfP = dialog1.getChanceOfP();
                         int counter = 0;
 
-                        for (int j = 0; j < dialog1.getNumOfChanceOfPIncrease(); j++) {
+                        for (int j = 0; j < dialog1.getNumOfOpsIncrease(); j++) {
                             if (isCancelled()) {
                                 break;
                             }
                             counter = 0;
-                            for (int i = 0; i < dialog1.getNumberOfOpsIncrease(); i++) {
+                            for (int i = 0; i < dialog1.getNumOfChanceOfPIncrease(); i++) {
                                 if (isCancelled() || counter == 1000) { // hier stand || counter
                                     counter = 0;
                                     break;
                                 }
-                                chanceOfP = dialog1.getChanceOfP() + j * dialog1.getChanceOfPIncr();
-                                ops = dialog1.getMinOps() + i * dialog1.getOpsIncrement();
+                                chanceOfP = dialog1.getChanceOfP() + i * dialog1.getChanceOfPIncr();
+                                ops = dialog1.getMinOps() + j * dialog1.getOpsIncrement();
                                 boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
 
                                 if (!isValid && !dialog1.isAllowInvalidGraphs()) {

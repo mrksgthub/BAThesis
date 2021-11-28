@@ -19,6 +19,12 @@ public abstract class SPQNode {
     double repIntervalLowerBound = 999;
     double repIntervalUpperBound = -990;
     boolean isRoot = false;
+    boolean isQ =false;
+
+    public boolean isNotQNode() {
+        return isQ;
+    }
+
     private SPQNode parent;
     private String name;
 
@@ -86,8 +92,6 @@ public abstract class SPQNode {
     }
 
 
-
-
     public SPQNode getParent() {
         return parent;
     }
@@ -129,7 +133,6 @@ public abstract class SPQNode {
     /**
      * Wird nur in den Blättern des Baums durchgeführt. Fügt die Senke (Quelle) in die Adjazenzliste der Quelle (Senke)
      * ein.
-     *
      */
     public void addToAdjecencyListsSinkAndSource() {
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqChildren.size() == 0) {
@@ -139,8 +142,7 @@ public abstract class SPQNode {
     }
 
     /**
-     *
-     * @param node Kindsknoten
+     * @param node   Kindsknoten
      * @param parent Der Elternknoten, mit dem node verschmelzen soll.
      */
     void mergeNodeWithParent(SPQNode node, SPQNode parent) {
@@ -154,8 +156,6 @@ public abstract class SPQNode {
             spQNode.setParent(parent);
         }
     }
-
-
 
 
     /**

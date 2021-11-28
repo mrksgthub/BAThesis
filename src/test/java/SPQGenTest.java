@@ -391,7 +391,7 @@ class SPQGenTest {
 
 
     SPQQNode addQNode(SPQNode parentNode, int counter, Vertex start, Vertex sink) {
-        SPQQNode node = new SPQQNode("Q" + counter++);
+        SPQQNode node = new SPQQNode("Q" + counter++, true);
         node.setParent(parentNode);
         parentNode.getSpqChildren().add(node);
         node.setStartVertex(start);
