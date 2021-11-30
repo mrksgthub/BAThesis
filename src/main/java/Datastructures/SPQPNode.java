@@ -132,11 +132,8 @@ public class SPQPNode extends SPQNode {
                     pdV = 1;
 
                 } else if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) { //I3rl
-
                     pdU = 1;
                     pdV = 0;
-
-
                 }
                 double lBound = mL - MR;
                 double upBound = ML - mR;

@@ -33,9 +33,14 @@ public class MaxFlow {
 
     public boolean runJGraptHImplementation() {
 
-        generateFlowNetwork();
+       boolean isValid = generateFlowNetwork();
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
-        return runJGraphTPushRelabelPlanarityTest();
+        if (isValid) {
+            return runJGraphTPushRelabelPlanarityTest();
+        } else {
+            return false;
+        }
+
     }
 
     public boolean runJGraphTPushRelabelPlanarityTest() {
@@ -45,7 +50,7 @@ public class MaxFlow {
         return maxFlowValue.getValue() == counter;
     }
 
-    public void generateFlowNetwork() {
+    public boolean generateFlowNetwork() {
         solverSource = new Vertex("solverSource");
         solverSink = new Vertex("solverSink");
 
@@ -80,7 +85,7 @@ public class MaxFlow {
         neighborOfFace = 2 * (edgeList.size()) + 4 - (edgeList.size());
         if (neighborOfFace < 0) {
             System.out.println("Negative Capacity");
-            return;
+            return false;
 
         }
 
@@ -107,7 +112,7 @@ public class MaxFlow {
 
             if (neighborOfFace < 0) {
                 System.out.println("Negative Capacity");
-                return;
+                return false;
             }
 
 
@@ -128,6 +133,8 @@ public class MaxFlow {
             }
 
         }
+
+        return true;
     }
 
     public void runJGraphTFordFulkerson() {

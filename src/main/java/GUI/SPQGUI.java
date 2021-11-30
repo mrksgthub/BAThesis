@@ -168,14 +168,14 @@ class SPQGUI extends JFrame {
                 try {
                     if (dialog1.run && tree != null && root != null) {
 
-                        PlanarityAndAngleDistributorRunner angles = new PlanarityAndAngleDistributorRunner(tree, root);
-                        angles.run(dialog1.run, dialog1.winkelAlgorithmus);
-                        timeLabel.setText(angles.getTime() + " ms");
+                        PlanarityAndAngleDistributorRunner runner = new PlanarityAndAngleDistributorRunner(tree, root);
+                        runner.run(dialog1.run, dialog1.winkelAlgorithmus);
+                        timeLabel.setText(runner.getTime() + " ms");
                         ////////////////////////////////////////////
                         // orthogonal rep muss gesetted werden
 
-                        GraphDrawer graphDrawer = new GraphDrawer(angles.getTreeVertexFaceGenerator().getPlanarGraphFaces(), angles.getEmbedding(), angles.getTreeVertexFaceGenerator().getAdjFaces2());
-                        ChanceOfP.setText("Faces: " + String.valueOf(angles.getTreeVertexFaceGenerator().getPlanarGraphFaces().size()));
+                        GraphDrawer graphDrawer = new GraphDrawer(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces(), runner.getEmbedding(), runner.getTreeVertexFaceGenerator().getAdjFaces2());
+                        ChanceOfP.setText("Faces: " + String.valueOf(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces().size()));
                         opsField.setText("Vertices: " + tree.getConstructedGraph().vertexSet().size());
 
 
@@ -318,7 +318,7 @@ class SPQGUI extends JFrame {
                             }
                             counter = 0;
                             for (int i = 0; i < dialog1.getNumOfChanceOfPIncrease(); i++) {
-                                if (isCancelled() || counter == 1000) { // hier stand || counter
+                                if (isCancelled() || counter == dialog1.getCounter()) {
                                     counter = 0;
                                     break;
                                 }
@@ -328,12 +328,11 @@ class SPQGUI extends JFrame {
 
                                 if (!isValid && !dialog1.isAllowInvalidGraphs()) {
                                     counter++;
-                                    updateText("N: "+ops+ "P: "+ chanceOfP + "Versuche:  " + counter);
+                                    updateText("N: " + ops + "P: " + chanceOfP + "Versuche:  " + counter);
                                     i--;
-
                                 } else {
-
-                                    updateText("Latzer gültiger Graph N:"+ops+ "P: "+ chanceOfP);
+                                    updateText("Latzer gültiger Graph N:" + ops + "P: " + chanceOfP);
+                                    counter = 0;
                                 }
                             }
 

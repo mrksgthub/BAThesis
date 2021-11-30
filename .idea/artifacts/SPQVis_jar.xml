@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="untitled:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/untitled_jar</output-path>
+  <artifact type="jar" name="SPQVis:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SPQVis_jar</output-path>
     <root id="archive" name="untitled.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />

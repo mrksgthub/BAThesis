@@ -39,7 +39,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(100, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(100000, 30);
         spqGenerator.run();
 
 
@@ -48,7 +48,7 @@ class basicMainClass {
 
         SPQExporter spqExporter = new SPQExporter();
         //      spqExporter.run(root);
-        spqExporter.run(root, "C:/a.dot");
+      spqExporter.run(root, "C:/a.dot");
 
 
        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\10002N9F.txt");
@@ -125,11 +125,20 @@ class basicMainClass {
 
         long startTime2 = System.currentTimeMillis();
         MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
+        test.generateFlowNetwork();
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);
       //  test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces(), tree.getConstructedGraph());
-       test.runJGraptHImplementation();
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Used Memory before" + usedMemoryBefore);
+        startTime = System.nanoTime();
+        test.runJGraphTPushRelabelPlanarityTest();
+        stopTime = System.nanoTime();
+        long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+        System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore)/1000000);
+
         angulator.runMaxFlowAngles(test);
 
         MinFlow tamassiaRepresentation = new MinFlow(treeVertexFaceGenerator.getPlanarGraphFaces());

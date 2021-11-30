@@ -134,10 +134,13 @@ public class SPQGenerator implements Callable, Runnable {
 
 
 
+/*
 
         boolean tamassiaValid = true;
 
-    /*    try {*/
+    */
+/*    try {*//*
+
             //    Hashtable<Datatypes.TreeVertex, ArrayList<Datatypes.TreeVertex>> embedding = erstelleHashtablefuerFacegenerator(tree);
             FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<Vertex, DefaultEdge>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces(); // counterclockwise = inner, clockwise = outerFacette
@@ -155,10 +158,12 @@ public class SPQGenerator implements Callable, Runnable {
             long stopTime2 = System.currentTimeMillis();
             long elapsedTime2 = stopTime2 - startTime2;
             // logger.info("Tamassia Zeit: " + elapsedTime2);
-  /*      } catch (Exception e) {
+  */
+/*      } catch (Exception e) {
             tamassiaValid = false;
             System.out.println("----------------------------------------Invalid Graph-----------------------------------------------------------");
-        }*/
+        }*//*
+
 
         assert (tamassiaValid == check);
         // assert(false);
@@ -176,6 +181,7 @@ public class SPQGenerator implements Callable, Runnable {
 
             }
         }
+*/
 
 
 

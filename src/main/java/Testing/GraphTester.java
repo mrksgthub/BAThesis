@@ -301,7 +301,7 @@ public class GraphTester {
         }
 
 
-        if (tamassiaMinCostAllowed) {
+        if (tamassiaMinCostAllowed && (nodes < 20000 || faces > 2)) {
             tree = spqImporter.runFromArray();
 
             DescriptiveStatistics statsTamassiaMinFlow = new DescriptiveStatistics();

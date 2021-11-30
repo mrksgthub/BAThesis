@@ -28,6 +28,7 @@ class GenerateTestDataDialog extends JDialog {
     
     private JPanel randomButton;
     private JCheckBox allowInvalidGraphsCheckbox;
+    private JTextField counterText;
 
 
     private int chanceOfPIncr;
@@ -38,6 +39,7 @@ class GenerateTestDataDialog extends JDialog {
     private File[] graphFolder;
     private String filePath;
     private int maxDegree;
+    private int counter;
     private int chainLength;
     private int numOfOpsIncrease;
     private int numOfChanceOfPIncrease;
@@ -49,6 +51,9 @@ class GenerateTestDataDialog extends JDialog {
 
     private boolean allowInvalidGraphs;
 
+    public int getCounter() {
+        return counter;
+    }
 
     public int getMode() {
         return mode;
@@ -191,7 +196,20 @@ class GenerateTestDataDialog extends JDialog {
             default -> throw new IllegalStateException("Button doesn't exist");
         }
 
-        
+        try {
+            counter = Integer.parseInt(counterText.getText());
+            if (counter < 0) {
+                throw new NumberFormatException();
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Nur Werte von 0+" + Integer.MAX_VALUE + " möglich");
+            e.printStackTrace();
+            counter = -1;
+        }
+
+
+
+
         try {
             minOps = Integer.parseInt(minimumOpsField.getText());
             if (minOps < 0) {
@@ -290,7 +308,7 @@ class GenerateTestDataDialog extends JDialog {
 
         allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
-        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0 && numOfChanceOfPIncrease > 0 && numOfOpsIncrease > 0) {
+        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0 && numOfChanceOfPIncrease > 0 && numOfOpsIncrease > 0 && counter >0) {
             validSettings = true;
             dispose();
 
