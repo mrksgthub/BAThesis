@@ -15,6 +15,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedMultigraph;
 
 import java.io.BufferedWriter;
@@ -292,8 +293,8 @@ public class GraphTester {
             didimoTime = statsDidimo.getMean();
             didimoStdev = statsDidimo.getStandardDeviation();
             didimoMedian = statsDidimo.getPercentile(50);
-            System.out.println("Didimo Zeit: " + didimoTime);
-            System.out.println("DidimoStdev" + didimoStdev);
+   //         System.out.println("Didimo Zeit: " + didimoTime);
+    //        System.out.println("DidimoStdev" + didimoStdev);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -323,8 +324,8 @@ public class GraphTester {
             tamassiaMinFlowTime = statsTamassiaMinFlow.getMean();
             tamassiaMinFlowStdDev = statsTamassiaMinFlow.getStandardDeviation();
             tamassiaMinFlowMedian = statsTamassiaMinFlow.getPercentile(50);
-            System.out.println("Tamassia Zeit: " + tamassiaMinFlowTime);
-            System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
+   //         System.out.println("Tamassia Zeit: " + tamassiaMinFlowTime);
+     //       System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
         } else {
             tamassiaMinFlowTime = -1;
             tamassiaMinFlowStdDev = -1;
@@ -350,12 +351,21 @@ public class GraphTester {
                 elapsedTime = stopTime - startTime;
                 statsTamassiaPush.addValue(elapsedTime);
                 flowNetWorkEdges = test.getFlowMap().keySet().size();
+                int count = 0;
+                for (DefaultWeightedEdge edge : test.getFlowMap().keySet()
+                     ) {
+                    if (test.flowNetwork.getEdgeWeight(edge) != 0) {
+                        count++;
+                    }
+
+                }
+
             }
             tamassiaPushTime = statsTamassiaPush.getMean();
             tamassiaPushStdev = statsTamassiaPush.getStandardDeviation();
             tamassiaPushMedian = statsTamassiaPush.getPercentile(50);
-            System.out.println("TamassiaPush Zeit: " + tamassiaPushStdev);
-            System.out.println("TamassiaStdev" + tamassiaPushStdev);
+        //    System.out.println("TamassiaPush Zeit: " + tamassiaPushStdev);
+       //     System.out.println("TamassiaStdev" + tamassiaPushStdev);
 
         } catch (Exception e) {
             e.printStackTrace();

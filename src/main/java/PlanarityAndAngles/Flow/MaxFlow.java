@@ -17,7 +17,7 @@ public class MaxFlow {
 
 
     private final List<PlanarGraphFace<Vertex>> listOfFaces;
-    private final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> flowNetwork = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+    public final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> flowNetwork = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
     private Map<DefaultWeightedEdge, Double> flowMap;
     private Vertex solverSource;
     private Vertex solverSink;

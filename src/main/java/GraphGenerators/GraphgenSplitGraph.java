@@ -368,14 +368,6 @@ class GraphgenSplitGraph {
         nodeUmhaengen(oldQNode2, newPnode2);
         addNodeAsLeftChild(newQnode12, newPnode2);
 
-
-
-
-
-
-
-
-
         DefaultEdge[] arr1;
 
         edge1 = randomnewSNode(edge1)[0];
@@ -406,6 +398,43 @@ class GraphgenSplitGraph {
 
     }
 
+    private void randomNewI3llNode(DefaultEdge edge) {
+
+        DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
+        edges.add(edge1);
+
+        SPQNode oldQNode = edgeSPQNodeHashMap.get(edge);
+        SPQNode newPnode = new SPQPNode("P" + ++counter);
+        SPQNode newQnode1 = new SPQQNode("Q" + ++counter, multigraph.getEdgeSource(edge1), multigraph.getEdgeTarget(edge1));
+        edgeSPQNodeHashMap.put(edge1, newQnode1);
+
+        nodeUmhaengen(oldQNode, newPnode);
+        addNodeAsRightChild(newQnode1, newPnode);
+
+
+        DefaultEdge[] arr1 =  randomnewSNode(edge);
+
+
+        DefaultEdge[] arr2 = randomnewSNode(edge1);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
 
     private DefaultEdge[] randomnewSNode(DefaultEdge edge) {
 
@@ -430,6 +459,30 @@ class GraphgenSplitGraph {
         DefaultEdge[] arr = {edge1, edge2};
         return arr;
     }
+
+    private DefaultEdge[] randomSNodeChain(DefaultEdge edge, int length) {
+
+        DefaultEdge[] arr = new DefaultEdge[length];
+
+        if (length == 1) {
+            arr[0] = edge;
+        }
+        if (length > 1) {
+
+            for (int i = 0; i < length - 1; i++) {
+                DefaultEdge[] tempArr = randomnewSNode(edge);
+                arr[i] = tempArr[0];
+                edge = tempArr[1];
+            }
+            DefaultEdge[] tempArr = randomnewSNode(edge);
+            arr[length - 2] = tempArr[0];
+            arr[length - 1] = tempArr[1];
+        }
+    return arr;
+    }
+
+
+
 
 
     private <T extends SPQNode> void addNodeAsRightChild(T node, T parent) {
