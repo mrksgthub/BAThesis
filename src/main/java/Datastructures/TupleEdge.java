@@ -12,15 +12,11 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
     public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge, int i) {
 
             return new TupleEdge<>(edge.getRight(), edge.getLeft(), i);
-
-
     }
 
     public static TupleEdge<Vertex, Vertex> reverseEdge(TupleEdge<Vertex, Vertex> edge) {
 
             return new TupleEdge<>(edge.getRight(), edge.getLeft());
-
-
     }
 
 

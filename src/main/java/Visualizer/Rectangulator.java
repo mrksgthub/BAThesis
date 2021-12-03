@@ -31,7 +31,7 @@ public class Rectangulator {
         return outerFace;
     }
 
-    public void setOriginalEdgeToFaceMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> originalEdgeToFaceMap) {
+    public void setOriginalTupleToFaceMap(HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> originalEdgeToFaceMap) {
         this.originalEdgeToFaceMap = originalEdgeToFaceMap;
     }
 

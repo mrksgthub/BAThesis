@@ -31,7 +31,7 @@ public class MaxFlow {
         return flowMap;
     }
 
-    public boolean runJGraptHImplementation() {
+    public boolean runJGraphTPushRelabelImplementation() {
 
        boolean isValid = generateFlowNetwork();
         // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
@@ -40,7 +40,6 @@ public class MaxFlow {
         } else {
             return false;
         }
-
     }
 
     public boolean runJGraphTPushRelabelPlanarityTest() {
@@ -137,28 +136,26 @@ public class MaxFlow {
         return true;
     }
 
-    public void runJGraphTFordFulkerson() {
+    public boolean runJGraphTFordFulkersonImplementation() {
 
 
-        generateFlowNetwork();
-
-
-        runJGrapthTFordFulkersonPlanarityTest();
-
-
-        setOrthogonalRep();
+        boolean isValid = generateFlowNetwork();
+        // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
+        if (isValid) {
+            return runJGrapthTFordFulkersonPlanarityTest();
+        } else {
+            return false;
+        }
 
     }
 
-    private void runJGrapthTFordFulkersonPlanarityTest() {
+    private boolean runJGrapthTFordFulkersonPlanarityTest() {
         MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(flowNetwork);
         //     MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
+        return maxFlowValue.getValue() == counter;
 
-        if (maxFlowValue.getValue() != counter) {
-            throw new IllegalArgumentException("Blub");
-        }
     }
 
 

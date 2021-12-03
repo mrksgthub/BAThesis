@@ -65,7 +65,26 @@ class stNumbering {
 
         graph3 = new AsUndirectedGraph<>(graph);
 
+
         Graphs.addGraph(graph, tree.getConstructedGraph());
+
+
+        DFTransversal.buildPostOrderStack(tree.getRoot().getSinkVertex(), tree.getRoot().getStartVertex());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         visited = new boolean[graph3.vertexSet().size()];
         childOf = new int[graph3.vertexSet().size()];
         dfs = new int[graph3.vertexSet().size()];
@@ -172,17 +191,12 @@ class DFTransversal {
             // if the vertex is already discovered yet, ignore it
             if (dfsVisited[vertex.getId()]) {
                 if (childOf[vertex.getId()] != null) {
-                    //  dfsTree.addEdge(vertex, ear.firstElement());
-                    //  stackList.add(ear);
-                    //  ear = new Stack<>();
+
                 }
                 continue;
             }
             ear.addLast(vertex);
 
-            // we will reach here if the popped vertex `v`
-            // is not discovered yet; print it and process
-            // its undiscovered adjacent nodes into the stack
             dfsVisited[vertex.getId()] = true;
             System.out.print(vertex.getId() + " ");
             dfsTree.addVertex(vertex);
@@ -247,6 +261,69 @@ class DFTransversal {
 
 
     }
+
+
+
+    /**
+     * https://www.techiedelight.com/postorder-tree-traversal-iterative-recursive/
+     *
+     * @param sink
+     * @return
+     */
+    public static Deque<Datastructures.Vertex> buildPostOrderStack(Datastructures.Vertex sink, Datastructures.Vertex source) {
+
+
+        int i = sink.getAdjacentVertices().indexOf(source);
+        Collections.rotate(sink.getAdjacentVertices(), -i);
+
+        // return if the tree is empty
+        if (sink == null) {
+            return null;
+        }
+
+        // create an empty stack and push the root node
+        Deque<Datastructures.Vertex> stack = new ArrayDeque<>();
+        stack.push(sink);
+
+        // create another stack to store postorder traversal
+        Deque<Datastructures.Vertex> out = new ArrayDeque<>();
+
+        // loop till stack is empty
+        while (!stack.isEmpty()) {
+            // pop a node from the stack and push the data into the output stack
+            Datastructures.Vertex curr = stack.pop();
+            out.push(curr);
+
+            // push the left and right child of the popped node into the stack
+            for (Datastructures.Vertex child : curr.getAdjacentVertices()
+            ) {
+                if (child != null) {
+                    stack.push(child);
+                }
+            }
+        }
+        return out;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

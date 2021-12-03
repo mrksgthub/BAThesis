@@ -134,7 +134,7 @@ public abstract class SPQNode {
      * Wird nur in den Blättern des Baums durchgeführt. Fügt die Senke (Quelle) in die Adjazenzliste der Quelle (Senke)
      * ein.
      */
-    public void addToAdjecencyListsSinkAndSource() {
+    public void addToAdjacencyListsSinkAndSource() {
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqChildren.size() == 0) {
             startVertex.adjacentVertices.add(sinkVertex);
             sinkVertex.adjacentVertices.add(0, startVertex);
@@ -179,5 +179,11 @@ public abstract class SPQNode {
 
     public List<Vertex> getSinkNodes() {
         return sinkNodes;
+    }
+
+    public static class NodeTypesEnum {
+
+        public enum NODETYPE {P, Q, S}
+
     }
 }

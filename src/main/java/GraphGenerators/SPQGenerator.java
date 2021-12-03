@@ -1,13 +1,9 @@
 package GraphGenerators;
 
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
-import PlanarityAndAngles.FaceGenerator;
-import PlanarityAndAngles.Flow.MaxFlow;
 import Datastructures.SPQNode;
 import Datastructures.SPQStarTree;
 import Datastructures.Vertex;
-import Helperclasses.SPQExporter;
-import org.jgrapht.graph.DefaultEdge;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
@@ -31,12 +27,9 @@ public class SPQGenerator implements Callable, Runnable {
     }
 
     public SPQGenerator(int size, int chanceOfP, BlockingQueue<SPQGenerator> blockingQueue) {
-
         this.size = size;
         this.chanceOfP = chanceOfP;
         this.blockingQueue = blockingQueue;
-
-
     }
 
     public SPQGenerator() {
@@ -45,7 +38,6 @@ public class SPQGenerator implements Callable, Runnable {
     public SPQGenerator(int ops, int chanceOfP, int maxDeg, int einfachheit) {
         this.size = ops;
         this.chanceOfP = chanceOfP;
-
 
         this.maxDeg = maxDeg;
         this.einfachheit = einfachheit;
@@ -80,7 +72,6 @@ public class SPQGenerator implements Callable, Runnable {
         counter = 0;
         while (!check && !shutdown) {
             check = generateGraph(size, chanceOfP, maxDeg, einfachheit, mode);
-
 
         }
         System.out.println("Generator zu Ende");

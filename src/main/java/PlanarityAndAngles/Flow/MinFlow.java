@@ -1,6 +1,8 @@
 package PlanarityAndAngles.Flow;
 
-import Datastructures.*;
+import Datastructures.PlanarGraphFace;
+import Datastructures.TupleEdge;
+import Datastructures.Vertex;
 import org.jgrapht.alg.flow.mincost.CapacityScalingMinimumCostFlow;
 import org.jgrapht.alg.flow.mincost.MinimumCostFlowProblem;
 import org.jgrapht.alg.interfaces.MinimumCostFlowAlgorithm;
@@ -13,11 +15,11 @@ import java.util.Map;
 
 public class MinFlow {
 
-    private List<PlanarGraphFace<Vertex>> listOfFaces;
-    private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
     private final Map<Vertex, Integer> supplyMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
+    private List<PlanarGraphFace<Vertex>> listOfFaces;
+    private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
     private MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
 
 
@@ -26,10 +28,7 @@ public class MinFlow {
     }
 
     public boolean run(List<PlanarGraphFace<Vertex>> planarGraphFaces) throws Exception {
-
-
-
-           generateFlowNetwork();
+        generateFlowNetwork();
         return runJGraphTMinCostFlowPlanarityTest();
 
         // setOrthogonalRep();

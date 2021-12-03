@@ -6,7 +6,7 @@ import GraphGenerators.SPQGenerator;
 import Helperclasses.SPQExporter;
 import Helperclasses.SPQImporter;
 import PlanarityAndAngles.PlanarityAndAngleDistributorRunner;
-import Testing.GraphBuilderST;
+import Testing.GraphBuilder;
 import Testing.GraphTester;
 import Visualizer.GraphDrawer;
 
@@ -174,7 +174,7 @@ class SPQGUI extends JFrame {
                         ////////////////////////////////////////////
                         // orthogonal rep muss gesetted werden
 
-                        GraphDrawer graphDrawer = new GraphDrawer(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces(), runner.getEmbedding(), runner.getTreeVertexFaceGenerator().getAdjFaces2());
+                        GraphDrawer graphDrawer = new GraphDrawer(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces(), runner.getEmbedding(), runner.getTreeVertexFaceGenerator().getTupleToFaceMap());
                         ChanceOfP.setText("Faces: " + String.valueOf(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces().size()));
                         opsField.setText("Vertices: " + tree.getConstructedGraph().vertexSet().size());
 
@@ -306,7 +306,7 @@ class SPQGUI extends JFrame {
                         interrupts.setEnabled(true);
                         generateTestDataButton.setEnabled(false);
                         updateText("Running tests");
-                        GraphBuilderST graphBuilderST = new GraphBuilderST(dialog1.getFilePath());
+                        GraphBuilder graphBuilder = new GraphBuilder(dialog1.getFilePath());
 
                         int ops = dialog1.getMinOps();
                         int chanceOfP = dialog1.getChanceOfP();
@@ -324,7 +324,7 @@ class SPQGUI extends JFrame {
                                 }
                                 chanceOfP = dialog1.getChanceOfP() + i * dialog1.getChanceOfPIncr();
                                 ops = dialog1.getMinOps() + j * dialog1.getOpsIncrement();
-                                boolean isValid = graphBuilderST.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
+                                boolean isValid = graphBuilder.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
 
                                 if (!isValid && !dialog1.isAllowInvalidGraphs()) {
                                     counter++;

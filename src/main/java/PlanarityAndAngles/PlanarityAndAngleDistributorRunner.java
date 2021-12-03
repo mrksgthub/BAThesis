@@ -4,7 +4,6 @@ import Datastructures.SPQNode;
 import Datastructures.SPQStarTree;
 import Datastructures.Vertex;
 import GUI.GraphDrawOptions;
-import PlanarityAndAngles.Didimo.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.Flow.MaxFlow;
 import org.jgrapht.graph.DefaultEdge;
@@ -68,11 +67,6 @@ public class PlanarityAndAngleDistributorRunner {
 
     public void run(boolean wasAlgorithmnSelected, GraphDrawOptions.WinkelAlgorithmus algorithmm) {
         if (wasAlgorithmnSelected) {
-            // embedding = new Hashtable<>();
-            //  Embedder embedder = new Embedder(embedding);
-            // embedder.run(root);
-
-
             embedding = tree.getVertexToAdjecencyListMap();
             treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
@@ -97,15 +91,13 @@ public class PlanarityAndAngleDistributorRunner {
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-           //     test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.runJGraptHImplementation();
+                test.runJGraphTPushRelabelImplementation();
                 Angulator angulator = new Angulator();
                 try {
                     angulator.runMaxFlowAngles(test);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
             }
             long stopTime3 = System.currentTimeMillis();
             time = stopTime3 - startTime3;

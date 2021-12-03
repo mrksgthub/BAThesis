@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.event.*;
 
 class GraphGeneratorSettingsDialog extends JDialog {
-    int ops = -1;
-    int chanceOfP = -1;
+    private int ops = -1;
+    private int chanceOfP = -1;
     boolean validSettings = false;
     ButtonGroup buttonGroup1;
     private int mode;

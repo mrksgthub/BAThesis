@@ -429,7 +429,7 @@ class SPQGenTest {
                 root.getSpqChildren()) {
             getIntervals(node, intervalsMap);
         }
-        if (root.getSpqChildren().size() > 1 && root.getNodeType() != NodeTypesEnum.NODETYPE.Q) {
+        if (root.getSpqChildren().size() > 1 && root.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q) {
             ArrayList<Double> array = new ArrayList<>();
             array.add(root.getRepIntervalLowerBound());
             array.add(root.getRepIntervalUpperBound());

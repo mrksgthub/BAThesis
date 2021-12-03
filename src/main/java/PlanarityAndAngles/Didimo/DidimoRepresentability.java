@@ -28,7 +28,7 @@ public class DidimoRepresentability {
 
 
 
-    public boolean computeNofRoot(SPQNode root) { // Änderungen in neuer v4 aus Paper eingefügt
+    private boolean computeNofRoot(SPQNode root) { // Änderungen in neuer v4 aus Paper eingefügt
 
         int spirality = 99999;
 
@@ -66,7 +66,7 @@ public class DidimoRepresentability {
 
 
 
-    public Boolean computeRepresentabilityIntervals(SPQNode root, Boolean check) {
+    private Boolean computeRepresentabilityIntervals(SPQNode root, Boolean check) {
 
 
        Deque<SPQNode> stack = DFSIterator.buildPostOrderStackPlanarityTest(root);

@@ -1,7 +1,7 @@
 package Helperclasses;
 
 import PlanarityAndAngles.*;
-import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import Datastructures.SPQNode;
 import Datastructures.SPQStarTree;
@@ -39,7 +39,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(100000, 30);
+        SPQGenerator spqGenerator = new SPQGenerator(40, 30000);
         spqGenerator.run();
 
 
@@ -134,7 +134,7 @@ class basicMainClass {
         long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
         System.out.println("Used Memory before" + usedMemoryBefore);
         startTime = System.nanoTime();
-        test.runJGraphTPushRelabelPlanarityTest();
+        test.runJGraphTPushRelabelImplementation();
         stopTime = System.nanoTime();
         long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
         System.out.println("Memory increased:" + (usedMemoryAfter-usedMemoryBefore)/1000000);
@@ -159,7 +159,7 @@ class basicMainClass {
         System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
         Rectangulator rectangulator = new Rectangulator(treeVertexFaceGenerator.getPlanarGraphFaces());
-        rectangulator.setOriginalEdgeToFaceMap(treeVertexFaceGenerator.getAdjFaces2());
+        rectangulator.setOriginalTupleToFaceMap(treeVertexFaceGenerator.getTupleToFaceMap());
         rectangulator.run();
        // rectangulator.getOuterFace().setOrientationsOuterFacette();
 
@@ -177,7 +177,7 @@ class basicMainClass {
 
 
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
-        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();
 
@@ -216,7 +216,7 @@ class basicMainClass {
             for (Vertex vertex : coordinator.getEdgeToCoordMap().keySet()) {
 
                 if (!vertex.isDummy()) {
-                    ArrayList<Vertex> list =vertex.getAdjacentVertices();
+                    ArrayList<Vertex> list = vertex.getAdjacentVertices();
 
                     for (Vertex vertex1 : list) {
 

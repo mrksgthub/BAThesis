@@ -17,7 +17,7 @@ class GraphgenSplitGraph {
     private final int numberOfNodes;
     private final List<DefaultEdge> edges = new ArrayList<>();
     private final HashMap<DefaultEdge, SPQNode> edgeSPQNodeHashMap = new HashMap<>();
-    private SPQPNode root;
+    private final SPQPNode root;
     private int counter = 0;
     private double chanceOfP = 50;
     private int maxDeg = 4;
@@ -88,7 +88,7 @@ class GraphgenSplitGraph {
     }
 
 
-    public void generateSimpleGraph(int mode) {
+    private void generateSimpleGraph(int mode) {
 
 
         DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
@@ -150,7 +150,7 @@ class GraphgenSplitGraph {
         counter = counter + 1 - 1;
     }
 
-    public void generateRandomGraph() {
+    private void generateRandomGraph() {
 
 
         DefaultEdge edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
@@ -491,7 +491,7 @@ class GraphgenSplitGraph {
 
     }
 
-    public <T extends SPQNode> void addNodeAsLeftChild(T node, T parent) {
+    private <T extends SPQNode> void addNodeAsLeftChild(T node, T parent) {
         node.setParent(parent);
         parent.getSpqChildren().add(0, node);
     }

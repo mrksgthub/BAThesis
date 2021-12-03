@@ -6,7 +6,7 @@ import Datastructures.Vertex;
 import Helperclasses.DFSIterator;
 import Helperclasses.GraphValidifier;
 import Helperclasses.SPQImporter;
-import PlanarityAndAngles.Didimo.Angulator;
+import PlanarityAndAngles.Angulator;
 import PlanarityAndAngles.Didimo.DidimoRepresentability;
 import PlanarityAndAngles.FaceGenerator;
 import PlanarityAndAngles.Flow.MaxFlow;
@@ -31,16 +31,16 @@ import java.util.List;
 
 public class GraphTester {
 
-    private static String SAMPLE_CSV_FILE = "C:/a.csv";
+    private static final String SAMPLE_CSV_FILE = "C:/a.csv";
 
-    private File dataFile;
-    private File[] files;
-    private int runs = 7;
+    private final File outputFile;
+    private final File[] inputFiles;
+    private final int runs = 7;
 
 
-    public GraphTester(File dataFile, File[] files) {
-        this.dataFile = dataFile;
-        this.files = files;
+    public GraphTester(File outputFile, File[] inputFiles) {
+        this.outputFile = outputFile;
+        this.inputFiles = inputFiles;
     }
 
     // https://www.callicoder.com/java-read-write-csv-file-apache-commons-csv/
@@ -59,7 +59,7 @@ public class GraphTester {
                 BufferedWriter writer = Files.newBufferedWriter(Paths.get(SAMPLE_CSV_FILE));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"));
+                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"))
         ) {
 
             for (String fileName : listOfFiles
@@ -121,7 +121,7 @@ public class GraphTester {
                 startTime = System.nanoTime();
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
                 //test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.runJGraptHImplementation();
+                test.runJGraphTPushRelabelPlanarityTest();
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 long tamassiaPushTime = elapsedTime;
@@ -173,25 +173,23 @@ public class GraphTester {
         SPQNode root;
 
         try (
-                /*BufferedWriter writer = Files.newBufferedWriter(dataFile.toPath());*/
                 BufferedWriter writer = Files.newBufferedWriter(
-                        dataFile.toPath(),
+                        outputFile.toPath(),
                         StandardOpenOption.APPEND,
                         StandardOpenOption.CREATE);
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("Graph", "Size", "Degree3Vertices", "Degree4Vertices", "FlownetworkKantenanzahl",
-                                "SPQ*Knoten", "DidimoMean", "DidimoMedian","DidimoStdev", "Tamassia", "TamassiaMedian", "TamassiaStdDev",  "TamassiaPush", "TamassiaPushMedian",
-                                "TamassiaPushStdev", "FordFulkerson", "FordFulkersonStdev", "rectilinear planar"));
+                                "SPQ*Knoten", "DidimoMean", "DidimoMedian", "DidimoStdev", "Tamassia", "TamassiaMedian", "TamassiaStdDev", "TamassiaPush", "TamassiaPushMedian",
+                                "TamassiaPushStdev", "FordFulkerson", "FordFulkersonStdev", "rectilinear planar"))
         ) {
 
-            for (File fileName : files
+            for (File fileName : inputFiles
             ) {
 
                 System.out.println(fileName);
                 SPQImporter spqImporter = new SPQImporter();
                 spqImporter.runFromFile(fileName.toString());
-
 
                 tree = spqImporter.getTree();
                 root = tree.getRoot();
@@ -199,7 +197,6 @@ public class GraphTester {
 
                 FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
-
 
                 if (maxSize < 0 || tree.getConstructedGraph().vertexSet().size() <= maxSize) {
                     if (minSize < 0 || tree.getConstructedGraph().vertexSet().size() >= minSize) {
@@ -209,7 +206,6 @@ public class GraphTester {
 
             }
             csvPrinter.flush();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,12 +234,12 @@ public class GraphTester {
         double didimoMedian = 0;
         double didimoStdev = 0;
         double tamassiaMinFlowTime;
-        double tamassiaMinFlowMedian=0;
+        double tamassiaMinFlowMedian = 0;
         double tamassiaMinFlowStdDev = 0;
         double FordFulkerson = 0;
         double FordFulkersonStdev = 0;
         double tamassiaPushTime = 0;
-        double tamassiaPushMedian=0;
+        double tamassiaPushMedian = 0;
         double tamassiaPushStdev = 0;
         int flowNetWorkEdges = 0;
         int degree3Vertices = 0;
@@ -253,11 +249,11 @@ public class GraphTester {
         Deque<SPQNode> s = DFSIterator.buildPostOrderStack(root);
 
         // Informationen über den Graphen sammeln
-       while (!s.isEmpty()) {
+        while (!s.isEmpty()) {
             notQnodeCount += (s.pop().getSpqChildren().size() != 0) ? 1 : 0;
         }
 
-       // notQnodeCount = s.size();
+        // notQnodeCount = s.size();
 
 
         for (Vertex v : tree.getConstructedGraph().vertexSet()
@@ -293,8 +289,8 @@ public class GraphTester {
             didimoTime = statsDidimo.getMean();
             didimoStdev = statsDidimo.getStandardDeviation();
             didimoMedian = statsDidimo.getPercentile(50);
-   //         System.out.println("Didimo Zeit: " + didimoTime);
-    //        System.out.println("DidimoStdev" + didimoStdev);
+            //         System.out.println("Didimo Zeit: " + didimoTime);
+            //        System.out.println("DidimoStdev" + didimoStdev);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -308,14 +304,12 @@ public class GraphTester {
             DescriptiveStatistics statsTamassiaMinFlow = new DescriptiveStatistics();
 
             for (int i = 0; i < runs; i++) {
-          //      treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
-            //    treeVertexFaceGenerator.generateFaces();
+                //      treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                //    treeVertexFaceGenerator.generateFaces();
                 MinFlow tamassiaRepresentation = new MinFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
                 tamassiaRepresentation.generateFlowNetwork();
                 startTime = System.nanoTime();
-
                 tamassiaRepresentation.runJGraphTMinCostFlowPlanarityTest();
-
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 statsTamassiaMinFlow.addValue(elapsedTime);
@@ -324,8 +318,8 @@ public class GraphTester {
             tamassiaMinFlowTime = statsTamassiaMinFlow.getMean();
             tamassiaMinFlowStdDev = statsTamassiaMinFlow.getStandardDeviation();
             tamassiaMinFlowMedian = statsTamassiaMinFlow.getPercentile(50);
-   //         System.out.println("Tamassia Zeit: " + tamassiaMinFlowTime);
-     //       System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
+            //         System.out.println("Tamassia Zeit: " + tamassiaMinFlowTime);
+            //       System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
         } else {
             tamassiaMinFlowTime = -1;
             tamassiaMinFlowStdDev = -1;
@@ -339,13 +333,13 @@ public class GraphTester {
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
-         //       treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
-         //       treeVertexFaceGenerator.generateFaces();
+                //       treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                //       treeVertexFaceGenerator.generateFaces();
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.generateFlowNetwork();
                 startTime = System.nanoTime();
 
-         //       test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
+                //       test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.runJGraphTPushRelabelPlanarityTest();
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
@@ -353,7 +347,7 @@ public class GraphTester {
                 flowNetWorkEdges = test.getFlowMap().keySet().size();
                 int count = 0;
                 for (DefaultWeightedEdge edge : test.getFlowMap().keySet()
-                     ) {
+                ) {
                     if (test.flowNetwork.getEdgeWeight(edge) != 0) {
                         count++;
                     }
@@ -364,8 +358,8 @@ public class GraphTester {
             tamassiaPushTime = statsTamassiaPush.getMean();
             tamassiaPushStdev = statsTamassiaPush.getStandardDeviation();
             tamassiaPushMedian = statsTamassiaPush.getPercentile(50);
-        //    System.out.println("TamassiaPush Zeit: " + tamassiaPushStdev);
-       //     System.out.println("TamassiaStdev" + tamassiaPushStdev);
+            //    System.out.println("TamassiaPush Zeit: " + tamassiaPushStdev);
+            //     System.out.println("TamassiaStdev" + tamassiaPushStdev);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -403,7 +397,6 @@ public class GraphTester {
             System.out.println("Invalid Graph");
         }
 */
-
 
 
         csvPrinter.printRecord(nodes, faces, degree3Vertices, degree4Vertices, flowNetWorkEdges, notQnodeCount, didimoTime, didimoMedian, didimoStdev, tamassiaMinFlowTime, tamassiaMinFlowMedian, tamassiaMinFlowStdDev, tamassiaPushTime, tamassiaPushMedian, tamassiaPushStdev, FordFulkerson, FordFulkersonStdev, isRectilinear);

@@ -37,12 +37,12 @@ public class SPQStarTree {
 
 
 
-    public void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root) {
+    private void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
         while (!stack.isEmpty()) {
             SPQNode node = stack.pop();
-            if (node.getNodeType() != NodeTypesEnum.NODETYPE.Q || node.getSpqChildren().size() > 0) {
+            if (node.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q || node.getSpqChildren().size() > 0) {
                 node.setStartVertex(node.getSpqChildren().get(0).getStartVertex());
                 node.setSinkVertex(node.getSpqChildren().get(node.getSpqChildren().size() - 1).getSinkVertex());
 
@@ -94,22 +94,22 @@ public class SPQStarTree {
     }
 
 
-    public void determineInnerOuterNodesAndAdjVertices(SPQNode root) {
+    private void determineInnerOuterNodesAndAdjVertices(SPQNode root) {
         calculateAdjaecencyListsOfSinkAndSource(root);
         determineInnerOuterAdjecentsOfSinkAndSource(root);
     }
 
 
-    public void calculateAdjaecencyListsOfSinkAndSource(SPQNode root) {
+    private void calculateAdjaecencyListsOfSinkAndSource(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPreOrderStack(root);
         while (!stack.isEmpty()) {
             SPQNode node = stack.pop();
-            node.addToAdjecencyListsSinkAndSource();
+            node.addToAdjacencyListsSinkAndSource();
         }
     }
 
-    public void determineInnerOuterAdjecentsOfSinkAndSource(SPQNode root) {
+    private void determineInnerOuterAdjecentsOfSinkAndSource(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
         while (!stack.isEmpty()) {
@@ -132,7 +132,7 @@ public class SPQStarTree {
 
     public void determineInnerOuterNodesAndAdjVertices2(SPQNode root) {
 
-        root.addToAdjecencyListsSinkAndSource(); // AdjLists der Knoten des SP-Graphen
+        root.addToAdjacencyListsSinkAndSource(); // AdjLists der Knoten des SP-Graphen
         for (SPQNode node : root.getSpqChildren()
         ) {
             determineInnerOuterNodesAndAdjVertices(node);
@@ -175,7 +175,7 @@ public class SPQStarTree {
         ) {
             setStartAndSinkNodesOrBuildConstructedGraph(node);
         }
-        if (root.getNodeType() != NodeTypesEnum.NODETYPE.Q || root.getSpqChildren().size() > 0) {
+        if (root.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q || root.getSpqChildren().size() > 0) {
             root.setStartVertex(root.getSpqChildren().get(0).getStartVertex());
             root.setSinkVertex(root.getSpqChildren().get(root.getSpqChildren().size() - 1).getSinkVertex());
 

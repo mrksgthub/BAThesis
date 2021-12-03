@@ -40,7 +40,7 @@ class GraphStreamOutput {
         for (Vertex vertex : edgeToCoordMap.keySet()) {
 
             if (!vertex.isDummy()) {
-                ArrayList<Vertex> list =vertex.getAdjacentVertices();
+                ArrayList<Vertex> list = vertex.getAdjacentVertices();
 
                 for (Vertex vertex1 : list) {
 

@@ -17,13 +17,13 @@ public class GraphDrawer implements Runnable {
     private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
     private final Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
     double time = Integer.MAX_VALUE;
-    private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> adjFaces2;
+    private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> tupleToFaceMap;
 
 
-    public GraphDrawer(List<PlanarGraphFace<Vertex>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> adjFaces2) {
+    public GraphDrawer(List<PlanarGraphFace<Vertex>> planarGraphFaces, Hashtable<Vertex, ArrayList<Vertex>> embedding, HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> tupleToFaceMap) {
         this.planarGraphFaces = planarGraphFaces;
         this.vertexToAdjListMap = embedding;
-        this.adjFaces2 = adjFaces2;
+        this.tupleToFaceMap = tupleToFaceMap;
     }
 
     @Override
@@ -34,12 +34,11 @@ public class GraphDrawer implements Runnable {
                         new LinkedBlockingQueue<Runnable>());
         List<Callable<Object>> callableList = new ArrayList<>();
 
-
         System.out.println("Anzahl Faces:" + planarGraphFaces.size());
 
         Rectangulator rectangulator = new Rectangulator(planarGraphFaces);
 
-        rectangulator.setOriginalEdgeToFaceMap(adjFaces2);
+        rectangulator.setOriginalTupleToFaceMap(tupleToFaceMap);
         try {
             rectangulator.run();
         } catch (Exception e) {
@@ -61,7 +60,7 @@ public class GraphDrawer implements Runnable {
 
 
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
-        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout2();
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout();
         //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
         //  horizontalFlow.generateCapacities();
 

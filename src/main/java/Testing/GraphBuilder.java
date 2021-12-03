@@ -14,16 +14,14 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
-public class GraphBuilderST {
+public class GraphBuilder {
 
     private final String filePathString;
-    static int counter = 0;
+    private static int counter = 0;
 
 
-    public GraphBuilderST(String filePathString) {
+    public GraphBuilder(String filePathString) {
 
         this.filePathString = filePathString;
     }

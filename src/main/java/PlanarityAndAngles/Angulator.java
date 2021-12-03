@@ -1,4 +1,4 @@
-package PlanarityAndAngles.Didimo;
+package PlanarityAndAngles;
 
 import Datastructures.PlanarGraphFace;
 import Datastructures.SPQNode;
@@ -7,13 +7,10 @@ import Datastructures.Vertex;
 import Helperclasses.DFSIterator;
 import PlanarityAndAngles.Flow.MaxFlow;
 import PlanarityAndAngles.Flow.MinFlow;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.DirectedWeightedMultigraph;
 
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Angulator {
 

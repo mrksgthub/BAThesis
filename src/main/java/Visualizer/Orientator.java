@@ -11,7 +11,7 @@ import java.util.List;
 public class Orientator {
 
 
-    List<PlanarGraphFace<Vertex>> orientatedInnerFaces;
+    private List<PlanarGraphFace<Vertex>> orientatedInnerFaces;
     PlanarGraphFace<Vertex> orientatedOuterFace;
     private HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> edgeFaceNeighbourMap;
 

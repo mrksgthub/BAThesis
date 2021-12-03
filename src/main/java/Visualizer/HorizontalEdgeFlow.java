@@ -59,7 +59,7 @@ public class HorizontalEdgeFlow implements Runnable {
         return minimumCostFlow;
     }
 
-    public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {
+    public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout() {
         networkGraph = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
         List<PlanarGraphFace<Vertex>> rectangleList = this.innerFaceList;
@@ -110,7 +110,6 @@ public class HorizontalEdgeFlow implements Runnable {
 
     private void generateCapacities() {
 
-
         MinimumCostFlowProblem<Vertex,
                 DefaultWeightedEdge> problem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<>(
                 networkGraph, v -> supplyMap.getOrDefault(v, 0), upperMap::get,
@@ -119,10 +118,7 @@ public class HorizontalEdgeFlow implements Runnable {
         CapacityScalingMinimumCostFlow<Vertex, DefaultWeightedEdge> minimumCostFlowAlgorithm =
                 new CapacityScalingMinimumCostFlow<>();
 
-
-
         minimumCostFlow = minimumCostFlowAlgorithm.getMinimumCostFlow(problem);
-
 
     }
 

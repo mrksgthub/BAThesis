@@ -1,5 +1,6 @@
 package PlanarityAndAngles.Flow;
 
+import Datastructures.Vertex;
 import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.DirectedWeightedMultigraph;
 
@@ -17,7 +18,7 @@ class PushRelabel extends MaxFlowImp {
     private ArrayDeque<Integer> queue;
 
 
-    public PushRelabel(DirectedWeightedMultigraph<Datastructures.Vertex, DefaultWeightedEdge> networkGraph) {
+    public PushRelabel(DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> networkGraph) {
         super(networkGraph);
 
 

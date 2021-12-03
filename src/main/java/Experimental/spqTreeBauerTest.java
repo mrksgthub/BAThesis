@@ -224,7 +224,7 @@ class spqTreeBauerTest {
                 SPQNode parentNode = SPQTree.getEdgeSource(edge);
                 ArrayList<SPQNode> parentSuccessors = new ArrayList<>(Graphs.successorListOf(SPQTree, parentNode));
 
-                if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == NodeTypesEnum.NODETYPE.S)) {
+                if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.S)) {
                     List<DefaultEdge> childrenSuccesors = new ArrayList<>();
 
 
@@ -253,7 +253,7 @@ class spqTreeBauerTest {
                         SPQNode pop = childrenList.pop();
                         SPQNode peek = childrenList.peek();
 
-                        if (peek.getNodeType() == NodeTypesEnum.NODETYPE.Q && pop.getNodeType() == NodeTypesEnum.NODETYPE.Q) {
+                        if (peek.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.Q && pop.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.Q) {
                             GraphHelper.mergeQVertices(SPQTree, pop, peek);
                             childrenList.pop(); // remove the merged node
                             childrenList.push(pop);
@@ -271,7 +271,7 @@ class spqTreeBauerTest {
                     }
 
 
-                } else if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == NodeTypesEnum.NODETYPE.P)) {
+                } else if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.P)) {
 
                     if (vertex.getSinkVertex() == parentNode.getSinkVertex() && vertex.getStartVertex() == parentNode.getStartVertex()) {
 

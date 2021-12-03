@@ -13,7 +13,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
     private final List<TupleEdge<V, V>> pairList;
     private final List<PlanarGraphFace<V>> planarGraphFaces = new ArrayList<>();
     private final HashMap<PlanarGraphFace<V>, ArrayList<V>> adjVertices = new HashMap<>();
-    private final HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> adjFaces2 = new HashMap<>();
+    private final HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> tupleToFaceMap = new HashMap<>();
     private final V startvertex;
     private final V sinkVertex;
 
@@ -35,8 +35,8 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
         return planarGraphFaces;
     }
 
-    public HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> getAdjFaces2() {
-        return adjFaces2;
+    public HashMap<TupleEdge<V, V>, PlanarGraphFace<V>> getTupleToFaceMap() {
+        return tupleToFaceMap;
     }
 
     public void generateFaces() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
@@ -80,7 +80,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                 face.add(nextVertex);
 
                 adjVertices.get(faceObj).add(vertex);
-                adjFaces2.put(pair, faceObj); // Hier zum checken, um die beiden Faces zu finden einfach adjFaces2 nach <a,b> und <b,a> untersuchen
+                tupleToFaceMap.put(pair, faceObj); // Hier zum checken, um die beiden Faces zu finden einfach adjFaces2 nach <a,b> und <b,a> untersuchen
             //    faceObj.getOrthogonalRep().put(pair, 999);
                 faceObj.setEdgeAngle(pair, 999);
 
@@ -96,7 +96,7 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                     nextVertex = tArrayList.get(Math.floorMod((tArrayList.indexOf(vertex) - 1), tArrayList.size()));
                     TupleEdge<V, V> vvPair = new TupleEdge<>(temp, nextVertex);
                     vertex = temp;
-                    adjFaces2.put(vvPair, faceObj);
+                    tupleToFaceMap.put(vvPair, faceObj);
              //       faceObj.getOrthogonalRep().put(vvPair, 999);
                     faceObj.setEdgeAngle(vvPair, 999);
 
