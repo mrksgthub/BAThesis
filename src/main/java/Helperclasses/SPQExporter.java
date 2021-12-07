@@ -24,7 +24,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getSourceVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();
@@ -39,7 +39,7 @@ public class SPQExporter {
         DOTExporter<SPQNode, DefaultEdge> exporter = new DOTExporter<>();
         exporter.setVertexIdProvider((SPQNode e) -> {
             //     return e.getName();
-            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getStartVertex().getName() + e.getSinkVertex().getName());
+            return ((e.getSpqChildren().size() > 0) ? e.getName() : e.getSourceVertex().getName() + e.getSinkVertex().getName());
 
         });
         Writer writer = new StringWriter();

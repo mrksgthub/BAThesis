@@ -68,7 +68,7 @@ public class PlanarityAndAngleDistributorRunner {
     public void run(boolean wasAlgorithmnSelected, GraphDrawOptions.WinkelAlgorithmus algorithmm) {
         if (wasAlgorithmnSelected) {
             embedding = tree.getVertexToAdjecencyListMap();
-            treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+            treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
 
 

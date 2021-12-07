@@ -69,7 +69,7 @@ public class GraphBuilder {
                 /*      Embedder embedder = new Embedder(embedding);
                 embedder.run(root);*/
 
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
 
@@ -111,7 +111,7 @@ public class GraphBuilder {
             root = spqGenerator.getRoot();
 
             DirectedMultigraph<Vertex, DefaultEdge> graph = tree.getConstructedGraph();
-            FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+            FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
 
             System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());

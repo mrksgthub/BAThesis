@@ -19,12 +19,14 @@ public class MaxFlow {
     private final List<PlanarGraphFace<Vertex>> listOfFaces;
     public final DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> flowNetwork = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
     private Map<DefaultWeightedEdge, Double> flowMap;
-    private Vertex solverSource;
-    private Vertex solverSink;
+    private final Vertex solverSource;
+    private final Vertex solverSink;
     private int counter;
 
     public MaxFlow(List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.listOfFaces = planarGraphFaces;
+        solverSource = new Vertex("solverSource");
+        solverSink = new Vertex("solverSink");
     }
 
     public Map<DefaultWeightedEdge, Double> getFlowMap() {
@@ -50,8 +52,7 @@ public class MaxFlow {
     }
 
     public boolean generateFlowNetwork() {
-        solverSource = new Vertex("solverSource");
-        solverSink = new Vertex("solverSink");
+
 
         flowNetwork.addVertex(solverSource);
         flowNetwork.addVertex(solverSink);

@@ -42,11 +42,11 @@ class GraphgenSplitGraph {
         SPQQNode qLeft = new SPQQNode("Q" + ++counter, vertex, vertex2);
         root.getSpqChildren().add(qLeft);
         qLeft.setParent(root);
-        qLeft.setStartVertex(vertex);
+        qLeft.setSourceVertex(vertex);
         qLeft.setSinkVertex(vertex2);
 
         SPQNode qRight = new SPQQNode("Q" + ++counter, vertex, vertex2);
-        qRight.setStartVertex(vertex);
+        qRight.setSourceVertex(vertex);
         qRight.setSinkVertex(vertex2);
         root.getSpqChildren().add(qRight);
         qRight.setParent(root);
@@ -118,7 +118,7 @@ class GraphgenSplitGraph {
                             i = i + 5;
                         } else {
                             //     int a = multigraph.vertexSet().size();
-                            newMaxDegreePNode(edge);
+                            newDeg4PNodeConst(edge);
                             //    int b = multigraph.vertexSet().size()-a;
                             i = i + 7;
                         }
@@ -129,7 +129,7 @@ class GraphgenSplitGraph {
                         newDeg3PNode(arr1[0]);
                         i = i + 5;
                     } else if (mode == 3) {
-                        newMaxDegreePNode(edge);
+                        newDeg4PNodeConst(edge);
                         i = i + 7;
                     }
                     i += einfachheit + 1;
@@ -191,11 +191,11 @@ class GraphgenSplitGraph {
     }
 
 
-    private void newMaxDegreePNode(DefaultEdge edge) {
+    private void newDeg4PNodeConst(DefaultEdge edge) {
         DefaultEdge[] arr1 = randomnewSNode(edge);
         arr1 = randomnewSNode(arr1[1]);
         arr1 = randomnewSNode(arr1[1]);
-        randomnewMaxDegPNode(arr1[0]);
+        Deg4PNode(arr1[0]);
     }
 
 
@@ -345,7 +345,7 @@ class GraphgenSplitGraph {
         }
     }
 
-    private void randomnewMaxDegPNode(DefaultEdge edge) {
+    private void Deg4PNode(DefaultEdge edge) {
 
         DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
         edges.add(edge1);

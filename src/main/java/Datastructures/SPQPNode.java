@@ -19,7 +19,7 @@ public class SPQPNode extends SPQNode {
     public SPQPNode(Vertex edgeSource, Vertex edgeTarget) {
         super("P" + edgeSource.getName() + edgeTarget.getName() + id++);
         nodeType = NodeTypesEnum.NODETYPE.P;
-        this.startVertex = edgeSource;
+        this.sourceVertex = edgeSource;
         this.sinkVertex = edgeTarget;
     }
 
@@ -31,7 +31,7 @@ public class SPQPNode extends SPQNode {
             if (node.getNodeType() == NodeTypesEnum.NODETYPE.Q && node.spqChildren.size() == 0) {
                 SPQNode newQ = new SPQQNode("Qstar" + node.getName(), false);
                 newQ.setParent(this);
-                newQ.setStartVertex(node.getStartVertex());
+                newQ.setSourceVertex(node.getSourceVertex());
                 newQ.setSinkVertex(node.getSinkVertex());
                 newQ.spqChildren.add(node);
                 this.spqChildren.set(this.spqChildren.indexOf(node), newQ);
@@ -83,7 +83,7 @@ public class SPQPNode extends SPQNode {
             int inDegreeCounterStart = startNodes.size();
             int inDegreeCounterSink = sinkNodes.size();
 
-            int outDegreeCounterStart = startVertex.adjacentVertices.size() - inDegreeCounterStart;
+            int outDegreeCounterStart = sourceVertex.adjacentVertices.size() - inDegreeCounterStart;
             int outDegreeCounterSink = sinkVertex.adjacentVertices.size() - inDegreeCounterSink;
 
 
@@ -195,36 +195,36 @@ public class SPQPNode extends SPQNode {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
             // Winkel um die Quelle festlegen.
             // Beispiel3-4-10  Außen
-            Vertex nextVertexStarRight = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
-            angleMap.put((new TupleEdge<>(nextVertexStarRight, startVertex, 1)), 1);
+            Vertex nextVertexStarRight = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
+            angleMap.put((new TupleEdge<>(nextVertexStarRight, sourceVertex, 1)), 1);
 
             //Beispiel 9-4-10
-            Vertex nextVertexMiddle = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), startVertex.adjacentVertices.size()));
-            angleMap.put((new TupleEdge<>(startNodes.get(1), startVertex, 1)), 1);
+            Vertex nextVertexMiddle = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
+            angleMap.put((new TupleEdge<>(startNodes.get(1), sourceVertex, 1)), 1);
 
             // Beispiel3-4-10  Außen
-            angleMap.put((new TupleEdge<>(startNodes.get(2), startVertex, 1)), 1);
+            angleMap.put((new TupleEdge<>(startNodes.get(2), sourceVertex, 1)), 1);
 
             // Beispiel5-4-3  Außen
-            angleMap.put((new TupleEdge<>(startNodes.get(0), startVertex, 1)), 1);
+            angleMap.put((new TupleEdge<>(startNodes.get(0), sourceVertex, 1)), 1);
 
-        } else if (startNodes.size() == 2 && startVertex.adjacentVertices.size() > 2 && !this.isRoot) {
+        } else if (startNodes.size() == 2 && sourceVertex.adjacentVertices.size() > 2 && !this.isRoot) {
             // Beispiel 8-6-5 außen
-            Vertex nextVertexStartLeft = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(vertex1) - 1), startVertex.adjacentVertices.size()));
-            angleMap.put(new TupleEdge<>(vertex1, startVertex, alphaul), alphaul);
+            Vertex nextVertexStartLeft = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(vertex1) - 1), sourceVertex.adjacentVertices.size()));
+            angleMap.put(new TupleEdge<>(vertex1, sourceVertex, alphaul), alphaul);
 
             // Beispiel 5-6-7 Außen
             Vertex vertex2 = spqChildren.get(1).startNodes.get(0);
-            Vertex nextVertexStarRight = startVertex.adjacentVertices.get(Math.floorMod((startVertex.adjacentVertices.indexOf(vertex2) + 1), startVertex.adjacentVertices.size()));
-            angleMap.put((new TupleEdge<>(nextVertexStarRight, startVertex, alphaur)), alphaur);
+            Vertex nextVertexStarRight = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(vertex2) + 1), sourceVertex.adjacentVertices.size()));
+            angleMap.put((new TupleEdge<>(nextVertexStarRight, sourceVertex, alphaur)), alphaur);
 
             //Winkel zwischen der linken und rechten äußeren Kanten "innen" (Bsp. am Ende von Kante 7-6 an Knoten 6)
-            angleMap.put((new TupleEdge<>(vertex2, startVertex, ((alphaur + alphaul == 2) && (startVertex.adjacentVertices.size() == 3)) ? 0 : 1)), ((alphaur + alphaul == 2) && (startVertex.adjacentVertices.size() == 3)) ? 0 : 1);
+            angleMap.put((new TupleEdge<>(vertex2, sourceVertex, ((alphaur + alphaul == 2) && (sourceVertex.adjacentVertices.size() == 3)) ? 0 : 1)), ((alphaur + alphaul == 2) && (sourceVertex.adjacentVertices.size() == 3)) ? 0 : 1);
 
-        } else if (startVertex.adjacentVertices.size() == 2 && this.isRoot) {
+        } else if (sourceVertex.adjacentVertices.size() == 2 && this.isRoot) {
             // Sonderfall: Referenzkante an der Wurzel.
-            angleMap.put((new TupleEdge<>(sinkVertex, startVertex, 1)), 1);
-            angleMap.put((new TupleEdge<>(startNodes.get(0), startVertex, 1)), -1);
+            angleMap.put((new TupleEdge<>(sinkVertex, sourceVertex, 1)), 1);
+            angleMap.put((new TupleEdge<>(startNodes.get(0), sourceVertex, 1)), -1);
 
 
         }
@@ -258,7 +258,7 @@ public class SPQPNode extends SPQNode {
 
         } else if (sinkVertex.adjacentVertices.size() == 2 && this.isRoot) {
 
-            angleMap.put((new TupleEdge<>(startVertex, sinkVertex, -1)), -1);
+            angleMap.put((new TupleEdge<>(sourceVertex, sinkVertex, -1)), -1);
             angleMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex, 1)), 1);
 
             //  System.out.println("Test");
@@ -286,15 +286,15 @@ public class SPQPNode extends SPQNode {
             int alphavr = 9999;
 
             // äquivalent zu outdeg(w)
-            double kul = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
-            double kur = ((this.startVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
+            double kul = ((this.sourceVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
+            double kur = ((this.sourceVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
 
 
             double kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;
             double kvr = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(1).sinkNodes.size() == 1) ? 1 : 0.5;
 
             int[] arrU;
-            if (startVertex.adjacentVertices.size() == 4) {
+            if (sourceVertex.adjacentVertices.size() == 4) {
                 alphaul = 1;
                 alphaur = 1;
                 arrU = new int[]{1};

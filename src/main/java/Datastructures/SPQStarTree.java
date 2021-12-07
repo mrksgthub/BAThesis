@@ -43,13 +43,13 @@ public class SPQStarTree {
         while (!stack.isEmpty()) {
             SPQNode node = stack.pop();
             if (node.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q || node.getSpqChildren().size() > 0) {
-                node.setStartVertex(node.getSpqChildren().get(0).getStartVertex());
+                node.setSourceVertex(node.getSpqChildren().get(0).getSourceVertex());
                 node.setSinkVertex(node.getSpqChildren().get(node.getSpqChildren().size() - 1).getSinkVertex());
 
             } else {
-                constructedGraph.addVertex(node.getStartVertex());
+                constructedGraph.addVertex(node.getSourceVertex());
                 constructedGraph.addVertex(node.getSinkVertex());
-                constructedGraph.addEdge(node.getStartVertex(), node.getSinkVertex());
+                constructedGraph.addEdge(node.getSourceVertex(), node.getSinkVertex());
             }
         }
 
@@ -176,13 +176,13 @@ public class SPQStarTree {
             setStartAndSinkNodesOrBuildConstructedGraph(node);
         }
         if (root.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q || root.getSpqChildren().size() > 0) {
-            root.setStartVertex(root.getSpqChildren().get(0).getStartVertex());
+            root.setSourceVertex(root.getSpqChildren().get(0).getSourceVertex());
             root.setSinkVertex(root.getSpqChildren().get(root.getSpqChildren().size() - 1).getSinkVertex());
 
         } else {
-            constructedGraph.addVertex(root.getStartVertex());
+            constructedGraph.addVertex(root.getSourceVertex());
             constructedGraph.addVertex(root.getSinkVertex());
-            constructedGraph.addEdge(root.getStartVertex(), root.getSinkVertex());
+            constructedGraph.addEdge(root.getSourceVertex(), root.getSinkVertex());
         }
 
     }

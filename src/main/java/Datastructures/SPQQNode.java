@@ -34,7 +34,7 @@ public class SPQQNode extends SPQNode {
             super.setName("QStar" + source.getName() + sink.getName() + id++);
         }
 
-        startVertex = source;
+        sourceVertex = source;
         sinkVertex = sink;
     }
 
@@ -48,7 +48,7 @@ public class SPQQNode extends SPQNode {
     public SPQQNode(String q, Vertex edgeSource, Vertex edgeTarget) {
         super(q);
         nodeType = NodeTypesEnum.NODETYPE.Q;
-        startVertex = edgeSource;
+        sourceVertex = edgeSource;
         sinkVertex = edgeTarget;
         isQ = false;
     }
@@ -57,11 +57,11 @@ public class SPQQNode extends SPQNode {
     @Override
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
-            if (this.getStartVertex() == nodes.getStartVertex()) {
+            if (this.getSourceVertex() == nodes.getSourceVertex()) {
                 startNodes.add(nodes.getSinkVertex());
             }
             if (this.getSinkVertex() == nodes.getSinkVertex()) {
-                sinkNodes.add(nodes.getStartVertex());
+                sinkNodes.add(nodes.getSourceVertex());
             }
 
     }
@@ -84,13 +84,13 @@ public class SPQQNode extends SPQNode {
 
         if (spirality >= 0) {
             for (int i = 0; i < spirality; i++) {
-                angleMap.put(new TupleEdge<>(spqChildren.get(i).getStartVertex(), spqChildren.get(i).getSinkVertex(),1), 1);
-                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getStartVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i).getSourceVertex(), spqChildren.get(i).getSinkVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getSourceVertex(),-1), -1);
             }
         } else {
             for (int i = 0; i < -spirality; i++) {
-                angleMap.put(new TupleEdge<>(spqChildren.get(i).getStartVertex(), spqChildren.get(i).getSinkVertex(),-1), -1);
-                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getStartVertex(),1), 1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i).getSourceVertex(), spqChildren.get(i).getSinkVertex(),-1), -1);
+                angleMap.put(new TupleEdge<>(spqChildren.get(i + 1).getSinkVertex(), spqChildren.get(i + 1).getSourceVertex(),1), 1);
             }
         }
 

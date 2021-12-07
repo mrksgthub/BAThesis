@@ -39,7 +39,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(40, 30000);
+        SPQGenerator spqGenerator = new SPQGenerator(30, 20000);
         spqGenerator.run();
 
 
@@ -72,7 +72,7 @@ class basicMainClass {
 
 
 
-        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+        FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
         treeVertexFaceGenerator.generateFaces();
 
 
@@ -125,7 +125,7 @@ class basicMainClass {
 
         long startTime2 = System.currentTimeMillis();
         MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-        test.generateFlowNetwork();
+       // test.generateFlowNetwork();
         long stopTime2 = System.currentTimeMillis();
         long elapsedTime2 = stopTime2 - startTime2;
         System.out.println("Algorithms.Flow.MaxFlow Init " + elapsedTime2);

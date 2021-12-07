@@ -41,7 +41,7 @@ class spqTreeBauerTest {
 
         Graphs.addGraph(graph, tree.getConstructedGraph());
 
-        graph.removeEdge(root.getStartVertex(), root.getSinkVertex());
+        graph.removeEdge(root.getSourceVertex(), root.getSinkVertex());
 
         for (Vertex vertex : graph.vertexSet()) {
             graphSPQNodeEdges.addVertex(vertex);
@@ -56,12 +56,12 @@ class spqTreeBauerTest {
         }
 
 
-        Vertex prev = root.getStartVertex();
+        Vertex prev = root.getSourceVertex();
         ArrayDeque<Vertex> stack = new ArrayDeque<>();
         //  stack.add(prev);
 
         List<ArrayDeque<Vertex>> qNodes = new ArrayList<>();
-        SPQDepthiterator<Vertex, SPQEdge> depthFirstIterator = new SPQDepthiterator(graphSPQNodeEdges, root.getStartVertex(), stack, prev);
+        SPQDepthiterator<Vertex, SPQEdge> depthFirstIterator = new SPQDepthiterator(graphSPQNodeEdges, root.getSourceVertex(), stack, prev);
 
         while (depthFirstIterator.hasNext()) {
 
@@ -85,7 +85,7 @@ class spqTreeBauerTest {
         ArrayDeque<Vertex> arrayDeque = new ArrayDeque<>(graph.vertexSet());
         connectivityInspector.connectedSets();
 
-        arrayDeque.remove(root.getStartVertex());
+        arrayDeque.remove(root.getSourceVertex());
         arrayDeque.remove(root.getSinkVertex());
 
 
@@ -273,7 +273,7 @@ class spqTreeBauerTest {
 
                 } else if (vertex.getNodeType() == parentNode.getNodeType() && (vertex.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.P)) {
 
-                    if (vertex.getSinkVertex() == parentNode.getSinkVertex() && vertex.getStartVertex() == parentNode.getStartVertex()) {
+                    if (vertex.getSinkVertex() == parentNode.getSinkVertex() && vertex.getSourceVertex() == parentNode.getSourceVertex()) {
 
 
                         List<DefaultEdge> childrenSuccesors = new ArrayList<>();
@@ -304,8 +304,8 @@ class spqTreeBauerTest {
         }
 
 
-        SPQQNode sourceSink = new SPQQNode(rootNode.getStartVertex(), rootNode.getSinkVertex(), false);
-        SPQQNode node = new SPQQNode(rootNode.getStartVertex(), rootNode.getSinkVertex(), true);
+        SPQQNode sourceSink = new SPQQNode(rootNode.getSourceVertex(), rootNode.getSinkVertex(), false);
+        SPQQNode node = new SPQQNode(rootNode.getSourceVertex(), rootNode.getSinkVertex(), true);
         SPQTree.addVertex(node);
         SPQTree.addVertex(sourceSink);
         SPQTree.addEdge(node, sourceSink);

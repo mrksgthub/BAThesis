@@ -77,7 +77,7 @@ public class GraphTester {
                 /* Embedder embedder = new Embedder(embedding);
                 embedder.run(root);
 */
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
                 DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
@@ -195,7 +195,7 @@ public class GraphTester {
                 root = tree.getRoot();
 
 
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
 
                 if (maxSize < 0 || tree.getConstructedGraph().vertexSet().size() <= maxSize) {
@@ -273,7 +273,7 @@ public class GraphTester {
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
-                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
+                treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
                 treeVertexFaceGenerator.generateFaces();
                 startTime = System.nanoTime();
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();

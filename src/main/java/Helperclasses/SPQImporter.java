@@ -157,7 +157,7 @@ public class SPQImporter {
                             int i = line.lastIndexOf("v");
                             // Erzeuge Startvertex der QNode
                             nameToTreeVertex.putIfAbsent(line.substring(0, i).trim(), new Vertex(line.substring(0, i).trim()));
-                            qNode.setStartVertex(  nameToTreeVertex.get(line.substring(0, i).trim()));
+                            qNode.setSourceVertex(  nameToTreeVertex.get(line.substring(0, i).trim()));
                             // Erzeuge Sinkvertex der QNode
                             nameToTreeVertex.putIfAbsent(line.substring(i, line.length() - 1).trim(), new Vertex(line.substring(i, line.length() - 1).trim()));
                             qNode.setSinkVertex( nameToTreeVertex.get(line.substring(i, line.length() - 1).trim()));

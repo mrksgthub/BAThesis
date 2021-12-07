@@ -14,7 +14,7 @@ public abstract class SPQNode {
     double spirality = 999999;
     int counter = 0;
     NodeTypesEnum.NODETYPE nodeType;
-    Vertex startVertex;
+    Vertex sourceVertex;
     Vertex sinkVertex;
     double repIntervalLowerBound = 999;
     double repIntervalUpperBound = -990;
@@ -67,12 +67,12 @@ public abstract class SPQNode {
         return true;
     }
 
-    public Vertex getStartVertex() {
-        return startVertex;
+    public Vertex getSourceVertex() {
+        return sourceVertex;
     }
 
-    public void setStartVertex(Vertex startVertex) {
-        this.startVertex = startVertex;
+    public void setSourceVertex(Vertex sourceVertex) {
+        this.sourceVertex = sourceVertex;
     }
 
     public Vertex getSinkVertex() {
@@ -122,7 +122,7 @@ public abstract class SPQNode {
      */
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
-        if (this.getStartVertex() == nodes.getStartVertex()) {
+        if (this.getSourceVertex() == nodes.getSourceVertex()) {
             startNodes.addAll(nodes.startNodes);
         }
         if (this.getSinkVertex() == nodes.getSinkVertex()) {
@@ -136,8 +136,8 @@ public abstract class SPQNode {
      */
     public void addToAdjacencyListsSinkAndSource() {
         if (this.getNodeType() == NodeTypesEnum.NODETYPE.Q && spqChildren.size() == 0) {
-            startVertex.adjacentVertices.add(sinkVertex);
-            sinkVertex.adjacentVertices.add(0, startVertex);
+            sourceVertex.adjacentVertices.add(sinkVertex);
+            sinkVertex.adjacentVertices.add(0, sourceVertex);
         }
     }
 

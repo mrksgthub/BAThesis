@@ -69,7 +69,7 @@ class stNumbering {
         Graphs.addGraph(graph, tree.getConstructedGraph());
 
 
-        DFTransversal.buildPostOrderStack(tree.getRoot().getSinkVertex(), tree.getRoot().getStartVertex());
+        DFTransversal.buildPostOrderStack(tree.getRoot().getSinkVertex(), tree.getRoot().getSourceVertex());
 
 
 
