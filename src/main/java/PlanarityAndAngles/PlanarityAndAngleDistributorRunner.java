@@ -91,7 +91,13 @@ public class PlanarityAndAngleDistributorRunner {
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.runJGraphTPushRelabelImplementation();
+               boolean isValid= test.runJGraphTPushRelabelImplementation();
+
+                if (!isValid) {
+                    throw new RuntimeException("inValidGraph");
+                }
+
+
                 Angulator angulator = new Angulator();
                 try {
                     angulator.runMaxFlowAngles(test);

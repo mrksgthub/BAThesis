@@ -113,10 +113,10 @@ class SPQGUI extends JFrame {
                     opsField.setText("Ops: " + dialog1.getOps());
                     ChanceOfP.setText("Chance of P: " + dialog1.getChanceOfP());
                     maxDegLabel.setText("Max Deg: " + dialog1.getMaxDeg());
-                    chainLenthLabel.setText("Kettenlänge: " + dialog1.getEinfachheit());
 
 
-                    SPQGenerator spqGenerator = new SPQGenerator(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit());
+
+                    SPQGenerator spqGenerator = new SPQGenerator(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg());
                     worker = new SwingWorker() {
 
                         @Override
@@ -127,7 +127,7 @@ class SPQGUI extends JFrame {
                             spqGenerator.setCounter(0);
                             ;
                             while ((!hasValidGraph || dialog1.isAllowInvalidGraphs()) && !isCancelled()) {
-                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getEinfachheit(), dialog1.getMode());
+                                hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getMode());
 
                             }
                             return null;
@@ -324,7 +324,7 @@ class SPQGUI extends JFrame {
                                 }
                                 chanceOfP = dialog1.getChanceOfP() + i * dialog1.getChanceOfPIncr();
                                 ops = dialog1.getMinOps() + j * dialog1.getOpsIncrement();
-                                boolean isValid = graphBuilder.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getChainLength(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
+                                boolean isValid = graphBuilder.run(chanceOfP, ops, dialog1.getMaxDegree(), dialog1.getMode(), dialog1.isAllowInvalidGraphs());
 
                                 if (!isValid && !dialog1.isAllowInvalidGraphs()) {
                                     counter++;

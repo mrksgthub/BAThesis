@@ -97,8 +97,7 @@ public class MinFlow {
 
                     break;
             }
-
-            //    System.out.println("test");
+            
         }
 
 

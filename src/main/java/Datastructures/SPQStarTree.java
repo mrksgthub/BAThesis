@@ -37,7 +37,7 @@ public class SPQStarTree {
 
 
 
-    private void setStartAndSinkNodesOrBuildConstructedGraph(SPQNode root) {
+    private void setStartAndSinkNodesAndBuildConstructedGraph(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
         while (!stack.isEmpty()) {
@@ -88,13 +88,7 @@ public class SPQStarTree {
     }
 
     public void initializeSPQNodes(SPQNode root) {
-        setStartAndSinkNodesOrBuildConstructedGraph(root);
-        calculateAdjaecencyListsOfSinkAndSource(root);
-        determineInnerOuterAdjecentsOfSinkAndSource(root);
-    }
-
-
-    private void determineInnerOuterNodesAndAdjVertices(SPQNode root) {
+        setStartAndSinkNodesAndBuildConstructedGraph(root);
         calculateAdjaecencyListsOfSinkAndSource(root);
         determineInnerOuterAdjecentsOfSinkAndSource(root);
     }
@@ -123,69 +117,6 @@ public class SPQStarTree {
         }
     }
 
-
-
-
-
-
-
-
-    public void determineInnerOuterNodesAndAdjVertices2(SPQNode root) {
-
-        root.addToAdjacencyListsSinkAndSource(); // AdjLists der Knoten des SP-Graphen
-        for (SPQNode node : root.getSpqChildren()
-        ) {
-            determineInnerOuterNodesAndAdjVertices(node);
-        }
-        if (root.getSpqChildren().size() > 0) {
-            for (SPQNode nodes :
-                    root.getSpqChildren()) {
-                root.addToSourceAndSinkLists(nodes); //innere adjazente Knoten
-            }
-        }
-    }
-
-    private void compactTree2(SPQNode root) {
-
-        root.getSpqChildren().addAll(root.getSpqChildren()); // mergedChildren sind die Kinder im SPQ*Baum
-
-        for (SPQNode node : root.getSpqChildren()
-        ) {
-            compactTree(node);
-        }
-
-        if (root.getParent() != null && root.getNodeType() == root.getParent().getNodeType() && !root.getParent().isRoot()) {
-            root.mergeNodeWithParent(root, root.getParent());
-        }
-    }
-
-    private void generateQStarNodes2(SPQNode root) {
-
-        for (SPQNode node : root.getSpqChildren()
-        ) {
-            generateQStarNodes(node);
-        }
-        root.generateQstarChildren();
-    }
-
-    public void setStartAndSinkNodesOrBuildConstructedGraph2(SPQNode root) {
-
-
-        for (SPQNode node : root.getSpqChildren()
-        ) {
-            setStartAndSinkNodesOrBuildConstructedGraph(node);
-        }
-        if (root.getNodeType() != SPQNode.NodeTypesEnum.NODETYPE.Q || root.getSpqChildren().size() > 0) {
-            root.setSourceVertex(root.getSpqChildren().get(0).getSourceVertex());
-            root.setSinkVertex(root.getSpqChildren().get(root.getSpqChildren().size() - 1).getSinkVertex());
-
-        } else {
-            constructedGraph.addVertex(root.getSourceVertex());
-            constructedGraph.addVertex(root.getSinkVertex());
-            constructedGraph.addEdge(root.getSourceVertex(), root.getSinkVertex());
-        }
-
-    }
 
 }
 

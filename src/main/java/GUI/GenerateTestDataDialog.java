@@ -16,9 +16,7 @@ class GenerateTestDataDialog extends JDialog {
     private JLabel graphFolderLabel;
     private JTextField maxDegreeText;
 
-    private JTextField chainLengthText;
     private JLabel maxDegreeLabel;
-    private JLabel chainLengthLabel;
     private JTextField NumChanceOfPIncrementsField;
     private JTextField NumOpsIncreaseField;
     private JRadioButton mixDeg3Deg4RadioButton;
@@ -40,7 +38,6 @@ class GenerateTestDataDialog extends JDialog {
     private String filePath;
     private int maxDegree;
     private int counter;
-    private int chainLength;
     private int numOfOpsIncrease;
     private int numOfChanceOfPIncrease;
     private ButtonGroup buttonGroup1;
@@ -156,10 +153,6 @@ class GenerateTestDataDialog extends JDialog {
 
     public int getMaxDegree() {
         return maxDegree;
-    }
-
-    public int getChainLength() {
-        return chainLength;
     }
 
     public int getChanceOfPIncr() {
@@ -295,20 +288,11 @@ class GenerateTestDataDialog extends JDialog {
             maxDegree = -1;
         }
 
-        try {
-            chainLength = Integer.parseInt(chainLengthText.getText());
-            if (chainLength < 1) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nur Werte von 1+ möglich");
-            e.printStackTrace();
-            chainLength = -1;
-        }
+
 
         allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
-        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5 && chainLength > 0 && numOfChanceOfPIncrease > 0 && numOfOpsIncrease > 0 && counter >0) {
+        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5  && numOfChanceOfPIncrease > 0 && numOfOpsIncrease > 0 && counter >0) {
             validSettings = true;
             dispose();
 

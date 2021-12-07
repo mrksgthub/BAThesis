@@ -59,11 +59,10 @@ class GraphgenSplitGraph {
 
     }
 
-    public GraphgenSplitGraph(int numberOfNodes, int chanceOfP, int maxDeg, int einfachheit, int mode) {
+    public GraphgenSplitGraph(int numberOfNodes, int chanceOfP, int maxDeg, int mode) {
         this(numberOfNodes);
         this.chanceOfP = chanceOfP;
         this.maxDeg = maxDeg;
-        this.einfachheit = einfachheit;
         this.mode = mode;
     }
 

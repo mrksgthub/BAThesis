@@ -94,7 +94,7 @@ public class GraphBuilder {
     }
 
 
-    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int einfachheit, int mode, boolean isInvalidAllowed) {
+    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int mode, boolean isInvalidAllowed) {
 
 
         //   runs = 30;
@@ -103,7 +103,7 @@ public class GraphBuilder {
 
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        boolean valid = spqGenerator.generateGraph(OPS, CHANCE_OF_P, maxDeg, einfachheit, mode);
+        boolean valid = spqGenerator.generateGraph(OPS, CHANCE_OF_P, maxDeg, mode);
 
 
         if (valid || isInvalidAllowed) {

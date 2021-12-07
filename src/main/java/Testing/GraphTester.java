@@ -269,7 +269,7 @@ public class GraphTester {
 
         try {
             DescriptiveStatistics statsDidimo = new DescriptiveStatistics();
-
+            // Didimo Test
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
@@ -278,10 +278,6 @@ public class GraphTester {
                 startTime = System.nanoTime();
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
                 isRectilinear = didimoRepresentability.run(tree.getRoot());
-
-                // root.getMergedChildren().get(0).computeSpirality();
-                //    Angulator angulator = new Angulator();
-                //    angulator.runSpiralityAlg(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 statsDidimo.addValue(elapsedTime);
@@ -289,23 +285,20 @@ public class GraphTester {
             didimoTime = statsDidimo.getMean();
             didimoStdev = statsDidimo.getStandardDeviation();
             didimoMedian = statsDidimo.getPercentile(50);
-            //         System.out.println("Didimo Zeit: " + didimoTime);
-            //        System.out.println("DidimoStdev" + didimoStdev);
+
 
         } catch (Exception e) {
             e.printStackTrace();
             didimoTime = -1;
         }
 
-
+        // Didimo MinCostTest
         if (tamassiaMinCostAllowed && (nodes < 20000 || faces > 2)) {
             tree = spqImporter.runFromArray();
 
             DescriptiveStatistics statsTamassiaMinFlow = new DescriptiveStatistics();
 
             for (int i = 0; i < runs; i++) {
-                //      treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
-                //    treeVertexFaceGenerator.generateFaces();
                 MinFlow tamassiaRepresentation = new MinFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
                 tamassiaRepresentation.generateFlowNetwork();
                 startTime = System.nanoTime();
@@ -318,8 +311,6 @@ public class GraphTester {
             tamassiaMinFlowTime = statsTamassiaMinFlow.getMean();
             tamassiaMinFlowStdDev = statsTamassiaMinFlow.getStandardDeviation();
             tamassiaMinFlowMedian = statsTamassiaMinFlow.getPercentile(50);
-            //         System.out.println("Tamassia Zeit: " + tamassiaMinFlowTime);
-            //       System.out.println("TamassaMinStdDev" + tamassiaMinFlowStdDev);
         } else {
             tamassiaMinFlowTime = -1;
             tamassiaMinFlowStdDev = -1;
@@ -329,17 +320,14 @@ public class GraphTester {
 
         try {
             DescriptiveStatistics statsTamassiaPush = new DescriptiveStatistics();
-
+            // PushRelabel Test
             for (int i = 0; i < runs; i++) {
 
                 tree = spqImporter.runFromArray();
-                //       treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getStartVertex(), root.getSinkVertex());
-                //       treeVertexFaceGenerator.generateFaces();
+
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.generateFlowNetwork();
                 startTime = System.nanoTime();
-
-                //       test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
                 test.runJGraphTPushRelabelPlanarityTest();
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
@@ -358,8 +346,6 @@ public class GraphTester {
             tamassiaPushTime = statsTamassiaPush.getMean();
             tamassiaPushStdev = statsTamassiaPush.getStandardDeviation();
             tamassiaPushMedian = statsTamassiaPush.getPercentile(50);
-            //    System.out.println("TamassiaPush Zeit: " + tamassiaPushStdev);
-            //     System.out.println("TamassiaStdev" + tamassiaPushStdev);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -368,7 +354,7 @@ public class GraphTester {
         }
 
 /*
-
+        // Falls man den Ford Fulkerson Test einfügen will
         try {
             DescriptiveStatistics statsFordFulkerson = new DescriptiveStatistics();
 

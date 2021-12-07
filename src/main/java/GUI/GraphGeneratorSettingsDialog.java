@@ -10,14 +10,12 @@ class GraphGeneratorSettingsDialog extends JDialog {
     ButtonGroup buttonGroup1;
     private int mode;
     private int maxDeg = -1;
-    private int einfachheit = -1;
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textField1;
     private JTextField textField2;
     private JTextField textField3;
-    private JTextField textField4;
     private JPanel randomButton;
     private JRadioButton mixDeg3Deg4RadioButton;
     private JRadioButton onlyDeg3RadioButton;
@@ -89,10 +87,6 @@ class GraphGeneratorSettingsDialog extends JDialog {
         return maxDeg;
     }
 
-    public int getEinfachheit() {
-        return einfachheit;
-    }
-
     public int getMode() {
         return mode;
     }
@@ -143,21 +137,12 @@ class GraphGeneratorSettingsDialog extends JDialog {
             maxDeg = -1;
         }
 
-        try {
-            einfachheit = Integer.parseInt(textField4.getText());
-            if (einfachheit < 1) {
-                throw new NumberFormatException();
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Nur Werte von 1+ möglich");
-            e.printStackTrace();
-            einfachheit = -1;
-        }
+
 
         allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
 
-        if (chanceOfP >= 0 && ops >= 0 && (maxDeg >= 2 && maxDeg <= 4) && (einfachheit >= 1)) {
+        if (chanceOfP >= 0 && ops >= 0 && (maxDeg >= 2 && maxDeg <= 4)) {
             validSettings = true;
             dispose();
 
