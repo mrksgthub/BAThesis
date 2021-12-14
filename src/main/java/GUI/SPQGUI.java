@@ -126,9 +126,11 @@ class SPQGUI extends JFrame {
 
                             spqGenerator.setCounter(0);
                             ;
-                            while ((!hasValidGraph || dialog1.isAllowInvalidGraphs()) && !isCancelled()) {
+                            while ((!hasValidGraph) && !isCancelled()) {
                                 hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getMode());
-
+                                if (dialog1.isAllowInvalidGraphs()) {
+                                    hasValidGraph = true;
+                                }
                             }
                             return null;
                         }
@@ -137,7 +139,7 @@ class SPQGUI extends JFrame {
                         protected void done() {
                             super.done();
                             System.out.println("In Done");
-                            if (hasValidGraph) {
+                            if (hasValidGraph || dialog1.isAllowInvalidGraphs()) {
                                 tree = spqGenerator.getTree();
                                 root = spqGenerator.getRoot();
                                 status.setText("Graph Generated");

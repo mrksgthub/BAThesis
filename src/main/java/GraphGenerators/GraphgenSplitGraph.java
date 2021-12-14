@@ -21,10 +21,16 @@ class GraphgenSplitGraph {
     private int counter = 0;
     private double chanceOfP = 50;
     private int maxDeg = 4;
-    private int einfachheit = 1;
+    private final int einfachheit = 1;
     private int mode;
 
 
+    /**
+     * Basiskonstruktur, welcher den Ausgangs SPQ-Baum, der aus 2 Knoten und zwei parallelen Kanten besteht erzeugt.
+     *
+     *
+     * @param numberOfNodes maximale Knotenanzahl, oder maximale Anzahl von Operationen
+     */
     private GraphgenSplitGraph(int numberOfNodes) {
         // Erzeugen des "Basisgraphen" an sich und auch den BasisSPQ-Baum
         this.numberOfNodes = numberOfNodes;
@@ -76,6 +82,10 @@ class GraphgenSplitGraph {
     }
 
 
+    /**
+     * Wählt aus, ob generateRandomGraph(), oder generateSimpleGraph erzeugt werden soll.
+     *
+     */
     public void generateGraph() {
         if (mode == 0) {
             generateRandomGraph();
@@ -87,6 +97,12 @@ class GraphgenSplitGraph {
     }
 
 
+    /**
+     * Erzeugt einen SPQ-Baum, der nur aus Einfachen Strukturen wie MixDeg3Deg4, Deg3, oder Deg4 besteht.
+     *
+     *
+     * @param mode Welche Art von SP-Graph erzeugt werden soll 1 = MixDeg3Deg4 2 = Deg3 3 = Deg4.
+     */
     private void generateSimpleGraph(int mode) {
 
 
@@ -103,9 +119,6 @@ class GraphgenSplitGraph {
 
         for (int i = 0; i < numberOfNodes; i++) {
             edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
-
-         /*   int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));
-            int degreeOfedgeSink = multigraph.outDegreeOf(multigraph.getEdgeTarget(edge)) + multigraph.inDegreeOf(multigraph.getEdgeTarget(edge));*/
             if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
                 if (multigraph.degreeOf(multigraph.getEdgeSource(edge)) < 3 && multigraph.degreeOf(multigraph.getEdgeTarget(edge)) < 3) {
                     if (mode == 1) {
@@ -116,9 +129,7 @@ class GraphgenSplitGraph {
                             newDeg3PNode(arr1[0]);
                             i = i + 5;
                         } else {
-                            //     int a = multigraph.vertexSet().size();
                             newDeg4PNodeConst(edge);
-                            //    int b = multigraph.vertexSet().size()-a;
                             i = i + 7;
                         }
                     } else if (mode == 2) {
@@ -146,9 +157,15 @@ class GraphgenSplitGraph {
         //  System.out.println("test");
         //    Helperclasses.GraphHelper.printTODOTSPQNode(Helperclasses.GraphHelper.treeToDOT(root, 1));
 
-        counter = counter + 1 - 1;
     }
 
+
+    /**
+     * Erzeugt einen SPQ-Baum, der newrandomPNode nutzt und so nahe einem zufälligem SPQ-Baum kommt.
+     *
+     *
+     *
+     */
     private void generateRandomGraph() {
 
 
@@ -248,10 +265,16 @@ class GraphgenSplitGraph {
 
     }
 
-
+    /**
+     * Erzeugt einen P-Knoten, welcher dessen 2 Kinder mindestens insgesamt aus 4 Kanten bestehen, umn eine minimale
+     * gültige Struktur zu erzeugen.
+     *
+     *
+     * @param edge Welche Kante bzw. welcher Q-Knoten durch den P-Knoten ersetzt werden soll
+     * @param einfachheit
+     */
     private void randomnewPNode(DefaultEdge edge, int einfachheit) {
 
-        //TODO reihenfolge Randomizen? dh zufällig welches rechts, oder links eingefügt wird
 
         DefaultEdge edge1 = multigraph.addEdge(multigraph.getEdgeSource(edge), multigraph.getEdgeTarget(edge));
         edges.add(edge1);
@@ -271,7 +294,7 @@ class GraphgenSplitGraph {
 
         DefaultEdge[] arr1;
 
-        // TODO Sinnvoll?
+
         // mind 1 wetere Kante, um zu sicherzustellen, dass wir keine Mehrfachkante erhalten und um die Wahrscheinlichkeit
         // eines rektilinearen Graphn zu erhöhen
         if (getRandomNumberUsingNextInt(0, 99) < 50) {

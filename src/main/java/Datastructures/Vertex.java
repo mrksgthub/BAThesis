@@ -12,8 +12,11 @@ public class Vertex implements Serializable {
         @Override
         public Vertex get() {
 
-            return new Vertex("v" + id++);
+            return new Vertex("v" + counter);
         }
+
+
+
     };
 
     private static int counter = 0;
@@ -33,6 +36,10 @@ public class Vertex implements Serializable {
         this.name = name;
         this.dummy = dummy;
         id = counter++;
+    }
+
+    public static void resetIdCounter() {
+        counter = 0;
     }
 
 

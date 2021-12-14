@@ -39,7 +39,7 @@ class basicMainClass {
         SPQStarTree tree;
         SPQNode root;
 
-        SPQGenerator spqGenerator = new SPQGenerator(30, 20000);
+        SPQGenerator spqGenerator = new SPQGenerator(40, 70000);
         spqGenerator.run();
 
 
@@ -48,7 +48,7 @@ class basicMainClass {
 
         SPQExporter spqExporter = new SPQExporter();
         //      spqExporter.run(root);
-      spqExporter.run(root, "C:/a.dot");
+     // spqExporter.run(root, "C:/a.dot");
 
 
        // Helperclasses.SPQImporter spqImporter = new Helperclasses.SPQImporter("C:\\Graphs\\10002N9F.txt");

@@ -2,6 +2,13 @@ package Datastructures;
 
 import java.util.*;
 
+/**
+ * Ist die Datenstruktur, welche dir orthogonale Repräsentation einer Facette implementiert.
+ * Beinhaltetet Informationen über die Kanten, die den Rand der Facette bilden, Winkel an den Knoten in der Facette
+ * und die Orientierung der Kanten im Raum.
+ *
+ * @param <V>
+ */
 public class PlanarGraphFace<V> extends Vertex {
 
     private final Map<TupleEdge<V, V>, Integer> orthogonalRep = new LinkedHashMap<>();
@@ -49,6 +56,13 @@ public class PlanarGraphFace<V> extends Vertex {
         return orthogonalRep;
     }
 
+    /**
+     * Gibt den Winkel am Endknoten des TupelEdge zurück.
+     *
+     * @param edge die TupelEdge, die überprüft werden soll.
+     * @return  Der Winkel: -1 = 270° ; 0 = 180° ; 1 = 90°
+     * @throws Exception
+     */
     public int getEdgeAngle(TupleEdge<V,V> edge) throws Exception {
 
         if (orthogonalRep.containsKey(edge)) {
@@ -58,6 +72,13 @@ public class PlanarGraphFace<V> extends Vertex {
         }
 
     }
+
+    /**
+     * Legt den Winkel der Mit dem Endknoten der TupelEdge fest.
+     *
+     * @param pair Das TupelEdge, welches festgelegt werden soll.
+     * @param angle Der Winkel (entweder -1, 0, oder 1)
+     */
     public void setEdgeAngle(TupleEdge<V,V> pair, int angle)  {
 
         orthogonalRep.put(pair, angle);

@@ -2,6 +2,18 @@ package Datastructures;
 
 import org.apache.commons.lang3.tuple.MutablePair;
 
+
+/**
+ * Repräsentiert eine Halbkante (Auch als dart bezeichnet in "Graph Drawing: Algorithms for the Visualization of Graphs")
+ *(https://de.wikipedia.org/wiki/Half-Edge-Datenstruktur) und wird von PlanarGraphFace zur Darstellung der Kanten
+ * verwendet.
+ *
+ *Speichert auch die Winkel am Endknoten ab.
+ *
+ *
+ * @param <L>
+ * @param <R>
+ */
 public class TupleEdge<L, R> extends MutablePair<L, R> {
 
     private static int idCounter = 0;

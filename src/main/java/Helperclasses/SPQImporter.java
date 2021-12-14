@@ -166,7 +166,7 @@ public class SPQImporter {
                         }
                         case 'P' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQPNode(line.substring(0, line.length() - 1).trim()));
                         case 'S' -> nameToNode.put(line.substring(0, line.length() - 1).trim(), new SPQSNode(line.substring(0, line.length() - 1).trim()));
-                        default -> System.out.println("");
+                     //   default -> System.out.println("");
                     }
 
                 }

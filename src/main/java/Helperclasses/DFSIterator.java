@@ -45,8 +45,8 @@ public class DFSIterator {
     /**
      * https://www.techiedelight.com/postorder-tree-traversal-iterative-recursive/
      *
-     * @param root
-     * @return
+     * @param root Wurzel des Baums
+     * @return Deque<SPQNode> in post order Reihenfolge.
      */
     public static Deque<SPQNode> buildPostOrderStack(SPQNode root) {
 

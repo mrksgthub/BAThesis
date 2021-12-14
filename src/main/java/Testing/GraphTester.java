@@ -29,13 +29,18 @@ import java.util.Deque;
 import java.util.List;
 
 
+/**
+ * Diese Klasse stellt die Fähigkeit zum batch-Testen von SPQ*-Baum .dot Dateien, oder eines ganzen Verzeichnisses
+ * zur Verfügung. Speichert das Ergebnis des Tests in einer .csv Datei.
+ *
+ */
 public class GraphTester {
 
     private static final String SAMPLE_CSV_FILE = "C:/a.csv";
 
     private final File outputFile;
     private final File[] inputFiles;
-    private final int runs = 7;
+    private final int runs = 15;
 
 
     public GraphTester(File outputFile, File[] inputFiles) {
@@ -85,7 +90,7 @@ public class GraphTester {
                 int nodes = graph.vertexSet().size();
 
 
-                System.out.println(fileName);
+              //  System.out.println(fileName);
                 long startTime = System.nanoTime();
 
 
@@ -98,7 +103,7 @@ public class GraphTester {
 
                 long stopTime = System.nanoTime();
                 long elapsedTime = stopTime - startTime;
-                System.out.println("Didimo Zeit: " + elapsedTime);
+            //    System.out.println("Didimo Zeit: " + elapsedTime);
                 long didimoTime = elapsedTime;
 
                 startTime = System.nanoTime();
@@ -115,7 +120,7 @@ public class GraphTester {
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 long tamassiaMinFlowTime = elapsedTime;
-                System.out.println("Tamassia Zeit: " + elapsedTime);
+            //    System.out.println("Tamassia Zeit: " + elapsedTime);
 
 
                 startTime = System.nanoTime();
@@ -125,7 +130,7 @@ public class GraphTester {
                 stopTime = System.nanoTime();
                 elapsedTime = stopTime - startTime;
                 long tamassiaPushTime = elapsedTime;
-                System.out.println("TamassiaPush Zeit: " + elapsedTime);
+             //   System.out.println("TamassiaPush Zeit: " + elapsedTime);
 
 
                 csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
@@ -181,13 +186,13 @@ public class GraphTester {
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader("Graph", "Size", "Degree3Vertices", "Degree4Vertices", "FlownetworkKantenanzahl",
                                 "SPQ*Knoten", "DidimoMean", "DidimoMedian", "DidimoStdev", "Tamassia", "TamassiaMedian", "TamassiaStdDev", "TamassiaPush", "TamassiaPushMedian",
-                                "TamassiaPushStdev", "FordFulkerson", "FordFulkersonStdev", "rectilinear planar"))
+                                "TamassiaPushStdev", "FordFulkerson", "FordFulkersonStdev", "rectilinear planar", "SnodeChildren"))
         ) {
 
             for (File fileName : inputFiles
             ) {
 
-                System.out.println(fileName);
+             //   System.out.println(fileName);
                 SPQImporter spqImporter = new SPQImporter();
                 spqImporter.runFromFile(fileName.toString());
 
@@ -200,6 +205,7 @@ public class GraphTester {
 
                 if (maxSize < 0 || tree.getConstructedGraph().vertexSet().size() <= maxSize) {
                     if (minSize < 0 || tree.getConstructedGraph().vertexSet().size() >= minSize) {
+                     //   System.gc();
                         runAllTests(tree, root, csvPrinter, fileName, spqImporter, treeVertexFaceGenerator, tamassiaMinCostAllowed);
                     }
                 }
@@ -226,7 +232,7 @@ public class GraphTester {
         DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
         int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
         int nodes = graph.vertexSet().size();
-        System.out.println(fileName);
+       // System.out.println(fileName);
         long startTime = System.nanoTime();
         long stopTime;
         long elapsedTime;
@@ -245,12 +251,18 @@ public class GraphTester {
         int degree3Vertices = 0;
         int degree4Vertices = 0;
         int notQnodeCount = 0;
+        int sNodeCountChildren = 0;
         boolean isRectilinear = false;
         Deque<SPQNode> s = DFSIterator.buildPostOrderStack(root);
 
         // Informationen über den Graphen sammeln
         while (!s.isEmpty()) {
-            notQnodeCount += (s.pop().getSpqChildren().size() != 0) ? 1 : 0;
+            SPQNode node = s.pop();
+            notQnodeCount += (node.getSpqChildren().size() != 0) ? 1 : 0;
+
+            if (node.getNodeType() == SPQNode.NodeTypesEnum.NODETYPE.S) {
+                sNodeCountChildren += node.getSpqChildren().size();
+            }
         }
 
         // notQnodeCount = s.size();
@@ -385,7 +397,7 @@ public class GraphTester {
 */
 
 
-        csvPrinter.printRecord(nodes, faces, degree3Vertices, degree4Vertices, flowNetWorkEdges, notQnodeCount, didimoTime, didimoMedian, didimoStdev, tamassiaMinFlowTime, tamassiaMinFlowMedian, tamassiaMinFlowStdDev, tamassiaPushTime, tamassiaPushMedian, tamassiaPushStdev, FordFulkerson, FordFulkersonStdev, isRectilinear);
+        csvPrinter.printRecord(nodes, faces, degree3Vertices, degree4Vertices, flowNetWorkEdges, notQnodeCount, didimoTime, didimoMedian, didimoStdev, tamassiaMinFlowTime, tamassiaMinFlowMedian, tamassiaMinFlowStdDev, tamassiaPushTime, tamassiaPushMedian, tamassiaPushStdev, FordFulkerson, FordFulkersonStdev, isRectilinear, sNodeCountChildren);
     }
 
 

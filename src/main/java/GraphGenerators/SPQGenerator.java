@@ -8,6 +8,13 @@ import Datastructures.Vertex;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 
+/**
+ * Implementiert die Methode, um mit GraphgenSplitGraph einen Graphen zu erzeugen und ihn diesen dann auf rektilineare
+ * Planarität zu testen.
+ *
+ *
+ *
+ */
 public class SPQGenerator implements Callable, Runnable {
 
     private SPQNode root;
@@ -77,11 +84,24 @@ public class SPQGenerator implements Callable, Runnable {
 
     }
 
+    /**
+     * Diese Methode ist dafür zuständig ein GraphGenSplitGraph Objekt zu erzeugen, welches einen SP-Graphen erzeugt.
+     * Dieser wird dann auf rektilineare Planarität getestet.
+     *
+     *
+     * @param ops Maximale Anzahl von Operationen, welche der Graphengenerator ausführen kann und gleichzeitig die maximale
+     *            Kantenanzahl des SP-Graphen
+     * @param chanceOfP Wahrscheintlichkeit dafür, dass der Graphengenerator versuchen wird einen Q-Knoten durch einen
+     *                  P-Knoten zu ersetzen.
+     * @param maxDeg maximaler Knotengrad.
+     * @param mode Welche Art von SP-Graph erzeugt werden soll 0 = random 1 = MixDeg3Deg4 2 = Deg3 3 = Deg4.
+     * @return Ist rektilineare Zeuchnung möglich ja = true, sonst = false-
+     */
     public Boolean generateGraph(int ops, int chanceOfP, int maxDeg, int mode) {
-        Boolean check;
+        boolean check;
         counter++;
         check = true;
-
+        Vertex.resetIdCounter();
         GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(ops, chanceOfP, maxDeg, mode);
         graphgenSplitGraph.generateGraph();
 

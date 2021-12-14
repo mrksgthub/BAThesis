@@ -73,10 +73,12 @@ public class PlanarityAndAngleDistributorRunner {
 
 
             long startTime3 = System.currentTimeMillis();
+            long stopTime3 = System.currentTimeMillis();
             if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.DIDIMO) {
-
+                startTime3 = System.currentTimeMillis();
                 DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
                 boolean isValid = didimoRepresentability.run(tree.getRoot());
+                stopTime3 = System.currentTimeMillis();
 
                 if (!isValid) {
                     throw new RuntimeException("inValidGraph");
@@ -91,8 +93,9 @@ public class PlanarityAndAngleDistributorRunner {
 
             } else if (algorithmm == GraphDrawOptions.WinkelAlgorithmus.PUSH_RELABEL) {
                 MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-               boolean isValid= test.runJGraphTPushRelabelImplementation();
-
+                startTime3 = System.currentTimeMillis();
+                boolean isValid = test.runJGraphTPushRelabelImplementation();
+                stopTime3 = System.currentTimeMillis();
                 if (!isValid) {
                     throw new RuntimeException("inValidGraph");
                 }
@@ -105,7 +108,7 @@ public class PlanarityAndAngleDistributorRunner {
                     ex.printStackTrace();
                 }
             }
-            long stopTime3 = System.currentTimeMillis();
+
             time = stopTime3 - startTime3;
 
         }

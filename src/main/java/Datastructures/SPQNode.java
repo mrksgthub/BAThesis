@@ -4,6 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Abstrakte Basisklasse für die verschiedenen Knoten des SPQ- bzw. SPQ*-Baums.
+ *
+ * Implementiert:
+ *
+ * Den Baum
+ * Methoden zur Transformation von SPQ- zu SPQ*-Baum
+ * Methoden, um die rektilineare Plnarität zu testen und die Winkel festzulegen (nach Didimo. et. al. 2020)
+ *
+ *
+ */
 public abstract class SPQNode {
 
 
@@ -110,7 +122,11 @@ public abstract class SPQNode {
 
     }
 
-
+    /**
+     * Überprüft die Kindsknoten und fügt diese, falls Q-Knoten vorkommen, zu korrekten Q*-Knoten zusammen.
+     *
+     *
+     */
     public void generateQstarChildren() {
 
     }
