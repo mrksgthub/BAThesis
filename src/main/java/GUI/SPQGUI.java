@@ -137,7 +137,7 @@ class SPQGUI extends JFrame {
                         @Override
                         protected void done() {
                             super.done();
-                            System.out.println("In Done");
+                          //  System.out.println("In Done");
                             if (hasValidGraph || dialog1.isAllowInvalidGraphs()) {
                                 tree = spqGenerator.getTree();
                                 root = spqGenerator.getRoot();

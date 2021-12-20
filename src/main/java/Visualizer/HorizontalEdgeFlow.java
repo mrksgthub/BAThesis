@@ -142,7 +142,7 @@ public class HorizontalEdgeFlow implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Horizontal Edge Flow");
+   //     System.out.println("Horizontal Edge Flow");
         generateCapacities();
     }
 

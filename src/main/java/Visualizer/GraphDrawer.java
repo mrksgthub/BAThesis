@@ -57,14 +57,14 @@ public class GraphDrawer implements Runnable {
 
         // Lege die Länge der horizontalen Kanten fest
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
-        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
+        DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout();
 
         // Lege die Länge der vertikalen Kanten fest
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout();
 
 
-
+        // Löst das Minimalkostenproblem auf beiden Netzwerken.
         callableList.add(Executors.callable(verticalFlow));
         callableList.add(Executors.callable(horizontalFlow));
 
@@ -75,7 +75,7 @@ public class GraphDrawer implements Runnable {
         }
 
 
-        System.out.println("Nach den FlowNetworks");
+     //   System.out.println("Nach den FlowNetworks");
 
         // Lege Koordinaten fest
         Coordinator coordinator = new Coordinator(rectangulator.outerFace, rectangulator.getRectangularInnerFaces(), verticalFlow.edgeToArcMap, horizontalFlow.edgeToArcMap, verticalFlow.getMinimumCostFlow(), horizontalFlow.getMinimumCostFlow());

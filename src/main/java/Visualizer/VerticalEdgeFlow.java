@@ -66,14 +66,14 @@ public class VerticalEdgeFlow implements Runnable {
      *
      * @return das Flussnetzwerk
      */
-    public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {
+    public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout() {
         networkGraph = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
         List<PlanarGraphFace<Vertex>> rectangleList = this.rectangleList;
         Vertex outerFace = this.outerFace;
         networkGraph.addVertex(outerFace);
 
-
+        // äußere Facette
         supplyMap.put(outerFace, 0);
         for (TupleEdge<Vertex, Vertex> edge :
                 this.outerFace.getSidesMap().get(1)) {
@@ -91,6 +91,7 @@ public class VerticalEdgeFlow implements Runnable {
         }
 
 
+        // innere Facetten
         for (int j = 0; j < rectangleList.size(); j++) {
             Vertex face = rectangleList.get(j);
             networkGraph.addVertex(face);
@@ -138,7 +139,7 @@ public class VerticalEdgeFlow implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Vertical Edge Flow");
+      //  System.out.println("Vertical Edge Flow");
         runCapacityScalingAlgorithm();
     }
 

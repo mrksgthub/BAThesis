@@ -126,13 +126,14 @@ public class Rectangulator {
                 }
             } else { // process die äußere Facette, welche jetzt durch das äußere Rechteck eine innere Facette ist.
 
-                System.out.println("Find Fronts:");
+
+             //   System.out.println("Find Fronts:");
                 StopWatch stopWatch = new StopWatch();
 
                 stopWatch.start();
 
                 stopWatch.stop();
-                System.out.println(" StopWatch findfronts1: " + stopWatch.getTime());
+             //   System.out.println(" StopWatch findfronts1: " + stopWatch.getTime());
 
                 stopWatch.reset();
 
@@ -143,14 +144,7 @@ public class Rectangulator {
                 stopWatch.stop();
 
 
-   /*            Set<TupleEdge<Vertex, Vertex>> frontSet = new LinkedHashSet<>(fronts.values());
-                List<TupleEdge<Vertex, Vertex>> frontList = new ArrayList<>(frontSet);
-                for (TupleEdge<Vertex, Vertex> edge : frontList
-                ) {
-
-                    projectEdge2(edge, nexts, fronts, newOrthogonalRep);
-                }*/
-                System.out.println(" StopWatch findFronts2: " + stopWatch.getTime());
+                //System.out.println(" StopWatch findFronts2: " + stopWatch.getTime());
 
                 face.setType(PlanarGraphFace.FaceType.EXTERNAL_PROCESSED);
             }
@@ -224,7 +218,7 @@ public class Rectangulator {
 
                 assert (Math.abs(counter) == 4);
                 if (counter == -4) {
-                    System.out.println("External Face Processed");
+               //     System.out.println("External Face Processed");
 
                     dequeStack.push(faceObj);
                     faceObj.setType(PlanarGraphFace.FaceType.EXTERNAL_PROCESSED);
@@ -414,7 +408,7 @@ public class Rectangulator {
                 newOrthogonalRep.get(edge);
             }
         } catch (Exception e) {
-            System.out.println("Test222");
+      //      System.out.println("Test222");
         }
 
         edgeList = new ArrayList<>();
@@ -453,7 +447,7 @@ public class Rectangulator {
 
         startingEdges.addAll(newFront);
 
-        System.out.println("End of projectExternalFace");
+      //  System.out.println("End of projectExternalFace");
     }
 
     private void projectExternalEdge2(TupleEdge<Vertex, Vertex> front, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> externalFronts, Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep, Map<TupleEdge<Vertex, Vertex>, Integer> orientations, Map<Integer, ArrayList<TupleEdge<Vertex, Vertex>>> sidesMap) throws Exception {
@@ -534,7 +528,7 @@ public class Rectangulator {
                         newOrthogonalRep.get(edge);
                     }
                 } catch (Exception e) {
-                    System.out.println("Test222");
+           //         System.out.println("Test222");
                 }
 
                 edgeList = new ArrayList<>();
@@ -883,7 +877,7 @@ public class Rectangulator {
                         newOrthogonalRep.get(edge);
                     }
                 } catch (Exception e) {
-                    System.out.println("Test222");
+                 //   System.out.println("Test222");
                 }
 
                 edgeList = new ArrayList<>();

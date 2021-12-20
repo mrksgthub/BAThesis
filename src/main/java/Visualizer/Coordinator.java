@@ -234,7 +234,7 @@ public class Coordinator {
         }
 
 
-        System.out.println("Visualizing.Coordinator finished");
+    //    System.out.println("Visualizing.Coordinator finished");
     }
 
 

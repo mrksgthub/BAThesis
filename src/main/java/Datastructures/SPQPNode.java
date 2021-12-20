@@ -110,7 +110,7 @@ public class SPQPNode extends SPQNode {
                     return false;
                 }
 
-            } else if ((inDegreeCounterStart == 3 && inDegreeCounterSink == 3))  // I_3dd
+            } else if ((inDegreeCounterStart == 3 && inDegreeCounterSink == 3))  // I_3dd'
             {
                 double pdV = 9999;
                 double pdU = 9999;
