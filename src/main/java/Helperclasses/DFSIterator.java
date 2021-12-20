@@ -5,12 +5,19 @@ import Datastructures.SPQNode;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+
+/**
+ * Implementiert die Erzeugung von Deques, welche pre-order und post-order Durchläufe von SPQ- oder SPQ*-Bäumen deren
+ * Wurzel ein SPQNode Objekt ist.
+ *
+ */
 public class DFSIterator {
 
     /**
+     * Kopiert und angepasst von
      * https://www.techiedelight.com/preorder-tree-traversal-iterative-recursive/
      *
-     * @param root
+     * @param root - Wurzel des Baums
      * @return
      */
     public static Deque<SPQNode> buildPreOrderStack(SPQNode root) {
@@ -43,6 +50,7 @@ public class DFSIterator {
 
 
     /**
+     * Kopiert und angepasst von
      * https://www.techiedelight.com/postorder-tree-traversal-iterative-recursive/
      *
      * @param root Wurzel des Baums
@@ -50,25 +58,24 @@ public class DFSIterator {
      */
     public static Deque<SPQNode> buildPostOrderStack(SPQNode root) {
 
-        // return if the tree is empty
+
         if (root == null) {
             return null;
         }
 
-        // create an empty stack and push the root node
+
         Deque<SPQNode> stack = new ArrayDeque<>();
         stack.push(root);
 
-        // create another stack to store postorder traversal
+
         Deque<SPQNode> out = new ArrayDeque<>();
 
-        // loop till stack is empty
+
         while (!stack.isEmpty()) {
-            // pop a node from the stack and push the data into the output stack
+
             SPQNode curr = stack.pop();
             out.push(curr);
 
-            // push the left and right child of the popped node into the stack
             for (SPQNode child : curr.getSpqChildren()
             ) {
                 if (child != null) {
@@ -80,6 +87,9 @@ public class DFSIterator {
     }
 
     /**
+     * Baut den post order Deque auf, fügt aber keine Kinder von Q*-Knoten in den Deque hinzu.
+     *
+     * Kopiert und angepasst von
      * https://www.techiedelight.com/postorder-tree-traversal-iterative-recursive/
      *
      * @param root
@@ -105,17 +115,14 @@ public class DFSIterator {
             SPQNode curr = stack.pop();
             out.push(curr);
 
-            // push the left and right child of the popped node into the stack
+            // Stellt sicher, dass keine Kinder von Q*-Knoten zum Deque hinzugefügt werden.
             if (!curr.isNotQNode()) {
-
-
                 for (SPQNode child : curr.getSpqChildren()
                 ) {
                     if (child != null) {
                         stack.push(child);
                     }
                 }
-
             }
         }
         return out;

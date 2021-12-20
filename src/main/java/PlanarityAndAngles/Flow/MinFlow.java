@@ -18,7 +18,7 @@ public class MinFlow {
     private final Map<Vertex, Integer> supplyMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> lowerMap = new HashMap<>();
     private final Map<DefaultWeightedEdge, Integer> upperMap = new HashMap<>();
-    private List<PlanarGraphFace<Vertex>> listOfFaces;
+    private final List<PlanarGraphFace<Vertex>> listOfFaces;
     private DefaultDirectedWeightedGraph<Vertex, DefaultWeightedEdge> networkGraph;
     private MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> minimumCostFlow;
 

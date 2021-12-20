@@ -12,6 +12,13 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.*;
 
+
+/**
+ * Implementiert den Ablauf der Umwandlung einer gültigen orthogonalen Repräsentation in eine Zeichnung.
+ *
+ *
+ *
+ */
 public class GraphDrawer implements Runnable {
 
     private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
@@ -34,8 +41,8 @@ public class GraphDrawer implements Runnable {
                         new LinkedBlockingQueue<Runnable>());
         List<Callable<Object>> callableList = new ArrayList<>();
 
-        System.out.println("Anzahl Faces:" + planarGraphFaces.size());
 
+        // Wandle Facetten in rechteckige Facetten um
         Rectangulator rectangulator = new Rectangulator(planarGraphFaces);
 
         rectangulator.setOriginalTupleToFaceMap(tupleToFaceMap);
@@ -44,25 +51,18 @@ public class GraphDrawer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // rectangulator.outerFace.setOrientationsOuterFacette();
-
-
+        // Orientiere die TupleEdges in den Facetten
         Orientator orientator = new Orientator(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         orientator.run(rectangulator.getOuterFace(), rectangulator.getRectangularInnerFaces());
 
-        System.out.println("Nach Visualizing.Orientator");
-
-
+        // Lege die Länge der horizontalen Kanten fest
         VerticalEdgeFlow verticalFlow = new VerticalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphVer = verticalFlow.generateFlowNetworkLayout2();
-        // Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraph);
-        // verticalFlow.generateCapacities();
 
-
+        // Lege die Länge der vertikalen Kanten fest
         HorizontalEdgeFlow horizontalFlow = new HorizontalEdgeFlow(rectangulator.getRectangularInnerFaces(), rectangulator.getOuterFace());
         DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> testgraphHor = horizontalFlow.generateFlowNetworkLayout();
-        //  Helperclasses.GraphHelper.printToDOTTreeVertexWeighted(testgraphHor);
-        //  horizontalFlow.generateCapacities();
+
 
 
         callableList.add(Executors.callable(verticalFlow));

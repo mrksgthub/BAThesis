@@ -84,7 +84,7 @@ class GraphgenSplitGraph {
 
     /**
      * Wählt aus, ob generateRandomGraph(), oder generateSimpleGraph erzeugt werden soll.
-     *
+     * Dabei ist 0 = random, 1 = MixDeg3Deg4 2 = Deg3 und 3 = Deg4.
      */
     public void generateGraph() {
         if (mode == 0) {
@@ -99,7 +99,6 @@ class GraphgenSplitGraph {
 
     /**
      * Erzeugt einen SPQ-Baum, der nur aus Einfachen Strukturen wie MixDeg3Deg4, Deg3, oder Deg4 besteht.
-     *
      *
      * @param mode Welche Art von SP-Graph erzeugt werden soll 1 = MixDeg3Deg4 2 = Deg3 3 = Deg4.
      */
@@ -116,13 +115,15 @@ class GraphgenSplitGraph {
         }
 
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
+        int mixDeg3Deg4Chance = (getRandomNumberUsingNextInt(0, 100));
 
-        for (int i = 0; i < numberOfNodes; i++) {
+
+        for (int i = multigraph.vertexSet().size(); i < numberOfNodes; i++) {
             edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
             if (getRandomNumberUsingNextInt(0, 100000) < chanceOfP) {
                 if (multigraph.degreeOf(multigraph.getEdgeSource(edge)) < 3 && multigraph.degreeOf(multigraph.getEdgeTarget(edge)) < 3) {
                     if (mode == 1) {
-                        if (getRandomNumberUsingNextInt(0, 100) < 50) {
+                        if (getRandomNumberUsingNextInt(0, 100) < mixDeg3Deg4Chance) {
                             DefaultEdge[] arr1 = randomnewSNode(edge);
                             arr1 = randomnewSNode(arr1[1]);
                             arr1 = randomnewSNode(arr1[1]);
@@ -179,8 +180,7 @@ class GraphgenSplitGraph {
         }
 
         // Helperclasses.GraphHelper.printToDOT(Helperclasses.GraphHelper.treeToDOT(root));
-
-        for (int i = 0; i < numberOfNodes; i++) {
+        for (int i = multigraph.vertexSet().size(); i < numberOfNodes; i++) {
             edge = edges.get(getRandomNumberUsingNextInt(0, edges.size()));
 
             int degreeOfedgeSource = multigraph.outDegreeOf(multigraph.getEdgeSource(edge)) + multigraph.inDegreeOf(multigraph.getEdgeSource(edge));

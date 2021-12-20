@@ -48,108 +48,9 @@ public class GraphTester {
         this.inputFiles = inputFiles;
     }
 
-    // https://www.callicoder.com/java-read-write-csv-file-apache-commons-csv/
-    public static void main(String[] args) {
 
 
-        SPQStarTree tree;
-        SPQNode root;
-
-        final File folder = new File("C:\\Graphs");
-        ArrayList<String> listOfFiles = new ArrayList<>();
-        listFilesForFolder(folder, listOfFiles);
-
-
-        try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get(SAMPLE_CSV_FILE));
-
-                CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
-                        .withHeader("Graph", "Size", "Didimo", "Tamassia", "TamassiaPush"))
-        ) {
-
-            for (String fileName : listOfFiles
-            ) {
-
-                System.out.println(fileName);
-                SPQImporter spqImporter = new SPQImporter();
-                spqImporter.runFromFile(fileName);
-
-
-                tree = spqImporter.getTree();
-                root = tree.getRoot();
-
-
-                /* Embedder embedder = new Embedder(embedding);
-                embedder.run(root);
-*/
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
-                treeVertexFaceGenerator.generateFaces();
-
-                DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
-                int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
-                int nodes = graph.vertexSet().size();
-
-
-              //  System.out.println(fileName);
-                long startTime = System.nanoTime();
-
-
-                DidimoRepresentability didimoRepresentability = new DidimoRepresentability();
-                didimoRepresentability.run(tree.getRoot());
-
-                Angulator angulator = new Angulator();
-                angulator.runSpiralityAlg(tree.getRoot(), treeVertexFaceGenerator.getPlanarGraphFaces());
-
-
-                long stopTime = System.nanoTime();
-                long elapsedTime = stopTime - startTime;
-            //    System.out.println("Didimo Zeit: " + elapsedTime);
-                long didimoTime = elapsedTime;
-
-                startTime = System.nanoTime();
-
-
-                // csvPrinter.printRecord(nodes, faces, "Didimo", elapsedTime);
-
-                // Algorithms.Flow.TamassiaRepresentation tamassiaRepresentation = new Algorithms.Flow.TamassiaRepresentation(tree, root, treeVertexFaceGenerator);
-                //  tamassiaRepresentation.run();
-
-
-                // Algorithms.Flow.MaxFlow test = new Algorithms.Flow.MaxFlow(tree, root, treeVertexFaceGenerator);
-                //   test.run();
-                stopTime = System.nanoTime();
-                elapsedTime = stopTime - startTime;
-                long tamassiaMinFlowTime = elapsedTime;
-            //    System.out.println("Tamassia Zeit: " + elapsedTime);
-
-
-                startTime = System.nanoTime();
-                MaxFlow test = new MaxFlow(treeVertexFaceGenerator.getPlanarGraphFaces());
-                //test.runPushRelabel(treeVertexFaceGenerator.getPlanarGraphFaces());
-                test.runJGraphTPushRelabelPlanarityTest();
-                stopTime = System.nanoTime();
-                elapsedTime = stopTime - startTime;
-                long tamassiaPushTime = elapsedTime;
-             //   System.out.println("TamassiaPush Zeit: " + elapsedTime);
-
-
-                csvPrinter.printRecord(nodes, faces, didimoTime, tamassiaMinFlowTime, tamassiaPushTime);
-
-
-            }
-            csvPrinter.flush();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-    /*
+    /**
     https://stackoverflow.com/questions/1844688/how-to-read-all-files-in-a-folder-from-java
      */
     private static void listFilesForFolder(final File folder, List<String> listOfFiles) {
@@ -220,6 +121,20 @@ public class GraphTester {
 
     }
 
+
+    /**
+     * Führt die Tests für den SPQ*-Baum, der als Eingabe dient aus und speichert die Messwerte dann in csvPrinter.
+     *
+     *
+     * @param tree Der SPQ*-Baum und Graph, der gemessen werden soll
+     * @param root Wurzel des SPQ*-Baums
+     * @param csvPrinter speichert die Messergebnisse.
+     * @param fileName
+     * @param spqImporter
+     * @param treeVertexFaceGenerator
+     * @param tamassiaMinCostAllowed - soll der Minimalkostenalgorithmus ausgeführt werden.
+     * @throws Exception
+     */
     private void runAllTests(SPQStarTree tree, SPQNode root, CSVPrinter csvPrinter, File fileName, SPQImporter spqImporter, FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator, boolean tamassiaMinCostAllowed) throws Exception {
         try {
             GraphValidifier graphValidifier = new GraphValidifier(tree.getConstructedGraph(), treeVertexFaceGenerator.getPlanarGraphFaces());
@@ -304,7 +219,7 @@ public class GraphTester {
             didimoTime = -1;
         }
 
-        // Didimo MinCostTest
+        // Netzwerkflussansatz MinCostTest
         if (tamassiaMinCostAllowed && (nodes < 20000 || faces > 2)) {
             tree = spqImporter.runFromArray();
 

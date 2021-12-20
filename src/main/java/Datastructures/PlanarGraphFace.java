@@ -61,7 +61,7 @@ public class PlanarGraphFace<V> extends Vertex {
      *
      * @param edge die TupelEdge, die überprüft werden soll.
      * @return  Der Winkel: -1 = 270° ; 0 = 180° ; 1 = 90°
-     * @throws Exception
+     * @throws Exception Falls der Winkel nicht festgelegt wurde (Zeichen für einen Bug)
      */
     public int getEdgeAngle(TupleEdge<V,V> edge) throws Exception {
 
@@ -93,7 +93,7 @@ public class PlanarGraphFace<V> extends Vertex {
      * ausgehend der Rest.
      *
      */
-    public void setOrientationsOuterFacette() {
+    public void setOrientationsOuterFace() {
 
         sidesMap.put(0, new ArrayList<>());
         sidesMap.put(1, new ArrayList<>());

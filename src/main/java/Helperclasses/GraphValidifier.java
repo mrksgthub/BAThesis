@@ -12,8 +12,8 @@ import java.util.List;
 public class GraphValidifier {
 
 
-    private DirectedMultigraph<Vertex, DefaultEdge> constructedGraph;
-    private List<PlanarGraphFace<Vertex>> planarGraphFaces;
+    private final DirectedMultigraph<Vertex, DefaultEdge> constructedGraph;
+    private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
 
     public GraphValidifier(DirectedMultigraph<Vertex, DefaultEdge> constructedGraph, List<PlanarGraphFace<Vertex>> planarGraphFaces) {
         this.constructedGraph = constructedGraph;

@@ -21,7 +21,7 @@ class graphTesterDialog extends JDialog {
     private JCheckBox tamassiaMinCostErlaubenCheckBox;
     private JTextField minSizeField;
     private File dataFile;
-    private File graphFolder[];
+    private File[] graphFolder;
     private File[] files;
     private int maxSize;
     private int minSize;

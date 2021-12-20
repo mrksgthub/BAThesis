@@ -88,11 +88,7 @@ public class TupleEdge<L, R> extends MutablePair<L, R> {
         TupleEdge<Vertex, Vertex> edge = (TupleEdge<Vertex, Vertex>) obj;
         TupleEdge<Vertex, Vertex> thisEdge = (TupleEdge<Vertex, Vertex>) this;
 
-        if (thisEdge.left.getId() == edge.left.getId() && thisEdge.right.getId() == edge.right.getId()) {
-            return true;
-        } else {
-            return false;
-        }
+        return thisEdge.left.getId() == edge.left.getId() && thisEdge.right.getId() == edge.right.getId();
 
 
     }

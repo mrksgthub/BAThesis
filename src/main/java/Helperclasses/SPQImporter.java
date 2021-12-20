@@ -95,7 +95,6 @@ public class SPQImporter {
         ) {
             if (v.getName().equals("vsource")) {
                 v.setId(0);
-                ;
             } else if ((v.getName().equals("vsink"))) {
                 v.setId(nameToTreeVertex.values().size() - 1);
             } else {

@@ -4,6 +4,11 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 
+/**
+ * Implementiert den Dialog, um eine Menge von SPQ*-Bäumen zu generieren.
+ *
+ *
+ */
 class GenerateTestDataDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -87,7 +92,7 @@ class GenerateTestDataDialog extends JDialog {
                     if (graphFolder[0].isDirectory()) {
                         if (graphFolder.length == 1) {
                             graphFolderLabel.setText(graphFolder[0].getAbsolutePath());
-                            filePath = graphFolder[0].getAbsolutePath().toString();
+                            filePath = graphFolder[0].getAbsolutePath();
                         } else {
                             JOptionPane.showMessageDialog(contentPane, "Only one folder can be selected at a time", "Alert", JOptionPane.WARNING_MESSAGE);
                             graphFolder = null;
@@ -266,7 +271,7 @@ class GenerateTestDataDialog extends JDialog {
 
         try {
             double v = Double.parseDouble(chanceOfPIncrField.getText()) * 1000;
-            chanceOfPIncr = (int) v;;
+            chanceOfPIncr = (int) v;
             if (chanceOfPIncr < 0) {
                 throw new NumberFormatException();
             }
@@ -292,14 +297,14 @@ class GenerateTestDataDialog extends JDialog {
 
         allowInvalidGraphs = allowInvalidGraphsCheckbox.isSelected();
 
-        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5  && numOfChanceOfPIncrease > 0 && numOfOpsIncrease > 0 && counter >0) {
+        if (chanceOfP >= 0 && chanceOfPIncr >= 0 && minOps >= 0 && opsIncrement >= 0 && maxDegree > 1 && maxDegree < 5  && numOfChanceOfPIncrease >= 0 && numOfOpsIncrease >= 0 && counter >0) {
             validSettings = true;
             dispose();
 
         }
 
 
-      //  dispose();
+
     }
 
     private void onCancel() {

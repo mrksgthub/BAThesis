@@ -13,6 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementiert den Minimalkostenalgorithmus, um die Längen der horizontalen Kanten zu bestimmen.
+ *
+ *
+ */
 public class VerticalEdgeFlow implements Runnable {
 
     private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> edgeToFAceMap = new HashMap<>();
@@ -37,16 +42,13 @@ public class VerticalEdgeFlow implements Runnable {
             edgeToFAceMap.put(edge, outerFace);
         }
 
-
         for (PlanarGraphFace<Vertex> face : rectangleList
         ) {
             for (TupleEdge<Vertex, Vertex> edge : face.getEdgeList()
             ) {
                 edgeToFAceMap.put(edge, face);
             }
-
         }
-
 
     }
 
@@ -58,6 +60,12 @@ public class VerticalEdgeFlow implements Runnable {
         return minimumCostFlow;
     }
 
+    /**
+     * Erzeugt das Flussnetzwerk und legt die unteren und oberen Schranken der Bögen fest.
+     *
+     *
+     * @return das Flussnetzwerk
+     */
     public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout2() {
         networkGraph = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
@@ -108,9 +116,13 @@ public class VerticalEdgeFlow implements Runnable {
         return networkGraph;
     }
 
-    private void generateCapacities() {
-
-
+    /**
+     * Erzeugt einen Minimalkostenfluss mit CapacityScalingMinimumCostFlow von JGraphT und speicher ihn in
+     * minimumCostFLow ab.
+     *
+     *
+     */
+    private void runCapacityScalingAlgorithm() {
         MinimumCostFlowProblem<Vertex,
                 DefaultWeightedEdge> problem = new MinimumCostFlowProblem.MinimumCostFlowProblemImpl<>(
                 networkGraph, v -> supplyMap.getOrDefault(v, 0), upperMap::get,
@@ -119,9 +131,7 @@ public class VerticalEdgeFlow implements Runnable {
         CapacityScalingMinimumCostFlow<Vertex, DefaultWeightedEdge> minimumCostFlowAlgorithm =
                 new CapacityScalingMinimumCostFlow<>();
 
-
         minimumCostFlow = minimumCostFlowAlgorithm.getMinimumCostFlow(problem);
-
 
     }
 
@@ -129,7 +139,7 @@ public class VerticalEdgeFlow implements Runnable {
     @Override
     public void run() {
         System.out.println("Vertical Edge Flow");
-        generateCapacities();
+        runCapacityScalingAlgorithm();
     }
 
     public void start() {

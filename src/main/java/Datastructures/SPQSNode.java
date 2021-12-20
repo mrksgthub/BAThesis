@@ -3,6 +3,11 @@ package Datastructures;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ *  Diese Klasse implementiert die Methoden, um das respresentability interval und condition für einen Q-Knoten festzulegen.
+ *
+ *
+ */
 public class SPQSNode extends SPQNode {
 
 

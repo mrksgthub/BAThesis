@@ -12,6 +12,12 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Diese Klasse implementiert die Durchführung der Festlegung der Winkel.
+ *
+ *
+ */
 public class Angulator {
 
 
@@ -56,16 +62,16 @@ public class Angulator {
         System.out.println("Algorithms.Didimo.Angulator Section  :" + elapsedTime3);
     }
 
-
+    /**
+     * Führt die Umwandlung von Spiralitäten in WInkel durch und speichert die Winkel in hashmap
+     *
+     *
+     * @param root Wurzel des SPQ*-Baums, dessen Spiralitäten festgelegt wurden
+     * @param hashmap - Hashmap, in welcher die Winkel gespeichert werden, bei den richtigen TupleEdges gespeichert werden.
+     */
     private void winkelHinzufuegen(SPQNode root, HashMap<TupleEdge<Vertex, Vertex>, Integer> hashmap) {
 
-    /*    for (SPQNode node :
-                root.getSpqChildren()) {
-            winkelHinzufuegen(node, hashmap);
-        }
-        if (root.getSpqChildren().size() > 1) { // IsRoot IS WICHTIG!!
-            root.computeAngles(hashmap);
-        }*/
+
 
         Deque<SPQNode> s = DFSIterator.buildPostOrderStackPlanarityTest(root);
 
@@ -79,12 +85,15 @@ public class Angulator {
 
     }
 
+    /**
+     * Führt einen iterativen pre-order Durchlauf der Knoten durch, um die Spiralitäten festzulegen
+     *
+     *
+     * @param root - linkes Kind der Wurzel.
+     */
     private void computeSpirality(SPQNode root) {
 
-    /*    for (SPQNode node : root.getSpqChildren()
-        ) {
-            computeSpirality(node);
-        }*/
+
 
         Deque<SPQNode> s = DFSIterator.buildPreOrderStack(root);
 
@@ -94,6 +103,13 @@ public class Angulator {
 
     }
 
+    /**
+     * führt flowAlg.setOrthogonalRep(); aus, was bedeutet, dass die Winkel in den PlanarGraphFace Objekten, auf die
+     * das Max-Flow Objekt eine Referenz hat aus dem gültigen Fluss berechnet werden.
+     *
+     *
+     * @param flowAlg
+     */
     public void runMaxFlowAngles(MaxFlow flowAlg) {
         flowAlg.setOrthogonalRep();
     }

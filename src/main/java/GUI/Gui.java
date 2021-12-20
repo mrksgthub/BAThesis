@@ -1,5 +1,10 @@
 package GUI;
 
+/**
+ * Klasse die das GUI startet.
+ *
+ *
+ */
 class Gui {
 
 

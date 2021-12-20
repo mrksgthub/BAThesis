@@ -13,6 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * Implementiert die Durchführung des Netzwerkflussansatzes.
+ * 1. die Transformation der Einbettung in ein Flussnetzwerk.
+ * 2. die Durchführung des Maximalkostenflusses.
+ * 3. die Festlegung der Winkel in der orthogonalen Repräsentation
+ *
+ */
 public class MaxFlow {
 
 
@@ -33,10 +41,16 @@ public class MaxFlow {
         return flowMap;
     }
 
+
+    /**
+     * Erstellt das Flussnetzwerk und führt den Maximalkostenfluss aus
+     *
+     *
+     * @return Ist der Fluss gültig?
+     */
     public boolean runJGraphTPushRelabelImplementation() {
 
        boolean isValid = generateFlowNetwork();
-        // MaximumFlowAlgorithm<Datatypes.TreeVertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(simple);
         if (isValid) {
             return runJGraphTPushRelabelPlanarityTest();
         } else {
@@ -44,6 +58,12 @@ public class MaxFlow {
         }
     }
 
+    /**
+     * Führt den Maximalkostenflussalgorithmus aus und prüft, ob der Fluss ein Maximalfluss ist und somit eine
+     * der rektilineare Planaritätstest bestanden wurde.
+     *
+     * @return WUrde der rektilineare Planaritätstest bestanden?
+     */
     public boolean runJGraphTPushRelabelPlanarityTest() {
         MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
@@ -51,6 +71,12 @@ public class MaxFlow {
         return maxFlowValue.getValue() == counter;
     }
 
+    /**
+     * Transformiert die Einbettung des Graphen in das entsprechende Flussnetzwerk.
+     *
+     *
+     * @return
+     */
     public boolean generateFlowNetwork() {
 
 
@@ -137,7 +163,7 @@ public class MaxFlow {
         return true;
     }
 
-    public boolean runJGraphTFordFulkersonImplementation() {
+/*    public boolean runJGraphTFordFulkersonImplementation() {
 
 
         boolean isValid = generateFlowNetwork();
@@ -148,18 +174,24 @@ public class MaxFlow {
             return false;
         }
 
-    }
+    }*/
 
-    private boolean runJGrapthTFordFulkersonPlanarityTest() {
+/*    private boolean runJGrapthTFordFulkersonPlanarityTest() {
         MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new EdmondsKarpMFImpl<>(flowNetwork);
         //     MaximumFlowAlgorithm<Vertex, DefaultWeightedEdge> test33 = new PushRelabelMFImpl<>(flowNetwork);
         MaximumFlowAlgorithm.MaximumFlow<DefaultWeightedEdge> maxFlowValue = test33.getMaximumFlow(solverSource, solverSink);
         flowMap = test33.getFlowMap();
         return maxFlowValue.getValue() == counter;
 
-    }
+    }*/
 
 
+    /**
+     * Nutzt den berechneten Fluss und nutzt diesen um die orthogonale Repräsentation festzulegen.
+     *
+     *
+     *
+     */
     public void setOrthogonalRep() {
 
         // Erstelle Map um die Kante (y,z) zu beommen, welche in Facette x auf Knoten z endet.

@@ -2,6 +2,12 @@ package Datastructures;
 
 import java.util.HashMap;
 
+/**
+ * Klasse, die die Methoden für den P-Knoten implementiert.
+ * Insbesondere die Methoden die respresentability conditions und intervals festzulegen.
+ * AUßerdem werden in dieser Klasse die Methode implementiert, um die Spiralität zu berechnen.
+ *
+ */
 public class SPQPNode extends SPQNode {
 
 
@@ -46,7 +52,6 @@ public class SPQPNode extends SPQNode {
 
 
         if (spqChildren.size() == 3) {
-
             // Lemma 6
             double mL = spqChildren.get(0).getRepIntervalLowerBound();
             double mC = spqChildren.get(1).getRepIntervalLowerBound();
@@ -60,11 +65,8 @@ public class SPQPNode extends SPQNode {
                 repIntervalLowerBound = Math.max(repIntervalLowerBound, mR + 2);
                 repIntervalUpperBound = Math.min(ML - 2, MC);
                 repIntervalUpperBound = Math.min(repIntervalUpperBound, MR + 2);
-                //    System.out.println("3 Children" + " " + this.getName());
-
-
             } else {
-                System.out.println("Intervals do not overlap P has 3 Children" + " " + this.getName());
+            //    System.out.println("Intervals do not overlap P has 3 Children" + " " + this.getName());
                 return false;
             }
 
@@ -80,7 +82,7 @@ public class SPQPNode extends SPQNode {
             double ML = leftSNode.getRepIntervalUpperBound();
             double MR = rightSNode.getRepIntervalUpperBound();
 
-            int inDegreeCounterStart = startNodes.size();
+            int inDegreeCounterStart = sourceNodes.size();
             int inDegreeCounterSink = sinkNodes.size();
 
             int outDegreeCounterStart = sourceVertex.adjacentVertices.size() - inDegreeCounterStart;
@@ -104,7 +106,7 @@ public class SPQPNode extends SPQNode {
                     //  System.out.println("I2Oab" + " " + this.getName());
 
                 } else {
-                    System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
+           //         System.out.println("No rectalinear drawing possible I2Oab" + " " + this.getName());
                     return false;
                 }
 
@@ -119,19 +121,19 @@ public class SPQPNode extends SPQNode {
                 MR = rightSNode.getRepIntervalUpperBound();
 
                 // Was tun falls erstes oder zweites child eine Q node ist
-                if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3ll
+                if ((spqChildren.get(0).sourceNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3ll
                     pdU = 0;
                     pdV = 0;
-                } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) //I3rr
+                } else if ((spqChildren.get(1).sourceNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) //I3rr
                 {
                     pdU = 1;
                     pdV = 1;
-                } else if ((spqChildren.get(1).startNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3lr
+                } else if ((spqChildren.get(1).sourceNodes.size() == 2) && (spqChildren.get(0).sinkNodes.size() == 2)) { //I3lr
 
                     pdU = 0;
                     pdV = 1;
 
-                } else if ((spqChildren.get(0).startNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) { //I3rl
+                } else if ((spqChildren.get(0).sourceNodes.size() == 2) && (spqChildren.get(1).sinkNodes.size() == 2)) { //I3rl
                     pdU = 1;
                     pdV = 0;
                 }
@@ -144,7 +146,7 @@ public class SPQPNode extends SPQNode {
                     repIntervalUpperBound = Math.min(ML - 1, MR + 2) - (pdU + pdV) / 2;
 
                 } else {
-                    System.out.println("No rectalinear I3dd'" + " " + this.getName());
+            //        System.out.println("No rectalinear I3dd'" + " " + this.getName());
                     return false;
                 }
 
@@ -156,7 +158,7 @@ public class SPQPNode extends SPQNode {
                 if (inDegreeCounterStart == 3) {
 
                     //TODO wurde geändert
-                    pd = (spqChildren.get(0).startNodes.size() == 2) ? 0 : 1;
+                    pd = (spqChildren.get(0).sourceNodes.size() == 2) ? 0 : 1;
 
                 } else { // check Sink
                     pd = (spqChildren.get(0).sinkNodes.size() == 2) ? 0 : 1;
@@ -171,14 +173,14 @@ public class SPQPNode extends SPQNode {
                     repIntervalLowerBound = Math.max(mL - 1.5, mR + 1) + (gamma - pd) / 2;
                     repIntervalUpperBound = Math.min(ML - 0.5, MR + 2) - (gamma + pd) / 2;
                 } else {
-                    System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
+            //        System.out.println("No rectalinear drawing possible I3dO" + " " + this.getName());
                     return false;
                 }
             }
 
 
         } else {
-            System.out.println("Invalid number of Children for P-Node");
+    //        System.out.println("Invalid number of Children for P-Node");
             return false;
         }
 
@@ -188,33 +190,33 @@ public class SPQPNode extends SPQNode {
 
     @Override
     public void computeAngles(HashMap<TupleEdge<Vertex, Vertex>, Integer> angleMap) {
+        // Die Beispiele beziehen sich auf den Graphen aus dem Didimo Paper.
+        // Jede if-clause legt alle Winkel
 
         // Für innere Facetten nur der Winkel auf der rechten Seite relevant?
-        Vertex vertex1 = spqChildren.get(0).startNodes.get(0);
-        if (startNodes.size() == 3 && !this.isRoot) {
+
+        // Legt Winkel an der Quelle fest.
+        Vertex vertex1 = spqChildren.get(0).sourceNodes.get(0);
+        if (sourceNodes.size() == 3 && !this.isRoot) {
             // mergedChildren 3, oder 2 sind die Fälle die unterschieden werden müssen
             // Winkel um die Quelle festlegen.
             // Beispiel3-4-10  Außen
-            Vertex nextVertexStarRight = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
+            Vertex nextVertexStarRight = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).sourceNodes.get(spqChildren.get(spqChildren.size() - 1).sourceNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(nextVertexStarRight, sourceVertex, 1)), 1);
-
             //Beispiel 9-4-10
-            Vertex nextVertexMiddle = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).startNodes.get(spqChildren.get(spqChildren.size() - 1).startNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
-            angleMap.put((new TupleEdge<>(startNodes.get(1), sourceVertex, 1)), 1);
-
+            Vertex nextVertexMiddle = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(spqChildren.get(spqChildren.size() - 1).sourceNodes.get(spqChildren.get(spqChildren.size() - 1).sourceNodes.size() - 1)) + 1), sourceVertex.adjacentVertices.size()));
+            angleMap.put((new TupleEdge<>(sourceNodes.get(1), sourceVertex, 1)), 1);
             // Beispiel3-4-10  Außen
-            angleMap.put((new TupleEdge<>(startNodes.get(2), sourceVertex, 1)), 1);
-
+            angleMap.put((new TupleEdge<>(sourceNodes.get(2), sourceVertex, 1)), 1);
             // Beispiel5-4-3  Außen
-            angleMap.put((new TupleEdge<>(startNodes.get(0), sourceVertex, 1)), 1);
-
-        } else if (startNodes.size() == 2 && sourceVertex.adjacentVertices.size() > 2 && !this.isRoot) {
+            angleMap.put((new TupleEdge<>(sourceNodes.get(0), sourceVertex, 1)), 1);
+        } else if (sourceNodes.size() == 2 && sourceVertex.adjacentVertices.size() > 2 && !this.isRoot) {
             // Beispiel 8-6-5 außen
             Vertex nextVertexStartLeft = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(vertex1) - 1), sourceVertex.adjacentVertices.size()));
             angleMap.put(new TupleEdge<>(vertex1, sourceVertex, alphaul), alphaul);
 
             // Beispiel 5-6-7 Außen
-            Vertex vertex2 = spqChildren.get(1).startNodes.get(0);
+            Vertex vertex2 = spqChildren.get(1).sourceNodes.get(0);
             Vertex nextVertexStarRight = sourceVertex.adjacentVertices.get(Math.floorMod((sourceVertex.adjacentVertices.indexOf(vertex2) + 1), sourceVertex.adjacentVertices.size()));
             angleMap.put((new TupleEdge<>(nextVertexStarRight, sourceVertex, alphaur)), alphaur);
 
@@ -224,12 +226,10 @@ public class SPQPNode extends SPQNode {
         } else if (sourceVertex.adjacentVertices.size() == 2 && this.isRoot) {
             // Sonderfall: Referenzkante an der Wurzel.
             angleMap.put((new TupleEdge<>(sinkVertex, sourceVertex, 1)), 1);
-            angleMap.put((new TupleEdge<>(startNodes.get(0), sourceVertex, 1)), -1);
-
-
+            angleMap.put((new TupleEdge<>(sourceNodes.get(0), sourceVertex, 1)), -1);
         }
 
-
+        // Legt die Winkel an der Senke fest.
         if (sinkNodes.size() == 3 && !this.isRoot) {
             // linker Winkel an SinkVertex (außen) 14-13-8 an Knoten 13
             Vertex nextVertexSinkLeft = sinkVertex.adjacentVertices.get(Math.floorMod((sinkVertex.adjacentVertices.indexOf(sinkNodes.get(0)) + 1), sinkVertex.adjacentVertices.size()));
@@ -257,7 +257,7 @@ public class SPQPNode extends SPQNode {
             angleMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex, (alphavr + alphavl == 2 && (sinkVertex.adjacentVertices.size() == 3)) ? 0 : 1)), (alphavr + alphavl == 2 && (sinkVertex.adjacentVertices.size() == 3)) ? 0 : 1);
 
         } else if (sinkVertex.adjacentVertices.size() == 2 && this.isRoot) {
-
+            // Sonderfall: Referenzkante an der Wurzel.
             angleMap.put((new TupleEdge<>(sourceVertex, sinkVertex, -1)), -1);
             angleMap.put((new TupleEdge<>(sinkNodes.get(0), sinkVertex, 1)), 1);
 
@@ -286,8 +286,8 @@ public class SPQPNode extends SPQNode {
             int alphavr = 9999;
 
             // äquivalent zu outdeg(w)
-            double kul = ((this.sourceVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(0).startNodes.size() == 1) ? 1 : 0.5;
-            double kur = ((this.sourceVertex.adjacentVertices.size() - startNodes.size()) == 1 && this.getSpqChildren().get(1).startNodes.size() == 1) ? 1 : 0.5;
+            double kul = ((this.sourceVertex.adjacentVertices.size() - sourceNodes.size()) == 1 && this.getSpqChildren().get(0).sourceNodes.size() == 1) ? 1 : 0.5;
+            double kur = ((this.sourceVertex.adjacentVertices.size() - sourceNodes.size()) == 1 && this.getSpqChildren().get(1).sourceNodes.size() == 1) ? 1 : 0.5;
 
 
             double kvl = ((this.sinkVertex.adjacentVertices.size() - sinkNodes.size()) == 1 && this.getSpqChildren().get(0).sinkNodes.size() == 1) ? 1 : 0.5;

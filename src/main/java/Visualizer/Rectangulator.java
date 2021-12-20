@@ -7,6 +7,10 @@ import org.apache.commons.lang3.time.StopWatch;
 
 import java.util.*;
 
+/**
+ * Diese Klasse implementiert die Umwandlung der orthogonalen Repräsentation in eine orthogonale Repräsentation,
+ * deren Facetten alle rechteckig sind.
+ */
 public class Rectangulator {
 
     private final List<PlanarGraphFace<Vertex>> planarGraphFaces;
@@ -57,7 +61,7 @@ public class Rectangulator {
             }
             if (count == 4) {
                 if (face.getType() == PlanarGraphFace.FaceType.EXTERNAL) { // Das äußere Face ist schon rechteckig und kann gleich als äußere Facette festgelegt werden.
-                    outerFace = (PlanarGraphFace<Vertex>) face;
+                    outerFace = face;
                     continue;
                 } else {
                     rectangularFaceMap.put(face, face);
@@ -88,9 +92,9 @@ public class Rectangulator {
     /**
      * Bestimme die Fronten der Facette
      *
-     * @param face
-     * @param orthogonalRep
-     * @param nexts
+     * @param face             Behandelte Facette
+     * @param orthogonalRep    Map mit den Winkeln der Facette
+     * @param nexts            Map, welche ausgibt welche das folgende TuplelEdge
      * @param fronts
      * @param vertexToFront
      * @param externalFronts
@@ -155,6 +159,14 @@ public class Rectangulator {
         }
     }
 
+    /**
+     * Wandedlt eine Facette in eine rechteckige Facette um.
+     *
+     * @param dequeStack
+     * @param face
+     * @param nexts
+     * @param newOrthogonalRep
+     */
     private void buildRectangularFacesFromFace(Deque<PlanarGraphFace<Vertex>> dequeStack, PlanarGraphFace<Vertex> face, Map<TupleEdge<Vertex, Vertex>, TupleEdge<Vertex, Vertex>> nexts, Map<TupleEdge<Vertex, Vertex>, Integer> newOrthogonalRep) {
         // Nachdem die Dummykanten und Knoten hinzugefügt wurden bestimmen wir die neuen Facetten, in dem wir die
         // Kanten in nexts Ablaufen. Dazu haben wir die Startedges (die neu hinzugefügten Kanten) in startingEdges
@@ -178,11 +190,9 @@ public class Rectangulator {
                 PlanarGraphFace<Vertex> faceObj = new PlanarGraphFace<>(Integer.toString(counter++));
 
                 rectangularFaceMap.put(faceObj, face);
-                //    faceObj.getOrthogonalRep().put(pair, newOrthogonalRep.get(pair));
                 faceObj.setEdgeAngle(pair, newOrthogonalRep.get(pair));
 
                 faceObj.getEdgeList().add(pair);
-                //    assert (originaledgeToFaceMap.get(Helperclasses.GraphHelper.reverseEdge(pair)) != null);
 
 
                 originalEdgeToFaceMap.put(pair, faceObj);
@@ -225,15 +235,13 @@ public class Rectangulator {
                     }
                     rectangularFaceMap.remove(faceObj);
                 }
-                //       faceObj.computeEdgeToIndexMap();
+
                 for (TupleEdge<Vertex, Vertex> edge : faceObj.getEdgeList()
                 ) {
-                    //        originalEdgeToFaceMap.put(new TupleEdge<>(edge.getLeft(), edge.getRight()),  faceObj);
+
                 }
             }
         }
-// TODO Testen, ob das entfernen irgendeinen Einfluss hatte
-        //
         if (startingEdges.size() == 0 && face.getType() == PlanarGraphFace.FaceType.EXTERNAL_PROCESSED && startingEdges.size() == 0) {
             dequeStack.push(face);
         }
@@ -755,7 +763,7 @@ public class Rectangulator {
 
         }
 
-       //    System.out.println("test");
+        //    System.out.println("test");
     }
 
 

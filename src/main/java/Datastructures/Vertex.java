@@ -4,10 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.function.Supplier;
 
+/**
+ * Implementiert den Knoten der Graphen.
+ * Implementiert dabei gleichzeitig auch die Adjazenzliste, aus welcher sich die Einbettung des Graphen ableseen lässt.
+ *
+ *
+ */
 public class Vertex implements Serializable {
 
     public static Supplier<Vertex> getvSupplier = new Supplier<>() {
-        private int id = 0;
+        private final int id = 0;
 
         @Override
         public Vertex get() {
@@ -20,7 +26,6 @@ public class Vertex implements Serializable {
     };
 
     private static int counter = 0;
-
     private boolean dummy = false;
     private final String name;
     ArrayList<Vertex> adjacentVertices = new ArrayList<>();

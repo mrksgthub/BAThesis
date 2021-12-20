@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
  *
  *
  */
-public class SPQGenerator implements Callable, Runnable {
+public class SPQGenerator  {
 
     private SPQNode root;
     private SPQStarTree tree;
@@ -25,7 +25,7 @@ public class SPQGenerator implements Callable, Runnable {
     private int counter;
     private BlockingQueue<SPQGenerator> blockingQueue;
     private final boolean shutdown = false;
-    private int mode = 0;
+    private final int mode = 0;
 
     public SPQGenerator(int size, int chanceOfP) {
         this.size = size;
@@ -41,8 +41,8 @@ public class SPQGenerator implements Callable, Runnable {
     public SPQGenerator() {
     }
 
-    public SPQGenerator(int ops, int chanceOfP, int maxDeg) {
-        this.size = ops;
+    public SPQGenerator(int nodes, int chanceOfP, int maxDeg) {
+        this.size = nodes;
         this.chanceOfP = chanceOfP;
 
         this.maxDeg = maxDeg;
@@ -89,7 +89,7 @@ public class SPQGenerator implements Callable, Runnable {
      * Dieser wird dann auf rektilineare Planarität getestet.
      *
      *
-     * @param ops Maximale Anzahl von Operationen, welche der Graphengenerator ausführen kann und gleichzeitig die maximale
+     * @param nodes Maximale Anzahl von Operationen, welche der Graphengenerator ausführen kann und gleichzeitig die maximale
      *            Kantenanzahl des SP-Graphen
      * @param chanceOfP Wahrscheintlichkeit dafür, dass der Graphengenerator versuchen wird einen Q-Knoten durch einen
      *                  P-Knoten zu ersetzen.
@@ -97,17 +97,17 @@ public class SPQGenerator implements Callable, Runnable {
      * @param mode Welche Art von SP-Graph erzeugt werden soll 0 = random 1 = MixDeg3Deg4 2 = Deg3 3 = Deg4.
      * @return Ist rektilineare Zeuchnung möglich ja = true, sonst = false-
      */
-    public Boolean generateGraph(int ops, int chanceOfP, int maxDeg, int mode) {
+    public Boolean generateGraph(int nodes, int chanceOfP, int maxDeg, int mode) {
         boolean check;
         counter++;
         check = true;
         Vertex.resetIdCounter();
-        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(ops, chanceOfP, maxDeg, mode);
+        GraphgenSplitGraph graphgenSplitGraph = new GraphgenSplitGraph(nodes, chanceOfP, maxDeg, mode);
         graphgenSplitGraph.generateGraph();
 
 
         root = graphgenSplitGraph.getRoot();
-        System.out.println("SPQ-Trees");
+      //  System.out.println("SPQ-Trees");
 
         tree = new SPQStarTree(root);
 
@@ -116,7 +116,7 @@ public class SPQGenerator implements Callable, Runnable {
         tree.addValidSPQStarTreeRepresentation(root);
         tree.initializeSPQNodes(root);
 
-        System.out.println("SPQ-Trees Done");
+     //   System.out.println("SPQ-Trees Done");
         for (Vertex vertex : tree.getConstructedGraph().vertexSet()
         ) {
             int i = tree.getConstructedGraph().degreeOf(vertex);
@@ -139,7 +139,7 @@ public class SPQGenerator implements Callable, Runnable {
         long elapsedTime = stopTime - startTime;
         // logger.info("Didimo Zeit: " + elapsedTime);
 
-        System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
+      //  System.out.println("Knotenanzahl: " + graphgenSplitGraph.getMultigraph().vertexSet().size());
 
 
 
@@ -168,11 +168,5 @@ public class SPQGenerator implements Callable, Runnable {
     }
 
 
-    @Override
-    public SPQGenerator call() throws Exception {
-        run();
-        blockingQueue.put(this);
-        return this;
-    }
 }
 

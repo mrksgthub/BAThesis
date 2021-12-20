@@ -29,7 +29,7 @@ public class SPQExporter {
         });
         Writer writer = new StringWriter();
         exporter.exportGraph(jgrapthTest, writer);
-        System.out.println(writer.toString());
+        System.out.println(writer);
     }
 
     private void writeTODOTSPQNode(Graph<SPQNode, DefaultEdge> jgrapthTest, String fileName) {
@@ -110,7 +110,7 @@ public class SPQExporter {
     /**
      * Debug run Methode
      *
-     * @param root
+     * @param root Wurzel des Baums
      */
     public void run(SPQNode root) {
 
@@ -118,7 +118,12 @@ public class SPQExporter {
 
     }
 
-
+    /**
+     * Exportiert den SPQ*-Baum im DOT-Format in des angegebene Verzeichnis.
+     *
+     * @param root Wurzel des Baums
+     * @param fileName Pfad unter dem abgespeichert werden soll
+     */
     public void run(SPQNode root, String fileName) {
 
      //   printTODOTSPQNode(treeToDOT(root, 2)); // Im Moment inaktiv

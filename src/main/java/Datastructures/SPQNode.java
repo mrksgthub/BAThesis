@@ -21,8 +21,8 @@ public abstract class SPQNode {
 
     static int id = 0;
     List<SPQNode> spqChildren = new ArrayList<>();
-    List<Vertex> startNodes = new ArrayList<>();
-    List<Vertex> sinkNodes = new ArrayList<>();
+    List<Vertex> sourceNodes = new ArrayList<>(); // innere Knoten an der Quelle
+    List<Vertex> sinkNodes = new ArrayList<>();   // innere Knoten an der Senke
     double spirality = 999999;
     int counter = 0;
     NodeTypesEnum.NODETYPE nodeType;
@@ -139,7 +139,7 @@ public abstract class SPQNode {
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
         if (this.getSourceVertex() == nodes.getSourceVertex()) {
-            startNodes.addAll(nodes.startNodes);
+            sourceNodes.addAll(nodes.sourceNodes);
         }
         if (this.getSinkVertex() == nodes.getSinkVertex()) {
             sinkNodes.addAll(nodes.sinkNodes);
@@ -189,8 +189,8 @@ public abstract class SPQNode {
     public void setSpiralityOfChildren() {
     }
 
-    public List<Vertex> getStartNodes() {
-        return startNodes;
+    public List<Vertex> getSourceNodes() {
+        return sourceNodes;
     }
 
     public List<Vertex> getSinkNodes() {

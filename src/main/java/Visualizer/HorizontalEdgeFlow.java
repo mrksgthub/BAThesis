@@ -14,7 +14,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * Implementiert den Minimalkostenalgorithmus, um die Längen der vertikalen Kanten zu bestimmen.
+ *
+ *
+ *
+ */
 public class HorizontalEdgeFlow implements Runnable {
 
     private final HashMap<TupleEdge<Vertex, Vertex>, PlanarGraphFace<Vertex>> edgeToFAceMap = new HashMap<>();
@@ -59,6 +64,12 @@ public class HorizontalEdgeFlow implements Runnable {
         return minimumCostFlow;
     }
 
+    /**
+     * Erzeugt das Flussnetzwerk und legt die unteren und oberen Schranken der Bögen fest.
+     *
+     *
+     * @return das Flussnetzwerk
+     */
     public DirectedWeightedMultigraph<Vertex, DefaultWeightedEdge> generateFlowNetworkLayout() {
         networkGraph = new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
 
@@ -108,6 +119,12 @@ public class HorizontalEdgeFlow implements Runnable {
         return networkGraph;
     }
 
+    /**
+     * Erzeugt einen Minimalkostenfluss mit CapacityScalingMinimumCostFlow von JGraphT und speicher ihn in
+     * minimumCostFLow ab.
+     *
+     *
+     */
     private void generateCapacities() {
 
         MinimumCostFlowProblem<Vertex,

@@ -8,6 +8,13 @@ import org.jgrapht.graph.DirectedMultigraph;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Implementiert die Erzeugung der Facetten. Nutzt dabei eine Einbettung eines Graphen in der Form eines DirectedMultigraph
+ * Objektes von JGraphT.
+ *
+ * @param <V> Klasse von Knoten
+ * @param <E> Eine Kante, welche ein Objekt eine JGraphT-Kante sein.
+ */
 public class FaceGenerator<V extends Vertex, E> implements Serializable {
 
     private final List<TupleEdge<V, V>> pairList;
@@ -40,9 +47,6 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
     }
 
     public void generateFaces() { // läuft im Moment "rückwärts" von daher hat das äußere Face sink -> source als Ausgangsvertex
-
-
-        // List<TupleEdge<V, V>> pairList = new ArrayList<>(pairIntegerMap.keySet());
 
         TupleEdge<V, V> startingEdge = new TupleEdge<>(startvertex, sinkVertex);
         int x = pairList.lastIndexOf(startingEdge);
@@ -80,30 +84,25 @@ public class FaceGenerator<V extends Vertex, E> implements Serializable {
                 face.add(nextVertex);
 
                 adjVertices.get(faceObj).add(vertex);
-                tupleToFaceMap.put(pair, faceObj); // Hier zum checken, um die beiden Faces zu finden einfach adjFaces2 nach <a,b> und <b,a> untersuchen
-            //    faceObj.getOrthogonalRep().put(pair, 999);
-                faceObj.setEdgeAngle(pair, 999);
+                tupleToFaceMap.put(pair, faceObj); // HashMap, um das Facettenobjekt zu finden.
+                faceObj.setEdgeAngle(pair, 999); // Initialisiere mit einem illegalen Winkel (für debugging).
 
 
-                // Bestimmung einer Facette: Nachdem man ein Startknoten gefunden hat sucht man ab jetzt immer den Folgeknoten bis man wieder am Startknoten ankommt
+                // Bestimmung einer Facette: Nachdem man ein Startknoten gefunden hat, sucht man ab jetzt immer den Folgeknoten bis man wieder am Startknoten ankommt
                 while (nextVertex != startVertex) {
 
                     adjVertices.get(faceObj).add(nextVertex);
-
-                    //    tArrayList = (List<V>) embedding.get(nextVertex);
                     tArrayList = (List<V>) nextVertex.getAdjacentVertices();
                     V temp = nextVertex;
                     nextVertex = tArrayList.get(Math.floorMod((tArrayList.indexOf(vertex) - 1), tArrayList.size()));
                     TupleEdge<V, V> vvPair = new TupleEdge<>(temp, nextVertex);
                     vertex = temp;
                     tupleToFaceMap.put(vvPair, faceObj);
-             //       faceObj.getOrthogonalRep().put(vvPair, 999);
                     faceObj.setEdgeAngle(vvPair, 999);
-
                     tupleVisitedMap.put(vvPair, true);
                     edgeList.add(vvPair);
                     face.add(nextVertex);
-                    //     visitsMap.merge(vvPair, 1, Integer::sum);
+
 
                 }
             }

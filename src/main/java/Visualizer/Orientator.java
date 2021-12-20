@@ -8,6 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+/**
+ * Orientiert die Facetten entsprechend der Orientierung der äußeren Facette. Dabei haben alle 4 Seiten jeweils eine
+ * Zahl zwischen 0,1,2,3 zugewiesen. Dabei ist z.B. 0 = unten, 1 = links, 2 = oben, 3 = rechts.
+ *
+ *
+ */
 public class Orientator {
 
 
@@ -38,7 +45,7 @@ public class Orientator {
     public void run(PlanarGraphFace<Vertex> rectangularOuterFace, List<PlanarGraphFace<Vertex>> rectangularInnerFaces) {
 
 
-        rectangularOuterFace.setOrientationsOuterFacette();
+        rectangularOuterFace.setOrientationsOuterFace();
         List<PlanarGraphFace<Vertex>> undiscoveredFaces = new ArrayList<>(rectangularInnerFaces);
         List<PlanarGraphFace<Vertex>> discoveredFaces = new ArrayList<>();
         edgeFaceNeighbourMap = new HashMap<>();

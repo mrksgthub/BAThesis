@@ -11,11 +11,18 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+
+/**
+ * Ist für das Zeichnen des Graphen zuständig. Nutzt dazu die GraphStream Bibliothek.
+ *
+ *
+ *
+ */
 class GraphStreamOutput {
 
 
-    private Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
-    private Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap;
+    private final Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap;
+    private final Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap;
 
     public GraphStreamOutput(Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjListMap, Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap) {
 
@@ -23,7 +30,11 @@ class GraphStreamOutput {
         this.edgeToCoordMap = edgeToCoordMap;
     }
 
-
+    /**
+     * Erstellt zum einen das Graph-Objekt von GraphStream, welches dann tatsächlich mit den angegebenen Koordinaten
+     * gezeichnet wird.
+     *
+     */
     void run() {
         // Graphstream
         Graph graph = new SingleGraph("Graph");
@@ -52,21 +63,6 @@ class GraphStreamOutput {
 
 
         }
-
-    /*    for (Vertex treeVertex : vertexToAdjListMap.keySet()) {
-
-            ArrayList<Vertex> list = vertexToAdjListMap.get(treeVertex);
-
-            for (Vertex vertex1 : list) {
-
-                if (graph.getEdge(vertex1.getName() + " " + treeVertex.getName()) == null)
-                    graph.addEdge(treeVertex.getName() + " " + vertex1.getName(), treeVertex.getName(), vertex1.getName());
-
-            }
-
-
-        }*/
-
 
         for (Node node : graph) {
             node.setAttribute("ui.label", node.getId());

@@ -125,7 +125,6 @@ class SPQGUI extends JFrame {
                             hasValidGraph = false;
 
                             spqGenerator.setCounter(0);
-                            ;
                             while ((!hasValidGraph) && !isCancelled()) {
                                 hasValidGraph = spqGenerator.generateGraph(dialog1.getOps(), dialog1.getChanceOfP(), dialog1.getMaxDeg(), dialog1.getMode());
                                 if (dialog1.isAllowInvalidGraphs()) {
@@ -177,7 +176,7 @@ class SPQGUI extends JFrame {
                         // orthogonal rep muss gesetted werden
 
                         GraphDrawer graphDrawer = new GraphDrawer(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces(), runner.getEmbedding(), runner.getTreeVertexFaceGenerator().getTupleToFaceMap());
-                        ChanceOfP.setText("Faces: " + String.valueOf(runner.getTreeVertexFaceGenerator().getPlanarGraphFaces().size()));
+                        ChanceOfP.setText("Faces: " + runner.getTreeVertexFaceGenerator().getPlanarGraphFaces().size());
                         opsField.setText("Vertices: " + tree.getConstructedGraph().vertexSet().size());
 
 
@@ -253,7 +252,7 @@ class SPQGUI extends JFrame {
                         @Override
                         protected void done() {
                             super.done();
-                            System.out.println("In Done");
+  //                          System.out.println("In Done");
                             updateText("Importing done");
                             drawGraphButton.setEnabled(true);
 
@@ -314,12 +313,12 @@ class SPQGUI extends JFrame {
                         int chanceOfP = dialog1.getChanceOfP();
                         int counter = 0;
 
-                        for (int j = 0; j < dialog1.getNumOfOpsIncrease(); j++) {
+                        for (int j = 0; j < dialog1.getNumOfOpsIncrease()+1; j++) {
                             if (isCancelled()) {
                                 break;
                             }
                             counter = 0;
-                            for (int i = 0; i < dialog1.getNumOfChanceOfPIncrease(); i++) {
+                            for (int i = 0; i < dialog1.getNumOfChanceOfPIncrease()+1; i++) {
                                 if (isCancelled() || counter == dialog1.getCounter()) {
                                     counter = 0;
                                     break;
@@ -347,7 +346,7 @@ class SPQGUI extends JFrame {
                     @Override
                     protected void done() {
                         super.done();
-                        System.out.println("In Done");
+       //                 System.out.println("In Done");
                         updateText("Finished generating graphs");
                         interrupts.setEnabled(false);
                         generateTestDataButton.setEnabled(true);

@@ -24,13 +24,15 @@ public class Coordinator {
     private final Map<TupleEdge<Vertex, Vertex>, DefaultWeightedEdge> verticalEdgeToArcMap;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> horizontalMinCostFlow;
     private final MinimumCostFlowAlgorithm.MinimumCostFlow<DefaultWeightedEdge> verticalMinCostFlow;
-    private Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap = new HashMap<>();
+    private final Map<Vertex, Pair<Integer, Integer>> edgeToCoordMap = new HashMap<>();
     private HashMap<Object, Object> edgeFaceNeighbourMap = new HashMap<>();
 
 
     /**
-     * @param outerFace
-     * @param innerFaceList
+     * Konstruktor für Coordinator
+     *
+     * @param outerFace - die äußere Facette
+     * @param innerFaceList - Liste der inneren Facetten
      * @param edgeToArcMap    - horizontal Edge to Arc Map
      * @param edgeToArcMap1   - vertical Edge to Arc Map
      * @param minimumCostFlow - erzeugt von jgrapht MinimumCostFlowAlgorithm für die vertical orientieren Edges

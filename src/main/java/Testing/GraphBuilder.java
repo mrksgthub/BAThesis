@@ -15,95 +15,49 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * Ist verantworlich dafür, dass eine  SPQ*-Bäumen mit den gewählten Paramtern erzeugt werden und dann mit einem
+ * generierten Namen an der richtigen Stelle abgespeichert werden.
+ *
+ *
+ */
 public class GraphBuilder {
 
     private final String filePathString;
     private static int counter = 0;
 
-
+    /**
+     * Implementiert die Methode einen SPQ*-Bäum zu generieren und in das
+     * angegebene Verzeichnis im DOT-Format zu exportieren.
+     *
+     *
+     * @param filePathString Zielverzeichnis
+     */
     public GraphBuilder(String filePathString) {
 
         this.filePathString = filePathString;
     }
 
-    public static void main(String[] args) throws Exception {
+    /**
+     * Führt die Erzeugung und das exportieren des SPQ*-Baums mit den entsprechenden Parametern durch
+     *
+     *
+     * @param CHANCE_OF_P Wahrscheinlichkeit einen P-Knoten hinzuzufügen
+     * @param nodes maximale Knotenanzahl
+     * @param maxDeg maximaler Knotengrad
+     * @param mode Modus
+     * @param isInvalidAllowed Dürfen nicht rektilinear planare Graphen gespeichert werden.
+     * @return ist der Graph rektilinear planar.
+     */
+    public boolean run(int CHANCE_OF_P, int nodes, int maxDeg, int mode, boolean isInvalidAllowed) {
 
 
-        int runs = 30;
-        SPQStarTree tree;
-        SPQNode root;
-
-        int CHANCE_OF_P = 0;
-
-
-        for (int j = 0; j < 6; j++) {
-
-            CHANCE_OF_P += 5;
-            int OPS = 2500;
-
-            for (int i = 0; i < runs; i++) {
-
-
-                OPS += 2000;
-
-                SPQGenerator spqGenerator = new SPQGenerator(OPS, CHANCE_OF_P);
-                spqGenerator.run();
-
-                tree = spqGenerator.getTree();
-                root = spqGenerator.getRoot();
-
-                SPQExporter spqExporter = new SPQExporter();
-            //    spqExporter.run(root);
-                spqExporter.run(root, "C:/a.txt");
-
-
-                SPQImporter spqImporter = new SPQImporter();
-                spqImporter.runFromFile("C:/a.txt");
-
-                DirectedMultigraph<Vertex, DefaultEdge> graph = spqImporter.getTree().getConstructedGraph();
-
-                tree = spqImporter.getTree();
-                root = tree.getRoot();
-
-
-                /*      Embedder embedder = new Embedder(embedding);
-                embedder.run(root);*/
-
-                FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
-                treeVertexFaceGenerator.generateFaces();
-
-
-                System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
-
-
-                int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
-                int nodes = graph.vertexSet().size();
-
-                try {
-                    Files.copy(Paths.get("C:/a.txt"), Paths.get("C:/" + nodes + "N" + faces + "F.txt"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-            }
-
-        }
-
-
-    }
-
-
-    public boolean run(int CHANCE_OF_P, int OPS, int maxDeg, int mode, boolean isInvalidAllowed) {
-
-
-        //   runs = 30;
         SPQStarTree tree;
         SPQNode root;
 
 
         SPQGenerator spqGenerator = new SPQGenerator();
-        boolean valid = spqGenerator.generateGraph(OPS, CHANCE_OF_P, maxDeg, mode);
+        boolean valid = spqGenerator.generateGraph(nodes, CHANCE_OF_P, maxDeg, mode);
 
 
         if (valid || isInvalidAllowed) {
@@ -114,15 +68,15 @@ public class GraphBuilder {
             FaceGenerator<Vertex, DefaultEdge> treeVertexFaceGenerator = new FaceGenerator<>(tree.getConstructedGraph(), root.getSourceVertex(), root.getSinkVertex());
             treeVertexFaceGenerator.generateFaces();
 
-            System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
+       //     System.out.println("Anzahl Faces:" + treeVertexFaceGenerator.getPlanarGraphFaces().size());
 
             int faces = treeVertexFaceGenerator.getPlanarGraphFaces().size();
-            int nodes = graph.vertexSet().size();
+            int numberOfNodes = graph.vertexSet().size();
 
 
             SPQExporter spqExporter = new SPQExporter();
             File filePath = new File(filePathString,
-                    nodes + "N" + faces + "F"+ "D"+counter++ +".dot");
+                    numberOfNodes + "N" + faces + "F"+ "D"+counter++ +".dot");
 
             spqExporter.run(root, filePath.toString());
             return true;

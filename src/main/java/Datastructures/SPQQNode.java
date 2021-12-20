@@ -2,10 +2,17 @@ package Datastructures;
 
 import java.util.HashMap;
 
+
+/**
+ * Diese Klasse implementiert die Methoden, um das respresentability interval und condition für einen Q-Knoten festzulegen.
+ *
+ *
+ *
+ */
 public class SPQQNode extends SPQNode {
 
     /**
-     * Für SPQImporter
+     * Konstruktor für SPQImporter
      *
      * @param q
      * @param b
@@ -18,32 +25,11 @@ public class SPQQNode extends SPQNode {
 
 
     /**
-     * Für Experimental
+     * Konstruktor für eines Q-Knotens für den Graphgenerator
      *
-     * @param source
-     * @param sink
-     * @param b
-     */
-    public SPQQNode(Vertex source, Vertex sink, boolean b) {
-        super("Q"+source.getName()+sink.getName()+ id++);
-        nodeType = NodeTypesEnum.NODETYPE.Q;
-
-        if (!b) {
-            super.setName(source.getName() + sink.getName());
-        } else {
-            super.setName("QStar" + source.getName() + sink.getName() + id++);
-        }
-
-        sourceVertex = source;
-        sinkVertex = sink;
-    }
-
-    /**
-     * Für Graphgenerator
-     *
-     * @param q
-     * @param edgeSource
-     * @param edgeTarget
+     * @param q Name
+     * @param edgeSource Quelle
+     * @param edgeTarget Senke
      */
     public SPQQNode(String q, Vertex edgeSource, Vertex edgeTarget) {
         super(q);
@@ -58,7 +44,7 @@ public class SPQQNode extends SPQNode {
     public void addToSourceAndSinkLists(SPQNode nodes) {
 
             if (this.getSourceVertex() == nodes.getSourceVertex()) {
-                startNodes.add(nodes.getSinkVertex());
+                sourceNodes.add(nodes.getSinkVertex());
             }
             if (this.getSinkVertex() == nodes.getSinkVertex()) {
                 sinkNodes.add(nodes.getSourceVertex());

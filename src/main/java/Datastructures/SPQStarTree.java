@@ -6,12 +6,18 @@ import org.jgrapht.graph.DirectedMultigraph;
 
 import java.util.*;
 
+/**
+ *Ist eine Containerklasse für die WUrzel des SPQ*-baums und wird genutzt, um einen SPQ*-Graphen zu initialisieren,
+ *oder einen SPQ-Baum in einen SPQ*-Baum zu transformieren.
+ *
+ *
+ */
 public class SPQStarTree {
 
     private SPQNode root;
-    private Set<SPQNode> visited = new LinkedHashSet<>();
-    private DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
-    private Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjecencyListMap = new Hashtable<>();
+    private final Set<SPQNode> visited = new LinkedHashSet<>();
+    private final DirectedMultigraph<Vertex, DefaultEdge> constructedGraph = new DirectedMultigraph<>(DefaultEdge.class);
+    private final Hashtable<Vertex, ArrayList<Vertex>> vertexToAdjecencyListMap = new Hashtable<>();
 
     public SPQStarTree(SPQNode root) {
         this.root = root;
@@ -36,7 +42,13 @@ public class SPQStarTree {
     }
 
 
-
+    /**
+     * Legt füllt die adjazenten start- und sinkNodes arrays auf und erzeugt auch einen JGraphT gerichteten Graphen, um
+     * die planare Einbettung der Graphen, dessen Wurzel in root übrgeben wurde, in einen gerichteten Graphen umwandelt.
+     *
+     *
+     * @param root Wurzel des Baumes
+     */
     private void setStartAndSinkNodesAndBuildConstructedGraph(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
@@ -56,8 +68,12 @@ public class SPQStarTree {
     }
 
 
-
-
+    /**
+     * Merged Eltern und Kinder, bei  der Transformation in einen SPQ-Baum -> SPQ*-Baum
+     *
+     *
+     * @param root Wirzeö des Baums.
+     */
     private void compactTree(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
@@ -70,8 +86,12 @@ public class SPQStarTree {
     }
 
 
-
-
+    /**
+     * Erzeugt die Q*-Knoten, bei der Transformation in SOQ-Baum -> SPQ*-Baum.
+     *
+     *
+     * @param root  Wurzel des Baums
+     */
     private void generateQStarNodes(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
@@ -82,11 +102,24 @@ public class SPQStarTree {
 
     }
 
+    /**
+     * Started und führt die Transformation von SOQ-Baum -> SPQ*-Baum durch.
+     *
+     *
+     * @param root  Wurzel des Baums
+     */
     public void addValidSPQStarTreeRepresentation(SPQNode root) {
         compactTree(root);
         generateQStarNodes(root);
     }
 
+    /**
+     * Initialisiert die Knoten des SPQ*-Baums, nach dem Laden. Dabei werden nur drei Methonden ausgeführt, die in
+     * dieser Klasse implementeiert sind.
+     *
+     *
+     * @param root  Wurzel des Baums
+     */
     public void initializeSPQNodes(SPQNode root) {
         setStartAndSinkNodesAndBuildConstructedGraph(root);
         calculateAdjaecencyListsOfSinkAndSource(root);
@@ -94,6 +127,12 @@ public class SPQStarTree {
     }
 
 
+    /**
+     * Berechnet die korrekten Adjazentenlisten der Knoten des Graphen (nicht des Baumes).
+     *
+     *
+     * @param root Wurzel des Baums
+     */
     private void calculateAdjaecencyListsOfSinkAndSource(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPreOrderStack(root);
@@ -103,6 +142,13 @@ public class SPQStarTree {
         }
     }
 
+    /**
+     * Legt die inneren und äußeren adjazenten Knoten an den Polen fest. Dabei ist dafür gesorgt, dass sie in der
+     * richtigen Reihenfolge einfügt.
+     *
+     *
+     * @param root  Wurzel des Baums
+     */
     private void determineInnerOuterAdjecentsOfSinkAndSource(SPQNode root) {
 
         Deque<SPQNode> stack = DFSIterator.buildPostOrderStack(root);
